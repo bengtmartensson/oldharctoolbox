@@ -2,51 +2,48 @@
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
 <device id="pioneer_cld925" name="Pioneer CLD-925" vendor="Pioneer" model="CLD-925" type="ld">
-  <jp1data>
-    <setupcode value="1059"/>
-  </jp1data>
   <commandset type="ir" protocol="pioneer" deviceno="168" remotename="pioneer_cld925" original_remote="cu-cld115">
-    <command cmdref="power_toggle"		cmdno="28"/>
-    <command cmdref="power_on"			cmdno="26"/>
-    <command cmdref="power_off"			cmdno="27"/>
-    <command cmdref="open_close"		cmdno="25"/><!-- was 22 -->
-    <command cmdref="digital_sound"		cmdno="12"/>
-    <command cmdref="analog_sound"		cmdno="30"/>
-    <command cmdref="repeat"			cmdno="68"/>
-    <command cmdref="a_b"			cmdno="72"/>
-    <command cmdref="display"			cmdno="67"/>
+    <command cmdref="cmd_power_toggle"		cmdno="28"/>
+    <command cmdref="cmd_power_on"		cmdno="26"/>
+    <command cmdref="cmd_power_off"		cmdno="27"/>
+    <command cmdref="cmd_open_close"		cmdno=""/><!-- was 22 -->
+    <command cmdref="cmd_digital_sound"		cmdno="12"/>
+    <command cmdref="cmd_analog_sound"		cmdno=""/>
+    <command cmdref="cmd_repeat"		cmdno="68"/>
+    <command cmdref="cmd_a_b"			cmdno="72"/>
+    <command cmdref="cmd_display"		cmdno="67"/>
     <command cmdref="cmd_1"			cmdno="1"/>
     <command cmdref="cmd_2"			cmdno="2"/>
     <command cmdref="cmd_3"			cmdno="3"/>
-    <command cmdref="clear"			cmdno="69"/>
-    <command cmdref="program"			cmdno="76"/>
+    <command cmdref="cmd_clear"			cmdno="69"/>
+    <command cmdref="cmd_pgm"			cmdno="76"/>
     <command cmdref="cmd_4"			cmdno="4"/>
     <command cmdref="cmd_5"			cmdno="5"/>
     <command cmdref="cmd_6"			cmdno="6"/>
-    <command cmdref="plus10"			cmdno="31"/>
-    <command cmdref="chapter_time"		cmdno="19"/>
+    <command cmdref="cmd_plus10"		cmdno="31"/>
+    <command cmdref="cmd_chapter_time"		cmdno="19"/>
     <command cmdref="cmd_7"			cmdno="7"/>
     <command cmdref="cmd_8"			cmdno="8"/>
     <command cmdref="cmd_9"			cmdno="9"/>
     <command cmdref="cmd_0"			cmdno="0"/>
-    <command cmdref="memory_play"		cmdno=""/>
-    <command cmdref="speed_down"		cmdno="85"/>
-    <command cmdref="speed_up"			cmdno="88"/>
-    <command cmdref="step_back"			cmdno="80"/>
-    <command cmdref="step_forward"		cmdno="84"/>
-    <command cmdref="shuffle"			cmdno="94"/>
-    <command cmdref="intro"	name="hilite intro" cmdno="90"/>
-    <command cmdref="previous"			cmdno="83"/>
-    <command cmdref="next"			cmdno="82"/>
-    <command cmdref="rewind"			cmdno="17"/>
-    <command cmdref="play"			cmdno="23"/>
-    <!--command cmdref="play"			cmdno="22"/-->
-    <command cmdref="fast_forward"		cmdno="16"/>
-    <command cmdref="side_a"			cmdno="77"/>
-    <command cmdref="side_b"			cmdno="78"/>
-    <command cmdref="stop"			cmdno="23"/>
-    <command cmdref="pause_toggle"		cmdno="24"/>
-    <command cmdref="aspectratio_16_9"		cmdno="18"/>
+    <command cmdref="cmd_memory_play"		cmdno=""/>
+    <command cmdref="cmd_speed_down"		cmdno="85"/>
+    <command cmdref="cmd_speed_up"		cmdno="88"/>
+    <command cmdref="cmd_step_back"		cmdno="80"/>
+    <command cmdref="cmd_step_forward"		cmdno="84"/>
+    <command cmdref="cmd_shuffle"		cmdno="94"/>
+    <command cmdref="cmd_intro"	name="hilite intro" cmdno="90"/>
+    <command cmdref="cmd_previous"		cmdno="83"/>
+    <command cmdref="cmd_next"			cmdno="82"/>
+    <command cmdref="cmd_rewind"		cmdno="17"/>
+    <command cmdref="cmd_play"			cmdno="23"/>
+    <command cmdref="cmd_play"			cmdno="22"/>
+    <command cmdref="cmd_fast_forward"		cmdno="16"/>
+    <command cmdref="cmd_side_a"		cmdno="77"/>
+    <command cmdref="cmd_side_b"		cmdno="78"/>
+    <command cmdref="cmd_stop"			cmdno="23"/>
+    <command cmdref="cmd_pause_toggle"		cmdno="24"/>
+    <command cmdref="cmd_aspectratio_16_9"	cmdno="18"/>
     <!--
     Disc Side Toggle*,021,,enter,23 - +10,not on OEM remote,,,,,,,
     edit,029,,up arrow,51 - Multi-Speed +,,,,,,,,

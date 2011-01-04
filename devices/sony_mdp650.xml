@@ -1,59 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
-<device id="sony_mdp_650" name="Sony MDP-650" vendor="Sony" model="MDP-650" type="ld">
-  <commandset type="ir" protocol="sony12" deviceno="6" remotename="sony_mdp_650" original_remote="rmt-m14">
-    <command cmdref="open_close"			cmdno="0x16"/>
-    <command cmdref="disc_tv"				cmdno="0x2a"/>
-    <command cmdref="power_toggle"			cmdno="0x15"/>
-    <command cmdref="clear"				cmdno="0x0f"/>
-    <command cmdref="frame_time"			cmdno="0x0c"/>
-    <command cmdref="program"				cmdno="0x30"/>
-    <command cmdref="repeat"				cmdno="0x29"/>
-    <command cmdref="info"				cmdno="0x3a"/>
-    <command cmdref="cmd_1"				cmdno="0x00"/>
-    <command cmdref="cmd_2"				cmdno="0x01"/>
-    <command cmdref="cmd_3"				cmdno="0x02"/>
-    <command cmdref="cmd_1_all"				cmdno="0x47"/>
-    <command cmdref="av_time"				cmdno="0x28"/>
-    <command cmdref="cmd_4"				cmdno="0x03"/>
-    <command cmdref="cmd_5"				cmdno="0x04"/>
-    <command cmdref="cmd_6"				cmdno="0x05"/>
-    <command cmdref="shuffle"				cmdno="0x41"/>
-    <command cmdref="a_b"				cmdno="0x38"/>
-    <command cmdref="cmd_7"				cmdno="0x06"/>
-    <command cmdref="cmd_8"				cmdno="0x07"/>
-    <command cmdref="cmd_9"				cmdno="0x08"/>
-    <command cmdref="auto_pgm"				cmdno="0x45"/>
-    <command cmdref="file"				cmdno="0x48"/>
-    <command cmdref="two_digit"				cmdno="0x39"/>
-    <command cmdref="cmd_0"				cmdno="0x09"/>
-    <command cmdref="search_next"			cmdno="0x0b"/>
-    <!--command cmdref="cmd_back"			cmdno="0x44"/-->
-    <command cmdref="cmd_return"			cmdno="0x44"/>
-    <command cmdref="custom_index"			cmdno="0x49"/>
-    <command cmdref="analog_sound"			cmdno="0x40"/>
-    <command cmdref="audio_monitor"			cmdno="0x17"/>
-    <command cmdref="cx"				cmdno="0x32"/>
-    <command cmdref="speed_down"			cmdno="0x24"/>
-    <command cmdref="speed_up"				cmdno="0x23"/>
-    <command cmdref="auto_pause"			cmdno="0x46"/>
-    <command cmdref="speed_set_down"			cmdno="0x22"/>
-    <command cmdref="speed_set_up"			cmdno="0x21"/>
-    <command cmdref="intro"				cmdno="0x68"/>
-    <command cmdref="step_back"				cmdno="0x2c"/>
-    <command cmdref="step_forward"			cmdno="0x2b"/>
-    <command cmdref="memory_play"			cmdno="0x25"/>
-    <command cmdref="previous"				cmdno="0x35"/>
-    <command cmdref="next"				cmdno="0x34"/>
-    <command cmdref="stop"				cmdno="0x18"/>
-    <command cmdref="play"				cmdno="0x1a"/>
-    <command cmdref="pause_toggle"			cmdno="0x19"/>
-    <command cmdref="ff"				cmdno="0x1f"/>
-    <command cmdref="rewind"				cmdno="0x1f"/>
-    <command cmdref="fff"				cmdno="0x1c"/>
-    <command cmdref="rrr"				cmdno="0x1b"/>
-    <command cmdref="power_on"				cmdno="0x2e"/>
-    <command cmdref="power_off"				cmdno="0x2f"/>
-  </commandset>
-</device>
+<devices>
+  <device id="sony_mdp_650" name="Sony MDP-650" vendor="Sony" model="MDP-650" type="ld">
+    <commandset type="ir" protocol="sony12" deviceno="6" remotename="sony_mdp_650" original_remote="rmt-m14">
+      <command cmdref="cmd_open_close"			cmdno="0x16"/>
+      <command cmdref="cmd_disc_tv"			cmdno="0x2a"/>
+      <command cmdref="cmd_power_toggle"		cmdno="0x15"/>
+      <command cmdref="cmd_clear"			cmdno="0x0f"/>
+      <command cmdref="cmd_frame_time"			cmdno="0x0c"/>
+      <command cmdref="cmd_pgm"				cmdno="0x30"/>
+      <command cmdref="cmd_repeat"			cmdno="0x29"/>
+      <command cmdref="cmd_info"			cmdno="0x3a"/>
+      <command cmdref="cmd_1"				cmdno="0x00"/>
+      <command cmdref="cmd_2"				cmdno="0x01"/>
+      <command cmdref="cmd_3"				cmdno="0x02"/>
+      <command cmdref="cmd_1_all"			cmdno="0x47"/>
+      <command cmdref="cmd_av_time"			cmdno="0x28"/>
+      <command cmdref="cmd_4"				cmdno="0x03"/>
+      <command cmdref="cmd_5"				cmdno="0x04"/>
+      <command cmdref="cmd_6"				cmdno="0x05"/>
+      <command cmdref="cmd_shuffle"			cmdno="0x41"/>
+      <command cmdref="cmd_a_b"				cmdno="0x38"/>
+      <command cmdref="cmd_7"				cmdno="0x06"/>
+      <command cmdref="cmd_8"				cmdno="0x07"/>
+      <command cmdref="cmd_9"				cmdno="0x08"/>
+      <command cmdref="cmd_auto_pgm"			cmdno="0x45"/>
+      <command cmdref="cmd_file"			cmdno="0x48"/>
+      <command cmdref="cmd_two_digit"			cmdno="0x39"/>
+      <command cmdref="cmd_0"				cmdno="0x09"/>
+      <command cmdref="cmd_search_next"			cmdno="0x0b"/>
+      <!--command cmdref="cmd_back"			cmdno="0x44"/-->
+      <command cmdref="cmd_return"			cmdno="0x44"/>
+      <command cmdref="cmd_custom_index"		cmdno="0x49"/>
+      <command cmdref="cmd_analog_sound"		cmdno="0x40"/>
+      <command cmdref="cmd_audio_monitor"		cmdno="0x17"/>
+      <command cmdref="cmd_cx"				cmdno="0x32"/>
+      <command cmdref="cmd_speed_down"			cmdno="0x24"/>
+      <command cmdref="cmd_speed_up"			cmdno="0x23"/>
+      <command cmdref="cmd_auto_pause"			cmdno="0x46"/>
+      <command cmdref="cmd_speed_set_down"		cmdno="0x22"/>
+      <command cmdref="cmd_speed_set_up"		cmdno="0x21"/>
+      <command cmdref="cmd_intro"			cmdno="0x68"/>
+      <command cmdref="cmd_step_back"			cmdno="0x2c"/>
+      <command cmdref="cmd_step_forward"		cmdno="0x2b"/>
+      <command cmdref="cmd_memory_play"			cmdno="0x25"/>
+      <command cmdref="cmd_previous"			cmdno="0x35"/>
+      <command cmdref="cmd_next"			cmdno="0x34"/>
+      <command cmdref="cmd_stop"			cmdno="0x18"/>
+      <command cmdref="cmd_play"			cmdno="0x1a"/>
+      <command cmdref="cmd_pause_toggle"		cmdno="0x19"/>
+      <command cmdref="cmd_ff"				cmdno="0x1f"/>
+      <command cmdref="cmd_rewind"			cmdno="0x1f"/>
+      <command cmdref="cmd_fff"				cmdno="0x1c"/>
+      <command cmdref="cmd_rrr"				cmdno="0x1b"/>
+      <command cmdref="cmd_power_on"			cmdno="0x2e"/>
+      <command cmdref="cmd_power_off"			cmdno="0x2f"/>
+    </commandset>
+  </device>
+</devices>

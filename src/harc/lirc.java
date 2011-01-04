@@ -1,35 +1,21 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
+/**
+ *
+ * @version 0.01 
+ * @author Bengt Martensson
+ */
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
+// Talks to a Lirc server. Thus, it is a lirc client.
 package harc;
 
 import java.io.*;
 import java.net.*;
 
-/**
- * A <a href="http://www.lirc.org">LIRC</a> client, talking to a remote LIRC
- * server through a TCP port.
- */
 public class lirc {
 
     private String lirc_host;
     private final static int lirc_default_port = 8765;
     private int lirc_port;
-    public final static String default_lirc_host = "localhost";
+    public final static String default_lirc_host = "dbox";
 
     // multiple hardware/transmitters are currently not supported.
     private boolean verbose = true;
@@ -87,11 +73,21 @@ public class lirc {
         BufferedReader inFromServer = null;
         String string = "";
 
+        //  try {
         sock = new Socket(lirc_host, lirc_port);
         outToServer = new PrintStream(sock.getOutputStream());
         inFromServer =
                 new BufferedReader(new InputStreamReader(sock.getInputStream()));
-        
+        /*
+        } catch (UnknownHostException e) {
+        System.err.println("Host " + lirc_host + " does not resolve.");
+        System.exit(1);
+        } catch (IOException e) {
+        System.err.println("Couldn't get I/O for the connection to: " + lirc_host);
+        System.exit(1);
+        }
+         */
+
         outToServer.print(packet + '\n');
 
         String[] result = null;
@@ -197,26 +193,20 @@ public class lirc {
         return result;
     }
 
-    /** Requires a nonstandard LIRC server */
     public void send_ccf(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
         send_command("SEND_CCF_ONCE " + (count - 1) + " " + ccf);
     }
 
-    /** Requires a nonstandard LIRC server */
     public void send_ccf_repeat(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
         send_command("SEND_CCF_START " + ccf);
-    }
-
-    public String send_ir(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_ir(remote, command, 1) ? "" : null;
     }
 
     public boolean send_ir(String remote, String command, int count) throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("SEND_ONCE " + remote + " " + command + " " + (count - 1)) == null;
     }
 
-    public boolean send_ir(String remote, command_t cmd, int count) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_ONCE " + remote + " " + cmd + " " + (count - 1)) == null;
+    public boolean send_ir(String remote, int cmd, int count) throws IOException, UnknownHostException, NoRouteToHostException {
+        return send_command("SEND_ONCE " + remote + " " + ir_code.command_name(cmd) + " " + (count - 1)) == null;
     }
 
     public void send_ir_repeat(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
@@ -227,20 +217,18 @@ public class lirc {
         send_command("SEND_STOP " + remote + " " + command);
     }
 
-    public String[] get_remotes() throws IOException, UnknownHostException, NoRouteToHostException {
+    public String[] get_remote() throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("LIST");
     }
 
-    /** Requires a nonstandard LIRC server */
     public String[] get_ccf_remote() throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("CCF");
     }
 
-    public String[] get_commands(String remote) throws IOException, UnknownHostException, NoRouteToHostException {
+    public String[] get_remote(String remote) throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("LIST " + remote);
     }
 
-    /** Requires a nonstandard LIRC server */
     public String[] get_ccf_remote(String remote) throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("CCF " + remote);
     }
@@ -249,7 +237,6 @@ public class lirc {
         return send_command("LIST " + remote + " " + command)[0];
     }
 
-    /** Requires a nonstandard LIRC server */
     public String get_ccf_remote_command(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("CCF " + remote + " " + command)[0];
     }
@@ -266,8 +253,14 @@ public class lirc {
         return send_command("VERSION")[0];
     }
 
+    private static void dump_array(String[] s) {
+        for (int i = 0; i < s.length; i++) {
+            System.out.println(s[i]);
+        }
+    }
+
     public static void main(String[] args) {
-        lirc l = new lirc(args[0], args.length > 1 && args[1].equals("-v"));
+        lirc l = new lirc("localhost", args.length > 0 && args[0].equals("-v"));
         try {
             //  	dump_array(l.get_remote());
             //  	dump_array(l.get_remote("rc5_cd"));
@@ -275,8 +268,7 @@ public class lirc {
             // 	System.out.println(l.get_version());
             // 	System.out.println(l.get_ccf_remote_command("panasonic_dvd", "power_toggle"));
             // 	dump_array(l.get_ccf_remote("panasonic_dvd"));
-            System.out.println(l.get_version());
-            harcutils.printtable("Remotes: ", l.get_remotes());
+            dump_array(l.get_ccf_remote());
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to: " + l.lirc_host);
             System.exit(1);

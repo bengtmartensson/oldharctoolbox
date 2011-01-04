@@ -1,156 +1,137 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
+/**
+ *
+ * @version 0.01
+ * @author Bengt Martensson
+ */
 
 package harc;
 
 public class commandset_entry {
-
-    private command_t cmd;
+    private int cmd;
     private short cmdno;
     private String name;
     private String transmit;
     private int response_lines;
     private String response_ending;
     private String expected_response;
-    private String remark;
     private String[] arguments;
-    private String ccf_toggle_0;
-    private String ccf_toggle_1;
 
     public String toString(commandset cmdset, boolean verbose) {
-        String response = "";
-        switch (cmdset.get_type()) {
-            case ir:
-                response = "Infrared: " + cmd + ", " + cmdno;
-                if (verbose)
-                    response = response + ", " + cmdset.get_remotename() + ", " + cmdset.get_protocol() + ", " + cmdset.get_deviceno() + ", " + cmdset.get_subdevice() + (cmdset.get_toggle() ? ", toggle, " : "");
-                ;
-                break;
-            case web_api:
-            case serial:
-            case tcp:
-            case udp:
-                response = cmdset.get_type() + ": " + cmd + ", '" + transmit + "'";
-                break;
-            default:
-                response = cmdset.get_type() + ": " + cmd;
-                break;
-        }
-        return response;
+	String response = "";
+	switch (cmdset.gettype()) {
+	case commandset.ir:
+	    response = "Infrared: " 
+		+ ir_code.command_name(cmd)
+		+ ", " + cmdno;
+	    if (verbose)
+		response = response
+		    + ", " + cmdset.getremotename()
+		    + ", " + cmdset.getprotocol()
+		    + ", "+ cmdset.getdeviceno()
+		    + ", "+ cmdset.getsubdevice()
+		    + (cmdset.gettoggle() ? ", toggle, " : "")
+		    ;
+	    ;
+	    break;
+	case commandset.web_api:
+	case commandset.serial:
+	case commandset.tcp:
+	case commandset.udp:
+	    response = commandset.toString(cmdset.gettype()) + ": "
+		+ ir_code.command_name(cmd) + ", '" + transmit + "'";
+	    break;
+	default:
+	    response = commandset.toString(cmdset.gettype()) + ": " 
+		+ ir_code.command_name(cmd);
+	    break;
+	}
+	return response;
     }
 
-    public String toString(commandtype_t type) {
-        String response = "";
-        switch (type) {
-            case ir:
-                response = "Infrared: " + cmd + ", " + cmdno;
-                ;
-                break;
-            case web_api:
-            case serial:
-                response = "Serial: " + cmd + ", '" + transmit + "'";
-                break;
-            case tcp:
-            case udp:
-            default:
-                response = type + ", " + cmd;
-                break;
-        }
-        return response;
+    public String toString(int type) {
+	String response = "";
+	switch (type) {
+	case commandset.ir:
+	    response = "Infrared: " 
+		+ ir_code.command_name(cmd)
+		+ ", " + cmdno;
+	    ;
+	    break;
+	case commandset.web_api:
+	case commandset.serial:
+	    response = "Serial: "
+		+ ir_code.command_name(cmd) + ", '"
+		+ transmit + "'";
+	    break;
+	case commandset.tcp:
+	case commandset.udp:
+	default:
+	    response = commandset.toString(type) + ", " + ir_code.command_name(cmd);
+	    break;
+	}
+	return response;
     }
 
-    /*public String toString(String type) {
-    return toString(commandset.toInt(type));
-    }*/
-    public command_t get_cmd() {
-        return cmd;
+    public String toString(String type) {
+	return toString(commandset.toInt(type));
     }
 
-    public short get_cmdno() {
-        return cmdno;
+    public int getcmd() {
+	return cmd;
     }
 
-    public String get_name() {
-        return name;
+    public short getcmdno() {
+	return cmdno;
     }
 
-    public String get_transmit() {
-        return transmit;
+    public String getname() {
+	return name;
+    }
+
+    public String gettransmit() {
+	return transmit;
     }
 
     public int get_response_lines() {
-        return response_lines;
+	return response_lines;
     }
 
     public String get_response_ending() {
-        return response_ending;
+	return response_ending;
     }
 
     public String get_expected_response() {
-        return expected_response;
-    }
-
-    public String get_remark() {
-        return remark;
+	return expected_response;
     }
 
     public String[] get_arguments() {
-        return arguments;
+	return arguments;
     }
 
-    public String get_ccf_toggle_0() {
-        return ccf_toggle_0;
-    }
-
-    public String get_ccf_toggle_1() {
-        return ccf_toggle_1;
-    }
-
-    private void setup(command_t cmd, short cmdno, String name, String transmit,
-            int response_lines, String response_ending,
-            String expected_response, String remark,
-            String[] arguments,
-            String ccf_toggle_0, String ccf_toggle_1) {
-        this.cmd = cmd;
-        this.cmdno = cmdno;
-        this.name = name;
-        this.transmit = transmit;
-        this.response_lines = response_lines;
-        this.response_ending = response_ending;
-        this.expected_response = expected_response;
-        this.remark = remark;
-        this.arguments = arguments;
-        this.ccf_toggle_0 = ccf_toggle_0;
-        this.ccf_toggle_1 = ccf_toggle_1;
+    private void setup(int cmd, short cmdno, String name, String transmit,
+		       int response_lines, String response_ending, 
+		       String expected_response,
+		       String[] arguments) {
+	this.cmd = cmd;
+	this.cmdno = cmdno;
+	this.name = name;
+	this.transmit = transmit;
+	this.response_lines = response_lines;
+	this.response_ending = response_ending;
+	this.expected_response = expected_response;
+	this.arguments = arguments;
     }
 
     public commandset_entry(String cmdname, String cmdno, String name,
-            String transmit, String response_lines,
-            String response_end,
-            String expected_response, String remark, String[] arguments,
-            String ccf_toggle_0, String ccf_toggle_1) {
-        short cmdnumber =
-                cmdno.equals("")
-                ? -1
-                : ((cmdno.length() > 2 && cmdno.startsWith("0x")) ? Short.parseShort(cmdno.substring(2), 16)
-                : Short.parseShort(cmdno));
-
-        setup(command_t.parse(cmdname), cmdnumber, name, transmit,
-                response_lines.equals("") ? 0 : Integer.parseInt(response_lines),
-                response_end, expected_response, remark, arguments, ccf_toggle_0, ccf_toggle_1);
+			    String transmit, String response_lines,
+			    String response_end,
+			    String expected_response, String[] arguments) {
+	short cmdnumber = 
+	    cmdno.equals("") ? -1 : 
+	    (cmdno.length() > 2 && cmdno.charAt(0) == '0' && cmdno.charAt(1) == 'x') ? Short.parseShort(cmdno.substring(2),16) :
+	    Short.parseShort(cmdno);
+	setup(ir_code.decode_command(cmdname), cmdnumber, name, transmit,
+	      response_lines.equals("") ? 0 : Integer.parseInt(response_lines),
+	      response_end, expected_response, arguments);
     }
 }

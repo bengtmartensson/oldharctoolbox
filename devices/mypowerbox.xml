@@ -3,11 +3,8 @@
  "../dtds/devices.dtd">
 <devices>
   <device id="mypowerbox" name="mypowerbox" vendor="Bengt Martensson" model="xyz" type="ha">
-    <jp1data>
-      <setupcode value="1877"/>
-    </jp1data>
     <commandset type="ir" protocol="rc5" deviceno="12" toggle="no" remotename="mypowerbox">
-      <command cmdref="all_off" cmdno="0"/>
+      <command cmdref="cmd_all_off" cmdno="0"/>
       <command cmdref="cmd_1toggle" cmdno="1"/>
       <command cmdref="cmd_2toggle" cmdno="2"/>
       <command cmdref="cmd_3toggle" cmdno="3"/>
@@ -16,7 +13,7 @@
       <command cmdref="cmd_6toggle" cmdno="6"/>
       <command cmdref="cmd_7toggle" cmdno="7"/>
       <command cmdref="cmd_8toggle" cmdno="8"/>
-      <command cmdref="all_on" cmdno="9"/>
+      <command cmdref="cmd_all_on" cmdno="9"/>
 
       <command cmdref="cmd_1on" cmdno="11"/>
       <command cmdref="cmd_2on" cmdno="12"/>
@@ -37,7 +34,7 @@
       <command cmdref="cmd_8off" cmdno="28"/>
     </commandset>
     <commandset type="serial" protocol="rs232_2400_8n1">
-      <command cmdref="all_off" transmit="C\rA\r"/>
+      <command cmdref="cmd_all_off" transmit="C\rA\r"/>
       <command cmdref="cmd_1toggle" transmit="T\r1\r"/>
       <command cmdref="cmd_2toggle" transmit="T\r2\r"/>
       <command cmdref="cmd_3toggle" transmit="T\r3\r"/>
@@ -46,7 +43,7 @@
       <command cmdref="cmd_6toggle" transmit="T\r6\r"/>
       <command cmdref="cmd_7toggle" transmit="T\r7\r"/>
       <command cmdref="cmd_8toggle" transmit="T\r8\r"/>
-      <command cmdref="all_on"  transmit="S\rA\r"/>
+      <command cmdref="cmd_all_on"  transmit="S\rA\r"/>
 
       <command cmdref="cmd_1on" transmit="S\r1\r"/>
       <command cmdref="cmd_2on" transmit="S\r2\r"/>

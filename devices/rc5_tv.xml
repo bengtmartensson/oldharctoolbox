@@ -14,18 +14,18 @@
       <command cmdref="cmd_7" 				cmdno="7"/>
       <command cmdref="cmd_8" 				cmdno="8"/>
       <command cmdref="cmd_9" 				cmdno="9"/>
-      <command cmdref="power_toggle" 		cmdno="12"/>
-      <command cmdref="in_tv"			cmdno="63"/>
-      <command cmdref="channel_up" 			cmdno="32"/>
-      <command cmdref="channel_down" 		cmdno="33"/>
-      <command cmdref="mute_toggle" 		cmdno="13"/>
-      <command cmdref="last_channel" 		cmdno="34"/>
-      <command cmdref="volume_up" 			cmdno="16"/>
-      <command cmdref="volume_down" 		cmdno="17"/>
-      <command cmdref="PP" 				cmdno="14"/>
-      <command cmdref="info" 			cmdno="15"/>
-      <command cmdref="brightness_down" 		cmdno="19"/>
-      <command cmdref="brightness_up" 		cmdno="18"/>
+      <command cmdref="cmd_power_toggle" 		cmdno="12"/>
+      <command cmdref="cmd_in_tv"			cmdno="63"/>
+      <command cmdref="cmd_channel_up" 			cmdno="32"/>
+      <command cmdref="cmd_channel_down" 		cmdno="33"/>
+      <command cmdref="cmd_mute_toggle" 		cmdno="13"/>
+      <command cmdref="cmd_last_channel" 		cmdno="34"/>
+      <command cmdref="cmd_volume_up" 			cmdno="16"/>
+      <command cmdref="cmd_volume_down" 		cmdno="17"/>
+      <command cmdref="cmd_PP" 				cmdno="14"/>
+      <command cmdref="cmd_info" 			cmdno="15"/>
+      <command cmdref="cmd_brightness_down" 		cmdno="19"/>
+      <command cmdref="cmd_brightness_up" 		cmdno="18"/>
     </commandset>
   </device>
 </devices>

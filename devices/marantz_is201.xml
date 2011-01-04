@@ -2,154 +2,151 @@
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
 <device id="marantz_is201" name="Marantz IS201 iPod dock" vendor="Marantz" model="is201" type="misc_audio">
-  <jp1data>
-    <setupcode value="2020"/>
-  </jp1data>
   <commandset type="ir" protocol="rc5" toggle="yes" deviceno="14" remotename="marantz_is201" original_remote="RC201IS">
-    <command cmdref="power_toggle" name="power"	cmdno="12"/>
-    <command cmdref="mute_toggle" name="power"	cmdno="13"/>
+    <command cmdref="cmd_power_toggle" name="power"	cmdno="12"/>
+    <command cmdref="cmd_mute_toggle" name="power"	cmdno="13"/>
   </commandset>
-
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="12" remotename="marantz_is201">
-    <command cmdno="01" cmdref="power_on" remark="Power On iPod"/>
-    <command cmdno="02" cmdref="power_off" remark="Power Off iPod (Charging)"/>
+<!--
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="12" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_power_on" remark="Power On iPod"/>
+    <command cmdno="02" cmdref="cmd_power_off" remark="Power Off iPod (Charging)"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="13" remotename="marantz_is201">
-    <command cmdno="00" cmdref="mute_on" remark="Mute On"/>
-    <command cmdno="01" cmdref="mute_off" remark="Mute Off"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="13" remotename="marantz_is201">
+    <command cmdno="00" cmdref="cmd_mute_on" remark="Mute On"/>
+    <command cmdno="01" cmdref="cmd_mute_off" remark="Mute Off"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="28" remotename="marantz_is201">
-    <command cmdno="01" cmdref="repeat" remark="Select Repeat mode (1Track > All > Repeat Off ) togle"/>
-    <command cmdno="02" cmdref="repeat_track" remark="Repeat Track"/>
-    <command cmdno="03" cmdref="repeat_all" remark="Repeat All"/>
-    <command cmdno="04" cmdref="repeat_off" remark="Repeat Off"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="28" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_repeat" remark="Select Repeat mode (1Track > All > Repeat Off ) togle"/>
+    <command cmdno="02" cmdref="cmd_repeat_track" remark="Repeat Track"/>
+    <command cmdno="03" cmdref="cmd_repeat_all" remark="Repeat All"/>
+    <command cmdno="04" cmdref="cmd_repeat_off" remark="Repeat Off"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="29" remotename="marantz_is201">
-    <command cmdno="01" cmdref="shuffle" remark="Select Shuffle mode (Song >Album > Shuffle Off) toggle"/>
-    <command cmdno="02" cmdref="shuffle_songs" remark="Shuffle by Songs"/>
-    <command cmdno="03" cmdref="shuffle_albums" remark="Shuffle by Albums"/>
-    <command cmdno="04" cmdref="shuffle_off" remark="Shuffle Off"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="29" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_shuffle" remark="Select Shuffle mode (Song >Album > Shuffle Off) toggle"/>
+    <command cmdno="02" cmdref="cmd_shuffle_songs" remark="Shuffle by Songs"/>
+    <command cmdno="03" cmdref="cmd_shuffle_albums" remark="Shuffle by Albums"/>
+    <command cmdno="04" cmdref="cmd_shuffle_off" remark="Shuffle Off"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="13" remotename="marantz_is201">
-    <command cmdno="01" cmdref="fast_forward" remark="Fast Forward"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="13" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_fast_forward" remark="Fast Forward"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="31" remotename="marantz_is201">
-    <command cmdno="01" cmdref="rewind"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="31" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_rewind"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="32" remotename="marantz_is201">
-    <command cmdno="01" cmdref="next" remark="Next Track"/>
-    <command cmdno="02" cmdref="next_album" remark="Select Next Album"/>
-    <command cmdno="03" cmdref="next_playlist" remark="Select Next Playlist"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="32" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_next_track" remark="Next Track"/>
+<command cmdno="02" cmdref="cmd_next_album" remark="Select Next Album"/>
+<command cmdno="03" cmdref="cmd_next_playlist" remark="Select Next Playlist"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="33" remotename="marantz_is201">
-    <command cmdno="01" cmdref="previous" remark="Previous Track"/>
-    <command cmdno="02" cmdref="previous_album" remark="Select Previous Album"/>
-    <command cmdno="03" cmdref="previous_playlist" remark="Select Previous Playlist"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="33" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_previous_track" remark="Previous Track"/>
+    <command cmdno="02" cmdref="cmd_previous_album" remark="Select Previous Album"/>
+    <command cmdno="03" cmdref="cmd_previous_playlist" remark="Select Previous Playlist"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="36" remotename="marantz_is201">
-    <command cmdno="01" cmdref="operation_mode" remark="Operation mode (Display OSD > Display LCD on iPod) toggle"/>
-    <command cmdno="02" cmdref="mode_osd_sidplay" remark="OSD Display mode (2way control)"/>
-    <command cmdno="03" cmdref="mode_ipod_lcd_display" remark="iPod LCD Display mode (Standard mode)"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="36" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_operation_mode" remark="Operation mode (Display OSD > Display LCD on iPod) toggle"/>
+    <command cmdno="02" cmdref="cmd_mode_osd_sidplay" remark="OSD Display mode (2way control)"/>
+    <command cmdno="03" cmdref="cmd_mode_ipod_lcd_display" remark="iPod LCD Display mode (Standard mode)"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="41" remotename="marantz_is201">
-    <command cmdno="01" cmdref="sort" remark="Sort mode (Artist/Album/Song/Genre/Composer/Play list/Podcasting/Audiobook) toggle"/>
-    <command cmdno="02" cmdref="sort_artist" remark="Sort by Artist"/>
-    <command cmdno="03" cmdref="sort_album" remark="Sort by Album"/>
-    <command cmdno="04" cmdref="sort_song" remark="Sort by Song"/>
-    <command cmdno="05" cmdref="sort_genres" remark="Sort by Genres"/>
-    <command cmdno="06" cmdref="sort_composer" remark="Sort byComposer"/>
-    <command cmdno="07" cmdref="sort_playlist" remark="Sort by Play-List"/>
-    <command cmdno="08" cmdref="sort_podcasting" remark="Sort by Podcasting"/>
-    <command cmdno="09" cmdref="sort_audiobook" remark="Sort by Audio Books"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="41" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_sort" remark="Sort mode (Artist/Album/Song/Genre/Composer/Play list/Podcasting/Audiobook) toggle"/>
+    <command cmdno="02" cmdref="cmd_sort_artist" remark="Sort by Artist"/>
+    <command cmdno="03" cmdref="cmd_sort_album" remark="Sort by Album"/>
+    <command cmdno="04" cmdref="cmd_sort_song" remark="Sort by Song"/>
+    <command cmdno="05" cmdref="cmd_sort_genres" remark="Sort by Genres"/>
+    <command cmdno="06" cmdref="cmd_sort_composer" remark="Sort byComposer"/>
+    <command cmdno="07" cmdref="cmd_sort_playlist" remark="Sort by Play-List"/>
+    <command cmdno="08" cmdref="cmd_sort_podcasting" remark="Sort by Podcasting"/>
+    <command cmdno="09" cmdref="cmd_sort_audiobook" remark="Sort by Audio Books"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="48" remotename="marantz_is201">
-    <command cmdno="01" cmdref="pause_toggle" remark="Pause"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="48" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_pause_toggle" remark="Pause"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="53" remotename="marantz_is201">
-    <command cmdno="01" cmdref="play_pause" remark="Play/Pause toggle"/>
-    <command cmdno="02" cmdref="play" remark="Play"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="53" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_play_pause" remark="Play/Pause toggle"/>
+    <command cmdno="02" cmdref="cmd_play" remark="Play"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="54" remotename="marantz_is201">
-    <command cmdno="01" cmdref="stop"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="54" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_stop"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="80" remotename="marantz_is201">
-    <command cmdno="01" cmdref="up" remark="Select contents up"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="80" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_up" remark="Select contents up"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="81" remotename="marantz_is201">
-    <command cmdno="01" cmdref="down" remark="Select contents down"/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="81" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_down" remark="Select contents down"/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="82" remotename="marantz_is201">
-    <command cmdno="01" cmdref="menu" remark="Menu or Return "/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="82" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_menu" remark="Menu or Return "/>
   </commandset>
-  <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="87" remotename="marantz_is201">
-    <command cmdno="01" cmdref="ok" remark="Enter "/>
+  <commandset type="ir" protocol="rc6" deviceno="14" subdevice="87" remotename="marantz_is201">
+    <command cmdno="01" cmdref="cmd_ok" remark="Enter "/>
   </commandset>
-
+-->
   <!--commandset type="ir" protocol="rc5" toggle="yes" deviceno="14" remotename="marantz_is201">
-    <command cmdref="sort" 				cmdno="33"/>
-    <command cmdref="menu" 				cmdno="82"/>
-    <command cmdref="up" 				cmdno="80"/>
-    <command cmdref="down" 				cmdno="81"/>
-    <command cmdref="ok" 				cmdno=""/>
-    <command cmdref="next" 				cmdno=""/>
-    <command cmdref="previous" 				cmdno=""/>
-    <command cmdref="play_pause" 			cmdno=""/>
-    <command cmdref="repeat" 				cmdno=""/>
-    <command cmdref="shuffle" 				cmdno=""/>
-    <command cmdref="album_up" 				cmdno=""/>
-    <command cmdref="album_down" 			cmdno=""/>
-    <command cmdref="playlist_up" 			cmdno=""/>
-    <command cmdref="playlist_down" 			cmdno=""/>
+    <command cmdref="cmd_sort" 				cmdno="33"/>
+    <command cmdref="cmd_menu" 				cmdno="82"/>
+    <command cmdref="cmd_up" 				cmdno="80"/>
+    <command cmdref="cmd_down" 				cmdno="81"/>
+    <command cmdref="cmd_ok" 				cmdno=""/>
+    <command cmdref="cmd_next" 				cmdno=""/>
+    <command cmdref="cmd_previous" 				cmdno=""/>
+    <command cmdref="cmd_play_pause" 			cmdno=""/>
+    <command cmdref="cmd_repeat" 				cmdno=""/>
+    <command cmdref="cmd_shuffle" 				cmdno=""/>
+    <command cmdref="cmd_album_up" 				cmdno=""/>
+    <command cmdref="cmd_album_down" 			cmdno=""/>
+    <command cmdref="cmd_playlist_up" 			cmdno=""/>
+    <command cmdref="cmd_playlist_down" 			cmdno=""/>
   </commandset-->
 
   <commandset type="serial" protocol="rs232_9600_8n1" prefix="@" suffix="\r">
-    <command cmdref="power_toggle" name="Power" transmit="PWR:0" response_lines="1"/>
-    <command cmdref="power_off" transmit="PWR:1" response_lines="1"/>
-    <command cmdref="power_on"  transmit="PWR:2" response_lines="1"/>
+    <command cmdref="cmd_power_toggle" name="Power" transmit="PWR:0" response_lines="1"/>
+    <command cmdref="cmd_power_off" transmit="PWR:1" response_lines="1"/>
+    <command cmdref="cmd_power_on"  transmit="PWR:2" response_lines="1"/>
     <command cmdref="get_power"  transmit="PWR:?" response_lines="1"/><!-- doc sez PWR? -->
-    <command cmdref="mute_toggle" transmit="AMT:0" response_lines="1"/><!-- broken, returns status -->
-    <command cmdref="mute_on" transmit="AMT:1" response_lines="1"/><!-- inverted semantic -->
-    <command cmdref="mute_off" transmit="AMT:2" response_lines="1"/><!-- inverted semantic -->
-    <command cmdref="stop" transmit="PMD:1" response_lines="1"/>
-    <command cmdref="pause_on" transmit="PMD:2" response_lines="1"/>
-    <command cmdref="play" transmit="PMD:3" response_lines="1"/>
+    <command cmdref="cmd_mute_toggle" transmit="AMT:0" response_lines="1"/><!-- broken, returns status -->
+    <command cmdref="cmd_mute_on" transmit="AMT:1" response_lines="1"/><!-- inverted semantic -->
+    <command cmdref="cmd_mute_off" transmit="AMT:2" response_lines="1"/><!-- inverted semantic -->
+    <command cmdref="cmd_stop" transmit="PMD:1" response_lines="1"/>
+    <command cmdref="cmd_pause_on" transmit="PMD:2" response_lines="1"/>
+    <command cmdref="cmd_play" transmit="PMD:3" response_lines="1"/>
     <command cmdref="get_mode" transmit="PMD:?" response_lines="1"/><!-- doc sez PMD? -->
-    <command cmdref="next" transmit="GOT:0" response_lines="1"/>
-    <command cmdref="previous" transmit="GOT:1" response_lines="1"/>
-    <command cmdref="menu" transmit="MNU:0" response_lines="1"/>
-    <command cmdref="up" transmit="CUR:1" response_lines="1"/>
-    <command cmdref="down" transmit="CUR:2" response_lines="1"/>
+    <command cmdref="cmd_next" transmit="GOT:0" response_lines="1"/>
+    <command cmdref="cmd_previous" transmit="GOT:1" response_lines="1"/>
+    <command cmdref="cmd_menu" transmit="MNU:0" response_lines="1"/>
+    <command cmdref="cmd_up" transmit="CUR:1" response_lines="1"/>
+    <command cmdref="cmd_down" transmit="CUR:2" response_lines="1"/>
 
-    <command cmdref="osd" transmit="MOD:0" response_lines="1"/>
-    <command cmdref="osd_on" transmit="MOD:1" response_lines="1"/>
-    <command cmdref="osd_off" transmit="MOD:2" response_lines="1"/>
+    <command cmdref="cmd_osd" transmit="MOD:0" response_lines="1"/>
+    <command cmdref="cmd_osd_on" transmit="MOD:1" response_lines="1"/>
+    <command cmdref="cmd_osd_off" transmit="MOD:2" response_lines="1"/>
     <command cmdref="get_osd" transmit="MOD:?" response_lines="1"/>
 
-    <command cmdref="ok" transmit="ENT:0" response_lines="1"/>
+    <command cmdref="cmd_ok" transmit="ENT:0" response_lines="1"/>
 
-    <command cmdref="shuffle" transmit="RDM:0" response_lines="1"/>
-    <command cmdref="shuffle_off" transmit="RDM:1" response_lines="1"/>
-    <command cmdref="shuffle_songs" transmit="RDM:2" response_lines="1"/>
-    <command cmdref="shuffle_albums" transmit="RDM:4" response_lines="1"/>
+    <command cmdref="cmd_shuffle" transmit="RDM:0" response_lines="1"/>
+    <command cmdref="cmd_shuffle_off" transmit="RDM:1" response_lines="1"/>
+    <command cmdref="cmd_shuffle_song" transmit="RDM:2" response_lines="1"/>
+    <command cmdref="cmd_shuffle_album" transmit="RDM:4" response_lines="1"/>
     <command cmdref="get_shuffle" transmit="RDM:?" response_lines="1"/>
-    <command cmdref="repeat" transmit="REP:0" response_lines="1"/>
-    <command cmdref="repeat_off" transmit="REP:1" response_lines="1"/>
-    <command cmdref="repeat_track" transmit="REP:2" response_lines="1"/>
-    <command cmdref="repeat_all" transmit="REP:4" response_lines="1"/>
+    <command cmdref="cmd_repeat" transmit="REP:0" response_lines="1"/>
+    <command cmdref="cmd_repeat_off" transmit="REP:1" response_lines="1"/>
+    <command cmdref="cmd_repeat_track" transmit="REP:2" response_lines="1"/>
+    <command cmdref="cmd_repeat_all" transmit="REP:4" response_lines="1"/>
     <command cmdref="get_repeat" transmit="REP:?" response_lines="1"/>
 
-    <command cmdref="playlist_up" transmit="PLL:1" response_lines="1"/>
-    <command cmdref="playlist_down" transmit="PLL:2" response_lines="1"/>
-    <command cmdref="album_up" transmit="ABL:1" response_lines="1"/>
-    <command cmdref="album_down" transmit="ABL:2" response_lines="1"/>
+    <command cmdref="cmd_playlist_up" transmit="PLL:1" response_lines="1"/>
+    <command cmdref="cmd_playlist_down" transmit="PLL:2" response_lines="1"/>
+    <command cmdref="cmd_album_up" transmit="ABL:1" response_lines="1"/>
+    <command cmdref="cmd_album_down" transmit="ABL:2" response_lines="1"/>
 
-    <command cmdref="sort" transmit="SOS:0" response_lines="1"/>
-    <command cmdref="sort_playlist" transmit="SOS:1" response_lines="1"/>
-    <command cmdref="sort_artist" transmit="SOS:2" response_lines="1"/>
-    <command cmdref="sort_album" transmit="SOS:3" response_lines="1"/>
-    <command cmdref="sort_song" transmit="SOS:5" response_lines="1"/>
-    <command cmdref="sort_audiobook" transmit="SOS:7" response_lines="1"/>
-    <command cmdref="sort_podcast" transmit="SOS:8" response_lines="1"/>
+    <command cmdref="cmd_sort" transmit="SOS:0" response_lines="1"/>
+    <command cmdref="cmd_sort_playlist" transmit="SOS:1" response_lines="1"/>
+    <command cmdref="cmd_sort_artist" transmit="SOS:2" response_lines="1"/>
+    <command cmdref="cmd_sort_album" transmit="SOS:3" response_lines="1"/>
+    <command cmdref="cmd_sort_song" transmit="SOS:5" response_lines="1"/>
+    <command cmdref="cmd_sort_audiobook" transmit="SOS:7" response_lines="1"/>
+    <command cmdref="cmd_sort_podcast" transmit="SOS:8" response_lines="1"/>
     <command cmdref="get_sort" transmit="SOS:?" response_lines="1"/>
     <command cmdref="get_track" transmit="IND:?" response_lines="1"/>
     <command cmdref="get_database" transmit="NDB:?" response_lines="1"/>
@@ -166,14 +163,14 @@
 
   <!--
   <commandset type="ir" protocol="rc5" toggle="yes" deviceno="16" original_remote="RC201IS">
-    <command cmdref="volume_up" 			cmdno="16">
+    <command cmdref="cmd_volume_up" 			cmdno="16">
       <remark>to receiver</remark>
     </command>
-    <command cmdref="volume_down" 			cmdno="17">
+    <command cmdref="cmd_volume_down" 			cmdno="17">
       <remark>to receiver</remark>
     </command>
-    <command cmdref="mode" 				cmdno="63"/>
-    <command cmdref="input" 			cmdno="32">
+    <command cmdref="cmd_mode" 				cmdno="63"/>
+    <command cmdref="cmd_input" 			cmdno="32">
       <remark>to receiver</remark>
     </command>
   </commandset>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
-<device id="computer" name="" model="generic" type="dumb" pingable_on="yes" pingable_standby="no">
-  <aliases>
-    <alias name="power_on" command="wol"/>
-  </aliases>
-  <commandset type="ip">
-    <command cmdref="ping"/>
-    <command cmdref="wol"/>
-  </commandset>
-  <xi:include href="www.xi"/>
+<device id="computer" name="" model="generic" type="dumb">
+    <aliases>
+      <alias name="power_on" command="wol"/>
+    </aliases>
+    <commandset type="ip">
+      <command cmdref="ping"/>
+      <command cmdref="wol"/>
+    </commandset>
 </device>

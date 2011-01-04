@@ -17,7 +17,7 @@
     <command cmdref="cmd_7" cmdno="7"/>
     <command cmdref="cmd_8" cmdno="8"/>
     <command cmdref="cmd_9" cmdno="9"/>
-    <command cmdref="plus10" cmdno="37"/>
+    <command cmdref="cmd_plus10" cmdno="37"/>
     <command cmdref="clear" cmdno="239"/>
     <command cmdref="title_search" cmdno="38"/><!-- ??? -->
     <command cmdref="up" cmdno="128"/>
@@ -33,15 +33,15 @@
     <command cmdref="previous" cmdno="35"/>
     <command cmdref="next" cmdno="36"/>
     <!--command cmdref="resume" cmdno="56"/--> <!-- resume (return f/ menu) ??? -->
-    <command cmdref="cmd_return" cmdno="34"/>
+    <command cmdref="return" cmdno="34"/>
     <command cmdref="repeat" cmdno="43"/>
     <!--command cmdref="tab" cmdno="50"/--> <!-- ??? -->
     <!--command cmdref="cursor" cmdno="51"/--> <!-- ??? -->
     <command cmdref="slow" cmdno="13"/>
-    <command cmdref="a" cmdno="52"/>
-    <command cmdref="b" cmdno="53"/>
-    <command cmdref="c" cmdno="54"/>
-    <command cmdref="d" cmdno="55"/>
+    <command cmdref="A" cmdno="52"/>
+    <command cmdref="B" cmdno="53"/>
+    <command cmdref="C" cmdno="54"/>
+    <command cmdref="D" cmdno="55"/>
     <command cmdref="audio" cmdno="39"/>
     <command cmdref="subtitle" cmdno="40"/>
     <command cmdref="angle" cmdno="41"/>
@@ -49,7 +49,7 @@
     <command cmdref="title" cmdno="222"/>
     <command cmdref="setup" cmdno="32"/>
     <!--command cmdref="video_output_HDMI" cmdno="159"/--><!-- ??? -->
-    <command cmdref="resolution" cmdno="78"/> <!--  (I/P selector -->
+    <command cmdref="cmd_resolution" cmdno="78"/> <!--  (I/P selector -->
     <command cmdref="display" cmdno="22"/>
     <command cmdref="dimmer" cmdno="65"/>
     <command cmdref="open_close" wakeup="yes" cmdno="245"/>
@@ -105,5 +105,7 @@ Here's how to get the above screen with the Tosh remote:
 Display - 1 -9 - 5 - Display
     -->
   </commandset>
-  <xi:include href="ping.xi"/>
+  <commandset type="ip">
+    <command cmdref="ping"/>
+  </commandset>
 </device>

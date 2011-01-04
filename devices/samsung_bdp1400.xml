@@ -30,40 +30,40 @@ FixedData=04 00 E0
     <command cmdref="cmd_7" 				cmdno="0x10"/>
     <command cmdref="cmd_8" 				cmdno="0x90"/>
     <command cmdref="cmd_9" 				cmdno="0x50"/>
-    <command cmdref="next" 				cmdno="0x88"/>
-    <command cmdref="a_b" 				cmdno="0x14"/>
-    <command cmdref="audio" 				cmdno="0xA4"/>
-    <command cmdref="yellow" 				cmdno="0xC4"/>
-    <command cmdref="home" name="exit"			cmdno="0xD4"/><!-- ??? -->
-    <command cmdref="open_close" name="open/close" 	wakeup="yes" cmdno="0x80"/>
-    <command cmdref="slow_reverse" 			cmdno="0xF0"/>
-    <command cmdref="repeat" 				cmdno="0xE4"/>
-    <command cmdref="slow_forward" 			cmdno="0x08"/>
-    <command cmdref="marker" 				cmdno="0x94"/>
-    <command cmdref="power_toggle" wakeup="yes"		cmdno="0x00"/>
-    <command cmdref="play_pause" name="play/pause" wakeup="yes" cmdno="0x28"/>
-    <command cmdref="rewind" 				cmdno="0x48"/>
-    <command cmdref="fast_forward"			cmdno="0xA8"/>
-    <command cmdref="stop" 				cmdno="0xC8"/>
-    <command cmdref="ok" 				cmdno="0x38"/>
-    <command cmdref="title" name="disc_menu"		cmdno="0xB8"/>
-    <command cmdref="up" 				cmdno="0x18"/>
-    <command cmdref="down" 				cmdno="0x98"/>
-    <command cmdref="left" 				cmdno="0xD8"/>
-    <command cmdref="right" 				cmdno="0x58"/>
-    <command cmdref="info" 				cmdno="0x78"/>
+    <command cmdref="cmd_next" 				cmdno="0x88"/>
+    <command cmdref="cmd_a_b" 				cmdno="0x14"/>
+    <command cmdref="cmd_audio" 			cmdno="0xA4"/>
+    <command cmdref="cmd_yellow" 			cmdno="0xC4"/>
+    <command cmdref="cmd_exit" 				cmdno="0xD4"/><!-- ??? -->
+    <command cmdref="cmd_open_close" name="open/close" wakeup="yes" cmdno="0x80"/>
+    <command cmdref="cmd_slow_reverse" 			cmdno="0xF0"/>
+    <command cmdref="cmd_repeat" 			cmdno="0xE4"/>
+    <command cmdref="cmd_slow_forward" 			cmdno="0x08"/>
+    <command cmdref="cmd_marker" 			cmdno="0x94"/>
+    <command cmdref="cmd_power_toggle" 			cmdno="0x00"/>
+    <command cmdref="cmd_play_pause" name="play/pause" wakeup="yes" cmdno="0x28"/>
+    <command cmdref="cmd_rewind" 			cmdno="0x48"/>
+    <command cmdref="cmd_fast_forward"			cmdno="0xA8"/>
+    <command cmdref="cmd_stop" 				cmdno="0xC8"/>
+    <command cmdref="cmd_ok" 				cmdno="0x38"/>
+    <command cmdref="cmd_title" name="disc_menu"	cmdno="0xB8"/>
+    <command cmdref="cmd_up" 				cmdno="0x18"/>
+    <command cmdref="cmd_down" 				cmdno="0x98"/>
+    <command cmdref="cmd_left" 				cmdno="0xD8"/>
+    <command cmdref="cmd_right" 			cmdno="0x58"/>
+    <command cmdref="cmd_info" 				cmdno="0x78"/>
     <command cmdref="cmd_return" 			cmdno="0xE8"/>
-    <command cmdref="previous" 				cmdno="0xB0"/>
-    <command cmdref="dvd_menu" 				cmdno="0x68"/>
-    <command cmdref="subtitle" 				cmdno="0x64"/>
-    <command cmdref="zoom" 				cmdno="0x54"/>
-    <command cmdref="slow" 				cmdno="0x70"/>
-    <command cmdref="cancel" 				cmdno="0xF8"/>
-    <command cmdref="scene_search" 			cmdno="0x30"/>
-    <command cmdref="menu" name="popup menu"		cmdno="0x04"/>
-    <command cmdref="red" 				cmdno="0x84"/>
-    <command cmdref="green" 				cmdno="0x44"/>
-    <command cmdref="blue" 				cmdno="0x24"/>
+    <command cmdref="cmd_previous" 			cmdno="0xB0"/>
+    <command cmdref="cmd_dvd_menu" 			cmdno="0x68"/>
+    <command cmdref="cmd_subtitle" 			cmdno="0x64"/>
+    <command cmdref="cmd_zoom" 				cmdno="0x54"/>
+    <command cmdref="cmd_slow" 				cmdno="0x70"/>
+    <command cmdref="cmd_cancel" 			cmdno="0xF8"/>
+    <command cmdref="cmd_scene_search" 			cmdno="0x30"/>
+    <command cmdref="cmd_menu" name="popup menu"	cmdno="0x04"/>
+    <command cmdref="cmd_red" 				cmdno="0x84"/>
+    <command cmdref="cmd_green" 			cmdno="0x44"/>
+    <command cmdref="cmd_blue" 				cmdno="0x24"/>
   </commandset>
   <commandset type="ip">
     <command cmdref="ping"/>

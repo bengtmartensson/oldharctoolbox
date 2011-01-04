@@ -2,11 +2,8 @@
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
 "../dtds/devices.dtd">
 <device id="analog_8ch_switch" name="8 channel analog switch" vendor="Bengt Martensson" model="unique!" type="misc_audio">
-  <jp1data>
-    <setupcode value="0031"/>
-  </jp1data>
   <commandset type="ir" protocol="rc5" toggle="no" deviceno="20" remotename="analog_8ch_switch">
-    <command cmdref="all_off" cmdno="0"/>
+    <command cmdref="cmd_all_off" cmdno="0"/>
     <command cmdref="cmd_1toggle" cmdno="1"/>
     <command cmdref="cmd_2toggle" cmdno="2"/>
     <command cmdref="cmd_3toggle" cmdno="3"/>
@@ -15,7 +12,7 @@
     <command cmdref="cmd_6toggle" cmdno="6"/>
     <command cmdref="cmd_7toggle" cmdno="7"/>
     <command cmdref="cmd_8toggle" cmdno="8"/>
-    <command cmdref="all_on" cmdno="9"/>
+    <command cmdref="cmd_all_on" cmdno="9"/>
 
     <command cmdref="cmd_1on" cmdno="11"/>
     <command cmdref="cmd_2on" cmdno="12"/>
@@ -35,11 +32,11 @@
     <command cmdref="cmd_7off" cmdno="27"/>
     <command cmdref="cmd_8off" cmdno="28"/>
 
-    <command cmdref="HTPC_5_1" cmdno="30"/>
-    <command cmdref="HTPC_7_1" cmdno="31"/>
+    <command cmdref="cmd_HTPC_5_1" cmdno="30"/>
+    <command cmdref="cmd_HTPC_7_1" cmdno="31"/>
     <command cmdref="cmd_2_2_2" cmdno="32"/>
-    <command cmdref="dvd_audio" cmdno="33"/>
-    <command cmdref="dvd_audio_bs" cmdno="34"/>
+    <command cmdref="cmd_dvd_audio" cmdno="33"/>
+    <command cmdref="cmd_dvd_audio_bs" cmdno="34"/>
   </commandset>
   <commandset type="serial" protocol="rs232_2400_8n1" delay_between_chars="500ms">
     <command cmdref="cmd_1toggle" transmit="T1"/>
@@ -50,7 +47,7 @@
     <command cmdref="cmd_6toggle" transmit="T6"/>
     <command cmdref="cmd_7toggle" transmit="T7"/>
     <command cmdref="cmd_8toggle" transmit="T8"/>
-    <command cmdref="all_toggle" transmit="TA"/>
+    <command cmdref="cmd_all_toggle" transmit="TA"/>
     
     <command cmdref="cmd_1on" transmit="S1"/>
     <command cmdref="cmd_2on" transmit="S2"/>
@@ -60,7 +57,7 @@
     <command cmdref="cmd_6on" transmit="S6"/>
     <command cmdref="cmd_7on" transmit="S7"/>
     <command cmdref="cmd_8on" transmit="S8"/>
-    <command cmdref="all_on" transmit="SA"/>
+    <command cmdref="cmd_all_on" transmit="SA"/>
 
     <command cmdref="cmd_1off" transmit="C1"/>
     <command cmdref="cmd_2off" transmit="C2"/>
@@ -70,6 +67,6 @@
     <command cmdref="cmd_6off" transmit="C6"/>
     <command cmdref="cmd_7off" transmit="C7"/>
     <command cmdref="cmd_8off" transmit="C8"/>
-    <command cmdref="all_off" transmit="CA"/>
+    <command cmdref="cmd_all_off" transmit="CA"/>
   </commandset>
 </device>

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
 <device id="panasonic_dvd_s75" name="Panasonic DVD S75" vendor="Panasonic" model="S75" type="dvd">
-  <jp1data>
-    <setupcode value="0490"/>
-  </jp1data>
   <commandset type="ir" protocol="panasonic" toggle="no" deviceno="176" subdevice="0" remotename="panasonic_dvd_s75">
 <!--
     <command cmdref="cmd_0"		      cmdno="0x98"/>
@@ -16,47 +13,47 @@
     <command cmdref="cmd_7"		      cmdno="0x68"/>
     <command cmdref="cmd_8"		      cmdno="0xe8"/>
     <command cmdref="cmd_9"		      cmdno="0x18"/>
-    <command cmdref="a_b"		      cmdno="0x12"/>
-    <command cmdref="a_srd"		      cmdno="0x79"/>
-    <command cmdref="angle"		      cmdno="0x09"/>
-    <command cmdref="audio"		      cmdno="0xcc"/>
-    <command cmdref="audio_only"		cmdno="0x87"/>
-    <command cmdref="clear" name="cancel"	cmdno="0xc1"/>
-    <command cmdref="depth_enh"	      cmdno="0x1b"/>
-    <command cmdref="display"	      cmdno="0x49"/>
-    <command cmdref="double_remaster"	cmdno="0x97"/>
-    <command cmdref="down"		cmdno="0x61"/>
-    <command cmdref="fast_forward"	cmdno="0xa0"/>
-    <command cmdref="group"			cmdno="0x07"/>
-    <command cmdref="left"		cmdno="0xe1"/>
-    <command cmdref="marker"		cmdno="0x71"/>
-    <command cmdref="menu"		cmdno="0x01"/>
-    <command cmdref="next"		cmdno="0x52"/>
-    <command cmdref="ok"			cmdno="0x41"/>
-    <command cmdref="open_close"		cmdno="0x80"/>
-    <command cmdref="still_advance"		cmdno="0x60"/>
-    <command cmdref="play"		cmdno="0x50"/>
-    <command cmdref="play_mode"		cmdno="0xb1"/>
-    <command cmdref="pos_mem"		cmdno="0x62"/>
-    <command cmdref="power_off"		cmdno="0xfc"/>
-    <command cmdref="power_on"		cmdno="0x7c"/>
-    <command cmdref="power_toggle"	cmdno="0xbc"/>
-    <command cmdref="previous"		cmdno="0x92"/>
-    <command cmdref="repeat"		cmdno="0x31"/>
+    <command cmdref="cmd_a_b"		      cmdno="0x12"/>
+    <command cmdref="cmd_a_srd"		      cmdno="0x79"/>
+    <command cmdref="cmd_angle"		      cmdno="0x09"/>
+    <command cmdref="cmd_audio"		      cmdno="0xcc"/>
+    <command cmdref="cmd_audio_only"		cmdno="0x87"/>
+    <command cmdref="cmd_clear" name="cancel"	cmdno="0xc1"/>
+    <command cmdref="cmd_depth_enh"	      cmdno="0x1b"/>
+    <command cmdref="cmd_display"	      cmdno="0x49"/>
+    <command cmdref="cmd_double_remaster"	cmdno="0x97"/>
+    <command cmdref="cmd_down"		cmdno="0x61"/>
+    <command cmdref="cmd_fast_forward"	cmdno="0xa0"/>
+    <command cmdref="cmd_group"			cmdno="0x07"/>
+    <command cmdref="cmd_left"		cmdno="0xe1"/>
+    <command cmdref="cmd_marker"		cmdno="0x71"/>
+    <command cmdref="cmd_menu"		cmdno="0x01"/>
+    <command cmdref="cmd_next"		cmdno="0x52"/>
+    <command cmdref="cmd_ok"			cmdno="0x41"/>
+    <command cmdref="cmd_open_close"		cmdno="0x80"/>
+    <command cmdref="cmd_still_advance"		cmdno="0x60"/>
+    <command cmdref="cmd_play"		cmdno="0x50"/>
+    <command cmdref="cmd_play_mode"		cmdno="0xb1"/>
+    <command cmdref="cmd_pos_mem"		cmdno="0x62"/>
+    <command cmdref="cmd_power_off"		cmdno="0xfc"/>
+    <command cmdref="cmd_power_on"		cmdno="0x7c"/>
+    <command cmdref="cmd_power_toggle"	cmdno="0xbc"/>
+    <command cmdref="cmd_previous"		cmdno="0x92"/>
+    <command cmdref="cmd_repeat"		cmdno="0x31"/>
     <command cmdref="cmd_return"		cmdno="0x81"/>
-    <command cmdref="rewind"		cmdno="0x20"/>
-    <command cmdref="right"			cmdno="0x11"/>
-    <command cmdref="setup"			cmdno="0x29"/>
-    <command cmdref="sleep"			cmdno="0xd7"/>
-    <command cmdref="special"		cmdno="0xa2"/>
-    <command cmdref="stop"		cmdno="0x00"/>
-    <command cmdref="subtitle"		cmdno="0x89"/>
-    <command cmdref="title"			cmdno="0xd9"/>
-    <command cmdref="two_digit" name="./.." cmdno="0x91"/>
-    <command cmdref="up"			cmdno="0xa1"/>
-    <command cmdref="vss"		cmdno="0x79"/>
-    <command cmdref="zoom"		cmdno="0x83"/>
-    <command cmdref="0xfd"		cmdno="0xfd"/>
+    <command cmdref="cmd_rewind"		cmdno="0x20"/>
+    <command cmdref="cmd_right"			cmdno="0x11"/>
+    <command cmdref="cmd_setup"			cmdno="0x29"/>
+    <command cmdref="cmd_sleep"			cmdno="0xd7"/>
+    <command cmdref="cmd_special"		cmdno="0xa2"/>
+    <command cmdref="cmd_stop"		cmdno="0x00"/>
+    <command cmdref="cmd_subtitle"		cmdno="0x89"/>
+    <command cmdref="cmd_title"			cmdno="0xd9"/>
+    <command cmdref="cmd_two_digit" name="./.." cmdno="0x91"/>
+    <command cmdref="cmd_up"			cmdno="0xa1"/>
+    <command cmdref="cmd_vss"		cmdno="0x79"/>
+    <command cmdref="cmd_zoom"		cmdno="0x83"/>
+    <command cmdref="cmd_0xfd"		cmdno="0xfd"/>
 -->
 
     <command cmdref="cmd_0" 		cmdno="25"/>
@@ -69,46 +66,46 @@
     <command cmdref="cmd_7" 		cmdno="22"/>
     <command cmdref="cmd_8" 		cmdno="23"/>
     <command cmdref="cmd_9" 		cmdno="24"/>
-    <command cmdref="a_b" 		cmdno="72"/>
-    <command cmdref="a_srd" 	cmdno="158"/>
-    <command cmdref="angle" 	cmdno="144"/>
-    <command cmdref="audio" 	cmdno="51"/>
-    <command cmdref="audio_only" 	cmdno="225"/>
-    <command cmdref="clear" 	cmdno="131"/>
-    <command cmdref="depth_enh" 	cmdno="216"/>
-    <command cmdref="osd" 		cmdno="146"/>
-    <command cmdref="double_remaster" cmdno="233"/>
-    <command cmdref="down" 		cmdno="134"/>
-    <command cmdref="fast_forward" 	cmdno="5"/>
-    <command cmdref="group" 	cmdno="224"/>
-    <command cmdref="left" 		cmdno="135"/>
-    <command cmdref="marker" 	cmdno="142"/>
-    <command cmdref="menu" 		cmdno="128"/>
-    <command cmdref="next" 		cmdno="74"/>
-    <command cmdref="ok" 		cmdno="130"/>
-    <command cmdref="open_close" 	cmdno="1"/>
-    <command cmdref="still_advance" cmdno="6"/>
-    <command cmdref="play" 		cmdno="10"/>
-    <command cmdref="play_mode" 	cmdno="141"/>
-    <command cmdref="pos_mem" 	cmdno="70"/>
-    <command cmdref="power_off" 	cmdno="63"/>
-    <command cmdref="power_on" 	cmdno="62"/>
-    <command cmdref="power_toggle" 	cmdno="61"/>
-    <command cmdref="previous" 	cmdno="73"/>
-    <command cmdref="repeat" 	cmdno="140"/>
+    <command cmdref="cmd_a_b" 		cmdno="72"/>
+    <command cmdref="cmd_a_srd" 	cmdno="158"/>
+    <command cmdref="cmd_angle" 	cmdno="144"/>
+    <command cmdref="cmd_audio" 	cmdno="51"/>
+    <command cmdref="cmd_audio_only" 	cmdno="225"/>
+    <command cmdref="cmd_clear" 	cmdno="131"/>
+    <command cmdref="cmd_depth_enh" 	cmdno="216"/>
+    <command cmdref="cmd_osd" 		cmdno="146"/>
+    <command cmdref="cmd_double_remaster" cmdno="233"/>
+    <command cmdref="cmd_down" 		cmdno="134"/>
+    <command cmdref="cmd_fast_forward" 	cmdno="5"/>
+    <command cmdref="cmd_group" 	cmdno="224"/>
+    <command cmdref="cmd_left" 		cmdno="135"/>
+    <command cmdref="cmd_marker" 	cmdno="142"/>
+    <command cmdref="cmd_menu" 		cmdno="128"/>
+    <command cmdref="cmd_next" 		cmdno="74"/>
+    <command cmdref="cmd_ok" 		cmdno="130"/>
+    <command cmdref="cmd_open_close" 	cmdno="1"/>
+    <command cmdref="cmd_still_advance" cmdno="6"/>
+    <command cmdref="cmd_play" 		cmdno="10"/>
+    <command cmdref="cmd_play_mode" 	cmdno="141"/>
+    <command cmdref="cmd_pos_mem" 	cmdno="70"/>
+    <command cmdref="cmd_power_off" 	cmdno="63"/>
+    <command cmdref="cmd_power_on" 	cmdno="62"/>
+    <command cmdref="cmd_power_toggle" 	cmdno="61"/>
+    <command cmdref="cmd_previous" 	cmdno="73"/>
+    <command cmdref="cmd_repeat" 	cmdno="140"/>
     <command cmdref="cmd_return" 	cmdno="129"/>
-    <command cmdref="rewind" 	cmdno="4"/>
-    <command cmdref="right" 	cmdno="136"/>
-    <command cmdref="setup" 	cmdno="148"/>
-    <command cmdref="sleep" 	cmdno="235"/>
-    <command cmdref="special" 	cmdno="69"/>
-    <command cmdref="stop" 		cmdno="0"/>
-    <command cmdref="subtitle" 	cmdno="145"/>
-    <command cmdref="title" 	cmdno="155"/>
-    <command cmdref="two_digit" 	cmdno="137"/>
-    <command cmdref="up" 		cmdno="133"/>
-    <command cmdref="vss" 		cmdno="158"/>
-    <command cmdref="zoom" 		cmdno="193"/>
+    <command cmdref="cmd_rewind" 	cmdno="4"/>
+    <command cmdref="cmd_right" 	cmdno="136"/>
+    <command cmdref="cmd_setup" 	cmdno="148"/>
+    <command cmdref="cmd_sleep" 	cmdno="235"/>
+    <command cmdref="cmd_special" 	cmdno="69"/>
+    <command cmdref="cmd_stop" 		cmdno="0"/>
+    <command cmdref="cmd_subtitle" 	cmdno="145"/>
+    <command cmdref="cmd_title" 	cmdno="155"/>
+    <command cmdref="cmd_two_digit" 	cmdno="137"/>
+    <command cmdref="cmd_up" 		cmdno="133"/>
+    <command cmdref="cmd_vss" 		cmdno="158"/>
+    <command cmdref="cmd_zoom" 		cmdno="193"/>
     <command cmdref="cmd_0xfd"		cmdno="0xfd"/>
   </commandset>
 </device>

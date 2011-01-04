@@ -1,66 +1,55 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
+/**
+ *
+ * @version 0.01 
+ * @author Bengt Martensson
+ */
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
+// TODO: the globalcache code should not reside here.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
-// TODO: This functionallity is not presently available from the GUI.
-// the globalcache code should not reside here.
-
-// Take care of toggling state here
 package harc;
-
-import java.util.*;
-//import java.io.*;
 
 public class protocol {
 
-    // States for toggles, one per protocol
-    private static Hashtable<String, Integer> toggle_state = new Hashtable<String, Integer>();
-
-    public static ir_code encode(String protocol_name, short deviceno,
-            short subdevice, short cmdno, toggletype toggle, boolean verbose) {
-        int itoggle = 0;
-        if (toggle == toggletype.do_toggle) {
-            itoggle = toggle_state.containsKey(protocol_name) ? 1 - toggle_state.get(protocol_name) : 0;
-            toggle_state.put(protocol_name, new Integer(itoggle));
-        }
-        ir_code ir =
-            protocol_name.equals("raw_ccf") ? new raw_ir()
-            : new protocol_parser(protocol_name, deviceno, subdevice, cmdno, itoggle);
+    public static ir_code encode(String protocol_name, short deviceno, short subdevice, short cmdno, int toggle) {
+        ir_code ir = null;
         
-        if (!ir.is_valid()) {
-            if (verbose)
-                System.err.println(protocol_name.equals("")
-                        ? "No protocol."
-                        : ("Protocol " + protocol_name + " not implemented."));
+        if (protocol_name.equals("rc5")) {
+            ir = new rc5((short) deviceno, (short) cmdno, toggle);
+        } else if (protocol_name.equals("dbox2_old")) {
+            ir = new dbox2_old((short) cmdno);
+        } /*else if (protocol_name.equals("sony12")) {
+            ir = new sony12(deviceno, cmdno);
+        } */else if (protocol_name.equals("samsung36")) {
+            ir = new samsung36(deviceno, cmdno);
+        } else if (protocol_name.equals("denon")) {
+            ir = new denon(deviceno, cmdno);
+        } else if (protocol_name.equals("denon_k")) {
+            ir = new denon_k(deviceno, subdevice, cmdno);
+        } /*else if (protocol_name.equals("nokia")) {
+            ir = new nokia(deviceno, subdevice, cmdno);
+        } else if (protocol_name.equals("panasonic")) {
+            ir = new panasonic(deviceno, subdevice, cmdno);
+        //} else if (protocol_name.equals("panasonic2")) {
+        //ir = new panasonic2(deviceno, subdevice, cmdno);
+        } */ else if (protocol_name.equals("nec1")) {
+            if (subdevice == -1) {
+                ir = new nec1(deviceno, cmdno);
+            } else {
+                ir = new nec1(deviceno, subdevice, cmdno);
+            }
+        } /* else if (protocol_name.equals("pioneer")) {
+            if (subdevice == -1) {
+                ir = new pioneer(deviceno, cmdno);
+            } else {
+                ir = new nec1(deviceno, subdevice, cmdno);
+            }
+        } else if (protocol_name.equals("nubert_ir")) {
+            ir = new nubert_ir(deviceno, cmdno);
+        } */ else {
+            System.err.println("Protocol " + protocol_name + " not implemented.");
             ir = null;
         }
         return ir;
-    }
-
-    // FIXME: throw exception (?) if protocol name not found
-    public static boolean has_toggle(String protocol_name) {
-        return protocol_parser.has_toggle(protocol_name);
-    }
-
-    public static boolean has_subdevice(String protocol_name) {
-        return protocol_parser.has_subdevice(protocol_name);
-    }
-
-    public static boolean subdevice_optional(String protocol_name) {
-        return protocol_parser.subdevice_optional(protocol_name);
     }
 
     /**
@@ -68,16 +57,21 @@ public class protocol {
      * @return Array of strings describing names of implemented protocols.
      */
     public static String[] get_protocols() {
-        return harcutils.get_basenames(harcprops.get_instance().get_protocolsdir(), harcutils.protocolfile_extension);
-    }
-
-    private static void usage(int returncode) {
-        System.err.println("Usage:\n" + "protocol [<options>] <protocol_name> <device> [<subdevice>] <commandno|min:max>" + "\nwhere options=-l,-d,-g <gc_hostname>,-t 0|1,-c <connector>,-v,-m <module>,-w <milliseconds>");
-        System.exit(returncode);
+        return new String[] {
+                    "rc5",
+                    "dbox2_old",
+                    "samsung36",
+                    "denon",
+                    "denon_k",
+                    "nec1"
+                };
     }
 
     private static void usage() {
-        usage(harcutils.exit_usage_error);
+	System.err.println("Usage:\n"
+			   + "protocol [<options>] <protocol_name> <device> [<subdevice>] <commandno|min:max>"
+			   + "\nwhere options=-d,-g <gc_hostname>,-t 0|1,-c <connector>,-v,-m <module>,-w <milliseconds>");
+	System.exit(1);
     }
 
     public static void main(String[] args) {
@@ -88,11 +82,10 @@ public class protocol {
         short subdevice = -1;
         boolean decodeir = false;
         boolean verbose = false;
-        boolean list = false;
         String gc_hostname = null;
         int gc_module = 2;
         int gc_connector = 1;
-        toggletype toggle = toggletype.toggle_0;
+        int toggle = 0;
         int wait_ms = 0;
         int arg_i = 0;
         try {
@@ -104,15 +97,9 @@ public class protocol {
                 } else if (args[arg_i].equals("-d")) {
                     arg_i++;
                     decodeir = true;
-                } else if (args[arg_i].equals("-l")) {
-                    arg_i++;
-                    list = true;
                 } else if (args[arg_i].equals("-t")) {
                     arg_i++;
-                    String t = args[arg_i++];
-                    toggle = t.equals("0") ? toggletype.toggle_0
-                            : t.equals("1") ? toggletype.toggle_1
-                            : toggletype.valueOf(t);
+                    toggle = Integer.parseInt(args[arg_i++]);
                 } else if (args[arg_i].equals("-g")) {
                     arg_i++;
                     gc_hostname = args[arg_i++];
@@ -130,11 +117,6 @@ public class protocol {
                 }
             }
 
-            if (list) {
-                harcutils.printtable("Available IR protocols:", get_protocols());
-                System.exit(harcutils.exit_success);
-            }
-
             protocol_name = args[arg_i++];
             device = Short.parseShort(args[arg_i++]);
             if (args.length - arg_i > 1) {
@@ -150,7 +132,7 @@ public class protocol {
                 max_command = Integer.parseInt(c.substring(n + 1));
                 if (max_command < min_command) {
                     System.err.println("max_command must be >= min_command");
-                    System.exit(harcutils.exit_semantic_usage_error);
+                    System.exit(2);
                 }
             }
 
@@ -159,26 +141,12 @@ public class protocol {
 
             for (int command = min_command; command <= max_command; command++) {
                 ir_code ir = encode(protocol_name, device, subdevice,
-                        (short) command, toggle, verbose);
+                        (short) command, toggle);
                 if (ir == null) {
-                    System.exit(1); // FIXME
+                    System.exit(1);
                 }
-                //if (verbose)
-                //    System.out.println(command);
-
-                if (decodeir) {
-                    try {
-                        com.hifiremote.decodeir.DecodeIR dec = new com.hifiremote.decodeir.DecodeIR(ir.raw_ccf_array());
-                        com.hifiremote.decodeir.DecodeIR.DecodedSignal[] out = dec.getDecodedSignals();
-                        if (out.length == 0)
-                            System.out.println("No decodings from DecodeIR.");
-                        for (int i = 0; i < out.length; i++) {
-                            System.out.println(out[i]);
-                        }
-                    } catch (UnsatisfiedLinkError e) {
-                        System.err.println("Did not find DecodeIR");
-                        System.exit(harcutils.exit_dynamic_link_error);
-                    }
+                if (verbose) {
+                    System.out.println(command);
                 }
 
                 if (gc != null) {
@@ -190,19 +158,27 @@ public class protocol {
                     } catch (java.io.IOException e) {
                         System.err.println("Sending to globalcache failed.");
                         System.exit(8);
-                    } catch (InterruptedException e) {
-                        System.err.println("Sending to globalcache interrupted.");
-                        System.exit(8);
                     }
                 } else
-                    System.out.println(ir.raw_ccf_string());
+                /* if (decodeir) {
+                try {
+                com.hifiremote.decodeir.DecodeIRCaller dec = new com.hifiremote.decodeir.DecodeIRCaller();
+                dec.setupCCF(ir.raw_ccf_array());
+                while (dec.decode())
+                System.out.println(dec.result_str());
+                } catch (UnsatisfiedLinkError e) {
+                System.err.println("Did not find DecodeIR");
+                System.exit(3);
+                }
+                } else */
+                System.out.println(ir.raw_ccf_string());
 
                 if (command < max_command && wait_ms > 0) {
                     try {
                         if (verbose) {
                             System.err.print("Waiting for " + wait_ms + "ms...");
                         }
-                        Thread.sleep(wait_ms);
+                        Thread.currentThread().sleep(wait_ms);
                         System.err.println();
                     } catch (java.lang.InterruptedException e) {
                         System.err.println("Interrupted...");

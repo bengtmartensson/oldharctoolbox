@@ -4,8 +4,8 @@
 <devices>
   <device id="lamp_dimmable_dumb" name="Lamp with dumb dimmer, with only one command" model="generic" type="dumb">
     <commandset type="on_off">
-      <command cmdref="power_on"/>
-      <command cmdref="power_dim"/>
+      <command cmdref="cmd_power_on"/>
+      <command cmdref="cmd_power_dim"/>
     </commandset>
   </device>
 </devices>

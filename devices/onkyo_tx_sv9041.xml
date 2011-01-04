@@ -7,7 +7,7 @@
     <command cmdref="sleep" cmdno="93"/>
     <command cmdref="main_spk_toggle" cmdno="89"/>
     <command cmdref="zone2_spk_toggle" cmdno="90"/>
-    <command cmdref="zone2_source" cmdno="204"/>
+    <command cmdref="zone2_src" cmdno="204"/>
     <command cmdref="in_tape1" cmdno="8"/>
     <command cmdref="in_phono" cmdno="10"/>
     <command cmdref="in_cd" cmdno="9"/>

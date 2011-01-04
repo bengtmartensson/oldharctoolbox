@@ -4,10 +4,10 @@
 <devices>
   <device id="lamp" name="Generic electrical consumer without memory" model="generic" type="dumb">
     <commandset type="on_off">
-      <command cmdref="power_on"/>
-      <command cmdref="power_off"/>
-      <!--command cmdref="power_toggle"/-->
-      <!--command cmdref="get_status"/-->
+      <command cmdref="cmd_power_on"/>
+      <command cmdref="cmd_power_off"/>
+      <command cmdref="cmd_power_toggle"/>
+      <command cmdref="get_status"/>
     </commandset>
   </device>
 </devices>

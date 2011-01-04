@@ -1,15 +1,9 @@
-<!-- Copying and distribution of this file, with or without modification,
-     are permitted in any medium without royalty provided the copyright
-     notice and this notice are preserved.  This file is offered as-is,
-     without any warranty.
--->
-
 <!ELEMENT macros (description?,(macro|menu|macros)+) >
 <!ATTLIST macros
 	name	ID	#REQUIRED
         visibility (public|private) "public" >
 
-<!ELEMENT macro (description?,prerequisites?,(true|false|match|command|select-src|delay|message|macrocall|cond|set-variable|get-variable)+,jump?) >
+<!ELEMENT macro (description?,prerequisites?,(true|false|match|command|select-src|delay|message|macrocall|cond|set-variable)+,jump?) >
 <!ATTLIST       macro
         name    ID #REQUIRED
         visibility (public|private) "public" >
@@ -42,18 +36,18 @@
 
 <!ELEMENT argument (#PCDATA) >
 
-<!--ELEMENT jump EMPTY >
+<!ELEMENT jump EMPTY >
 <!ATTLIST jump
         class 		(device|macro|home) "device"
         pagegroup       NMTOKEN #REQUIRED
-        page            NMTOKEN #REQUIRED -->
+        page            NMTOKEN #REQUIRED >
 
-<!--ELEMENT prerequisites (prerequisite*) -->
+<!ELEMENT prerequisites (prerequisite*) >
 
-<!--ELEMENT prerequisite (#PCDATA) >
+<!ELEMENT prerequisite (#PCDATA) >
 <!ATTLIST prerequisite
         device  NMTOKEN #IMPLIED
-        state   NMTOKEN #IMPLIED -->
+        state   NMTOKEN #IMPLIED >
 
 <!ELEMENT macrocall EMPTY >
 <!ATTLIST macrocall
@@ -63,7 +57,7 @@
 
 <!ELEMENT clause ((true|false|match|message|command|select|macrocall|delay|code|cond)+) >
 
-<!ELEMENT match ((command|get-variable)+) >
+<!ELEMENT match ((match|message|command|select|macrocall|delay|code|cond)+) >
 <!ATTLIST match
         regexp CDATA #REQUIRED >
 
@@ -90,7 +84,3 @@
 <!ATTLIST set-variable
         name    CDATA   #REQUIRED
         value   CDATA   #REQUIRED >
-
-<!ELEMENT get-variable EMPTY >
-<!ATTLIST get-variable
-        name CDATA #REQUIRED >

@@ -8,10 +8,10 @@
       <argument name="modulenumber">
       </argument>
     </command>
-    <command cmdref="blink_on" ifattribute="firmware_3" transmit="blink,1"
+    <command cmdref="cmd_blink_on" ifattribute="firmware_3" transmit="blink,1"
       response_lines="0"/>
-    <command cmdref="blink_off" ifattribute="firmware_3" transmit="blink,0" response_lines="0"/>
-    <command cmdref="set_net" ifattribute="firmware_3" transmit="set_NET,0:1,$1,$2" response_lines="0">
+    <command cmdref="cmd_blink_off" ifattribute="firmware_3" transmit="blink,0" response_lines="0"/>
+    <command cmdref="cmd_set_net" ifattribute="firmware_3" transmit="set_NET,0:1,$1,$2" response_lines="0">
       <argument name="configlock"/>
       <argument name="ip_settings"/>
     </command>
@@ -61,7 +61,7 @@
     </command>
   </commandset>
   <!-- For some reason, Globalcache ignores ping requests -->
-  <!--xi:include href="ping.xi"/-->
-  <xi:include href="www.xi"/>
-
+  <!--commandset type="ip">
+    <command cmdref="ping"/>
+  </commandset-->
 </device>

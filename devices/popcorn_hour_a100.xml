@@ -1,62 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
-<device id="popcorn_hour_a100" name="Popcorn Hour A100" vendor="Syabase Technology" model="A100" type="misc_audio">
-  <jp1data>
-    <setupcode value="1234"/>
-  </jp1data>
-  <commandset type="ir" protocol="nec1" toggle="no" remotename="popcorn_hour" deviceno="4" subdevice="203">
-    <!-- Reference: http://support.popcornhour.com/article.aspx?id=1005 -->
-    <command cmdref="cmd_0" 		cmdno="0x1b"/>
-    <command cmdref="cmd_1" 		cmdno="0x41"/>
-    <command cmdref="cmd_2" 		cmdno="0x03"/>
-    <command cmdref="cmd_3" 		cmdno="0x42"/>
-    <command cmdref="cmd_4" 		cmdno="0x45"/>
-    <command cmdref="cmd_5" 		cmdno="0x07"/>
-    <command cmdref="cmd_6" 		cmdno="0x46"/>
-    <command cmdref="cmd_7" 		cmdno="0x55"/>
-    <command cmdref="cmd_8" 		cmdno="0x17"/>
-    <command cmdref="cmd_9" 		cmdno="0x56"/>
-    <command cmdref="caps_num" 		cmdno="0x5a"/>
-    <command cmdref="delete" 		cmdno="0x59" remark="power + delete to shutdown"/>
-    <command cmdref="mute_toggle"	cmdno="0x51"/>
-    <command cmdref="page_up" 		cmdno="0x4e"/>
-    <command cmdref="page_down" 	cmdno="0x52"/>
-    <command cmdref="power_toggle"	cmdno="0x4a"/>
-    <command cmdref="cmd_return" 	cmdno="0x47"/>
-    <command cmdref="source" 		cmdno="0x05"/>
-    <command cmdref="info" 		cmdno="0x4b"/>
-    <command cmdref="home" 		cmdno="0x09"/>
-    <command cmdref="up" 		cmdno="0x06"/>
-    <command cmdref="down" 		cmdno="0x0a"/>
-    <command cmdref="left" 		cmdno="0x43"/>
-    <command cmdref="right"	 	cmdno="0x01"/>
-    <command cmdref="ok"		cmdno="0x02"/>
-    <command cmdref="file_mode" 	cmdno="0x48"/>
-    <command cmdref="setup" 		cmdno="0x0f"/>
-    <command cmdref="suspend" 		cmdno="0x4d"/>
-    <command cmdref="tv_mode" 		cmdno="0x13"/>
-    <command cmdref="play" 		cmdno="0x50"/>
-    <command cmdref="pause_toggle"	cmdno="0x54"/>
-    <command cmdref="reverse" 		cmdno="0x0e"/>
-    <command cmdref="fast_forward"	cmdno="0x0d"/>
-    <command cmdref="stop" 		cmdno="0x4c"/>
-    <command cmdref="slow" 		cmdno="0x15"/>
-    <command cmdref="next" 		cmdno="0x11"/>
-    <command cmdref="previous" 		cmdno="0x12"/>
-    <command cmdref="repeat" 		cmdno="0x57"/>
-    <command cmdref="zoom" 		cmdno="0x19"/>
-    <command cmdref="angle" 		cmdno="0x16"/>
-    <command cmdref="audio" 		cmdno="0x1a"/>
-    <command cmdref="title" 		cmdno="0x4f"/>
-    <command cmdref="subtitle" 		cmdno="0x58"/>
-    <command cmdref="time_search" 	cmdno="0x5b"/>
-    <command cmdref="red" 		cmdno="0x5f"/>
-    <command cmdref="green" 		cmdno="0x1e"/>
-    <command cmdref="yellow" 		cmdno="0x5c"/>
-    <command cmdref="blue" 		cmdno="0x1d"/>
-    <command cmdref="open_close" 	cmdno="0x44" remark="power + open/close to reset"/>
-    <command cmdref="menu" 		cmdno="0x53"/>
-  </commandset>
-  <xi:include href="ping.xi"/>
-</device>
+<devices>
+  <device id="popcorn_hour_a100" name="Popcorn Hour A100" vendor="Syabase Technology" model="A100" type="misc_audio">
+    <jp1data>
+      <setupcode value="1234"/>
+    </jp1data>
+    <commandset type="ir" protocol="nec1" toggle="no" remotename="popcorn_hour" deviceno="4" subdevice="203">
+      <!-- Reference: http://support.popcornhour.com/article.aspx?id=1005 -->
+      <command cmdref="cmd_0" 			cmdno="0x1b"/>
+      <command cmdref="cmd_1" 			cmdno="0x41"/>
+      <command cmdref="cmd_2" 			cmdno="0x03"/>
+      <command cmdref="cmd_3" 			cmdno="0x42"/>
+      <command cmdref="cmd_4" 			cmdno="0x45"/>
+      <command cmdref="cmd_5" 			cmdno="0x07"/>
+      <command cmdref="cmd_6" 			cmdno="0x46"/>
+      <command cmdref="cmd_7" 			cmdno="0x55"/>
+      <command cmdref="cmd_8" 			cmdno="0x17"/>
+      <command cmdref="cmd_9" 			cmdno="0x56"/>
+      <command cmdref="cmd_caps_num" 		cmdno="0x5a"/>
+      <command cmdref="cmd_delete" 		cmdno="0x59" remark="power + delete to shutdown"/>
+      <command cmdref="cmd_mute_toggle"		cmdno="0x51"/>
+      <command cmdref="cmd_page_up" 		cmdno="0x4e"/>
+      <command cmdref="cmd_page_down" 		cmdno="0x52"/>
+      <command cmdref="cmd_power_toggle"	cmdno="0x4a"/>
+      <command cmdref="cmd_return" 		cmdno="0x47"/>
+      <command cmdref="cmd_source" 		cmdno="0x05"/>
+      <command cmdref="cmd_info" 		cmdno="0x4b"/>
+      <command cmdref="cmd_home" 		cmdno="0x09"/>
+      <command cmdref="cmd_up" 			cmdno="0x06"/>
+      <command cmdref="cmd_down" 		cmdno="0x0a"/>
+      <command cmdref="cmd_left" 		cmdno="0x43"/>
+      <command cmdref="cmd_right"	 	cmdno="0x01"/>
+      <command cmdref="cmd_ok"		 	cmdno="0x02"/>
+      <command cmdref="cmd_file_mode" 		cmdno="0x48"/>
+      <command cmdref="cmd_setup" 		cmdno="0x0f"/>
+      <command cmdref="cmd_suspend" 		cmdno="0x4d"/>
+      <command cmdref="cmd_tv_mode" 		cmdno="0x13"/>
+      <command cmdref="cmd_play" 		cmdno="0x50"/>
+      <command cmdref="cmd_pause_toggle"	cmdno="0x54"/>
+      <command cmdref="cmd_reverse" 		cmdno="0x0e"/>
+      <command cmdref="cmd_fast_forward"	cmdno="0x0d"/>
+      <command cmdref="cmd_stop" 		cmdno="0x4c"/>
+      <command cmdref="cmd_slow" 		cmdno="0x15"/>
+      <command cmdref="cmd_next" 		cmdno="0x11"/>
+      <command cmdref="cmd_previous" 		cmdno="0x12"/>
+      <command cmdref="cmd_repeat" 		cmdno="0x57"/>
+      <command cmdref="cmd_zoom" 		cmdno="0x19"/>
+      <command cmdref="cmd_angle" 		cmdno="0x16"/>
+      <command cmdref="cmd_audio" 		cmdno="0x1a"/>
+      <command cmdref="cmd_title" 		cmdno="0x4f"/>
+      <command cmdref="cmd_subtitle" 		cmdno="0x58"/>
+      <command cmdref="cmd_time_seek" 		cmdno="0x5b"/>
+      <command cmdref="cmd_red" 		cmdno="0x5f"/>
+      <command cmdref="cmd_green" 		cmdno="0x1e"/>
+      <command cmdref="cmd_yellow" 		cmdno="0x5c"/>
+      <command cmdref="cmd_blue" 		cmdno="0x1d"/>
+      <command cmdref="cmd_open_close" 		cmdno="0x44" remark="power + open/close to reset"/>
+      <command cmdref="cmd_menu" 		cmdno="0x53"/>
+    </commandset>
+  </device>
+</devices>

@@ -1,20 +1,8 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
+/**
+ *
+ * @version 0.01 
+ * @author Bengt Martensson
+ */
 package harc;
 
 import java.io.*;
@@ -26,22 +14,9 @@ public class globalcache {
     private final static int gc_port = 4998;
     private final static int gc_first_serial_port = 4999;
     public final static String default_gc_host = "192.168.1.70";
-    // Having this static is both illogical and slightly unflexible, but
-    // MUCH simpler to implement.
-    // TODO: fix
-    private static int socket_timeout = 2000;
-
-    /** GlobalCache models */
-    public enum gc_model {
-        gc_100_06,
-        gc_100_12,
-        gc_100_18,
-        gc_unknown;
-
-        public static int default_ir_module(gc_model m) {
-            return m == gc_100_06 ? 2 : 4;
-        }
-    }
+    public final static int gc_100_06 = 1;
+    public final static int gc_100_12 = 2;
+    public final static int gc_100_18 = 3;
 
     // Configlock
     public final static int locked = 0;
@@ -51,13 +26,11 @@ public class globalcache {
     public final static int dhcp = 0;
     public final static int static_ip = 1;
 
-    /** Type of configuration of a GlobalCache in/output */
-    public enum gc_io_configuration {
-        ir,
-        sensor,
-        sensor_notify,
-        ir_nocarrier;
-    }
+    // IR/Sensor in-output configuration
+    public final static int ir = 0;
+    public final static int sensor = 1;
+    public final static int sensor_notify = 2;
+    public final static int ir_nocarrier = 3;
     /**
      * Global Cache default module for ir communication
      */
@@ -74,15 +47,11 @@ public class globalcache {
      * Global Cache ir index
      */
 
-    // should turn around at 65536, see GC API docs.
-    private static int gc_index;
+    // short, because should turn around at 65536, see GC API docs.
+    private static short gc_index;
 
     private boolean valid_connector(int c) {
         return (c > 0) && (c <= 3);
-    }
-
-    public static void set_serial_timeout(int timeout) {
-        socket_timeout = timeout;
     }
 
     /**
@@ -97,7 +66,7 @@ public class globalcache {
                 System.err.println("Can only convert learned CCF codes.");
                 System.exit(1);
             }
-            int freq = ir_code.get_frequency(Integer.parseInt(sa[1], 16));
+            int freq = ir_code.carrier_frequency(Integer.parseInt(sa[1], 16));
             int intro_length = Integer.parseInt(sa[2], 16);
 
             gc_string = "" + freq + "," + count + "," + (1 + 2 * intro_length);
@@ -112,7 +81,7 @@ public class globalcache {
         return gc_string;
     }
     private boolean verbose = true;
-    private gc_model gc_type = gc_model.gc_100_06;
+    private int gc_type = gc_100_06;
     private java.lang.Process gc_process;
 
     private static String gc_joiner(int[] array) {
@@ -126,42 +95,46 @@ public class globalcache {
     private String gc_string(ir_code code, int count) {
         int[] intro = code.get_intro_array();
         int[] repeat = code.get_repeat_array();
-        return code.get_frequency() + "," + count + "," + (1 + intro.length) + gc_joiner(intro) + gc_joiner(repeat);
+        return code.carrier_frequency() + "," + count + "," + (1 + intro.length) + gc_joiner(intro) + gc_joiner(repeat);
     }
     ;
 
-    public globalcache(String hostname, gc_model type, boolean verbose) {
+    public globalcache(String hostname, int type, boolean verbose) {
         gc_host = (hostname != null) ? hostname : default_gc_host;
-        default_ir_module = gc_model.default_ir_module(type);
+        default_ir_module = (type == gc_100_06) ? 2 : 4;
         this.verbose = verbose;
     }
 
     public globalcache(String hostname, String type, boolean verbose) {
-        this(hostname, gc_model.valueOf(type), verbose);
+        this(hostname, type_as_int(type), verbose);
+    }
+
+    private static int type_as_int(String type) {
+        return type.equals("gc_100_18") ? gc_100_18 : type.equals("gc_100_12") ? gc_100_12 : gc_100_06;
     }
 
     public globalcache(String hostname) {
-        this(hostname, /*gc_model.gc_100_06*/ gc_model.gc_unknown, false);
+        this(hostname, gc_100_06, false);
     }
 
     public globalcache(String hostname, boolean verbose) {
-        this(hostname, gc_model.gc_100_06, verbose);
+        this(hostname, gc_100_06, verbose);
     }
 
-    public globalcache(gc_model type) {
+    public globalcache(int type) {
         this(default_gc_host, type, false);
     }
 
     public globalcache(boolean verbose) {
-        this(default_gc_host, gc_model.gc_100_06, verbose);
+        this(default_gc_host, gc_100_06, verbose);
     }
 
     public globalcache() {
-        this(default_gc_host, gc_model.gc_100_06, false);
+        this(default_gc_host, gc_100_06, false);
     }
 
     public void set_verbosity(boolean verbosity) {
-        this.verbose = verbosity;
+        this.verbose = verbose;
     }
 
     private String connector_address(int module, int connector) {
@@ -170,284 +143,317 @@ public class globalcache {
 
     public String send_serial(String cmd, int serial_no, int return_lines,
             int count, int delay)
-            throws UnknownHostException, IOException, NoRouteToHostException, InterruptedException {
+            throws UnknownHostException, IOException, NoRouteToHostException {
         Socket sock = null;
-        PrintStream outToServer = null;
+        /*DataOutputStream*/        PrintStream outToServer = null;
         BufferedReader inFromServer = null;
         String result = "";
 
-        sock = socket_storage.getsocket(gc_host, gc_first_serial_port + serial_no - 1);
-        if (sock == null)
-            throw new IOException("got a null socket");
-        sock.setSoTimeout(socket_timeout);
-        outToServer = new PrintStream(sock.getOutputStream());
-        inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+        sock = new Socket(gc_host, gc_first_serial_port + serial_no - 1);
+        outToServer =
+                new /*DataOutputStream*/ PrintStream(sock.getOutputStream());
+        inFromServer =
+                new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
-        try {
-            if (cmd != null)
-                for (int c = 0; c < count; c++) {
-                    if (delay > 0 && c > 0)
-                        Thread.sleep(delay);
-
-                    outToServer.print(cmd);
-                    Thread.sleep(10);
+        for (int c = 0; c < count; c++) {
+            try {
+                if (delay > 0 && c > 0) {
+                    Thread.currentThread().sleep(delay);
                 }
-
-            for (int i = 0; i < return_lines; i++) {
-                result = result + ((i > 0) ? "\n" : "") + inFromServer.readLine();
+                outToServer./*writeBytes*/print(cmd);
+            } catch (InterruptedException e) {
             }
-
-        } catch (SocketTimeoutException e) {
-            System.err.println("Sockettimeout Globalcache: " + e.getMessage());
-            result = null;
-        } finally {
-            outToServer.close();
-            inFromServer.close();
-            socket_storage.returnsocket(sock, false);//sock.close();
         }
+
+        for (int i = 0; i < return_lines; i++) {
+            if (i > 0) {
+                result = result + "\n";
+            }
+            result = result + inFromServer.readLine();
+        }
+        sock.close();
         return result;
     }
 
     public String send_serial(String cmd, int serial_no, int return_lines)
-            throws UnknownHostException, IOException, NoRouteToHostException, InterruptedException {
+            throws UnknownHostException, IOException, NoRouteToHostException {
         return send_serial(cmd, serial_no, return_lines, 1, 0);
     }
 
+
     // Note: does not return, but loops forever!
-    public void listen_serial(int serial_no)
-            throws UnknownHostException, IOException, NoRouteToHostException, InterruptedException {
+    public void listen_serial(int serial_no) {
         Socket sock = null;
         BufferedReader inFromServer = null;
         String result = "";
-        sock = socket_storage.getsocket(gc_host, gc_first_serial_port + serial_no - 1);
-        inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
-        while (true) {
-            result = inFromServer.readLine();
-            // Ignore whitspace lines
-            if (result.trim().length() > 0) {
-                System.err.println(result);
+        try {
+            sock = new Socket(gc_host, gc_first_serial_port + serial_no - 1);
+            inFromServer =
+                    new BufferedReader(new InputStreamReader(sock.getInputStream()));
+        } catch (UnknownHostException e) {
+            System.err.println("Host " + gc_host + " does not resolve.");
+            System.exit(1);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to: " + gc_host);
+            System.exit(1);
+        }
+
+        try {
+            for (;;) {
+                result = inFromServer.readLine();
+                // Ignore whitspace lines
+                if (result.trim().length() > 0) {
+                    System.out.println(result);
+                }
             }
+        } catch (IOException e) {
+            System.err.println("Couldn't read from " + gc_host);
+            System.exit(1);
         }
     }
 
-    public String send_serial(String cmd) throws UnknownHostException, IOException, InterruptedException {
+    public String send_serial(String cmd) throws UnknownHostException, IOException {
         String result = send_serial(cmd, 1, 0);
         return result;
     }
 
-    private String send_command(String cmd, boolean blind)
-            throws UnknownHostException, IOException, InterruptedException {
-        if (verbose)
-            System.err.println("Sending command `" + cmd + "' to GlobalCache (" + gc_host + ")");
+    // Not used, at least not presently
+    private String send_command_external(String command) {
+        if (verbose) {
+            System.err.println("Sending command `" + command + "' to GlobalCache");
+        }
 
+        String cmd_array[] = new String[2];
+        cmd_array[0] = "/usr/local/bin/gc";
+        cmd_array[1] = command;
+        String result = "***";
+        try {
+            gc_process = java.lang.Runtime.getRuntime().exec(cmd_array);
+            BufferedInputStream proc_stdout = new BufferedInputStream(gc_process.getInputStream());
+            BufferedInputStream proc_stderr = new BufferedInputStream(gc_process.getErrorStream());
+            int ch;
+            proc_stderr.mark(100000); // How to get rid of this braindamage?
+            while ((ch = proc_stderr.read()) != -1);
+            proc_stderr.reset();
+            gc_process.waitFor();
+            int exit_value = gc_process.exitValue();
+            if (exit_value != 0) {
+                System.err.println("Exit value was " + exit_value);
+            }
+            if (verbose) {
+                int c;
+                while ((c = proc_stdout.read()) != -1) {
+                    System.out.write(c);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Could not exec command `" + command + "'.");
+        } catch (InterruptedException e) {
+            System.err.println("Interrupted...");
+        }
+        return result;
+    }
+
+    private String send_command(String cmd, boolean blind) throws UnknownHostException, IOException {
+        if (verbose) {
+            System.err.println("Sending command `" + cmd + "' to GlobalCache (" + gc_host + ")");
+        }
         Socket sock = null;
         PrintStream outToServer = null;
         BufferedReader inFromServer = null;
         //InputStreamReader inFromServer = null;
         String result = "";
 
-        try {
-            sock = socket_storage.getsocket(gc_host, gc_port, false);
-            if (sock == null)
-                result = "Could not get socket to Globalcache";
-            else {
-                outToServer = new PrintStream(sock.getOutputStream());
-                inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+        sock = new Socket(gc_host, gc_port);
+        outToServer = new PrintStream(sock.getOutputStream());
+        inFromServer =
+                new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
-                outToServer.print(cmd + '\r');
+        outToServer.print(cmd + '\r');
 
-                if (!blind) {
-                    while (!inFromServer.ready())
-                        Thread.sleep(20);
-
-                    result = inFromServer.readLine();
-                    while (inFromServer.ready()) {
-                        result = (result.equals("") ? "" : (result + '\n')) + inFromServer.readLine();
-                    }
-                }
+        if (!blind) {
+            result = inFromServer.readLine();// may hang
+            while (inFromServer.ready()) {
+                result = (result.equals("") ? "" : (result + '\n')) + inFromServer.readLine();
             }
-        //} catch (Exception e) {
-        //    System.err.println(e.toString() + e.getMessage());
-        } finally {
-            if (outToServer != null)
-                outToServer.close();
-            if (inFromServer != null)
-                inFromServer.close();
-            if (sock != null)
-                socket_storage.returnsocket(sock, false);//sock.close();
         }
 
+        sock.close();
+
         if (verbose) {
-            System.err.println(result);
+            System.out.println(result);
         }
 
         return result;
     }
 
-    private String[] send_command_array(String[] cmd, boolean blind, int delay_ms)
-            throws UnknownHostException, IOException, InterruptedException {
+    private String[] send_command_array(String[] cmd, boolean blind, int delay_ms) throws UnknownHostException, IOException {
         int length = cmd.length;
         String[] result = new String[length];
         Socket sock = null;
         PrintStream outToServer = null;
         BufferedReader inFromServer = null;
-        boolean was_interrupted = false;
+        //InputStreamReader inFromServer = null;
 
-        sock = socket_storage.getsocket(gc_host, gc_port);
+        sock = new Socket(gc_host, gc_port);
         outToServer = new PrintStream(sock.getOutputStream());
-        inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+        inFromServer =
+                new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
-        try {
-            for (int i = 0; i < length; i++) {
-                if (verbose)
-                    System.err.println("Sending command (array) " + cmd[i] + " to GlobalCache (" + gc_host + ")");
+        for (int i = 0; i < length; i++) {
+            if (verbose) {
+                System.err.println("Sending command (array) " + cmd[i] + " to GlobalCache (" + gc_host + ")");
+            }
+            outToServer.print(cmd[i] + '\r');
 
-                outToServer.print(cmd[i] + '\r');
+            try {
+                Thread.currentThread().sleep(delay_ms); // Yes, this is necessary
+            } catch (InterruptedException e) {
+            }
 
-                Thread.sleep(delay_ms);
-
-                if (!blind) {
-                    result[i] = inFromServer.readLine();// may hang
-                    while (inFromServer.ready()) {
-                        result[i] = (result[i].equals("") ? "" : (result[i] + '\n')) + inFromServer.readLine();
-                    }
+            if (!blind) {
+                result[i] = inFromServer.readLine();// may hang
+                while (inFromServer.ready()) {
+                    result[i] = (result[i].equals("") ? "" : (result[i] + '\n')) + inFromServer.readLine();
                 }
             }
-        } finally {
-            outToServer.close();
-            inFromServer.close();
-            socket_storage.returnsocket(sock, false);//sock.close();
         }
-        if (verbose)
-            System.err.println(result[0]);
+
+        sock.close();
+
+        if (verbose) {
+            System.out.println(result[0]);
+        }
 
         return result;
     }
 
-    public String send_command(String cmd) throws UnknownHostException, IOException, InterruptedException {
+    public String send_command(String cmd) throws UnknownHostException, IOException {
         return send_command(cmd, false);
     }
 
-    public void stop_ir(int module, int connector) throws UnknownHostException, IOException, InterruptedException {
-        send_command("stopir," + connector_address(module, connector), true);
+    public void stop_ir(int module, int connector) throws UnknownHostException, IOException {
+        send_command("stopir," + connector_address(module, connector));
     }
 
-    public void stop_ir(int connector) throws UnknownHostException, IOException, InterruptedException {
+    public void stop_ir(int connector) throws UnknownHostException, IOException {
         stop_ir(default_ir_module + ((connector - 1) / 3), (connector - 1) % 3 + 1);
     }
 
-    public void stop_ir() throws UnknownHostException, IOException, InterruptedException {
+    public void stop_ir() throws UnknownHostException, IOException {
         stop_ir(gc_default_connector);
     }
 
-    public boolean send_ir(ir_code code, int module, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
-        if (!valid_connector(connector))
+    // FIXME returnstatus
+    public boolean send_ir(ir_code code, int module, int connector, int count) throws UnknownHostException, IOException {
+        if (!valid_connector(connector)) {
             connector = gc_default_connector;
+        }
 
         String cmd = "sendir," + connector_address(module, connector) + "," + gc_index + "," + gc_string(code, count);
-        gc_index = (gc_index + 1) % 65536;
+        gc_index++;
         String result = send_command(cmd);
         return result.startsWith("completeir");
     }
 
-    public boolean send_ir(ir_code code, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(ir_code code, int connector, int count) throws UnknownHostException, IOException {
         return send_ir(code, default_ir_module + ((connector - 1) / 3), (connector - 1) % 3 + 1, count);
     }
 
-    public boolean send_ir(ir_code code, int connector) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(ir_code code, int connector) throws UnknownHostException, IOException {
         return send_ir(code, connector, gc_default_connector);
     }
 
-    public boolean send_ir(ir_code code) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(ir_code code) throws UnknownHostException, IOException {
         return send_ir(code, gc_default_connector);
     }
 
-    public boolean send_ir(String ccf_string, int module, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
-        if (!valid_connector(connector))
+    public boolean send_ir(String ccf_string, int module, int connector, int count) throws UnknownHostException, IOException {
+        if (!valid_connector(connector)) {
             connector = gc_default_connector;
+        }
 
         String cmd = "sendir," + connector_address(module, connector) + "," + gc_index + "," + ccf_string2gc_string(ccf_string, count);
-        gc_index = (gc_index + 1) % 65536;
+        gc_index++;
         String result = send_command(cmd);
         return result.startsWith("completeir");
     }
 
-    public boolean send_ir(String ccf_string, int connector) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(String ccf_string, int connector) throws UnknownHostException, IOException {
         return send_ir(ccf_string, default_ir_module, connector, gc_default_connector);
     }
 
-    public boolean send_ir(String ccf_string, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(String ccf_string, int connector, int count) throws UnknownHostException, IOException {
         return send_ir(ccf_string, default_ir_module + (connector - 1) / 3, (connector - 1) % 3 + 1, count);
     }
 
-    public String getdevices() throws UnknownHostException, IOException, InterruptedException {
+    public String getdevices() throws UnknownHostException, IOException {
         return send_command("getdevices");
     }
 
-    public String getversion(int module) throws UnknownHostException, IOException, InterruptedException {
+    public String getversion(int module) throws UnknownHostException, IOException {
         return send_command("getversion," + module);
     }
 
-    public String getversion() throws UnknownHostException, IOException, InterruptedException {
+    public String getversion() throws UnknownHostException, IOException {
         return getversion(0);
     }
 
-    public String getnet() throws UnknownHostException, IOException, InterruptedException {
+    public String getnet() throws UnknownHostException, IOException {
         return send_command("get_NET,0:1");
     }
 
-    public String setnet(String arg) throws UnknownHostException, IOException, InterruptedException {
+    public String setnet(String arg) throws UnknownHostException, IOException {
         return send_command("set_NET,0:1," + arg);
     }
 
-    public String getir(int module, int connector) throws UnknownHostException, IOException, InterruptedException {
+    public String getir(int module, int connector) throws UnknownHostException, IOException {
         return send_command("get_IR," + connector_address(module, connector));
     }
 
-    /*
     private String connector_mode(int mode) {
-    String result;
-    switch (mode) {
-    case ir:
-    result = "IR";
-    break;
-    case sensor:
-    result = "SENSOR";
-    break;
-    case sensor_notify:
-    result = "SENSOR_NOTIFY";
-    break;
-    case ir_nocarrier:
-    result = "IR_NOCARRIER";
-    break;
-    default:
-    result = "UNKNOWN";
-    }
-    return result;
-    }
-     */
-    public String setir(int module, int connector, String modestr) throws UnknownHostException, IOException, InterruptedException {
-        return send_command("set_IR," + connector_address(module, connector) + "," + modestr.toUpperCase());
+        String result;
+        switch (mode) {
+            case ir:
+                result = "IR";
+                break;
+            case sensor:
+                result = "SENSOR";
+                break;
+            case sensor_notify:
+                result = "SENSOR_NOTIFY";
+                break;
+            case ir_nocarrier:
+                result = "IR_NOCARRIER";
+                break;
+            default:
+                result = "UNKNOWN";
+        }
+        return result;
     }
 
-    public String setir(int module, int connector, gc_io_configuration mode) throws UnknownHostException, IOException {
-        return setir(module, connector, mode);
+    public String setir(int module, int connector, String modestr) throws UnknownHostException, IOException {
+        return send_command("set_IR," + connector_address(module, connector) + "," + modestr);
     }
 
-    public String getserial(int module) throws UnknownHostException, IOException, InterruptedException {
+    public String setir(int module, int connector, int mode) throws UnknownHostException, IOException {
+        return setir(module, connector, connector_mode(mode));
+    }
+
+    public String getserial(int module) throws UnknownHostException, IOException {
         return send_command("get_SERIAL," + connector_address(module, 1));
     }
 
-    public String setserial(int module, String arg) throws UnknownHostException, IOException, InterruptedException {
+    public String setserial(int module, String arg) throws UnknownHostException, IOException {
         return send_command("set_SERIAL," + connector_address(module, 1) + "," + arg);
     }
 
-    public String setserial(int module, int baudrate) throws UnknownHostException, IOException, InterruptedException {
+    public String setserial(int module, int baudrate) throws UnknownHostException, IOException {
         return send_command("set_SERIAL," + connector_address(module, 1) + "," + baudrate);
     }
 
-    public int getstate(int module, int connector) throws UnknownHostException, IOException, InterruptedException {
+    public int getstate(int module, int connector) throws UnknownHostException, IOException {
         int result = -1;
         try {
             result = Integer.parseInt(send_command("getstate," + connector_address(module,
@@ -458,33 +464,33 @@ public class globalcache {
         return result;
     }
 
-    public int getstate(int connector) throws UnknownHostException, IOException, InterruptedException {
+    public int getstate(int connector) throws UnknownHostException, IOException {
         return getstate(default_ir_module + ((connector - 1) / 3), (connector - 1) % 3 + 1);
     }
 
     // Seems quite inefficient
-    public boolean togglestate(int connector) throws UnknownHostException, IOException, InterruptedException {
+    public boolean togglestate(int connector) throws UnknownHostException, IOException {
         return setstate(default_relay_module, connector,
                 1 - getstate(default_relay_module, connector));
     }
 
-    public boolean setstate(int module, int connector, int state) throws UnknownHostException, IOException, InterruptedException {
+    public boolean setstate(int module, int connector, int state) throws UnknownHostException, IOException {
         String result = send_command("setstate," + connector_address(module, connector) + "," + (state == 0 ? 0 : 1));
         if (verbose) {
-            System.err.println(result.substring(0, 5));
+            System.out.println(result.substring(0, 5));
         }
         return result.substring(0, 5).equals("state");
     }
 
-    public boolean setstate(int connector, int state) throws UnknownHostException, IOException, InterruptedException {
+    public boolean setstate(int connector, int state) throws UnknownHostException, IOException {
         return setstate(default_relay_module, connector, state);
     }
 
-    public boolean setstate(int connector, boolean on_off) throws UnknownHostException, IOException, InterruptedException {
+    public boolean setstate(int connector, boolean on_off) throws UnknownHostException, IOException {
         return setstate(connector, on_off ? 1 : 0);
     }
 
-    public boolean pulsestate(int module, int connector) throws UnknownHostException, IOException, InterruptedException {
+    public boolean pulsestate(int module, int connector) throws UnknownHostException, IOException {
         String[] cmd = new String[2];
         cmd[0] = "setstate," + connector_address(module, connector) + ",1";
         cmd[1] = "setstate," + connector_address(module, connector) + ",0";
@@ -493,32 +499,18 @@ public class globalcache {
         return true;
     }
 
-    public boolean pulsestate(int connector) throws UnknownHostException, IOException, InterruptedException {
+    public boolean pulsestate(int connector) throws UnknownHostException, IOException {
         return pulsestate(default_relay_module, connector);
     }
 
-    public void set_blink(int arg) throws UnknownHostException, IOException, InterruptedException {
+    public void set_blink(int arg) throws UnknownHostException, IOException {
         send_command("blink," + arg, true);
-    }
-
-    public boolean is_valid() {
-        try {
-            String result = getdevices();
-        } catch (Exception e) {
-            System.err.println(e.toString());
-            return false;
-        }
-        return true;
-    }
-
-    public static amx_beacon.result listen_beacon() {
-        return amx_beacon.listen_for("-Make", "GlobalCache");
     }
 
     public static void usage() {
         System.err.println("Usage:");
         System.err.println("globalcache [options] <command> [<argument>]");
-        System.err.println("where options=-# <count>,-h <hostname>,-c <connector>,-m <module>,-b <baudrate>,-v,-B");
+        System.err.println("where options=-# <count>,-h <hostname>,-c <connector>,-m <module>,-b <baudrate>,-v");
         System.err.println("and command=send_ir,send_serial,listen_serial,set_relay,get_devices,get_version,set_blink,[set|get]_serial,[set|get]_ir,[set|get]_net,[get|set]_state");
         System.exit(1);
     }
@@ -529,11 +521,7 @@ public class globalcache {
         int module = 2;
         int count = 1;
         boolean verbose = false;
-        boolean beacon = false;
         int baudrate = 0; // invalid value
-        globalcache gc = null;
-        String cmd = null;
-        String arg = null;
 
         int arg_i = 0;
 
@@ -557,33 +545,19 @@ public class globalcache {
                 } else if (args[arg_i].equals("-v")) {
                     verbose = true;
                     arg_i++;
-                } else if (args[arg_i].equals("-B")) {
-                    beacon = true;
-                    arg_i++;
                 } else {
                     usage();
                 }
             }
-            if (!beacon) {
-                gc = new globalcache(hostname, verbose);
-                cmd = args[arg_i];
-                arg = (args.length > arg_i + 1) ? args[arg_i + 1] : "";
-            }
 
-        } catch (ArrayIndexOutOfBoundsException e) {
-            usage();
-        }
+            globalcache gc = new globalcache(hostname, verbose);
 
-        
+            String cmd = args[arg_i];
+            String arg = (args.length > arg_i + 1) ? args[arg_i + 1] : "";
 
-        String output = "";
+            String output = "";
 
-        if (beacon) {
-            amx_beacon.result r = listen_beacon();
-            System.err.println(r);
-        } else {
             try {
-
                 if (cmd.equals("set_blink")) {
                     if (arg.equals("0")) {
                         gc.set_blink(0);
@@ -634,8 +608,6 @@ public class globalcache {
                     }
 
                     output = gc.send_serial(transmit, module, 0);
-                } else if (cmd.equals("stop_ir")) {
-                    gc.stop_ir(module, connector);
                 } else if (cmd.equals("listen_serial")) {
                     System.err.println("Press Ctrl-C to interrupt.");
                     // Never returns
@@ -649,9 +621,10 @@ public class globalcache {
             } catch (IOException e) {
                 System.err.println("IOException occured.");
                 System.exit(1);
-            } catch (InterruptedException e) {
             }
-            System.err.println(output);
+            System.out.println(output);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            usage();
         }
     }
 }

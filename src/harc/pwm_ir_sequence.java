@@ -1,28 +1,10 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
+/**
+ *
+ * @version 0.01 
+ * @author Bengt Martensson
+ */
 
 package harc;
-
-/**
- * @deprecated
- * Superclass for ir modulation protocol based upon pulse width modulation (PWM).
- * Deprecated since defining these protocol in xml files is much easier and better
- * than writing derived Java classes.
- */
 
 public class pwm_ir_sequence extends modulated_ir_sequence {
     private pulse_pair code0;
@@ -55,12 +37,10 @@ public class pwm_ir_sequence extends modulated_ir_sequence {
 	appenddata(new int[]{is_interlude});
     }
 
-    @Override
     public boolean nonempty() {
 	return (data.length > 0) || ! leadin.is_zero() || ! leadout.is_zero() || leadbetween.is_zero();
     }
 
-    @Override
     public int[] int_array() {
 	int len = (repeat_leadin ? count : 1) * (leadin.is_zero() ? 0 : 2) 
 	    + 2*count*data.length

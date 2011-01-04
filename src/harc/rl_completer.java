@@ -1,20 +1,3 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
 package harc;
 
 import org.gnu.readline.*;
@@ -25,7 +8,7 @@ import org.gnu.readline.*;
  */
 public class rl_completer implements ReadlineCompleter {
 
-    //private macro_engine engine = null;
+    private macro_engine engine = null;
     private home hm = null;
     private String[] commands = null;
     private String[] macros = null;
@@ -48,11 +31,11 @@ public class rl_completer implements ReadlineCompleter {
     private String devicename = null;
     String dst_device = null;
 
-    public rl_completer(String[] commands, /*macro_engine engine,*/ home hm) {
-        //this.engine = engine;
+    public rl_completer(String[] commands, macro_engine engine, home hm) {
+        this.engine = engine;
         this.hm = hm;
         this.commands = commands;
-        //macros = engine != null ? engine.get_macros(false) : null;
+        macros = engine.get_macros(false);
         devices = hm.get_devices();
         selecting_devices = hm.get_selecting_devices();
     }
@@ -65,13 +48,13 @@ public class rl_completer implements ReadlineCompleter {
             }
         commands_p = commands.length;
 
-        /*for (int i = macro_p; i < macros.length; i++)
+        for (int i = macro_p; i < macros.length; i++)
             if (macros[i].startsWith(in)) {
                 macro_p = i + 1;
                 return macros[i]
                         + (in.endsWith(" ") ? ("# " + engine.describe_macro(macros[i])) : "");
             }
-        macro_p = macros.length;*/
+        macro_p = macros.length;
 
         for (int i = devices_p; i < devices.length; i++)
             if (devices[i].startsWith(in)) {
@@ -132,7 +115,6 @@ public class rl_completer implements ReadlineCompleter {
         return null;
     }
 
-    @Override
     public String completer(String in, int s) {
         
         in = in.replaceFirst("^[ \t]+", "");
@@ -164,10 +146,10 @@ public class rl_completer implements ReadlineCompleter {
         if (tokens.length <= 1 && !between_words) {
             // Find a command, macro, or device.
             return first_token_completer(in, s);
-        }/* else if (tokens.length == 1 && between_words && s == 0 && engine.has_macro(tokens[0])) {
+        } else if (tokens.length == 1 && between_words && s == 0 && engine.has_macro(tokens[0])) {
             // Macro, deliver its documentation (only once).
             return in + " # " + engine.describe_macro(tokens[0]);
-        }*/ else if (select_mode) {
+        } else if (select_mode) {
             if ((tokens.length == 1 && between_words) || (tokens.length == 2 && !between_words)) {
                 // Find a selecting device.
                 return selecting_device_completer(tokens[0], tokens.length > 1 ? tokens[1] : "", s);
