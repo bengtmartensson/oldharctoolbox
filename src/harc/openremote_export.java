@@ -7,6 +7,7 @@ import org.xml.sax.*;
 public class openremote_export {
 
     private home hm = null;
+    private macro_engine mac = null;
     private Document doc = null;
     private int index_counter = 1;
 
@@ -47,8 +48,9 @@ public class openremote_export {
         return Integer.toString(2*index_counter + 1);
     }
 
-    openremote_export(home hm) {
+    openremote_export(home hm, macro_engine mac) {
         this.hm = hm;
+        this.mac = mac;
         doc = harcutils.newDocument();
         Element root = doc.createElement("openremote");
         root.setAttribute("xmlns", openremote_namespace);
@@ -90,14 +92,14 @@ public class openremote_export {
             }
         }
 
-        /*if (mac != null) {
+        if (mac != null) {
             String macros[] = mac.get_macros(false);
             for (int i = 0; i < macros.length; i++) {
                 make_harc_event(macros[i], macros[i]);
                 make_button();
                 index_counter++;
             }
-        }*/
+        }
     }
 
     void print(String filename) throws FileNotFoundException {
@@ -109,11 +111,11 @@ public class openremote_export {
      */
     public static void main(String[] args) {
         home hm = null;
-        //macro_engine mac = null;
+        macro_engine mac = null;
         String filename = controller_filename;
         try {
-            hm = new home(harcprops.get_instance().get_homefilename());
-            //mac = new macro_engine(hm);
+            hm = new home();
+            mac = new macro_engine(hm);
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (SAXParseException ex) {
@@ -122,7 +124,7 @@ public class openremote_export {
             ex.printStackTrace();
         }
 
-        openremote_export exporter = new openremote_export(hm);
+        openremote_export exporter = new openremote_export(hm, mac);
         try {
             exporter.print(filename);
         } catch (FileNotFoundException ex) {

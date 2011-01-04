@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
 <device id="humax-prhd1000c" name="Humax PR-HD1000C" vendor="Humax" model="prhd1000c" type="cable">
-  <delays>
-    <delay type="intra_command" delay="200"/>
-  </delays>
   <jp1data>
     <setupcode value="1915"/>
   </jp1data>
-  <commandset type="ir" protocol="nec1" toggle="no" deviceno="0" subdevice="73"
-    remotename="humax-rs636" pseudo_power_on="cmd_0">
-    <!--command cmdref="source"		cmdno="2"/--> <!-- ? -->
+  <commandset type="ir" protocol="nec1" toggle="no" deviceno="0" subdevice="73" remotename="humax-rs636">
+    <command cmdref="source"		cmdno="2"/> <!-- ? -->
     <command cmdref="mode"		cmdno="13" name="tv/radio"/>
-    <command cmdref="cmd_0" 		cmdno="12" wakeup="yes"/>
-    <command cmdref="cmd_1" 		cmdno="3"  wakeup="yes"/>
-    <command cmdref="cmd_2" 		cmdno="4"  wakeup="yes"/>
-    <command cmdref="cmd_3" 		cmdno="5"  wakeup="yes"/>
-    <command cmdref="cmd_4" 		cmdno="6"  wakeup="yes"/>
-    <command cmdref="cmd_5" 		cmdno="7"  wakeup="yes"/>
-    <command cmdref="cmd_6" 		cmdno="8"  wakeup="yes"/>
-    <command cmdref="cmd_7" 		cmdno="9"  wakeup="yes"/>
-    <command cmdref="cmd_8" 		cmdno="10" wakeup="yes"/>
-    <command cmdref="cmd_9" 		cmdno="11" wakeup="yes"/>
+    <command cmdref="cmd_0" 		cmdno="12"/>
+    <command cmdref="cmd_1" 		cmdno="3"/>
+    <command cmdref="cmd_2" 		cmdno="4"/>
+    <command cmdref="cmd_3" 		cmdno="5"/>
+    <command cmdref="cmd_4" 		cmdno="6"/>
+    <command cmdref="cmd_5" 		cmdno="7"/>
+    <command cmdref="cmd_6" 		cmdno="8"/>
+    <command cmdref="cmd_7" 		cmdno="9"/>
+    <command cmdref="cmd_8" 		cmdno="10"/>
+    <command cmdref="cmd_9" 		cmdno="11"/>
 
     <command cmdref="epg"	 	cmdno="27"/>
     <command cmdref="cmd_return" 	cmdno="22"/>
@@ -39,7 +35,7 @@
     <command cmdref="channel_down"	cmdno="21"/>
 
     <command cmdref="menu" 		cmdno="14"/>
-    <command cmdref="teletext_toggle"	cmdno="70"/>
+    <command cmdref="teletext" 		cmdno="70"/>
     <command cmdref="channellist"	cmdno="77"/>
     <command cmdref="aspectratio"	cmdno="78"/>
     <command cmdref="power_toggle" 	cmdno="0"/>
@@ -55,10 +51,7 @@
     <command cmdref="page_down"	 	cmdno="74"/>
     <command cmdref="resolution"	cmdno="79"/>
 
-    <!--command cmdref="subchannel_up"	cmdno="16"/-->
-    <!--command cmdref="subchannel_down"	cmdno="15"/-->
-
-    <command cmdref="lipsync"		cmdno="80"/>
-    <!--command cmdref="mute_toggle"	cmdno="126"/-->
+    <command cmdref="subchannel_up"	cmdno="16"/>
+    <command cmdref="subchannel_down"	cmdno="15"/>
   </commandset>
 </device>

@@ -89,7 +89,7 @@ user=f,Function
       <coded_number direction="lsb" zero="p0" one="p1" bits="8">
 	<xor>
 	  <!--  (device * 16) -->
-	  <mask mask="15" shift="4">
+	  <mask shift="4">
 	    <parameterref parameter="deviceno"/>
 	  </mask>
 	  <!-- ^ (subdevice -->
@@ -99,7 +99,7 @@ user=f,Function
 	    <parameterref parameter="cmdno"/>
 	  </mask>
 	  <!-- (command / 16); -->
-	  <mask mask="4095" shift="-4">
+	  <mask shift="-4">
 	    <parameterref parameter="cmdno"/>
 	  </mask>
        </xor>

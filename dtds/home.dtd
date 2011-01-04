@@ -4,7 +4,7 @@
      without any warranty.
 -->
 
-<!ELEMENT homemap ( aliases?,device-groups?, devices?, gateways?, gateway-ports? ) >
+<!ELEMENT homemap ( aliases?,device-groups?, devices?, from-gateways?, gateways?) >
 
 <!ELEMENT aliases (alias+) >
 
@@ -23,51 +23,31 @@
 
 <!ELEMENT deviceref (#PCDATA) >
 <!ATTLIST deviceref
-        device IDREF #REQUIRED
-        permanent (yes|no) "yes" >
+        device IDREF #REQUIRED >
 
 <!ELEMENT description (#PCDATA) >
 
 <!ELEMENT devices (device+) >
 
-<!ELEMENT device (description?,notes?,attribute*,powered-through?,(gateway-port|gateway-port-ref)*,inputs?) >
+<!ELEMENT device (description?,attribute*,(from-gateway|from-gateway-ref)*,inputs?) >
 <!ATTLIST device
 	name CDATA #IMPLIED
         id ID #REQUIRED
-        canonical NMTOKEN #IMPLIED
         model NMTOKEN #IMPLIED
-        class NMTOKEN #REQUIRED
-        firmware CDATA #IMPLIED
-        pin NMTOKEN #IMPLIED
-        defaultzone NMTOKEN #IMPLIED >
+        class NMTOKEN #REQUIRED >
 
-<!ELEMENT powered-through EMPTY >
-<!ATTLIST powered-through
-    device IDREF #REQUIRED >
+<!ELEMENT inputs (input)+ >
 
-<!ELEMENT notes (#PCDATA) >
-
-<!ELEMENT inputs (connectors*,(input)+) >
-
-<!ELEMENT input (((selectcommand?,querycommand*)|zone+),connector*,internalsrc*,externalsrc*) >
+<!ELEMENT input ((selectcommand+|zone+),connectiontype*,(deviceref|internalsrc|externalsrc)*) >
 <!ATTLIST input
 	name CDATA #REQUIRED
 	myname CDATA #IMPLIED
 	audio (yes|no) "yes"
 	video (yes|no) "no" >
 
-<!ELEMENT connectors (connector+) >
-<!ATTLIST connectors
-          connectiontype (analog|s_video|yuv|scart|spdif|hdmi|cvbs|rgb|denon_link|external_analog|other) #REQUIRED
-        version CDATA #IMPLIED
-        hardware CDATA #IMPLIED >
-
-<!ELEMENT connector (deviceref*) >
-<!ATTLIST connector
-          connectiontype  (analog|s_video|yuv|spdif|hdmi|cvbs|rgb|denon_link|external_analog|other) #IMPLIED 
-          hardware CDATA #IMPLIED
-          number NMTOKEN "1"
-          remark CDATA #IMPLIED >
+<!ELEMENT connectiontype EMPTY >
+<!ATTLIST connectiontype
+	type NMTOKEN #REQUIRED >
 
 <!ELEMENT internalsrc EMPTY >
 <!ATTLIST internalsrc
@@ -79,13 +59,13 @@
 
 <!ELEMENT selectcommand EMPTY >
 <!ATTLIST selectcommand
-	audio_video NMTOKEN #REQUIRED
+	select NMTOKEN #REQUIRED
 	audio_only NMTOKEN #IMPLIED
 	video_only NMTOKEN #IMPLIED >
 
-<!ELEMENT zone (selectcommand?,querycommand*) >
+<!ELEMENT zone (selectcommand|querycommand)* >
 <!ATTLIST zone
-        name (1|2|3|4|record) #REQUIRED >
+        name (1|2|3|record) #REQUIRED >
 
 <!ELEMENT querycommand EMPTY >
 <!ATTLIST querycommand
@@ -93,35 +73,39 @@
         val CDATA #REQUIRED
         mediatype (audio_only|video_only|audio_video) "audio_video" >
 
-<!ELEMENT commandmappings (commandmapping)+ >
+<!ELEMENT dumb-device (commands?) >
+<!ATTLIST dumb-device
+	type (on_off|up_down|open_close) "on_off"
+        forget (yes|no) #IMPLIED
+        memory (direction|position|none) "none"
+        pulse CDATA #IMPLIED >
+
+<!ELEMENT commands (command|on|off|toggle|open_close|up|down)+ >
 
 <!ELEMENT attribute EMPTY >
 <!ATTLIST attribute
 	name NMTOKEN #REQUIRED
 	value CDATA "yes" >
 
-    <!-- Previously called from-gateway -->
-<!ELEMENT gateway-ports (gateway-port)+ >
+<!ELEMENT from-gateways (from-gateway)+ >
 
-<!ELEMENT gateway-port EMPTY >
-<!ATTLIST gateway-port
+<!ELEMENT from-gateway EMPTY >
+<!ATTLIST from-gateway
         id ID #IMPLIED
         gateway IDREF #REQUIRED
-        connectorno NMTOKEN "1"
-        connectortype (ir|rf|serial|bluetooth|on_off|tcp|web_api|www|ip|virtual|sensor|special) #REQUIRED
+        connector NMTOKEN "1"
         hostname CDATA #IMPLIED
  	portnumber CDATA #IMPLIED
  	mac CDATA #IMPLIED
- 	timeout CDATA "10000"
  	wol (yes|no) #IMPLIED >
 
-<!ELEMENT gateway-port-ref EMPTY >
-<!ATTLIST gateway-port-ref
-	gateway-port IDREF #REQUIRED >
+<!ELEMENT from-gateway-ref EMPTY >
+<!ATTLIST from-gateway-ref
+	from-gateway IDREF #REQUIRED >
 
 <!ELEMENT gateways (gateway+) >
 
-<!ELEMENT gateway  ((gateway-port|gateway-port-ref)*,ports+,commandmappings?) >
+<!ELEMENT gateway  ((lan|hostname|(from-gateway|from-gateway-ref)+),output+,commands?,presets?) >
 <!ATTLIST gateway
         class NMTOKEN #REQUIRED
         model NMTOKEN #IMPLIED
@@ -132,24 +116,31 @@
 	web_api (yes|no) "no"
 	web_api_portnumber CDATA "80"
         name CDATA #IMPLIED
-        hostname CDATA #IMPLIED
-        timeout CDATA "4242"
         id ID #REQUIRED >
 
-<!ELEMENT ports (port+) >
-<!ATTLIST ports
-        type (ir|rf|serial|bluetooth|on_off|tcp|web_api|www|ip|virtual|sensor|special) #REQUIRED >
+<!ELEMENT hostname EMPTY >
+<!ATTLIST hostname
+        ipname CDATA #REQUIRED >
 
-<!ELEMENT port (commandmappings?) >
-<!ATTLIST port
+<!ELEMENT lan EMPTY >
+
+<!ELEMENT output (commands?) >
+<!ATTLIST output
+        type (ir|rf433|rf868|serial|bluetooth|on_off|tcp|web_api|www|ip|special) "ir"
         baud CDATA #IMPLIED
-        number NMTOKEN "1" >
+        connector NMTOKEN "1" >
 
-<!ELEMENT commandmapping EMPTY >
-<!ATTLIST commandmapping
+<!ELEMENT command EMPTY >
+<!ATTLIST command
 	cmd NMTOKEN #REQUIRED
 	house NMTOKEN #IMPLIED
 	deviceno NMTOKEN #IMPLIED
 	commandname NMTOKEN #REQUIRED
 	remotename NMTOKEN #REQUIRED >
 
+<!ELEMENT presets (preset+) >
+
+<!ELEMENT preset EMPTY >
+<!ATTLIST preset
+        programno CDATA #REQUIRED
+        device IDREF #REQUIRED >

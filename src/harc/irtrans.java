@@ -17,15 +17,10 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package harc;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.io.*;
+import java.net.*;
+import org.w3c.dom.*;
+import org.xml.sax.*;
 
 public class irtrans {
 
@@ -33,18 +28,6 @@ public class irtrans {
     
     public final static int irtrans_port = 21000;
     public final static String default_irtrans_host = "irtrans";//"192.168.0.31";
-
-    public static final int dummy_delay = 10; // milliseconds
-
-    /** Interfaces that can be used to command an IRTrans unit */
-    public enum interfaces {
-        tcp,
-        tcp_ascii,
-        udp,
-        http,
-        serial, // currently not supported in this sw
-        usb // currently not supported
-    }
 
     /** IR LEDs on the IRTrans */
     public enum led_t {
@@ -59,14 +42,7 @@ public class irtrans {
         led_5,
         led_6,
         led_7,
-        led_8,
-        led_9,
-        led_10,
-        led_11,
-        led_12,
-        led_13,
-        led_14,
-        led_15;
+        led_8;
 
         public static String led_char(led_t l) {
             return "l" + (
@@ -78,7 +54,7 @@ public class irtrans {
 
         public static led_t parse(String s) {
             try {
-                return led_t.valueOf(s);
+            return led_t.valueOf(s);
             } catch (IllegalArgumentException e) {
                 try {
                     return led_t.valueOf("led_" + s);
@@ -86,11 +62,6 @@ public class irtrans {
                     return intern;
                 }
             }
-        }
-
-        // questionable...
-        public static led_t parse(int i) {
-            return i == 2 ? led_t.extern : led_t.intern;
         }
     }
 
@@ -139,7 +110,7 @@ public class irtrans {
             inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
             outToServer.print("ASCI");
-            Thread.sleep(dummy_delay);
+            delay();
             outToServer.print(cmd);
             while (!inFromServer.ready())
                 Thread.sleep(20);
@@ -178,7 +149,7 @@ public class irtrans {
         String[] remotes = null;
         try {
             outToServer.print("ASCI");
-            Thread.sleep(dummy_delay);
+            delay();
             int index = 0;
             int no_remotes = 99999;
             while (index < no_remotes - 1) {
@@ -219,8 +190,7 @@ public class irtrans {
         return get_table("Agetcommands " + remote + ",");
     }
 
-    /*
-     public void listen(String configfilename) throws IOException, SAXParseException, SAXException {
+    public void listen(String configfilename) throws IOException, SAXParseException, SAXException {
         Document doc = harcutils.open_xmlfile(configfilename);
 
         Element map = doc.getDocumentElement();
@@ -343,7 +313,7 @@ public class irtrans {
 
     private void delay() throws InterruptedException {
         Thread.sleep(10);
-    }*/
+    }
 
     /*
     public final static int command_sendccf = 28;
@@ -469,19 +439,9 @@ public class irtrans {
             command_t command, String led) {
         return make_url(hostname, remote, command, led_t.parse(led));
     }
-    
-    public static String make_url(String hostname, String remote,
-            command_t command, int led) {
-        return make_url(hostname, remote, command, led_t.parse(led));
-    }
 
     public static String make_url(String hostname, String remote,
             command_t command, led_t led) {
-        return make_url(hostname, remote, command, led);
-    }
-
-    public static String make_url(String hostname, String remote,
-            String command, led_t led) {
         return "http://" + (hostname != null ? hostname : default_irtrans_host)
                 + "/send.htm?remote=" + remote + "&command=" + command + "&led=" + led_t.led_char(led);
     }
@@ -494,11 +454,6 @@ public class irtrans {
     public boolean send_flashed_command(String remote, command_t cmd, String connector, int count)
             throws UnknownHostException, IOException, InterruptedException {
         return send_flashed_command(remote, cmd, led_t.valueOf(connector), count);
-    }
-
-    public boolean send_flashed_command(String remote, command_t cmd, int connector, int count)
-            throws UnknownHostException, IOException, InterruptedException {
-        return send_flashed_command(remote, cmd, led_t.parse(connector), count);
     }
 
     public boolean send_flashed_command(String remote, String command, led_t connector, int count)
@@ -535,11 +490,6 @@ public class irtrans {
         return success;
     }
 
-    public boolean send_flashed_command_udp(String remote, String command,
-            String connector, int no_sends) throws UnknownHostException, IOException {
-        return send_flashed_command_udp(remote, command, led_t.valueOf(connector), no_sends);
-    }
-
      public boolean send_flashed_command_udp(String remote, String command,
             led_t led, boolean repeat)
             throws UnknownHostException, IOException {
@@ -549,11 +499,6 @@ public class irtrans {
     public boolean send_flashed_command_udp(String remote, String command)
             throws UnknownHostException, IOException {
         return send_flashed_command_udp(remote, command, led_t.intern, false);
-    }
-
-    public boolean send_ir(String ccf_string, String connector, int count)
-            throws UnknownHostException, IOException {
-        return send_ir(ccf_string, led_t.parse(connector), count);
     }
 
     public boolean send_ir(String ccf_string, led_t led, int count)
@@ -566,7 +511,7 @@ public class irtrans {
 
     public boolean send_ir(String ccf_string, led_t led, boolean repeat)
             throws UnknownHostException, IOException {
-        return send_command_udp((repeat ? "sndccfr " : "sndccf ") + ccf_string.trim() + "," + led_t.led_char(led));
+        return send_command_udp((repeat ? "sndccfr " : "sndccf ") + ccf_string + "," + led_t.led_char(led));
     }
 
     public boolean send_ir(ir_code code, led_t led, boolean repeat)
@@ -597,16 +542,11 @@ public class irtrans {
             throws UnknownHostException, IOException {
         return send_ir(code, led_t.valueOf(led), count);
     }
-    
-    public boolean send_ir(ir_code code, int led, int count)
-            throws UnknownHostException, IOException {
-        return send_ir(code, led_t.parse(led), count);
-    }
 
     private static void usage(int exitstatus) {
         System.err.println("Usage:");
         System.err.println("\tirtrans [-v][-h <hostname>] -r [<remotename>]");
-        //System.err.println("\tirtrans [-v][-h <hostname>] listenfile");
+        System.err.println("\tirtrans [-v][-h <hostname>] listenfile");
         System.exit(exitstatus);
     }
 
@@ -643,11 +583,12 @@ public class irtrans {
                         System.err.println(commands[i]);
                     }
                 }
-            } else if (args.length > optarg && args[optarg].equals("-c")) {
-                String ccf = "";
-                for (int i = optarg+1; i < args.length; i++)
-                    ccf = ccf + " " + args[i];
-                irt.send_ir(ccf, led_t.intern, 1);
+            } else {
+                if (args.length > optarg) {
+                    configfilename = args[optarg];
+                }
+
+                irt.listen(configfilename);
             }
         } catch (Exception e) {
             usage(harcutils.exit_usage_error);

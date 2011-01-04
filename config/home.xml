@@ -375,7 +375,7 @@ This is a sample file.
       </inputs>
     </device>
 
-    <device id="oppo" class="oppo_bdp83" name="Oppo DVD player">
+    <device id="oppo" class="oppo_dv983" name="Oppo DVD player">
       <from-gateway-ref from-gateway="dvd_serial_gw"/>
       <from-gateway-ref from-gateway="globalcache_mainzone"/>
       <from-gateway-ref from-gateway="irtrans_mainzone"/>

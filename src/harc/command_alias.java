@@ -17,17 +17,14 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package harc;
 
-import java.io.IOException;
-import java.util.Hashtable;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 /**
  *
  */
+
+import java.util.*;
+import java.io.*;
+import org.w3c.dom.*;
+import org.xml.sax.*;
 
 public class command_alias {
 

@@ -8,7 +8,7 @@
 
 <!ELEMENT devices (device)+ >
 
-<!ELEMENT device (description?,comment?,attributes?,aliases?,delays?,jp1data?,(commandset|xi:include)*) >
+<!ELEMENT device (description?,comment?,attributes?,aliases?,jp1data?,(commandset|xi:include)*) >
 <!ATTLIST device
         xmlns:xi CDATA #IMPLIED
         id ID #REQUIRED
@@ -37,19 +37,18 @@
     xmlns:xi   CDATA   #FIXED   "http://www.w3.org/2001/XInclude"
 >
 
-<!ELEMENT delays (delay)* >
-
-<!ELEMENT delay EMPTY >
-<!ATTLIST delay
-        type NMTOKEN #REQUIRED
-        delay NMTOKEN #REQUIRED >
-
-<!ELEMENT attributes (attribute)+ >
+<!ELEMENT attributes (attribute|has-attribute)+ >
 
 <!ELEMENT attribute EMPTY >
 <!ATTLIST attribute
 	name NMTOKEN #REQUIRED
-	defaultvalue CDATA #IMPLIED >
+	value CDATA #IMPLIED
+	default (yes|no) "no" >
+
+<!ELEMENT has-attribute EMPTY >
+<!ATTLIST has-attribute
+	name NMTOKEN #REQUIRED
+	value (yes|no) "yes" >
 
 <!ELEMENT aliases (alias+) >
 
@@ -70,7 +69,7 @@
 
 <!ELEMENT commandset (commandgroup|commandgroupref|command)* >
 <!ATTLIST commandset
-        type (ir|rf433|rf868|www|web_api|tcp|udp|serial|bluetooth|on_off|ip|special|telnet|sensor) "ir"
+        type (ir|rf433|rf868|www|web_api|tcp|udp|serial|bluetooth|on_off|ip|special|telnet) "ir"
         ifattribute CDATA #IMPLIED
         protocol NMTOKEN #IMPLIED
         prefix CDATA ""
@@ -90,8 +89,7 @@
         delay_between_chars CDATA "0"
  	pseudo_power_on NMTOKEN #IMPLIED
  	delay_between_reps CDATA "0"
- 	remark CDATA #IMPLIED
-        charset CDATA "utf-8" >
+ 	remark CDATA #IMPLIED >
 
 <!ELEMENT commandgroup (commandgroup|command)+ >
 <!ATTLIST commandgroup
@@ -113,7 +111,7 @@
 	zone (1|2|3|record) #IMPLIED
         type (discrete|toggle|cyclic) #IMPLIED
 	remark CDATA #IMPLIED
-        ifattribute CDATA #IMPLIED
+        ifattribute NMTOKEN #IMPLIED
         wakeup (yes|no) #IMPLIED
         transmit CDATA #IMPLIED
         expected_response CDATA #IMPLIED

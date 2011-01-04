@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
-<device id="asus_oplay_hdp-r1" name="ASUS O!Play HDP-R1" vendor="asus"
-  model="oplay_hdp-r1" type="misc_audio" pingable_on="yes" pingable_standby="no">
+<device id="asus_oplay_hdp-r1" name="ASUS O!Play HDP-R1" vendor="asus" model="oplay_hdp-r1" type="misc_audio">
   <jp1data>
     <setupcode value="1324"/>
   </jp1data>
@@ -32,8 +31,4 @@
     <command cmdref="audio"		cmdno="87"/> 
     <command cmdref="repeat"		cmdno="90"/>
   </commandset>
-  <commandset type="telnet" portnumber="23" user="root" password="none"/>
-  <xi:include href="www.xi"/> <!-- really just dummy -->
-  <!--xi:include href="wol.xi"/-->
-  <xi:include href="ping.xi"/>
 </device>

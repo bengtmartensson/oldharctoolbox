@@ -127,7 +127,7 @@ public class br_export {
         }
     }
 
-    public static final String doctype = harcprops.get_instance().get_dtddir() + File.separator + "br_export.dtd";//FIXME
+    public static final String doctype = ".." + File.separator + harcprops.get_instance().get_dtddir() + File.separator + "br_export.dtd";//FIXME
     private static int debug = 0;
     private button_remote remote = null;
     private device dev;

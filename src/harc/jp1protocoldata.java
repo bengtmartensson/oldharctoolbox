@@ -25,15 +25,12 @@ import java.util.*;
 public class jp1protocoldata {
 
     /** Functions for turning hex into OBC (in JP1 terminology) */
-    // This is not complete at all...
     public enum tohex_function {
         id,
         reverse,
         complement,
         jp1_00e8,
-        reverse_complement,
-        //nrc17,
-        none
+        reverse_complement
     };
 
     // assume bits = 8 for now...
@@ -41,10 +38,8 @@ public class jp1protocoldata {
         return
                function == tohex_function.reverse_complement ? (short)((255 - (Integer.reverse((int)obc) >> 24)) & 255)
              : function == tohex_function.reverse ? (short) ((Integer.reverse((int)obc) >> 24) & 255)
-             //: function == tohex_function.nrc17 ? (short)(((Integer.reverse((int)obc&127) >> 24) & 255) + 1)
              : function == tohex_function.jp1_00e8 ? (short)((((255-obc)<<2) & 255) + ((obc>>6)&1))
-             : function == tohex_function.id ? obc
-             : -1;
+             : obc;
     }
 
     public short obc2hex(int obc) {
@@ -52,10 +47,7 @@ public class jp1protocoldata {
     }
 
     public short hex2obc(short hex) {
-        return
-                function == tohex_function.jp1_00e8 ? (short)(63 - (hex>>2))
-                //: function == tohex_function.nrc17 ? (short) ((Integer.reverse((int)(hex-1)) >> 24) & 255)
-                : obc2hex(hex);
+        return function == tohex_function.jp1_00e8 ? (short)(63 - (hex>>2)) : obc2hex(hex);
     }
 
     public static short efc2hex(short efc) {
@@ -107,7 +99,7 @@ public class jp1protocoldata {
 		System.out.println(x + "\t" + efc2hex(x) + "\t" + hex2efc(x) + "\t" + hex2efc(efc2hex(x)));
 	else {
 	    short x = Short.parseShort(argv[0]);
-	    System.out.println("EFC2HEX = " + efc2hex(x) + "\tHEX2EFC = " + hex2efc(x));
+	    System.out.println("EFC = " + efc2hex(x) + "\tHEX = " + hex2efc(x));
 	}
     }
 }
