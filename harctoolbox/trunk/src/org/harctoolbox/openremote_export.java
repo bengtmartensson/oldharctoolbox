@@ -1,4 +1,4 @@
-package harc;
+package org.harctoolbox;
 
 import java.io.*;
 import org.w3c.dom.*;

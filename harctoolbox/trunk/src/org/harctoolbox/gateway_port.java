@@ -1,4 +1,4 @@
-package harc;
+package org.harctoolbox;
 
 /**
  *

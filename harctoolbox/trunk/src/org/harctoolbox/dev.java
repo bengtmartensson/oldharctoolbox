@@ -1,4 +1,4 @@
-package harc;
+package org.harctoolbox;
 
 import java.util.Collection;
 import java.util.Enumeration;

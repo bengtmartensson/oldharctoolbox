@@ -1,4 +1,4 @@
-package harc;
+package org.harctoolbox;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

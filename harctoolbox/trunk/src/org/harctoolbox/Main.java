@@ -14,7 +14,7 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program. If not, see http://www.gnu.org/licenses/.
  */
-package harc;
+package org.harctoolbox;
 
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;

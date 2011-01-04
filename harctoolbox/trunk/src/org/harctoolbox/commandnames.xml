@@ -5,7 +5,7 @@
      without any warranty.
 -->
 <!DOCTYPE commandnames PUBLIC "-//bengt-martensson.de//commandnames//en"
- "../../dtds/commandnames.dtd">
+ "../../../dtds/commandnames.dtd">
 <!--
 The valid command names are defined in this file. The names should describe the
 action of the command as accurately as possible (without being overly long).

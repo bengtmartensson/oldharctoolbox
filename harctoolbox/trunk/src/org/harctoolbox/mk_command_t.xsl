@@ -36,7 +36,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 // Do not edit.
 // Do not check in version management.
 
-package harc;
+package org.harctoolbox;
 
 /**
   * All commands known in the system.

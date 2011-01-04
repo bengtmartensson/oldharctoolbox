@@ -1,4 +1,4 @@
-package harc;
+package org.harctoolbox;
 
 import java.util.Hashtable;
 import java.util.Vector;
