@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see http://www.gnu.org/licenses/.
 */
 
-package harc;
+package org.harctoolbox;
 
 /**
  * This class models an IR sequence, that is, an intro- or a repeat sequence.

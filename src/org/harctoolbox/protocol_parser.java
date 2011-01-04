@@ -17,7 +17,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 // In this class, toggletype should not be used, a toggle is just any parameter
 // holding the value 0 or 1 given to us.
-package harc;
+package org.harctoolbox;
 
 import java.io.*;
 import java.util.*;

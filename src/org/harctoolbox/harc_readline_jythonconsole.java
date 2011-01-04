@@ -1,5 +1,5 @@
 // Copyright (c) Corporation for National Research Initiatives
-package harc;
+package org.harctoolbox;
 
 import java.io.BufferedReader;
 import java.io.EOFException;

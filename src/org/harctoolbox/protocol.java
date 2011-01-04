@@ -19,7 +19,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 // the globalcache code should not reside here.
 
 // Take care of toggling state here
-package harc;
+package org.harctoolbox;
 
 import java.util.*;
 //import java.io.*;

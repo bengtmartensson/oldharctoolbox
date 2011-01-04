@@ -22,7 +22,7 @@ this program. If not, see http://www.gnu.org/licenses/.
  * This is just a rather dumb file conversion.
  */
 
-package harc;
+package org.harctoolbox;
 
 import java.io.*;
 import java.util.*;
