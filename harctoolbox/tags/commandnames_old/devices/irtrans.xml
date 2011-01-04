@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="irtrans" name="IRTrans Ethernet" model="IRT-LAN-DB" pingable_on="yes">
+  <commandset type="web_api">
+    <command cmdref="cmd_reboot" transmit="ridjeg3o5ew22.htm"
+      response_lines="0" remark="Returns error despite success"/>
+  </commandset>
+
+  <commandset type="ip">
+    <command cmdref="ping"/>
+  </commandset>
+</device>

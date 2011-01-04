@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<irprotocol name="intertechno" id="intertechno">
+<!--  http://www.sbprojects.com/knowledge/ir/recs80.htm -->
+<jp1data>
+    <protocol number="xx" name=""/>
+    <tohex function="reverse-invert" bits="8"/>
+  </jp1data>
+  <parameters>
+    <parameter id="deviceno" name="house" bits="4"/>
+    <parameter id="subdevice" name="deviceaddress" bits="4"/>
+    <parameter id="cmdno" name="command" bits="1"/>
+    <!-- power_on = 0, power_off = 1 -->
+  </parameters>
+  <frequency value="38000"/>
+  <body>
+    <timings>
+      <timing id="t1" cycles="14"/>
+      <timing id="t3" cycles="42"/>
+      <timing id="tend" cycles="409"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <one timing="t1"/>
+        <zero timing="t3"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t3"/>
+        <zero timing="t1"/>
+      </pair>
+    </pairs>
+    <intro/>
+    <repeat>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="0"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<mask mask="1" shift="0">
+	  <parameterref parameter="deviceno"/>
+	</mask>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="0"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<mask mask="2" shift="-1">
+	  <parameterref parameter="deviceno"/>
+	</mask>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="0"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<mask mask="4" shift="-2">
+	  <parameterref parameter="deviceno"/>
+	</mask>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="0"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<mask mask="8" shift="-3">
+	  <parameterref parameter="deviceno"/>
+	</mask>
+      </coded_number>
+
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="0"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<mask mask="1" shift="0">
+	  <parameterref parameter="subdevice"/>
+	</mask>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="0"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<mask mask="2" shift="-1">
+	  <parameterref parameter="subdevice"/>
+	</mask>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="0"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<mask mask="4" shift="-2">
+	  <parameterref parameter="subdevice"/>
+	</mask>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="0"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<mask mask="8" shift="-3">
+	  <parameterref parameter="subdevice"/>
+	</mask>
+      </coded_number>
+
+      <coded_number direction="msb" zero="p0" one="p1" bits="7">
+	<constant value="10"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <one timing="t1"/>
+      <zero timing="tend"/>
+    </repeat>
+  </body>
+</irprotocol>

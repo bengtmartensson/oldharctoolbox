@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="lg_vcr_xxx" name="LG VCR xxx" vendor="LG" model="VCR xxx" type="vcr">
+  <commandset type="ir" deviceno="0" remotename="lg_vcr">
+    <command cmdref="cmd_0" 				cmdno="0"/>
+    <command cmdref="cmd_1" 				cmdno="1"/>
+    <command cmdref="cmd_2" 				cmdno="2"/>
+    <command cmdref="cmd_3" 				cmdno="3"/>
+    <command cmdref="cmd_4" 				cmdno="4"/>
+    <command cmdref="cmd_5" 				cmdno="5"/>
+    <command cmdref="cmd_6" 				cmdno="6"/>
+    <command cmdref="cmd_7" 				cmdno="7"/>
+    <command cmdref="cmd_8" 				cmdno="8"/>
+    <command cmdref="cmd_9" 				cmdno="9"/>
+    <command cmdref="power_toggle" name="power"		cmdno="12"/>
+    <command cmdref="tv_mode"				cmdno="63"/>
+    <command cmdref="vcr_tv" 				cmdno="62"/>
+    <command cmdref="previous" 				cmdno="37"/>
+    <command cmdref="next" 				cmdno="38"/>
+    <command cmdref="still_advance" 			cmdno="41"/>
+    <command cmdref="open" 				cmdno="45"/>
+    <command cmdref="clear" 				cmdno="49"/>
+    <command cmdref="play" 				cmdno="53"/>
+    <command cmdref="rewind" 				cmdno="50"/>
+    <command cmdref="fast_forward" 			cmdno="52"/>
+    <command cmdref="stop" 				cmdno="54"/>
+    <command cmdref="channel_up" 			cmdno="32"/>
+    <command cmdref="channel_down" 			cmdno="33"/>
+    <command cmdref="record_toggle"			cmdno="55"/>
+    <command cmdref="info" 				cmdno="15"/>
+    <command cmdref="smart_picture" 			cmdno="70"/>
+    <command cmdref="ok" 				cmdno="87"/>
+    <command cmdref="skip_search" 			cmdno="106"/>
+    <command cmdref="rec_end_search" 			cmdno="117"/>
+    <command cmdref="menu" 				cmdno="82"/>
+    <command cmdref="timer" 				cmdno="69"/>
+    <command cmdref="turbo_timer" 			cmdno="28"/>
+    <command cmdref="lp_sp" 				cmdno="58"/>
+    <command cmdref="I_II" 				cmdno="35"/>
+    <command cmdref="standby_toggle"			cmdno="6"/>
+<!--
+  [power_toggle][T]0[D]S011101101000100100101000110101110
+  [tv_vcr][T]0[D]S011101101000100110101000010101110
+  [av][T]0[D]S011101101000100101101010100101010
+  [open][T]0[D]S011101101000100100000000111111110
+  [1][T]0[D]S011101101000100110100000010111110
+  [2][T]0[D]S011101101000100101100000100111110
+  [3][T]0[D]S011101101000100111100000000111110
+  [c_lock][T]0[D]S011101101000100111111100000000110
+  [4][T]0[D]S011101101000100100110000110011110
+  [5][T]0[D]S011101101000100110110000010011110
+  [6][T]0[D]S011101101000100101110000100011110
+  [power_off][T]0[D]S011101101000100100011101111000100
+  [7][T]0[D]S011101101000100111110000000011110
+  [8][T]0[D]S011101101000100100111000110001110
+  [9][T]0[D]S011101101000100110111000010001110
+  [repeat][T]0[D]S011101101000100101101101100100100
+  [cm_skip][T]0[D]S011101101000100110111011010001000
+  [0][T]0[D]S011101101000100100100000110111110
+  [lp][T]0[D]S011101101000100100010010111011010
+  [info][T]0[D]S011101101000100101101000100101110
+  [record][T]0[D]S011101101000100110010000011011110
+  [play][T]0[D]S011101101000100100010000111011110
+  [rewind][T]0[D]S011101101000100101000000101111110
+  [pause][T]0[D]S011101101000100111010000001011110
+  [ff][T]0[D]S011101101000100111000000001111110
+  [ok][T]0[D]S011101101000100101110001100011100
+  [stop][T]0[D]S011101101000100110000000011111110
+  [up][T]0[D]S011101101000100101000001101111100
+  [clear][T]0[D]S011101101000100111111000000001110
+  [left][T]0[D]S011101101000100111000001001111100
+  [reight][T]0[D]S011101101000100100001001111101100
+  [down][T]0[D]S011101101000100110010001011011100
+  [showview][T]0[D]S011101101000100111100010000111010
+ -->
+  </commandset>
+</device>

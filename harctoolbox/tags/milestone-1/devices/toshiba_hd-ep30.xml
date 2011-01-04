@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="toshiba_hd-ep30" name="Toshiba HD EP30" model="ep30" type="dvd"  pingable_on="yes" pingable_standby="no">
+  <jp1data>
+    <setupcode value="1069"/>
+  </jp1data>
+  <commandset type="ir" protocol="nec1" deviceno="69" subdevice="181" original_remote="SE-R0288" remotename="toshiba_hd-ep30">
+    <!--    Manual:,,0 = 1-byte,LSB-COMP,88,NO,,,,,,, -->
+    <command cmdref="cmd_0" cmdno="10"/>
+    <command cmdref="cmd_1" cmdno="1" remark="requires OK to select tracks"/>
+    <command cmdref="cmd_2" cmdno="2"/>
+    <command cmdref="cmd_3" cmdno="3"/>
+    <command cmdref="cmd_4" cmdno="4"/>
+    <command cmdref="cmd_5" cmdno="5"/>
+    <command cmdref="cmd_6" cmdno="6"/>
+    <command cmdref="cmd_7" cmdno="7"/>
+    <command cmdref="cmd_8" cmdno="8"/>
+    <command cmdref="cmd_9" cmdno="9"/>
+    <command cmdref="plus10" cmdno="37"/>
+    <command cmdref="clear" cmdno="239"/>
+    <command cmdref="title_search" cmdno="38"/><!-- ??? -->
+    <command cmdref="up" cmdno="128"/>
+    <command cmdref="down" cmdno="129"/>
+    <command cmdref="left" cmdno="81"/>
+    <command cmdref="right" cmdno="77"/>
+    <command cmdref="ok" cmdno="33"/>
+    <command cmdref="pause_toggle" cmdno="0"/>
+    <command cmdref="play" wakeup="yes" cmdno="21"/>
+    <command cmdref="stop" cmdno="20"/>
+    <command cmdref="rewind" cmdno="25"/>
+    <command cmdref="fast_forward" cmdno="19"/>
+    <command cmdref="previous" cmdno="35"/>
+    <command cmdref="next" cmdno="36"/>
+    <!--command cmdref="resume" cmdno="56"/--> <!-- resume (return f/ menu) ??? -->
+    <command cmdref="cmd_return" cmdno="34"/>
+    <command cmdref="repeat" cmdno="43"/>
+    <!--command cmdref="tab" cmdno="50"/--> <!-- ??? -->
+    <!--command cmdref="cursor" cmdno="51"/--> <!-- ??? -->
+    <command cmdref="slow" cmdno="13"/>
+    <command cmdref="A" cmdno="52"/>
+    <command cmdref="B" cmdno="53"/>
+    <command cmdref="C" cmdno="54"/>
+    <command cmdref="D" cmdno="55"/>
+    <command cmdref="audio" cmdno="39"/>
+    <command cmdref="subtitle" cmdno="40"/>
+    <command cmdref="angle" cmdno="41"/>
+    <command cmdref="dvd_menu" cmdno="132"/>
+    <command cmdref="title" cmdno="222"/>
+    <command cmdref="setup" cmdno="32"/>
+    <!--command cmdref="video_output_HDMI" cmdno="159"/--><!-- ??? -->
+    <command cmdref="resolution" cmdno="78"/> <!--  (I/P selector -->
+    <command cmdref="display" cmdno="22"/>
+    <command cmdref="dimmer" cmdno="65"/>
+    <command cmdref="open_close" wakeup="yes" cmdno="245"/>
+    <command cmdref="power_toggle" cmdno="18"/>
+    <!--command cmdref="power_on" cmdno="146"/--><!-- not working -->
+    <command cmdref="power_on" cmdno="254"/><!-- self discovered -->
+    <command cmdref="power_off" cmdno="147"/><!-- ok -->
+    <command cmdref="tray_lock_toggle" cmdno="202"/>
+    <command cmdref="factory_reset" cmdno="205"/><!-- or 206? not tested -->
+    <!--command cmdref="display_time" cmdno="203"/-->
+    <!--command cmdref="display_firmware_ver" cmdno="195"/-->
+    <command cmdref="up_right" cmdno="130"/>
+    <command cmdref="down_right" cmdno="131"/>
+    <command cmdref="up_left" cmdno="134"/>
+    <command cmdref="down_left" cmdno="133"/>
+    <command cmdref="cancel" cmdno="27"/>
+    <command cmdref="resolution" cmdno="196"/><!-- ?? not work? -->
+    <command cmdref="test_mode" cmdno="197"/><!-- not work -->
+    <command cmdref="time" cmdno="203"/><!-- not work -->
+    <command cmdref="firmware_version" cmdno="207"/><!-- not work -->
+    <!--command cmdref="door" cmdno="73"/--> <!-- ??? -->
+    <!-- 252: beep -->
+    <!-- 
+    DiscreteON,47 - discrete on
+    DiscreteOFF,48 - discrete off
+    -->
+    <!--
+Line Notes:
+These codes were created for the Toshiba HD-A1/XA1 HD-DVD player.
+All original functions of OEM remote are included, including
+some extra functions not on the original remote.
+
+Following functions *not* included on the OEM have been added:
+
+discrete on (discrete off available but not tested)
+tray lock/unlock
+factory reset
+display time
+display firmware ver
+
+Full set of function codes (OBC) from Toshiba can be found here
+http://www.remotecentral.com/cgi-bin/mboard/rc-touch/thread.cgi?1160
+
+Questions - PM sfhub at http://www.avsforum.com/
+
+Rev 1.1 Added functions from Toshiba HD-XA1 RS232 list, but not tested
+up-right, down-right, up-left, down-left, tab, cancel, door, discrete off
+
+Thread: http://www.avsforum.com/avs-vb/showthread.php?t=940909
+
+Here's how to get the above screen with the Tosh remote:
+
+Display - 1 -9 - 5 - Display
+    -->
+  </commandset>
+  <commandset type="ip">
+    <command cmdref="ping"/>
+  </commandset>
+</device>

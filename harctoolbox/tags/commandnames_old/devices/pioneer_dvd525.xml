@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
+<devices>
+  <device id="pioneer_dvd525" name="Pioneer DVD 525" vendor="Pioneer" model="DVD525" type="dvd">
+    <commandset type="ir" protocol="xxx" toggle="no" deviceno="0" remotename="pioneer_dvd525">
+<!--
+stop		F1 Q 000 R 1110 S L
+pause		F1 Q 111 R 0000 S L
+prev		F1 Q 101 R 0100 S L
+next		F1 Q 001 R 1100 S L
+play		F1 Q 011 R 1000 S L
+power_toggle	F2 Q 100 R 0110 S L A B T 0011110111000010L
+open		F2 Q 100 R 0110 S L A B T 0110110110010010L
+rewind		F1 Q 110 R 0010 S L
+fast_forward	F1 Q 010 R 1010 S L
+step_forward	F2 Q 100 R 0110 S L A B T 1110110100010010L
+step_back	F2 Q 100 R 0110 S L A B T 0001110111100010L
+up		F2 Q 100 R 0110 S L A B T 0100111110110000L
+down		F2 Q 100 R 0110 S L A B T 1100111100110000L
+left		F2 Q 100 R 0110 S L A B T 1100011000111001L
+OK		F2 Q 100 R 0110 S L A B T 1111011100001000L
+top		F2 Q 100 R 0110 S L A B T 0010110111010010L
+return		F2 Q 100 R 0110 S L A B T 0010111111010000L
+menu		F2 Q 100 R 0110 S L A B T 1001110101100010L
+setup		F2 Q 100 R 0110 S L A B T 0000110111110010L
+right		F2 Q 100 R 0110 S L A B T 0010011011011001L
+1		F2 Q 100 R 0110 S L A B T 1000010101111010L
+2		F2 Q 100 R 0110 S L A B T 0100010110111010L
+3		F2 Q 100 R 0110 S L A B T 1100010100111010L
+4		F2 Q 100 R 0110 S L A B T 0010010111011010L
+5		F2 Q 100 R 0110 S L A B T 1010010101011010L
+6		F2 Q 100 R 0110 S L A B T 0110010110011010L
+7		F2 Q 100 R 0110 S L A B T 1110010100011010L
+8		F2 Q 100 R 0110 S L A B T 0001010111101010L
+9		F2 Q 100 R 0110 S L A B T 1001010101101010L
+0		F2 Q 100 R 0110 S L A B T 0000010111111010L
+???		F2 Q 100 R 0110 S L A B T 1010011101011000L
+display		F2 Q 100 R 0110 S L A B T 1100011100111000L
+two_dig 	F2 Q 100 R 0110 S L A B T 1111110100000010L
+search mode	F2 Q 100 R 0110 S L A B T 1100110100110010L
+vnr		F2 Q 100 R 0110 S L A B T 0000110011110011L
+cond memory	F2 Q 100 R 0110 S L A B T 1000110101110010L
+last memory	F2 Q 100 R 0110 S L A B T 0110111110010000L
+subtitles	F2 Q 100 R 0110 S L A B T 0110110010010011L
+angle		F2 Q 100 R 0110 S L A B T 1010110101010010L
+audio		F2 Q 100 R 0110 S L A B T 0111110110000010L
+random		F2 Q 100 R 0110 S L A B T 0111111110000000L
+repeat		F2 Q 100 R 0110 S L A B T 0010011111011000L
+program		F2 Q 100 R 0110 S L A B T 0011011111001000L
+A-B		F2 Q 100 R 0110 S L A B T 0001011111101000L
+power_on	F3 Q 100 R 0110 S L A B T 0101110110100010L
+power_off	F3 Q 100 R 0110 S L A B T 1101110100100010L
+-->
+      <command cmdref="cmd_0"                   cmdno="0x98"/>
+      <command cmdref="cmd_1"                   cmdno="0x08"/>
+      <command cmdref="cmd_2"                   cmdno="0x88"/>
+      <command cmdref="cmd_3"                   cmdno="0x48"/>
+      <command cmdref="cmd_4"                   cmdno="0xc8"/>
+      <command cmdref="cmd_5"                   cmdno="0x28"/>
+      <command cmdref="cmd_6"                   cmdno="0xa8"/>
+      <command cmdref="cmd_7"                   cmdno="0x68"/>
+      <command cmdref="cmd_8"                   cmdno="0xe8"/>
+      <command cmdref="cmd_9"                   cmdno="0x18"/>
+      <command cmdref="cmd_a_b"                 cmdno="0x12"/>
+      <command cmdref="cmd_a_srd"               cmdno="0x79"/>
+      <command cmdref="cmd_angle"               cmdno="0x09"/>
+      <command cmdref="cmd_audio"               cmdno="0xcc"/>
+      <command cmdref="cmd_audio_only" 		cmdno="0x87"/>
+      <command cmdref="cmd_clear" name="cancel"	cmdno="0xc1"/>
+      <command cmdref="cmd_depth_enh"           cmdno="0x1b"/>
+      <command cmdref="cmd_display"             cmdno="0x49"/>
+      <command cmdref="cmd_double_remaster"	cmdno="0x97"/>
+      <command cmdref="cmd_down" 		cmdno="0x61"/>
+      <command cmdref="cmd_fast_forward" 	cmdno="0xa0"/>
+      <command cmdref="cmd_group" 		cmdno="0x07"/>
+      <command cmdref="cmd_left" 		cmdno="0xe1"/>
+      <command cmdref="cmd_marker" 		cmdno="0x71"/>
+      <command cmdref="cmd_menu" 		cmdno="0x01"/>
+      <command cmdref="cmd_next" 		cmdno="0x52"/>
+      <command cmdref="cmd_ok" 			cmdno="0x41"/>
+      <command cmdref="cmd_open_close" 		cmdno="0x80"/>
+      <command cmdref="cmd_still_advance" 	cmdno="0x60"/>
+      <command cmdref="cmd_play" 		cmdno="0x50"/>
+      <command cmdref="cmd_play_mode" 		cmdno="0xb1"/>
+      <command cmdref="cmd_pos_mem" 		cmdno="0x62"/>
+      <command cmdref="cmd_power_off" 		cmdno="0xfc"/>
+      <command cmdref="cmd_power_on" 		cmdno="0x7c"/>
+      <command cmdref="cmd_power_toggle" 	cmdno="0xbc"/>
+      <command cmdref="cmd_previous" 		cmdno="0x92"/>
+      <command cmdref="cmd_repeat" 		cmdno="0x31"/>
+      <command cmdref="cmd_return" 		cmdno="0x81"/>
+      <command cmdref="cmd_rewind" 		cmdno="0x20"/>
+      <command cmdref="cmd_right" 		cmdno="0x11"/>
+      <command cmdref="cmd_setup" 		cmdno="0x29"/>
+      <command cmdref="cmd_sleep" 		cmdno="0xd7"/>
+      <command cmdref="cmd_special" 		cmdno="0xa2"/>
+      <command cmdref="cmd_stop" 		cmdno="0x00"/>
+      <command cmdref="cmd_subtitle" 		cmdno="0x89"/>
+      <command cmdref="cmd_title" 		cmdno="0xd9"/>
+      <command cmdref="cmd_two_digit" name="./.." cmdno="0x91"/>
+      <command cmdref="cmd_up" 			cmdno="0xa1"/>
+      <command cmdref="cmd_vss" 		cmdno="0x79"/>
+      <command cmdref="cmd_zoom" 		cmdno="0x83"/>
+    </commandset>
+  </device>
+</devices>

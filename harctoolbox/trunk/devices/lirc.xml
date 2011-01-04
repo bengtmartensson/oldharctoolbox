@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="lirc" name="LIRC Server" model="-" pingable_on="yes">
+  <commandset type="tcp" suffix="\n" portnumber="8765">
+    <command cmdref="get_version" transmit="VERSION" response_lines="7"/>
+  </commandset>
+
+  <commandset type="special" portnumber="21000">
+    <command cmdref="get_version"/>
+    <command cmdref="get_remotes"/>
+    <command cmdref="get_commands">
+      <argument name="remote"/>
+    </command>
+    <command cmdref="send_ir">
+      <argument name="remote"/>
+      <argument name="command"/>
+    </command>
+  </commandset>
+
+  <xi:include href="ping.xi"/>
+</device>

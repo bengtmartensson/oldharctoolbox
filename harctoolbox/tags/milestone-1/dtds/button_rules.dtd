@@ -1,0 +1,26 @@
+<!ELEMENT button_rules (reserve-button|names|assign-unshifted-buttons|assign-buttons|dump-buttons|dump-functions)+ >
+
+<!ELEMENT assign-buttons EMPTY >
+<!ATTLIST assign-buttons
+	aliases (yes|no) "yes"
+	unshifted-only (yes|no) "no" >
+
+<!ELEMENT reserve-button EMPTY >
+<!ATTLIST reserve-button
+	unshifted-only (yes|no) #IMPLIED
+	button NMTOKEN #REQUIRED >
+
+<!ELEMENT names (add-name)+ >
+<!ATTLIST names
+	button NMTOKEN #REQUIRED
+	devicetype CDATA #IMPLIED
+	match-required (yes|no) "no"
+	match-required-unshifted (yes|no) "no" >
+
+<!ELEMENT add-name EMPTY >
+<!ATTLIST add-name
+	name NMTOKEN #REQUIRED
+	replace (yes|no) "no" >
+
+<!ELEMENT dump-buttons EMPTY >
+<!ELEMENT dump-functions EMPTY >

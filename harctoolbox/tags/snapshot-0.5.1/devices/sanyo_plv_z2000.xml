@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<devices>
+  <device id="sanyo_plv_z2000" name="Sanyo PLV-Z2000" vendor="Sanyo" model="PLV-Z2000" type="projector">
+    <jp1data>
+      <setupcode value="0735"/>
+    </jp1data>
+    <commandset type="ir" protocol="nec1" deviceno="51" subdevice="0" remotename="sanyo_plv_z2000">
+      <!-- Interesting reference:-->
+      <!-- http://www.remotecentral.com/cgi-bin/mboard/rc-discrete/thread.cgi?3694 -->
+
+      <command cmdref="power_toggle"		cmdno="0"/>
+      <command cmdref="logo" 			cmdno="60"/>
+      <command cmdref="color_temp" 			cmdno="21"/>
+      <command cmdref="sharpness" 			cmdno="20"/>
+      <command cmdref="img_preset_up"		cmdno="14"/>
+      <command cmdref="in_hdmi2" 			cmdno="19"/>
+      <command cmdref="in_s_video" 			cmdno="62"/>
+      <command cmdref="lamp_mode" 			cmdno="24"/>
+      <command cmdref="video_mute_toggle"		cmdno="139"/>
+      <command cmdref="freeze_toggle"		cmdno="67"/>
+      <command cmdref="menu" 			cmdno="28"/>
+      <command cmdref="reset" 			cmdno="25"/>
+      <command cmdref="up" 				cmdno="140"/>
+      <command cmdref="down" 			cmdno="141"/>
+      <command cmdref="right" 			cmdno="29"/>
+      <command cmdref="left" 			cmdno="30"/>
+      <command cmdref="ok" 				cmdno="15"/>
+      <command cmdref="aspectratio"	 		cmdno="130"/>
+      <command cmdref="image" 			cmdno="12"/>
+      <command cmdref="img_user_up"			cmdno="13"/>
+      <command cmdref="in_hdmi1" 			cmdno="55"/>
+      <command cmdref="in_vga" name="Computer"	cmdno="56"/>
+      <command cmdref="in_component2" 		cmdno="129"/>
+      <command cmdref="in_component1" 		cmdno="131"/>
+      <command cmdref="contrast" 			cmdno="49"/>
+      <command cmdref="color" 			cmdno="50"/>
+      <command cmdref="brightness" 			cmdno="48"/>
+      <command cmdref="in_video" 			cmdno="61"/>
+      <command cmdref="info" 			cmdno="22"/>
+      <command cmdref="cmd_return" 			cmdno="18"/>
+
+      <command cmdref="power_on" 			cmdno="0xa0"/>
+      <command cmdref="power_off" 			cmdno="0xa1"/>
+      <command cmdref="power_off_confirm"		cmdno="0xa2"/>
+    </commandset>
+    <commandset type="serial" protocol="rs232_9600_8n1" prefix="C" suffix="\r">
+      <command cmdref="power_on" 			transmit="00"/>
+      <command cmdref="power_off" 			transmit="01"/>
+      <command cmdref="power_off_confirm" 		transmit="02"/>
+      <command cmdref="power_mgmt_on"		transmit="2A"/>
+      <command cmdref="power_mgmt_off"		transmit="2B"/>
+
+      <command cmdref="video_mute_on" 		transmit="0D"/>
+      <command cmdref="video_mute_off" 		transmit="0E"/>
+      <command cmdref="freeze_on"			transmit="43"/>
+      <command cmdref="freeze_off"			transmit="44"/>
+      <command cmdref="osd_off" name="display_clear" transmit="1E"/>
+
+      <command cmdref="aspectratio_4_3"		transmit="0F"/>
+      <command cmdref="aspectratio_16_9" 		transmit="10"/>
+      <command cmdref="aspectratio_zoom"		transmit="2C"/>
+      <command cmdref="aspectratio_nat_wide1"	transmit="2D"/>
+      <command cmdref="aspectratio_nat_wide2"	transmit="2E"/>
+      <command cmdref="aspectratio_caption_in"	transmit="63"/>
+      <command cmdref="aspectratio_full_through"	transmit="65"/>
+      <command cmdref="aspectratio_normal_through"	transmit="66"/>
+
+      <command cmdref="img_living" 			transmit="11"/>
+      <command cmdref="img_creative_cinema" 	transmit="12"/>
+      <command cmdref="img_pure_cinema"	 	transmit="13"/>
+      <command cmdref="img_vivid"		 	transmit="18"/>
+      <command cmdref="img_brilliant_cinema" 	transmit="19"/>
+      <command cmdref="img_dynamic"		 	transmit="1A"/>
+      <command cmdref="img_natural"		 	transmit="1B"/>
+      <command cmdref="img1"		 	transmit="14"/>
+      <command cmdref="img2"		 	transmit="15"/>
+      <command cmdref="img3"		 	transmit="16"/>
+      <command cmdref="img4"		 	transmit="17"/>
+      <command cmdref="img5"			transmit="36"/>
+      <command cmdref="img6"			transmit="37"/>
+      <command cmdref="img7"			transmit="38"/>
+      <command cmdref="img_logo_off"		transmit="7A"/>
+      <command cmdref="img_logo_default"		transmit="7B"/>
+      <command cmdref="img_logo_user"		transmit="7C"/>
+      <command cmdref="img_logo_capture"		transmit="7D"/>
+      <command cmdref="img_my_pic_on"		transmit="7E"/>
+      <command cmdref="img_my_pic_off"		transmit="7F"/>
+      <command cmdref="auto_pc_adj"			transmit="89"/>
+
+      <command cmdref="menu_on"		 	transmit="1C"/>
+      <command cmdref="menu_off"		 	transmit="1D"/>
+      <command cmdref="right"			transmit="3A"/>
+      <command cmdref="left"			transmit="3B"/>
+      <command cmdref="up"				transmit="3C"/>
+      <command cmdref="down"			transmit="3D"/>
+      <command cmdref="ok"				transmit="3F"/>
+      <command cmdref="reset"			transmit="40"/>
+      <command cmdref="cmd_return"			transmit="3D"/>
+
+      <command cmdref="in_video"			transmit="23"/>
+      <command cmdref="in_s_video"			transmit="24"/>
+      <command cmdref="in_component1"		transmit="25"/>
+      <command cmdref="in_component2"		transmit="26"/>
+      <command cmdref="in_vga"			transmit="50"/>
+      <command cmdref="in_scart" remark="through VGA" transmit="50"/>
+      <command cmdref="in_hdmi1"			transmit="53"/>
+      <command cmdref="in_hdmi2"			transmit="54"/>
+      <command cmdref="d5_control_on"		transmit="67"/>
+      <command cmdref="d5_control_off"		transmit="68"/>
+
+      <command cmdref="factory_reset" name="factory_default" transmit="4C"/>
+
+      <command cmdref="lamp_auto1"			transmit="72"/>
+      <command cmdref="lamp_auto2"			transmit="73"/>
+      <command cmdref="lamp_normal"			transmit="74"/>
+      <command cmdref="lamp_eco"			transmit="75"/>
+
+      <command cmdref="setup_cealing_on"		transmit="76"/>
+      <command cmdref="setup_cealing_off"		transmit="77"/>
+      <command cmdref="setup_rear_on"		transmit="78"/>
+      <command cmdref="setup_rear_off"		transmit="79"/>
+
+      <command cmdref="get_status" transmit="R0" response_lines="1">
+	<returnvalues>
+	  <syntax parse="%2x\r">
+	    <returntype type="hexadecimal_integer" length="2"/>
+	  </syntax>
+	  <semantics>
+	    <table index="string">
+	      <entry value="00" desc="Power On"/>
+	      <entry value="80" desc="Standby"/>
+	      <entry value="40" desc="Processing Countdown"/>
+	      <entry value="20" desc="Processing Cooling down"/>
+	      <entry value="10" desc="Power Failure"/>
+	      <entry value="28" desc="Processing cooling down due to abnormal temperature"/>
+	      <entry value="88" desc="Standby after cooling down due to abnormal temperature"/>
+	      <entry value="24" desc="Processing power save/Cooling down"/>
+	      <entry value="04" desc="Power save"/>
+	      <entry value="21" desc="Processing cooling down after OFF due to lamp failure"/>
+	      <entry value="81" desc="Standby after cooling down due to lamp failure"/>
+	      <default desc="Unknown"/>
+	    </table>
+	  </semantics>
+	</returnvalues>
+      </command>
+      <command cmdref="get_input" transmit="R1" response_lines="1">
+	<returnvalues>
+	  <syntax>
+	    <returntype type="decimal_integer" length="1"/>
+	  </syntax>
+	  <semantics>
+	    <table>
+	      <entry value="0" desc="Video"/>
+	      <entry value="1" desc="S-Video"/>
+	      <entry value="2" desc="Component1"/>
+	      <entry value="3" desc="Component2"/>
+	      <entry value="4" desc="HDMI1"/>
+	      <entry value="5" desc="HDMI2"/>
+	      <entry value="6" desc="VGA"/>
+	      <entry value="7" desc="Computer(SCART)"/>
+	    </table>
+	  </semantics>
+	</returnvalues>
+      </command>
+      <command cmdref="get_lamp_hours" transmit="R3" response_lines="1">
+	<returnvalues>
+	  <syntax>
+	    <returntype type="decimal_integer" length="5"/>
+	  </syntax>
+	</returnvalues>
+      </command>
+      <command cmdref="get_settings" transmit="R4" response_lines="1">
+	<returnvalues>
+	  <syntax>
+	    <returntype type="decimal_integer" length="2"/>
+	  </syntax>
+	  <semantics>
+	    <table>
+	      <entry value="11" desc="Normal"/>
+	      <entry value="10" desc="Ceiling, rear on"/>
+	      <entry value="01" desc="Rear on"/>
+	      <entry value="11" desc="Ceiling on"/>
+	    </table>
+	  </semantics>
+	</returnvalues>
+      </command>
+      <command cmdref="get_temperatures" transmit="R6" response_lines="1">
+	<returnvalues>
+	  <syntax>
+	    <returntype type="decimal_integer"/>
+	    <returntype type="decimal_integer"/>
+	    <returntype type="decimal_integer"/>
+	  </syntax>
+	</returnvalues>
+      </command>
+    </commandset>
+  </device>
+</devices>

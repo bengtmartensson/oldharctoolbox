@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
+<device id="humax-prhd1000c" name="Humax PR-HD1000C" vendor="Humax" model="prhd1000c" type="cable">
+  <jp1data>
+    <setupcode value="1915"/>
+  </jp1data>
+  <commandset type="ir" protocol="nec1" toggle="no" deviceno="0" subdevice="73" remotename="humax-rs636">
+    <command cmdref="source"		cmdno="2"/> <!-- ? -->
+    <command cmdref="mode"		cmdno="13" name="tv/radio"/>
+    <command cmdref="cmd_0" 		cmdno="12"/>
+    <command cmdref="cmd_1" 		cmdno="3"/>
+    <command cmdref="cmd_2" 		cmdno="4"/>
+    <command cmdref="cmd_3" 		cmdno="5"/>
+    <command cmdref="cmd_4" 		cmdno="6"/>
+    <command cmdref="cmd_5" 		cmdno="7"/>
+    <command cmdref="cmd_6" 		cmdno="8"/>
+    <command cmdref="cmd_7" 		cmdno="9"/>
+    <command cmdref="cmd_8" 		cmdno="10"/>
+    <command cmdref="cmd_9" 		cmdno="11"/>
+
+    <command cmdref="epg"	 	cmdno="27"/>
+    <command cmdref="cmd_return" 	cmdno="22"/>
+
+    <command cmdref="up" 		cmdno="17"/>
+    <command cmdref="down" 		cmdno="21"/>
+    <command cmdref="left" 		cmdno="18"/>
+    <command cmdref="right" 		cmdno="20"/>
+
+    <command cmdref="red" 		cmdno="28"/>
+    <command cmdref="green" 		cmdno="29"/>
+    <command cmdref="yellow" 		cmdno="26"/>
+    <command cmdref="blue" 		cmdno="30"/>
+
+    <command cmdref="channel_up"	cmdno="17"/>
+    <command cmdref="channel_down"	cmdno="21"/>
+
+    <command cmdref="menu" 		cmdno="14"/>
+    <command cmdref="teletext" 		cmdno="70"/>
+    <command cmdref="channellist"	cmdno="77"/>
+    <command cmdref="aspectratio"	cmdno="78"/>
+    <command cmdref="power_toggle" 	cmdno="0"/>
+    <command cmdref="setup" 		cmdno="66"/>
+    <command cmdref="last_channel" 	cmdno="65"/>
+    <command cmdref="ok"	 	cmdno="19"/>
+
+    <command cmdref="volume_up" 	cmdno="31"/>
+    <command cmdref="volume_down" 	cmdno="64"/>
+    <command cmdref="osd"	 	cmdno="67"/>
+    <command cmdref="mute_toggle" 	cmdno="24"/>
+    <command cmdref="page_up"	 	cmdno="73"/>
+    <command cmdref="page_down"	 	cmdno="74"/>
+    <command cmdref="resolution"	cmdno="79"/>
+
+    <command cmdref="subchannel_up"	cmdno="16"/>
+    <command cmdref="subchannel_down"	cmdno="15"/>
+  </commandset>
+</device>

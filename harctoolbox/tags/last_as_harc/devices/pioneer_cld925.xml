@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="pioneer_cld925" name="Pioneer CLD-925" vendor="Pioneer" model="CLD-925" type="ld">
+  <jp1data>
+    <setupcode value="1059"/>
+  </jp1data>
+  <commandset type="ir" protocol="pioneer" deviceno="168" remotename="pioneer_cld925" original_remote="cu-cld115">
+    <command cmdref="power_toggle"		cmdno="28"/>
+    <command cmdref="power_on"			cmdno="26"/>
+    <command cmdref="power_off"			cmdno="27"/>
+    <command cmdref="open_close"		cmdno="25"/><!-- was 22 -->
+    <command cmdref="digital_sound"		cmdno="12"/>
+    <command cmdref="analog_sound"		cmdno="30"/>
+    <command cmdref="repeat"			cmdno="68"/>
+    <command cmdref="a_b"			cmdno="72"/>
+    <command cmdref="display"			cmdno="67"/>
+    <command cmdref="cmd_1"			cmdno="1"/>
+    <command cmdref="cmd_2"			cmdno="2"/>
+    <command cmdref="cmd_3"			cmdno="3"/>
+    <command cmdref="clear"			cmdno="69"/>
+    <command cmdref="program"			cmdno="76"/>
+    <command cmdref="cmd_4"			cmdno="4"/>
+    <command cmdref="cmd_5"			cmdno="5"/>
+    <command cmdref="cmd_6"			cmdno="6"/>
+    <command cmdref="plus10"			cmdno="31"/>
+    <command cmdref="chapter_time"		cmdno="19"/>
+    <command cmdref="cmd_7"			cmdno="7"/>
+    <command cmdref="cmd_8"			cmdno="8"/>
+    <command cmdref="cmd_9"			cmdno="9"/>
+    <command cmdref="cmd_0"			cmdno="0"/>
+    <command cmdref="memory_play"		cmdno=""/>
+    <command cmdref="speed_down"		cmdno="85"/>
+    <command cmdref="speed_up"			cmdno="88"/>
+    <command cmdref="step_back"			cmdno="80"/>
+    <command cmdref="step_forward"		cmdno="84"/>
+    <command cmdref="shuffle"			cmdno="94"/>
+    <command cmdref="intro"	name="hilite intro" cmdno="90"/>
+    <command cmdref="previous"			cmdno="83"/>
+    <command cmdref="next"			cmdno="82"/>
+    <command cmdref="rewind"			cmdno="17"/>
+    <command cmdref="play"			cmdno="23"/>
+    <!--command cmdref="play"			cmdno="22"/-->
+    <command cmdref="fast_forward"		cmdno="16"/>
+    <command cmdref="side_a"			cmdno="77"/>
+    <command cmdref="side_b"			cmdno="78"/>
+    <command cmdref="stop"			cmdno="23"/>
+    <command cmdref="pause_toggle"		cmdno="24"/>
+    <command cmdref="aspectratio_16_9"		cmdno="18"/>
+    <!--
+    Disc Side Toggle*,021,,enter,23 - +10,not on OEM remote,,,,,,,
+    edit,029,,up arrow,51 - Multi-Speed +,,,,,,,,
+    Audio,030,,down arrow,50 - Multi-Speed -,,,,,,,,
+    Jog Forward*,032,,right arrow,66 - Multi-Speed >,not on OEM remote,,,,,,,63 - step +
+    Jog Forward x2*,033,,select,21 - edit,not on OEM remote,,,,,,,
+    Jog Forward x3*,034,,sleep,,not on OEM remote,,,,,,,
+    Jog Forward x4*,035,,pip,,not on OEM remote,,,,,,,
+    Jog Reverse*,036,,info,47 - Display,not on OEM remote,,,,,,,
+    Jog Reverse x2*,037,,swap,52 - Repeat A*,not on OEM remote,,,,,,,
+    Jog Reverse x3*,038,,move,48 - Repeat (B),not on OEM remote,,,,,,,
+    Jog Reverse x4*,039,,play,18 - play,not on OEM remote,,,,,,,
+    shuttle forward,040,,pause,19 - pause,,,,,,,,
+    shuttle forward x2,041,,rewind,14 - rewind,,,,,,,,
+    shuttle forward x3,042,,fwd,13 - fast forward,,,,,,,,
+    shuttle forward x4,043,,stop,17 - Stop/Eject,,,,,,,,
+    shuttle back,044,,record,,,,,,,,,
+    shuttle back x2,045,,exit,49 - Clear,,,,,,,,
+    shuttle back x3,046,,surround,,,,,,,,,
+    shuttle back x4,047,,input,,,,,,,,,
+    Frame/Time Search*,065,,com/skip,,not on OEM remote,,,,,,,
+    search memory*,066,,shift-right,,not on OEM remote,,,,,,,
+    Display,067,,pip freeze,,,,,,,,,
+    Repeat (B),068,,slow,,,,,,,,,
+    Clear,069,,eject,,,,,,,,,
+    Multi-Speed -,070,,slow+,,,,,,,,,
+    Multi-Speed +,071,,slow-,,,,,,,,,
+    Repeat A*,072,,x2,,not on OEM remote,,,,,,,
+    2/R ch*,073,,center,,not on OEM remote,,,,,,,
+    Stereo*,074,,rear,,not on OEM remote,,,,,,,
+    1/L ch*,075,,phantom1,,not on OEM remote,,,,,,,
+    Program,076,,phantom2,,,,,,,,,
+    step -,080,,phantom6,,,,,,,,,
+    Skip >>|,082,,phantom7,,,,,,,,,
+    Skip |<<,083,,phantom8,,,,,,,,,
+    step +,084,,phantom9,,,,,,,,,
+    Multi-Speed <,085,,phantom10,,,,,,,,,
+    D*,087,,setup,,not on OEM remote,,,,,,,
+    Multi-Speed >,088,,light,,,,,,,,,
+    still / strobe*,091,,home theater,,not on OEM remote,,,,,,,
+    digital effect*,092,,M1,,not on OEM remote,,,,,,,
+    1shot memory*,093,,M2,,not on OEM remote,,,,,,,
+    random play,094,,M3,,,,,,,,,
+    -->
+  </commandset>
+</device>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<!-- Status: tested(??) -->
+<device id="denon_asd_3n" name="Denon iPod dock" vendor="Denon" model="asd_3n" type="misc_audio">
+  <commandset type="ir" protocol="denon_k" deviceno="2" subdevice="3" remotename="denon_asd_3n" original_remote="Denon RC-1088">
+    <command cmdref="cmd_browse_remote" name="browse/remote"	cmdno="45"/>
+    <command cmdref="cmd_power_toggle"	name="power"		cmdno="71"/>
+    <command cmdref="cmd_previous"				cmdno="5"/>
+    <command cmdref="cmd_play_pause"	name="play/pause"	cmdno="1"/>
+    <command cmdref="cmd_next"					cmdno="4"/>
+    <command cmdref="cmd_title"		name="top"		cmdno="23"/>
+    <command cmdref="cmd_favorites" name="favorites/all music"	cmdno="72"/>
+    <command cmdref="cmd_right"					cmdno="28"/>
+    <command cmdref="cmd_left"					cmdno="27"/>
+    <command cmdref="cmd_up"					cmdno="25"/>
+    <command cmdref="cmd_down"					cmdno="26"/>
+    <command cmdref="cmd_ok"					cmdno="24"/>
+    <command cmdref="cmd_radio_mode"	name="internet radio"	cmdno="75"/>
+    <command cmdref="cmd_ipod_mode"	name="iPod"		cmdno="76"/>
+    <command cmdref="cmd_shuffle"	name="random"		cmdno="16"/>
+    <command cmdref="cmd_repeat"				cmdno="17"/>
+    <command cmdref="cmd_memory"				cmdno="80"/>
+    <command cmdref="cmd_mute_toggle"	name="mute"		cmdno="77"/>
+    <command cmdref="cmd_volume_up"				cmdno="2"/>
+    <command cmdref="cmd_volume_down"				cmdno="3"/>
+    <command cmdref="cmd_page_down"				cmdno="73"/>
+    <command cmdref="cmd_page_up"				cmdno="74"/>
+
+    <command cmdref="cmd_stop"					cmdno="8"/>
+<!--
+    <command cmdref="cmd_search_plus"				cmdno="21"/>
+    <command cmdref="cmd_search_plus"				cmdno="22"/>
+    <command cmdref="cmd_search_plus"				cmdno="31"/>
+    <command cmdref="cmd_page_search"				cmdno="34"/>
+-->
+    <command cmdref="cmd_return"				cmdno="35"/>
+    <command cmdref="cmd_browse_mode"				cmdno="46"/>
+    <command cmdref="cmd_remote_mode"				cmdno="47"/>
+    <command cmdref="cmd_shuffle_songs"				cmdno="64"/>
+    <command cmdref="cmd_shuffle_albums"			cmdno="65"/>
+    <command cmdref="cmd_shuffle_off"				cmdno="66"/>
+    <command cmdref="cmd_repeat_one"				cmdno="67"/>
+    <command cmdref="cmd_repeat_all"				cmdno="68"/>
+    <command cmdref="cmd_repeat_off"				cmdno="69"/>
+  </commandset>
+</device>

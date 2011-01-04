@@ -1,0 +1,155 @@
+<!-- Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
+-->
+
+<!ELEMENT homemap ( aliases?,device-groups?, devices?, gateways?, gateway-ports? ) >
+
+<!ELEMENT aliases (alias+) >
+
+<!ELEMENT alias EMPTY >
+<!ATTLIST alias
+	id ID #REQUIRED
+        device IDREF #REQUIRED >
+
+<!ELEMENT device-groups ( device-group+ ) >
+
+<!ELEMENT device-group ( deviceref+ ) >
+<!ATTLIST device-group
+        id ID #REQUIRED
+        name CDATA #REQUIRED
+        zone CDATA #IMPLIED >
+
+<!ELEMENT deviceref (#PCDATA) >
+<!ATTLIST deviceref
+        device IDREF #REQUIRED
+        permanent (yes|no) "yes" >
+
+<!ELEMENT description (#PCDATA) >
+
+<!ELEMENT devices (device+) >
+
+<!ELEMENT device (description?,notes?,attribute*,powered-through?,(gateway-port|gateway-port-ref)*,inputs?) >
+<!ATTLIST device
+	name CDATA #IMPLIED
+        id ID #REQUIRED
+        canonical NMTOKEN #IMPLIED
+        model NMTOKEN #IMPLIED
+        class NMTOKEN #REQUIRED
+        firmware CDATA #IMPLIED
+        pin NMTOKEN #IMPLIED
+        defaultzone NMTOKEN #IMPLIED >
+
+<!ELEMENT powered-through EMPTY >
+<!ATTLIST powered-through
+    device IDREF #REQUIRED >
+
+<!ELEMENT notes (#PCDATA) >
+
+<!ELEMENT inputs (connectors*,(input)+) >
+
+<!ELEMENT input (((selectcommand?,querycommand*)|zone+),connector*,internalsrc*,externalsrc*) >
+<!ATTLIST input
+	name CDATA #REQUIRED
+	myname CDATA #IMPLIED
+	audio (yes|no) "yes"
+	video (yes|no) "no" >
+
+<!ELEMENT connectors (connector+) >
+<!ATTLIST connectors
+          connectiontype (analog|s_video|yuv|scart|spdif|hdmi|cvbs|rgb|denon_link|external_analog|other) #REQUIRED
+        version CDATA #IMPLIED
+        hardware CDATA #IMPLIED >
+
+<!ELEMENT connector (deviceref*) >
+<!ATTLIST connector
+          connectiontype  (analog|s_video|yuv|spdif|hdmi|cvbs|rgb|denon_link|external_analog|other) #IMPLIED 
+          hardware CDATA #IMPLIED
+          number NMTOKEN "1"
+          remark CDATA #IMPLIED >
+
+<!ELEMENT internalsrc EMPTY >
+<!ATTLIST internalsrc
+	name CDATA #REQUIRED >
+
+<!ELEMENT externalsrc EMPTY >
+<!ATTLIST externalsrc
+	name CDATA #REQUIRED >
+
+<!ELEMENT selectcommand EMPTY >
+<!ATTLIST selectcommand
+	audio_video NMTOKEN #REQUIRED
+	audio_only NMTOKEN #IMPLIED
+	video_only NMTOKEN #IMPLIED >
+
+<!ELEMENT zone (selectcommand?,querycommand*) >
+<!ATTLIST zone
+        name (1|2|3|4|record) #REQUIRED >
+
+<!ELEMENT querycommand EMPTY >
+<!ATTLIST querycommand
+        cmd NMTOKEN #REQUIRED
+        val CDATA #REQUIRED
+        mediatype (audio_only|video_only|audio_video) "audio_video" >
+
+<!ELEMENT commandmappings (commandmapping)+ >
+
+<!ELEMENT attribute EMPTY >
+<!ATTLIST attribute
+	name NMTOKEN #REQUIRED
+	value CDATA "yes" >
+
+    <!-- Previously called from-gateway -->
+<!ELEMENT gateway-ports (gateway-port)+ >
+
+<!ELEMENT gateway-port EMPTY >
+<!ATTLIST gateway-port
+        id ID #IMPLIED
+        gateway IDREF #REQUIRED
+        connectorno NMTOKEN "1"
+        connectortype (ir|rf|serial|bluetooth|on_off|tcp|web_api|www|ip|virtual|sensor|special) #REQUIRED
+        hostname CDATA #IMPLIED
+ 	portnumber CDATA #IMPLIED
+ 	mac CDATA #IMPLIED
+ 	timeout CDATA "10000"
+ 	wol (yes|no) #IMPLIED >
+
+<!ELEMENT gateway-port-ref EMPTY >
+<!ATTLIST gateway-port-ref
+	gateway-port IDREF #REQUIRED >
+
+<!ELEMENT gateways (gateway+) >
+
+<!ELEMENT gateway  ((gateway-port|gateway-port-ref)*,ports+,commandmappings?) >
+<!ATTLIST gateway
+        class NMTOKEN #REQUIRED
+        model NMTOKEN #IMPLIED
+        interface NMTOKEN #IMPLIED
+        deviceclass NMTOKEN #IMPLIED
+        firmware CDATA #IMPLIED
+	www (yes|no) "no"
+	web_api (yes|no) "no"
+	web_api_portnumber CDATA "80"
+        name CDATA #IMPLIED
+        hostname CDATA #IMPLIED
+        timeout CDATA "4242"
+        id ID #REQUIRED >
+
+<!ELEMENT ports (port+) >
+<!ATTLIST ports
+        type (ir|rf|serial|bluetooth|on_off|tcp|web_api|www|ip|virtual|sensor|special) #REQUIRED >
+
+<!ELEMENT port (commandmappings?) >
+<!ATTLIST port
+        baud CDATA #IMPLIED
+        number NMTOKEN "1" >
+
+<!ELEMENT commandmapping EMPTY >
+<!ATTLIST commandmapping
+	cmd NMTOKEN #REQUIRED
+	house NMTOKEN #IMPLIED
+	deviceno NMTOKEN #IMPLIED
+	commandname NMTOKEN #REQUIRED
+	remotename NMTOKEN #REQUIRED >
+

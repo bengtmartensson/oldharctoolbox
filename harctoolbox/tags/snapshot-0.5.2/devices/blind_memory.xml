@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<devices>
+  <device id="blind_memory" name="Generic blind or screen that moves up (by power_reverse_on) or down (by power_on), does not stop when power removed" model="generic" type="dumb">
+    <attributes>
+      <attribute name="memory" value="yes"/>
+      <attribute name="forget" value="1m"/>
+    </attributes>
+    <aliases>
+      <alias name="down" command="power_on"/>
+      <alias name="up" command="power_reverse_on"/>
+      <alias name="power_off" command="power_reverse_on"/>
+    </aliases>
+    <commandset type="on_off">
+      <command cmdref="power_on"/>
+      <command cmdref="power_reverse_on"/>
+      <!--command cmdref="get_status"/-->
+    </commandset>
+  </device>
+</devices>

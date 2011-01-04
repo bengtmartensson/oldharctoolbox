@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="philips_28ml8805" name="Philips TV 28ML8805" vendor="Philips" model="28ML8805" type="tv">
+  <jp1data>
+    <setupcode value="1234"/>
+  </jp1data>
+  <commandset type="ir" protocol="rc5" toggle="yes" deviceno="0"
+    remotename="philips_28ml8805">
+    <command cmdref="cmd_0" 				cmdno="0"/>
+    <command cmdref="cmd_1" 				cmdno="1"/>
+    <command cmdref="cmd_2" 				cmdno="2"/>
+    <command cmdref="cmd_3" 				cmdno="3"/>
+    <command cmdref="cmd_4" 				cmdno="4"/>
+    <command cmdref="cmd_5" 				cmdno="5"/>
+    <command cmdref="cmd_6" 				cmdno="6"/>
+    <command cmdref="cmd_7" 				cmdno="7"/>
+    <command cmdref="cmd_8" 				cmdno="8"/>
+    <command cmdref="cmd_9" 				cmdno="9"/>
+    <command cmdref="power_off" name="power"	cmdno="12"/>
+    <command cmdref="tv_mode"			cmdno="63"/>
+    <command cmdref="channel_up" 			cmdno="32"/>
+    <command cmdref="channel_down" 			cmdno="33"/>
+    <command cmdref="mute_toggle" name="mute"	cmdno="13"/>
+    <command cmdref="last_channel" 			cmdno="34"/>
+    <command cmdref="volume_up" 			cmdno="16"/>
+    <command cmdref="volume_down" 			cmdno="17"/>
+    <command cmdref="PP" 				cmdno="14"/>
+    <command cmdref="info" 				cmdno="15"/>
+    <command cmdref="brightness_down" 		cmdno="19"/>
+    <command cmdref="brightness_up" 		cmdno="18"/>
+    <command cmdref="aspectratio"	 		cmdno="126"/>
+    <command cmdref="menu" 				cmdno="82"/>
+    <command cmdref="up" 				cmdno="80"/>
+    <command cmdref="down" 				cmdno="81"/>
+    <command cmdref="red" 				cmdno="107"/>
+    <command cmdref="green" 			cmdno="108"/>
+    <command cmdref="yellow" 			cmdno="109"/>
+    <command cmdref="blue" 				cmdno="110"/>
+    <command cmdref="white" 			cmdno="111"/>
+    <command cmdref="menu_off" 			cmdno="83"/>
+    <command cmdref="I_II" 				cmdno="35"/>
+    <command cmdref="teletext" 			cmdno="60"/>
+    <command cmdref="teletext_freeze" 		cmdno="41"/>
+    <command cmdref="teletext_reveal" 		cmdno="44"/>
+    <command cmdref="teletext_hide" 		cmdno="45"/>
+    <command cmdref="teletext_translucent" 		cmdno="46"/>
+    <command cmdref="teletext_doubleheight" 	cmdno="43"/>
+    <command cmdref="teletext_time" 		cmdno="42"/>
+    <command cmdref="PIP" 				cmdno="88"/>
+    <command cmdref="PIP_source" 			cmdno="95"/>
+    <command cmdref="PIP_exchange" 			cmdno="90"/>
+    <command cmdref="PIP_freeze" 			cmdno="101"/>
+    <command cmdref="PIP_position" 			cmdno="89"/>
+    <command cmdref="PIP_ch_down" 			cmdno="103"/>
+    <command cmdref="PIP_ch_up" 			cmdno="102"/>
+    <command cmdref="freeze_toggle"			cmdno="93"/>
+    <command cmdref="DNR" 				cmdno="97"/>
+    <command cmdref="special" 			cmdno="94"/>
+  </commandset>
+
+  <commandset type="ir" protocol="rc5" toggle="yes" deviceno="12"
+    remotename="philips_28ml8805" pseudo_power_on="in_aux">
+    <command cmdref="in_aux"		 	cmdno="63"/>
+  </commandset>
+  <commandset type="ir" protocol="rc5" toggle="yes" deviceno="5" remotename="philips_28ml8805">
+    <command cmdref="in_vcr"			cmdno="63"/>
+  </commandset>
+</device>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE event-action-map SYSTEM "../dtds/event-action-map.dtd">
+
+<event-action-map>
+  <event>
+    <ir-command remote="analog_8ch_switch" command="all_off"/>
+    <action>
+      <quit/>
+    </action>
+  </event>
+
+  <event>
+    <ir-command remote="analog_8ch_switch" command="cmd_4toggle"/>
+    <action>
+      <log-string>Hello world</log-string>
+    </action>
+  </event>
+
+  <event>
+    <ir-command remote="analog_8ch_switch" command="cmd_5toggle"/>
+    <action>
+      <exec wait="true">
+        <progname filename="xset"/>
+        <argument>dpms</argument>
+        <argument>force</argument>
+        <argument>standby</argument>
+      </exec>
+    </action>
+  </event>
+
+  <event>
+    <ir-command remote="analog_8ch_switch" command="cmd_6toggle"/>
+    <action>
+      <exec wait="true">
+        <progname filename="xset"/>
+        <argument>dpms</argument>
+        <argument>force</argument>
+        <argument>on</argument>
+      </exec>
+    </action>
+  </event>
+</event-action-map>

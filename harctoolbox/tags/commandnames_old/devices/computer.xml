@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="computer" name="" model="generic" type="dumb">
+    <commandset type="ip">
+      <command cmdref="ping"/>
+    </commandset>
+</device>

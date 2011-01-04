@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<irprotocol name="pioneer" id="pioneer">
+  <jp1data>
+    <protocol number="00 xx" name="Samsung36"/>
+    <tohex function="reverse-invert" bits="8"/>
+  </jp1data>
+  <parameters>
+    <parameter id="deviceno" bits="8"/>
+    <parameter id="subdevice" bits="8">
+      <default>
+	<constant value="0"/>
+      </default>
+    </parameter>
+    <parameter id="E" bits="4">
+      <default><!-- not implemented -->
+	<constant value="1"/>
+      </default>
+    </parameter>
+    <parameter id="cmdno" bits="8"/>
+  </parameters>
+  <frequency value="38000"/>
+  <irpnotation-old>
+    // Device=32.0
+    // define E=1
+    // Function=0..255
+    // Frequency=38000
+    // One=498,-1498
+    // Zero=498,-498
+    // Form=;4488,-4492,d:8,s:8,498,-4498,e:4,f:8,-68,~f:8,498,-59154
+    // Note: we use function/command with the other bit direction than in .irp.
+  </irpnotation-old>
+  <body>
+    <timings>
+      <timing id="t1" cycles="19"/>
+      <timing id="t3" cycles="57"/>
+      <timing id="tab" cycles="171"/>
+      <timing id="taa" cycles="170"/>
+      <timing id="t900" cycles="2304"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <one timing="t1"/>
+        <zero timing="t1"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t1"/>
+        <zero timing="t3"/>
+      </pair>
+    </pairs>
+    <intro/>
+    <repeat>
+      <one timing="tab"/>
+      <zero timing="taa"/>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="subdevice"/>
+      </coded_number>
+      <one timing="t1"/>
+      <zero timing="tab"/>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="4">
+	<!--parameterref parameter="E"/-->
+        <constant value="7"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="8">
+	  <parameterref parameter="cmdno"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="8">
+        <complement bits="8">
+	  <parameterref parameter="cmdno"/>
+        </complement>
+      </coded_number>
+      <one timing="t1"/>
+      <zero timing="t900"/>
+    </repeat>
+  </body>
+</irprotocol>

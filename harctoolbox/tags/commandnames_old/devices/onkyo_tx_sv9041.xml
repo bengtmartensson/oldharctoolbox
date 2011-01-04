@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="onkyo_tx_sv9041" name="Onkyo TX-SV9041" vendor="Onkyo" model="tx_sv9041" type="receiver">
+  <commandset type="ir" protocol="nec1" deviceno="210" subdevice="109" remotename="onkyo_tx_sv9041">
+    <command cmdref="power_toggle" cmdno="4"/>
+    <command cmdref="sleep" cmdno="93"/>
+    <command cmdref="main_spk_toggle" cmdno="89"/>
+    <command cmdref="zone2_spk_toggle" cmdno="90"/>
+    <command cmdref="zone2_src" cmdno="204"/>
+    <command cmdref="in_tape1" cmdno="8"/>
+    <command cmdref="in_phono" cmdno="10"/>
+    <command cmdref="in_cd" cmdno="9"/>
+    <command cmdref="zone2_volume_up" cmdno="194"/>
+    <command cmdref="in_tuner" cmdno="11"/>
+    <command cmdref="in_tape2" cmdno="7"/>
+    <command cmdref="in_video1" cmdno="15"/>
+    <command cmdref="in_video2" cmdno="14"/>
+    <command cmdref="in_video3" cmdno="13"/>
+    <command cmdref="zone2_volume_down" cmdno="195"/>
+    <command cmdref="tuner_class_preset" cmdno="74"/>
+    <command cmdref="channel_up" cmdno="0"/>
+    <command cmdref="channel_down" cmdno="1"/>
+    <command cmdref="mute_toggle" cmdno="5"/>
+    <command cmdref="center_up" cmdno="128"/>
+    <command cmdref="center_down" cmdno="129"/>
+    <command cmdref="rear_up" cmdno="66"/>
+    <command cmdref="rear_down" cmdno="67"/>
+    <command cmdref="volume_up" cmdno="2"/>
+    <command cmdref="volume_down" cmdno="3"/>
+    <command cmdref="test_mode" cmdno="154"/>
+    <command cmdref="surround_mode" cmdno="76"/>
+    <command cmdref="delay_time" cmdno="83"/>
+  </commandset>
+</device>

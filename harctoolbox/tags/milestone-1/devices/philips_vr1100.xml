@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="philips_vr1100" name="Philips VCR VR1100" vendor="Philips" model="VR1100" type="vcr">
+  <!-- Discrete commands for power on/off and inputs not known -->
+  <commandset type="ir" protocol="rc5" toggle="yes" deviceno="5" remotename="philips_vr1100">
+    <command cmdref="cmd_0" 				cmdno="0"/>
+    <command cmdref="cmd_1" 				cmdno="1"/>
+    <command cmdref="cmd_2" 				cmdno="2"/>
+    <command cmdref="cmd_3" 				cmdno="3"/>
+    <command cmdref="cmd_4" 				cmdno="4"/>
+    <command cmdref="cmd_5" 				cmdno="5"/>
+    <command cmdref="cmd_6" 				cmdno="6"/>
+    <command cmdref="cmd_7" 				cmdno="7"/>
+    <command cmdref="cmd_8" 				cmdno="8"/>
+    <command cmdref="cmd_9" 				cmdno="9"/>
+    <command cmdref="power_toggle" name="power"		cmdno="12"/>
+    <command cmdref="in_tv"				cmdno="63"/>
+    <command cmdref="vcr_tv" 				cmdno="62"/>
+    <command cmdref="previous" 				cmdno="37"/>
+    <command cmdref="next" 				cmdno="38"/>
+    <command cmdref="still_advance" 			cmdno="41"/>
+    <command cmdref="open" 				cmdno="45"/>
+    <command cmdref="clear" 				cmdno="49"/>
+    <command cmdref="play" 				cmdno="53"/>
+    <command cmdref="rewind" 				cmdno="50"/>
+    <command cmdref="fast_forward" 			cmdno="52"/>
+    <command cmdref="stop" 				cmdno="54"/>
+    <command cmdref="channel_up" 			cmdno="32"/>
+    <command cmdref="channel_down" 			cmdno="33"/>
+    <command cmdref="record_toggle"			cmdno="55"/>
+    <command cmdref="info" 				cmdno="15"/>
+    <command cmdref="smart_picture" 			cmdno="70"/>
+    <command cmdref="ok" 				cmdno="87"/>
+    <command cmdref="skip_search" 			cmdno="106"/>
+    <command cmdref="rec_end_search" 			cmdno="117"/>
+    <command cmdref="menu" 				cmdno="82"/>
+    <command cmdref="timer" 				cmdno="69"/>
+    <command cmdref="turbo_timer" 			cmdno="28"/>
+    <command cmdref="lp_sp" 				cmdno="58"/>
+    <command cmdref="I_II" 				cmdno="35"/>
+    <command cmdref="standby_toggle" 			cmdno="6"/>
+
+    <!-- power_on = standby + power_toggle -->
+    <!-- power_off = standby + standby -->
+  </commandset>
+</device>

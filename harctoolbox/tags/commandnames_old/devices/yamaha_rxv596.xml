@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<devices>
+  <device id="yamaha_rxv596" name="Yamaha RX-V 596 Receiver" vendor="Yamaha" model="RX-V 596" type="receiver">
+    <commandset type="ir" protocol="nec1" deviceno="122" remotename="yamaha_rxv596" original_remote="xxx">
+
+      <!-- Input -->
+      <command cmdref="cmd_in_phono" 			cmdno="0x14"/>
+      <command cmdref="cmd_in_cd" 			cmdno="0x15"/>
+      <command cmdref="cmd_in_tuner" 			cmdno="0x16"/>
+      <command cmdref="cmd_in_tape_mon"			cmdno="0x18"/>
+      <command cmdref="cmd_in_dvd" 			cmdno="0x17"/>
+      <command cmdref="cmd_in_dtv" 			cmdno="0x54"/>
+      <command cmdref="cmd_in_cable" 			cmdno="0xc0"/>
+      <command cmdref="cmd_in_vcr" 			cmdno="0x0f"/>
+      <command cmdref="cmd_in_video_aux" 		cmdno="0x55"/>
+      <!--command cmdref="cmd_input_mode" 		cmdno="0xc3"/-->
+
+      <!-- System -->
+      <command cmdref="cmd_volume_up" 			cmdno="0x1a"/>
+      <command cmdref="cmd_volume_down" 		cmdno="0x1b"/>
+      <command cmdref="cmd_power_on" 			cmdno="0x1d"/>
+      <command cmdref="cmd_power_off" 			cmdno="0x1e"/>
+      <command cmdref="cmd_power_toggle" 		cmdno="0x1f"/>
+      <command cmdref="cmd_mute_toggle" 		cmdno="0x1c"/>
+      <command cmdref="cmd_ext_input_toggle"		cmdno="0x87"/>
+      <command cmdref="cmd_osd" 			cmdno="0xc2"/>
+      <command cmdref="cmd_sleep" 			cmdno="0x57"/>
+      <command cmdref="cmd_menu" 			cmdno="0x9c"/>	<!-- not in the list -->
+
+      <!-- DSP -->
+      <command cmdref="cmd_stereo"			cmdno="0x88"/>
+      <command cmdref="cmd_hall" 			cmdno="0x89"/>
+      <command cmdref="cmd_jazz" 			cmdno="0x8a"/>
+      <command cmdref="cmd_rock_concert" 		cmdno="0x8b"/>
+      <command cmdref="cmd_entertainment" 		cmdno="0x8c"/>
+      <command cmdref="cmd_music_video" 		cmdno="0x8d"/>
+      <command cmdref="cmd_tv_theatre" 			cmdno="0x8e"/>
+      <command cmdref="cmd_movie_theatre" 		cmdno="0x8f"/>
+      <command cmdref="cmd_thx" 			cmdno="0x90"/>
+      <command cmdref="cmd_dolby_dts" 			cmdno="0x91"/>
+      <command cmdref="cmd_select" 			cmdno="0x96"/>
+      <command cmdref="cmd_night_toggle" 		cmdno="0x95"/>
+      <command cmdref="cmd_ex_es" 			cmdno="0x97"/>
+      <command cmdref="cmd_effect_toggle" 		cmdno="0x56"/>
+      <command cmdref="cmd_effect_level_select"		cmdno="0x86"/>
+      <command cmdref="cmd_test_mode" 			cmdno="0x85"/>
+
+      <!-- Other -->
+      <command cmdref="cmd_up"				cmdno="0x98"/>
+      <command cmdref="cmd_down" 			cmdno="0x99"/>
+      <command cmdref="cmd_plus" 			cmdno="0x52"/>
+      <command cmdref="cmd_minus" 			cmdno="0x53"/>
+      
+      <!-- Tuner -->
+      <command cmdref="cmd_preset_page_toggle"		cmdno="0x12"/>
+      <command cmdref="cmd_channel_up" 			cmdno="0x10"/>
+      <command cmdref="cmd_channel_down" 		cmdno="0x11"/>
+	
+      <command cmdref="cmd_service_menu"		cmdno="0xdf"/>	<!-- undocumented -->
+
+      <command cmdref="cmd_page_a"			cmdno="0xe0"/>	<!-- undocumented -->
+      <command cmdref="cmd_page_b"			cmdno="0xe1"/>	<!-- undocumented -->
+      <command cmdref="cmd_page_c"			cmdno="0xe2"/>	<!-- undocumented -->
+      <command cmdref="cmd_page_d"			cmdno="0xe3"/>	<!-- undocumented -->
+      <command cmdref="cmd_page_e"			cmdno="0xe4"/>	<!-- undocumented -->
+
+      <command cmdref="cmd_1" 				cmdno="0xe5"/>	<!-- No cmd_0 and cmd_9! -->
+      <command cmdref="cmd_2" 				cmdno="0xe6"/>
+      <command cmdref="cmd_3"	 			cmdno="0xe7"/>
+      <command cmdref="cmd_4" 				cmdno="0xe8"/>
+      <command cmdref="cmd_5" 				cmdno="0xe9"/>
+      <command cmdref="cmd_6" 				cmdno="0xea"/>
+      <command cmdref="cmd_7" 				cmdno="0xeb"/>
+      <command cmdref="cmd_8" 				cmdno="0xec"/>
+
+    </commandset>
+  </device>
+</devices>

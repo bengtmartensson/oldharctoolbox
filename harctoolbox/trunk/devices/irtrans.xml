@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="irtrans" name="IRTrans Ethernet" model="IRT-LAN-DB" pingable_on="yes">
+  <commandset type="web_api">
+    <!-- I have no idea if this is universally valid; at least it works for me -->
+    <command cmdref="reboot" transmit="ridjeg3o5ew22.htm"
+      response_lines="0" remark="Produces error despite success"/>
+  </commandset>
+
+  <commandset type="tcp" suffix="\r" open="ASCI" portnumber="21000">
+    <command cmdref="get_version" transmit="Aver" response_lines="1"/>
+  </commandset>
+  <commandset type="tcp" portnumber="21000">
+    <command cmdref="listen" transmit="ASCI" response_lines="-1"/>
+  </commandset>
+  <commandset type="tcp" portnumber="21000">
+    <command cmdref="listen1" transmit="ASCI" response_lines="1"/>
+  </commandset>
+
+  <commandset type="special" portnumber="21000">
+    <command cmdref="get_remotes"/>
+    <command cmdref="get_commands">
+      <argument name="remote"/>
+    </command>
+    <command cmdref="send_ir">
+      <argument name="remote"/>
+      <argument name="command"/>
+    </command>
+  </commandset>
+
+  <xi:include href="ping.xi"/>
+  <xi:include href="www.xi"/>
+</device>

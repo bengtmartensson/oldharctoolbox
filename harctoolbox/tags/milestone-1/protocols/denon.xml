@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<irprotocol name="denon" id="denon">
+  <!-- Called Sharp by Denon (the firm) ... -->
+  <jp1data>
+    <protocol number="00 9C" name="Denon"/>
+    <tohex function="reverse-invert" bits="8"/>
+  </jp1data>
+  <parameters>
+    <parameter id="deviceno" bits="5"/>
+    <parameter id="cmdno" bits="8"/>
+  </parameters>
+  <frequency value="38000"/>
+  <irpnotation-new>
+protocol={38k,264}&lt;1,-3|1,-7>(D:5,F:8,0:2,1,-165,D:5,~F:8,3:2,1,-165)+
+user=d,Device
+user=f,Function
+  </irpnotation-new>
+  <body>
+    <timings>
+      <timing id="t1" cycles="10"/>
+      <timing id="t3" cycles="30"/>
+      <timing id="t7" cycles="70"/>
+      <timing id="t165" cycles="1650"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <one timing="t1"/>
+        <zero timing="t3"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t1"/>
+        <zero timing="t7"/>
+      </pair>
+    </pairs>
+    <intro/>
+    <repeat>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="5">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="2">
+	<constant value="0"/>
+      </coded_number>
+      <one timing="t1"/>
+      <zero timing="t165"/>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="5">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+        <complement bits="8">
+	  <parameterref parameter="cmdno"/>
+        </complement>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="2">
+	<constant value="3"/>
+      </coded_number>
+      <one timing="t1"/>
+      <zero timing="t165"/>
+    </repeat>
+  </body>
+</irprotocol>

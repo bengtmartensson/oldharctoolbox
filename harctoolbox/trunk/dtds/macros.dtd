@@ -1,0 +1,96 @@
+<!-- Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
+-->
+
+<!ELEMENT macros (description?,(macro|menu|macros)+) >
+<!ATTLIST macros
+	name	ID	#REQUIRED
+        visibility (public|private) "public" >
+
+<!ELEMENT macro (description?,prerequisites?,(true|false|match|command|select-src|delay|message|macrocall|cond|set-variable|get-variable)+,jump?) >
+<!ATTLIST       macro
+        name    ID #REQUIRED
+        visibility (public|private) "public" >
+
+<!ELEMENT delay EMPTY >
+
+<!ATTLIST delay
+        duration NMTOKEN #REQUIRED >
+
+<!ELEMENT message (#PCDATA) >
+<!ATTLIST message
+        class   (debug|info|critical|confirm) "info" >
+
+<!ELEMENT description (#PCDATA) >
+
+<!ELEMENT command (argument*) >
+<!ATTLIST command
+        device  NMTOKEN #REQUIRED
+        command CDATA #REQUIRED
+        count   NMTOKEN "1"
+        toggle  (0|1|yes|no) "no" >
+
+<!ELEMENT select-src EMPTY >
+<!ATTLIST select-src
+	device NMTOKEN #REQUIRED
+	src NMTOKEN #REQUIRED
+	zone NMTOKEN #IMPLIED
+	connectiontype NMTOKEN #IMPLIED
+	mediatype (audio_only|video_only|audio_video) "audio_video" >        
+
+<!ELEMENT argument (#PCDATA) >
+
+<!--ELEMENT jump EMPTY >
+<!ATTLIST jump
+        class 		(device|macro|home) "device"
+        pagegroup       NMTOKEN #REQUIRED
+        page            NMTOKEN #REQUIRED -->
+
+<!--ELEMENT prerequisites (prerequisite*) -->
+
+<!--ELEMENT prerequisite (#PCDATA) >
+<!ATTLIST prerequisite
+        device  NMTOKEN #IMPLIED
+        state   NMTOKEN #IMPLIED -->
+
+<!ELEMENT macrocall EMPTY >
+<!ATTLIST macrocall
+        macro IDREF #REQUIRED >
+
+<!ELEMENT cond (clause+) >
+
+<!ELEMENT clause ((true|false|match|message|command|select|macrocall|delay|code|cond)+) >
+
+<!ELEMENT match ((command|get-variable)+) >
+<!ATTLIST match
+        regexp CDATA #REQUIRED >
+
+<!--ELEMENT test (true|false|(command,expected-response)) -->
+
+<!ELEMENT expected-response EMPTY >
+<!ATTLIST expected-response
+	regexp CDATA #REQUIRED >
+
+<!ELEMENT true EMPTY >
+<!ELEMENT false EMPTY >
+
+<!ELEMENT menu (description?,macrocall*) >
+<!ATTLIST menu
+        name    CDATA   #REQUIRED
+        id      ID      #REQUIRED
+        nuke-prefix CDATA #IMPLIED >
+
+<!ELEMENT code (#PCDATA) >
+<!ATTLIST code
+        wait (true|false) "true" >
+
+<!ELEMENT set-variable EMPTY >
+<!ATTLIST set-variable
+        name    CDATA   #REQUIRED
+        value   CDATA   #REQUIRED >
+
+<!ELEMENT get-variable EMPTY >
+<!ATTLIST get-variable
+        name CDATA #REQUIRED >

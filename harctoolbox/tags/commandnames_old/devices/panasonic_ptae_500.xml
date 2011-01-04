@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
+<device id="panasonic_dvd_s75" name="Panasonic DVD S75" vendor="Panasonic" model="S75" type="projector">
+  <commandset type="ir" protocol="panasonic2" toggle="no" deviceno="128" subdevice="72" remotename="panasonic_ptae_500">
+    <command cmdref="cmd_power_toggle" cmdno="61"/>
+    <command cmdref="cmd_in_video" cmdno="3"/>
+    <command cmdref="cmd_menu" cmdno="122"/>
+    <command cmdref="cmd_up" cmdno="90"/>
+    <command cmdref="cmd_left" cmdno="92"/>
+    <command cmdref="cmd_right" cmdno="93"/>
+    <command cmdref="cmd_down" cmdno="91"/>
+    <command cmdref="cmd_ok" cmdno="114"/>
+    <command cmdref="cmd_normal" cmdno="97"/>
+    <command cmdref="cmd_freeze_toggle" cmdno="2"/>
+    <command cmdref="cmd_aspectratio" cmdno="222"/>
+    <command cmdref="cmd_shutter" cmdno="145"/>
+    <command cmdref="cmd_input" cmdno="109"/>
+    <command cmdref="cmd_in_component1" cmdno="128"/>
+    <command cmdref="cmd_in_vga" cmdno="6"/>
+    <command cmdref="cmd_img_user" cmdno="129"/>
+    <command cmdref="cmd_keystone" cmdno="81"/>
+  </commandset>
+</device>

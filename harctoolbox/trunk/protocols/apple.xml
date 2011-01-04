@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<!-- Created from IRWidget dumps and -->
+<!-- http://www.hifi-remote.com/forums/viewtopic.php?t=5317 -->
+<irprotocol name="apple" id="apple">
+  <!--jp1data>
+    <protocol number="00 5A" name="apple"/>
+    <tohex function="reverse_complement" bits="8"/>
+  </jp1data-->
+  <parameters>
+    <parameter id="deviceno" bits="8"/>
+    <parameter id="cmdno" bits="8"/>
+  </parameters>
+  <frequency value="37683"/>
+  <body>
+    <timings>
+      <timing id="t1" cycles="22"/>
+      <timing id="t2" cycles="21"/>
+      <timing id="t3" cycles="65"/>
+      <timing id="t16" cycles="342"/>
+      <timing id="t8" cycles="173"/>
+      <timing id="t78" cycles="1516"/>
+      <timing id="t4" cycles="86"/>
+      <timing id="t173" cycles="3680"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <one timing="t1"/>
+        <zero timing="t2"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t1"/>
+        <zero timing="t3"/>
+      </pair>
+    </pairs>
+    <intro>
+      <one timing="t16"/>
+      <zero timing="t8"/>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<constant value="238"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<constant value="135"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <one timing="t1"/>
+      <zero timing="t78"/>
+    </intro>
+    <repeat>
+      <one timing="t16"/>
+      <zero timing="t4"/>
+      <one timing="t1"/>
+      <zero timing="t173"/>
+    </repeat>
+  </body>
+</irprotocol>

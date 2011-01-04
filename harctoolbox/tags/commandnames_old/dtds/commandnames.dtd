@@ -1,0 +1,31 @@
+<!ELEMENT commandnames (group+) >
+
+<!ELEMENT group ((group|command|commandref)+) >
+<!ATTLIST group
+        id ID #REQUIRED
+        description CDATA #IMPLIED >
+
+<!ELEMENT command (synonym*,parameter*,comment?) >
+<!ATTLIST command
+        id ID #REQUIRED
+        name CDATA #IMPLIED
+        displayname CDATA #IMPLIED
+        zone (1|2|3) #IMPLIED
+        remark CDATA #IMPLIED
+	type (discrete|toggle|cyclic) "discrete"
+        description CDATA #IMPLIED >
+
+<!ELEMENT comment (#PCDATA) >
+
+<!ELEMENT synonym (#PCDATA) >
+<!ATTLIST synonym
+        name CDATA #REQUIRED >
+
+<!ELEMENT parameter EMPTY >
+<!ATTLIST parameter
+        name    CDATA   #REQUIRED >
+
+<!ELEMENT commandref EMPTY >
+<!ATTLIST commandref
+	cmd	IDREF	#REQUIRED >
+	

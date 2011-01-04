@@ -1,0 +1,44 @@
+<!ELEMENT rmdu (Description|Remote.name|Remote.signature|DeviceType|DeviceIndex|SetupCode|Protocol|Protocol.name|ProtocolParms|FixedData|Code|Notes|Function|Button)* >
+
+<!ELEMENT Description (#PCDATA) >
+
+<!ELEMENT Remote.name (#PCDATA) >
+
+<!ELEMENT Remote.signature (#PCDATA) >
+
+<!ELEMENT DeviceType (#PCDATA) >
+
+<!ELEMENT DeviceIndex (#PCDATA) >
+
+<!ELEMENT SetupCode (#PCDATA) >
+
+<!ELEMENT Protocol (#PCDATA) >
+
+<!ELEMENT Protocol.name (#PCDATA) >
+
+<!ELEMENT ProtocolParms (#PCDATA) >
+
+<!ELEMENT FixedData (#PCDATA) >
+
+<!ELEMENT Code (#PCDATA) >
+<!ATTLIST Code
+	cpu NMTOKEN #REQUIRED >
+
+<!ELEMENT Notes (#PCDATA) >
+
+<!ELEMENT Function (#PCDATA) >
+<!ATTLIST Function
+	name NMTOKEN #REQUIRED
+	button NMTOKEN #IMPLIED
+	shift-mode CDATA #IMPLIED
+	index CDATA #REQUIRED
+	hex CDATA #IMPLIED
+	obc CDATA #REQUIRED >
+
+<!ELEMENT Button (#PCDATA) >
+<!ATTLIST Button
+	name CDATA #REQUIRED
+	number CDATA #REQUIRED
+	unshifted NMTOKEN #IMPLIED
+	shifted NMTOKEN #IMPLIED
+	xshifted NMTOKEN #IMPLIED >

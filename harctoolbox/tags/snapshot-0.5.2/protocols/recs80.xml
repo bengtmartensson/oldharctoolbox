@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<irprotocol name="recs80" id="recs80">
+<!--  http://www.sbprojects.com/knowledge/ir/recs80.htm -->
+<jp1data>
+    <protocol number="0045" name="RECS80"/>
+    <tohex function="reverse_complement" bits="8"/>
+  </jp1data>
+  <parameters>
+    <parameter id="deviceno" bits="3"/>
+    <parameter id="cmdno" bits="6"/>
+    <parameter id="toggle" bits="1"/>
+  </parameters>
+  <frequency value="38000"/>
+  <irpnotation-new>
+<![CDATA[
+{38k,158,msb}<1,-31|1,-47>(1:1,T:1,D:3,F:6,1,-45m)+
+]]>
+  </irpnotation-new>
+  <body>
+    <timings>
+      <timing id="t1" cycles="6"/>
+      <timing id="t31" cycles="186"/>
+      <timing id="t47" cycles="282"/>
+      <timing id="t45m" cycles="1710"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <one timing="t1"/>
+        <zero timing="t31"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t1"/>
+        <zero timing="t47"/>
+      </pair>
+    </pairs>
+    <intro/>
+    <repeat>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="1"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<parameterref parameter="toggle"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="3">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="6">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <one timing="t1"/>
+      <zeropadding timing="t45m"/>
+    </repeat>
+  </body>
+</irprotocol>

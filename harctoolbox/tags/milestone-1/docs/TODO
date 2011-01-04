@@ -1,0 +1,82 @@
+Personal:
+Set up LIRC server delta
+set up harc listener
+
+EXTENSIONS:
+socketlistener (preliminary version finished)
+LIRC: revive/publish CCF-patch, CCF-exporter. dBox.
+Eventghost: ...
+JP1: RemoteMaster, extender, MkJP1, ...
+Tonto: finished
+Pronto-NG: ?
+Guile
+Python
+Lua
+superremote (java/xml) (Nokia N810)
+lua/netremote
+
+Restructuring:
+Rename home -> house?
+home.java restructure transmit_command.
+
+BUGS, necessary features:
+console showing last line
+-->Makefile should be able to build jar-file.
+
+misc missing features in GUI. DONE
+In GUI, facility for rereading macros and/or home file. DOME
+run macros in threads DONE
+sockets performance (improved)
+Possibility to interrupt commands (e.g. listen) -- DONE
+properites issues DONE
+Generate irdb-file for components using IRTrans as gateway. (Ok, but reject)
+Generate lirc.conf-file for lirc servers. DONE
+
+Export device formats
+lirc.conf	DONE
+rem		DONE
+rmdu		primitive version ok, TODO: integrate with RemoteMaster.
+ccf		DONE
+xml		DONE
+eventghost	(through xml, alternatively teach EG to read them directly)
+ired touch	can't get "sharing your remotes" to work
+pronto-ng?
+
+Import formats
+ccf		DONE (gui integration 2bdone)
+rmdu   		Through RemoteMaster integration
+LIRC   		lircpatch, to revive
+
+Very low priority
+ISO-8859-1 streams from dbox erroneously read.
+XML export of protocol codes (not really useful).
+GC GUI: Blink, relay status and manipulation (questionable usability, NR better)
+support <img> elements in home and devices. (do if/when I need it)
+Ping all in Home/Macros. (can be done in a macro)
+EZControl udp support	 (no advantages wrt web_api)
+USB-Uirt direct support	(can be done indirectly with LIRC)
+TIRA direct support	(can be done indirectly with LIRC)
+cntrl-c-handling (readline) - much better, still not perfect.
+GUI cannot call commands with more than one argument.
+
+Rejected - Probably never
+IRTrans Gui: getremotes?, getversion?
+HAL irtransmitter
+Macro arguments
+IRTrans tcp support (using libIRTrans.so/IRTrans.dll). (Only for learning native methods :-)
+
+Open:
+Browser support: XUL?, Java applet?, Javascript?, AJAX?, iPod Touch?
+
+REJECTED:
+Generate t10-irdb-fragment for t10 actions
+Getline, editline support
+server (listen @port -> Main.main()) (Port EG instead)
+decodeIR port to Java.
+IRWidget prog port.
+
+Devices, very low priority:
+
+Pioneer DVD (combination protocol?)
+Windows media center signals
+dbox keyboard

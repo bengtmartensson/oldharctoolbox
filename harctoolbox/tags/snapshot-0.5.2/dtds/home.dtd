@@ -1,0 +1,155 @@
+<!-- Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
+-->
+
+<!ELEMENT homemap ( aliases?,device-groups?, devices?, from-gateways?, gateways?) >
+
+<!ELEMENT aliases (alias+) >
+
+<!ELEMENT alias EMPTY >
+<!ATTLIST alias
+	id ID #REQUIRED
+        device IDREF #REQUIRED >
+
+<!ELEMENT device-groups ( device-group+ ) >
+
+<!ELEMENT device-group ( deviceref+ ) >
+<!ATTLIST device-group
+        id ID #REQUIRED
+        name CDATA #REQUIRED
+        zone CDATA #IMPLIED >
+
+<!ELEMENT deviceref (#PCDATA) >
+<!ATTLIST deviceref
+        device IDREF #REQUIRED >
+
+<!ELEMENT description (#PCDATA) >
+
+<!ELEMENT devices (device+) >
+
+<!ELEMENT device (description?,notes?,attribute*,powered-through?,(from-gateway|from-gateway-ref)*,inputs?) >
+<!ATTLIST device
+	name CDATA #IMPLIED
+        id ID #REQUIRED
+        canonical NMTOKEN #IMPLIED
+        model NMTOKEN #IMPLIED
+        class NMTOKEN #REQUIRED
+        firmware CDATA #IMPLIED
+        pin NMTOKEN #IMPLIED >
+
+<!ELEMENT powered-through EMPTY >
+<!ATTLIST powered-through
+    device IDREF #REQUIRED >
+
+<!ELEMENT notes (#PCDATA) >
+
+<!ELEMENT inputs (input)+ >
+
+<!ELEMENT input ((selectcommand+|zone+),connectiontype*,(deviceref|internalsrc|externalsrc)*) >
+<!ATTLIST input
+	name CDATA #REQUIRED
+	myname CDATA #IMPLIED
+	audio (yes|no) "yes"
+	video (yes|no) "no" >
+
+<!ELEMENT connectiontype EMPTY >
+<!ATTLIST connectiontype
+	type NMTOKEN #REQUIRED >
+
+<!ELEMENT internalsrc EMPTY >
+<!ATTLIST internalsrc
+	name CDATA #REQUIRED >
+
+<!ELEMENT externalsrc EMPTY >
+<!ATTLIST externalsrc
+	name CDATA #REQUIRED >
+
+<!ELEMENT selectcommand EMPTY >
+<!ATTLIST selectcommand
+	select NMTOKEN #REQUIRED
+	audio_only NMTOKEN #IMPLIED
+	video_only NMTOKEN #IMPLIED >
+
+<!ELEMENT zone (selectcommand|querycommand)* >
+<!ATTLIST zone
+        name (1|2|3|record) #REQUIRED >
+
+<!ELEMENT querycommand EMPTY >
+<!ATTLIST querycommand
+        cmd NMTOKEN #REQUIRED
+        val CDATA #REQUIRED
+        mediatype (audio_only|video_only|audio_video) "audio_video" >
+
+<!ELEMENT dumb-device (commands?) >
+<!ATTLIST dumb-device
+	type (on_off|up_down|open_close) "on_off"
+        forget (yes|no) #IMPLIED
+        memory (direction|position|none) "none"
+        pulse CDATA #IMPLIED >
+
+<!ELEMENT commands (command|on|off|toggle|open_close|up|down)+ >
+
+<!ELEMENT attribute EMPTY >
+<!ATTLIST attribute
+	name NMTOKEN #REQUIRED
+	value CDATA "yes" >
+
+<!ELEMENT from-gateways (from-gateway)+ >
+
+<!ELEMENT from-gateway EMPTY >
+<!ATTLIST from-gateway
+        id ID #IMPLIED
+        gateway IDREF #REQUIRED
+        connector NMTOKEN "1"
+        hostname CDATA #IMPLIED
+ 	portnumber CDATA #IMPLIED
+ 	mac CDATA #IMPLIED
+ 	wol (yes|no) #IMPLIED >
+
+<!ELEMENT from-gateway-ref EMPTY >
+<!ATTLIST from-gateway-ref
+	from-gateway IDREF #REQUIRED >
+
+<!ELEMENT gateways (gateway+) >
+
+<!ELEMENT gateway  ((lan|hostname|(from-gateway|from-gateway-ref)+),output+,commands?,presets?) >
+<!ATTLIST gateway
+        class NMTOKEN #REQUIRED
+        model NMTOKEN #IMPLIED
+        interface NMTOKEN #IMPLIED
+        deviceclass NMTOKEN #IMPLIED
+        firmware CDATA #IMPLIED
+	www (yes|no) "no"
+	web_api (yes|no) "no"
+	web_api_portnumber CDATA "80"
+        name CDATA #IMPLIED
+        id ID #REQUIRED >
+
+<!ELEMENT hostname EMPTY >
+<!ATTLIST hostname
+        ipname CDATA #REQUIRED >
+
+<!ELEMENT lan EMPTY >
+
+<!ELEMENT output (commands?) >
+<!ATTLIST output
+        type (ir|rf433|rf868|serial|bluetooth|on_off|tcp|web_api|www|ip|special) "ir"
+        baud CDATA #IMPLIED
+        connector NMTOKEN "1" >
+
+<!ELEMENT command EMPTY >
+<!ATTLIST command
+	cmd NMTOKEN #REQUIRED
+	house NMTOKEN #IMPLIED
+	deviceno NMTOKEN #IMPLIED
+	commandname NMTOKEN #REQUIRED
+	remotename NMTOKEN #REQUIRED >
+
+<!ELEMENT presets (preset+) >
+
+<!ELEMENT preset EMPTY >
+<!ATTLIST preset
+        programno CDATA #REQUIRED
+        device IDREF #REQUIRED >

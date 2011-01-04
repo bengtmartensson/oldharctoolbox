@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE button_rules SYSTEM "../dtds/button_rules.dtd">
+<button_rules>
+  <reserve-button button="magic" unshifted-only="no"/>
+  <reserve-button button="volume_up" unshifted-only="yes"/>
+  <reserve-button button="volume_down" unshifted-only="yes"/>
+  <reserve-button button="d" unshifted-only="yes"/>
+  <names button="play">
+    <add-name name="play_pause"/>
+    <add-name name="slow"/>
+    <add-name name="slow_forward"/>
+  </names>
+  <names button="pause">
+    <add-name name="pause_toggle" replace="yes"/>
+    <add-name name="pause_on"/>
+    <add-name name="pause_off"/>
+    <add-name name="play_pause"/>
+    <add-name name="still_advance"/>
+    <add-name name="freeze_toggle"/>
+  </names>
+  <names button="rewind">
+    <add-name name="slow_reverse"/>
+    <add-name name="reverse"/>
+  </names>
+  <names button="guide">
+    <add-name name="info" replace="yes"/>
+    <add-name name="display"/>
+  </names>
+  <names button="mute">
+    <add-name name="mute_toggle"/>
+  </names>
+  <names button="menu" devicetype="dvd|misc_audio">
+    <add-name name="dvd_menu"/>
+    <add-name name="title"/>
+  </names>
+  <names button="menu">
+    <add-name name="setup"/>
+  </names>
+  <names button="channel_up" devicetype="dvd|cd">
+    <add-name name="next"/>
+  </names>
+  <names button="channel_up" devicetype="sat">
+    <add-name name="up"/>
+  </names>
+  <names button="channel_up" devicetype="misc_audio">
+    <add-name name="page_up"/>
+  </names>
+  <names button="channel_down" devicetype="dvd">
+    <add-name name="previous"/>
+  </names>
+  <names button="channel_down" devicetype="sat">
+    <add-name name="down"/>
+  </names>
+  <names button="channel_down" devicetype="misc_audio">
+    <add-name name="page_down"/>
+  </names>
+  <reserve-button button="mute" unshifted-only="yes"/>
+  <names button="power" match-required="yes">
+    <add-name name="power_toggle" replace="yes"/>
+    <add-name name="power_on"/>
+    <add-name name="power_off"/>
+    <add-name name="standby"/>
+    <add-name name="suspend"/>
+  </names>
+  <names button="record">
+    <add-name name="record_toggle" replace="yes"/>
+    <add-name name="record_on"/>
+    <add-name name="record_off"/>
+  </names>
+  <names button="record">
+    <add-name name="open_close"/>
+  </names>
+  <names button="two_digit">
+    <add-name name="plus10"/>
+    <add-name name="last_channel"/>
+    <add-name name="caps_num"/>
+  </names>
+  <names button="exit">
+    <add-name name="home"/>
+    <add-name name="return"/>
+    <add-name name="menu_off"/>
+  </names>
+  <names button="a" devicetype="dvd|misc_audio">
+    <add-name name="audio"/>
+  </names>
+  <names button="b" devicetype="dvd|misc_audio">
+    <add-name name="subtitle"/>
+  </names>
+  <names button="c" devicetype="dvd|misc_audio">
+    <add-name name="angle"/>
+    <add-name name="zoom"/>
+  </names>
+
+  <names button="a">
+    <add-name name="A"/>
+  </names>
+  <names button="b">
+    <add-name name="B"/>
+  </names>
+  <names button="c">
+    <add-name name="C"/>
+  </names>
+  <names button="d">
+    <add-name name="D"/>
+  </names>
+
+  <names button="red" devicetype="dvd|misc_audio">
+    <add-name name="setup"/>
+  </names>
+  <names button="green" devicetype="dvd|misc_audio">
+    <add-name name="osd"/>
+    <add-name name="source"/>
+  </names>
+  <names button="yellow" devicetype="dvd|misc_audio">
+    <add-name name="bookmark"/>
+    <add-name name="delete"/>
+  </names>
+  <names button="blue" devicetype="dvd">
+    <add-name name="goto"/>
+  </names>
+
+  <names button="16_9">
+    <add-name name="ar"/>
+    <add-name name="resolution"/>
+  </names>
+  <names button="av">
+    <add-name name="in_usb"/>
+    <add-name name="in_aux"/>
+    <add-name name="mode_tv"/>
+    <add-name name="tv_mode"/>
+    <add-name name="file_mode"/>
+    <add-name name="input_select"/>
+  </names>
+  <names button="previous" devicetype="sat">
+    <add-name name="page_down"/>
+  </names>
+  <names button="next" devicetype="sat">
+    <add-name name="page_up"/>
+  </names>
+
+  <names button="rewind">
+    <add-name name="teletext"/>
+  </names>
+  <names button="stop">
+    <add-name name="teletext_freeze"/>
+  </names>
+  <names button="record">
+    <add-name name="teletext_doubleheight"/>
+  </names>
+  <names button="fast_forward">
+    <add-name name="teletext_hide"/>
+  </names>
+
+  <names button="a" devicetype="sat">
+    <add-name name="topleft"/>
+  </names>
+  <names button="b" devicetype="sat">
+    <add-name name="topright"/>
+  </names>
+  <names button="c" devicetype="sat">
+    <add-name name="bottomleft"/>
+  </names>
+  <names button="record" devicetype="sat">
+    <add-name name="bottomright"/>
+  </names>
+
+  <names button="av">
+    <add-name name="in_hdmi1"/>
+    <add-name name="in_component1"/>
+    <add-name name="source"/>
+  </names>
+
+  <assign-buttons aliases="yes" unshifted-only="yes"/>
+  <!--dump-functions/-->
+  <!--dump-buttons/-->
+  <assign-buttons/>
+  <assign-buttons/>
+
+</button_rules>

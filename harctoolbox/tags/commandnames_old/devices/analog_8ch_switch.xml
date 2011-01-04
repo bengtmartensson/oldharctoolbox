@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+"../dtds/devices.dtd">
+<device id="analog_8ch_switch" name="8 channel analog switch" vendor="Bengt Martensson" model="unique!" type="misc_audio">
+  <commandset type="ir" protocol="rc5" toggle="no" deviceno="20" remotename="analog_8ch_switch">
+    <command cmdref="cmd_all_off" cmdno="0"/>
+    <command cmdref="cmd_1toggle" cmdno="1"/>
+    <command cmdref="cmd_2toggle" cmdno="2"/>
+    <command cmdref="cmd_3toggle" cmdno="3"/>
+    <command cmdref="cmd_4toggle" cmdno="4"/>
+    <command cmdref="cmd_5toggle" cmdno="5"/>
+    <command cmdref="cmd_6toggle" cmdno="6"/>
+    <command cmdref="cmd_7toggle" cmdno="7"/>
+    <command cmdref="cmd_8toggle" cmdno="8"/>
+    <command cmdref="cmd_all_on" cmdno="9"/>
+
+    <command cmdref="cmd_1on" cmdno="11"/>
+    <command cmdref="cmd_2on" cmdno="12"/>
+    <command cmdref="cmd_3on" cmdno="13"/>
+    <command cmdref="cmd_4on" cmdno="14"/>
+    <command cmdref="cmd_5on" cmdno="15"/>
+    <command cmdref="cmd_6on" cmdno="16"/>
+    <command cmdref="cmd_7on" cmdno="17"/>
+    <command cmdref="cmd_8on" cmdno="18"/>
+
+    <command cmdref="cmd_1off" cmdno="21"/>
+    <command cmdref="cmd_2off" cmdno="22"/>
+    <command cmdref="cmd_3off" cmdno="23"/>
+    <command cmdref="cmd_4off" cmdno="24"/>
+    <command cmdref="cmd_5off" cmdno="25"/>
+    <command cmdref="cmd_6off" cmdno="26"/>
+    <command cmdref="cmd_7off" cmdno="27"/>
+    <command cmdref="cmd_8off" cmdno="28"/>
+
+    <command cmdref="cmd_HTPC_5_1" cmdno="30"/>
+    <command cmdref="cmd_HTPC_7_1" cmdno="31"/>
+    <command cmdref="cmd_2_2_2" cmdno="32"/>
+    <command cmdref="cmd_dvd_audio" cmdno="33"/>
+    <command cmdref="cmd_dvd_audio_bs" cmdno="34"/>
+  </commandset>
+  <commandset type="serial" protocol="rs232_2400_8n1" delay_between_chars="500ms">
+    <command cmdref="cmd_1toggle" transmit="T1"/>
+    <command cmdref="cmd_2toggle" transmit="T2"/>
+    <command cmdref="cmd_3toggle" transmit="T3"/>
+    <command cmdref="cmd_4toggle" transmit="T4"/>
+    <command cmdref="cmd_5toggle" transmit="T5"/>
+    <command cmdref="cmd_6toggle" transmit="T6"/>
+    <command cmdref="cmd_7toggle" transmit="T7"/>
+    <command cmdref="cmd_8toggle" transmit="T8"/>
+    <command cmdref="cmd_all_toggle" transmit="TA"/>
+    
+    <command cmdref="cmd_1on" transmit="S1"/>
+    <command cmdref="cmd_2on" transmit="S2"/>
+    <command cmdref="cmd_3on" transmit="S3"/>
+    <command cmdref="cmd_4on" transmit="S4"/>
+    <command cmdref="cmd_5on" transmit="S5"/>
+    <command cmdref="cmd_6on" transmit="S6"/>
+    <command cmdref="cmd_7on" transmit="S7"/>
+    <command cmdref="cmd_8on" transmit="S8"/>
+    <command cmdref="cmd_all_on" transmit="SA"/>
+
+    <command cmdref="cmd_1off" transmit="C1"/>
+    <command cmdref="cmd_2off" transmit="C2"/>
+    <command cmdref="cmd_3off" transmit="C3"/>
+    <command cmdref="cmd_4off" transmit="C4"/>
+    <command cmdref="cmd_5off" transmit="C5"/>
+    <command cmdref="cmd_6off" transmit="C6"/>
+    <command cmdref="cmd_7off" transmit="C7"/>
+    <command cmdref="cmd_8off" transmit="C8"/>
+    <command cmdref="cmd_all_off" transmit="CA"/>
+  </commandset>
+</device>

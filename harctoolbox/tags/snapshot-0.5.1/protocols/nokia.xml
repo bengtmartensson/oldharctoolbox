@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<irprotocol name="nokia" id="nokia">
+  <jp1data>
+    <protocol number="00 ed" name="Nokia"/>
+    <tohex function="id" bits="8"/>
+  </jp1data>
+  <parameters>
+    <parameter id="deviceno" bits="8"/>
+    <parameter id="subdevice" bits="8">
+    </parameter>
+    <parameter id="cmdno" bits="8"/>
+  </parameters>
+  <frequency value="36000"/>
+  <irpnotation-new>
+{36k,msb}&lt;164,-276|164,-445|164,-614|164,-783>(412,-276,D:8,S:8,F:8,164,-???)+
+  </irpnotation-new>
+  <body>
+    <timings>
+      <timing id="t164" cycles="6"/>
+      <timing id="t276" cycles="10"/>
+      <timing id="t445" cycles="16"/>
+      <timing id="t614" cycles="22"/>
+      <timing id="t783" cycles="28"/>
+      <timing id="t412" cycles="15"/>
+      <timing id="t_end" cycles="4050"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <one timing="t164"/>
+        <zero timing="t276"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t164"/>
+        <zero timing="t445"/>
+      </pair>
+      <pair id="p2">
+        <one timing="t164"/>
+        <zero timing="t614"/>
+      </pair>
+      <pair id="p3">
+        <one timing="t164"/>
+        <zero timing="t783"/>
+      </pair>
+    </pairs>
+    <intro/>
+    <repeat>
+      <one timing="t412"/>
+      <zero timing="t276"/>
+      <coded_number direction="msb" zero="p0" one="p1" two="p2" three="p3" bits="8">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" two="p2" three="p3" bits="8">
+	<parameterref parameter="subdevice"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" two="p2" three="p3" bits="8">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <one timing="t164"/>
+      <zero timing="t_end"/>
+    </repeat>
+  </body>
+</irprotocol>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="philips_37pfl9603" name="Philips TV 37PFL9603" vendor="Philips" model="37PFL9603" type="tv" pingable_on="yes" pingable_standby="no">
+  <jp1data>
+    <setupcode value="1234"/>
+  </jp1data>
+  <commandset type="ir" protocol="rc5" toggle="yes" deviceno="0"
+    remotename="philips_37pfl9603">
+    <command cmdref="cmd_0" 				cmdno="0"/>
+    <command cmdref="cmd_1" 				cmdno="1"/>
+    <command cmdref="cmd_2" 				cmdno="2"/>
+    <command cmdref="cmd_3" 				cmdno="3"/>
+    <command cmdref="cmd_4" 				cmdno="4"/>
+    <command cmdref="cmd_5" 				cmdno="5"/>
+    <command cmdref="cmd_6" 				cmdno="6"/>
+    <command cmdref="cmd_7" 				cmdno="7"/>
+    <command cmdref="cmd_8" 				cmdno="8"/>
+    <command cmdref="cmd_9" 				cmdno="9"/>
+    <command cmdref="cmd_power_toggle" name="power"	cmdno="12"/>
+    <!--command cmdref="cmd_tv_mode"			cmdno="63"/-->
+    <command cmdref="cmd_channel_up" 			cmdno="32"/>
+    <command cmdref="cmd_channel_down" 			cmdno="33"/>
+    <command cmdref="cmd_mute_toggle" name="mute"	cmdno="13"/>
+    <command cmdref="cmd_last_channel" 			cmdno="34"/>
+    <command cmdref="cmd_volume_up" 			cmdno="16"/>
+    <command cmdref="cmd_volume_down" 			cmdno="17"/>
+    <command cmdref="cmd_PP" 				cmdno="14"/>
+    <command cmdref="cmd_info" 				cmdno="15"/>
+    <command cmdref="cmd_brightness_down" 		cmdno="19"/>
+    <command cmdref="cmd_brightness_up" 		cmdno="18"/>
+    <command cmdref="cmd_aspectratio"	 		cmdno="126"/>
+    <command cmdref="cmd_menu" 				cmdno="82"/>
+    <command cmdref="cmd_up" 				cmdno="80"/>
+    <command cmdref="cmd_down" 				cmdno="81"/>
+    <command cmdref="cmd_red" 				cmdno="107"/>
+    <command cmdref="cmd_green" 			cmdno="108"/>
+    <command cmdref="cmd_yellow" 			cmdno="109"/>
+    <command cmdref="cmd_blue" 				cmdno="110"/>
+    <command cmdref="cmd_white" 			cmdno="111"/>
+    <command cmdref="cmd_menu_off" 			cmdno="83"/>
+    <command cmdref="cmd_I_II" 				cmdno="35"/>
+    <command cmdref="cmd_teletext" 			cmdno="60"/>
+    <command cmdref="cmd_teletext_freeze" 		cmdno="41"/>
+    <command cmdref="cmd_teletext_reveal" 		cmdno="44"/>
+    <command cmdref="cmd_teletext_hide" 		cmdno="45"/>
+    <command cmdref="cmd_teletext_translucent" 		cmdno="46"/>
+    <command cmdref="cmd_teletext_doubleheight" 	cmdno="43"/>
+    <command cmdref="cmd_teletext_time" 		cmdno="42"/>
+    <command cmdref="cmd_PIP" 				cmdno="88"/>
+    <command cmdref="cmd_PIP_source" 			cmdno="95"/>
+    <command cmdref="cmd_PIP_exchange" 			cmdno="90"/>
+    <command cmdref="cmd_PIP_freeze" 			cmdno="101"/>
+    <command cmdref="cmd_PIP_position" 			cmdno="89"/>
+    <command cmdref="cmd_PIP_ch_down" 			cmdno="103"/>
+    <command cmdref="cmd_PIP_ch_up" 			cmdno="102"/>
+    <!--command cmdref="cmd_freeze_toggle"			cmdno="93"/-->
+    <!--command cmdref="cmd_DNR" 				cmdno="97"/-->
+    <!--command cmdref="cmd_special" 			cmdno="94"/-->
+
+    <command cmdref="cmd_in_ext2" 			cmdno="57"/>
+    <command cmdref="cmd_power_on" 			cmdno="63"/>
+    <command cmdref="cmd_power_off" 			cmdno="61"/>
+
+    <command cmdref="cmd_input"				cmdno="56"/>
+  </commandset>
+
+  <commandset type="ir" protocol="rc5" toggle="yes" deviceno="12"
+    remotename="philips_37pfl9603" pseudo_power_on="cmd_in_aux">
+    <command cmdref="cmd_in_aux"		 	cmdno="63"/>
+  </commandset>
+  <commandset type="ir" protocol="rc5" toggle="yes" deviceno="5" remotename="philips_37pfl9603">
+    <command cmdref="cmd_in_vcr"			cmdno="63"/>
+  </commandset>
+
+  <commandset type="ir" protocol="rc5" toggle="yes" deviceno="3" remotename="philips_37pfl9603">
+<!--
+Notes=Dummy device to support RC-5 commands on Philips TV discrete input selection for remotes w/o 2 byte code support (e.g. URC-6131).\n\nFunctions for this device\:\nav1\nav3\nhdmi1\nhdmi3\nside\nambilight discrete on\nambilight discrete off\nformat auto
+-->
+
+    <command cmdref="cmd_in_ext1"			cmdno="4"/>
+    <command cmdref="cmd_in_ext3"			cmdno="56"/>
+    <command cmdref="cmd_in_hdmi1"			cmdno="57"/>
+    <command cmdref="cmd_in_hdmi2"			cmdno="123"/>
+    <command cmdref="cmd_in_hdmi3"			cmdno="6"/>
+    <!--command cmdref="cmd_tv_mode"			cmdno="72"/-->
+    <command cmdref="cmd_in_side"			cmdno="58"/>
+    <command cmdref="cmd_light_on"			cmdno="40"/>
+    <command cmdref="cmd_light_off"			cmdno="41"/>
+    <!--command cmdref="cmd_aspectratio_automatic"		cmdno="61"/-->
+  </commandset>
+
+  <commandset type="ip" wol="no">
+    <command cmdref="ping"/>
+  </commandset>
+</device>

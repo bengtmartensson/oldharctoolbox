@@ -1,0 +1,68 @@
+<!-- Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
+-->
+
+<!ELEMENT jp1remotes (jp1remote)+ >
+
+<!ELEMENT jp1remote (general, settings, checksums, devicetypes,devicetypealiases, devicebuttons, buttons, buttonmaps, digitmaps, protocols) >
+
+<!ELEMENT general EMPTY >
+<!ATTLIST general
+	name CDATA #REQUIRED
+	description CDATA #IMPLIED
+	signature CDATA #REQUIRED
+	EepromSize CDATA #IMPLIED
+	AdvCodeAddr CDATA #IMPLIED
+	UpgradeAddr CDATA #IMPLIED
+	LearnedAddr CDATA #IMPLIED
+	Processor CDATA #IMPLIED
+	BaseAddr CDATA #IMPLIED
+	RAMAddr CDATA #IMPLIED
+	RDFSync CDATA #IMPLIED
+	WAVUpgrade (0|1) #IMPLIED
+	AdvCodeFormat CDATA #IMPLIED
+	AdvCodeBindFormat CDATA #IMPLIED
+	SectionTerminator CDATA #IMPLIED
+	EFCDigits CDATA #IMPLIED
+	LearnedDevBtnSwapped (Yes|No) #IMPLIED
+	ImageMap CDATA #IMPLIED >
+
+<!ELEMENT settings (#PCDATA) >
+
+<!ELEMENT checksums (#PCDATA) >
+
+<!ELEMENT devicetypes (devicetype)* >
+
+<!ELEMENT devicetype EMPTY >
+<!ATTLIST devicetype
+	name NMTOKEN #REQUIRED
+	value CDATA #REQUIRED >
+
+<!ELEMENT devicetypealiases (devicetypealias)+ >
+
+<!ELEMENT devicetypealias (#PCDATA) >
+<!ATTLIST devicetypealias
+	name CDATA #REQUIRED
+	value CDATA #REQUIRED >
+
+<!ELEMENT devicebuttons (#PCDATA) >
+
+<!ELEMENT buttons (button)+ >
+
+<!ELEMENT button EMPTY >
+<!ATTLIST button
+	name NMTOKEN #REQUIRED
+	value CDATA #REQUIRED
+>
+
+<!ELEMENT buttonmaps (#PCDATA) >
+
+<!ELEMENT digitmaps (#PCDATA) >
+
+<!ELEMENT protocols (protocol)+ >
+
+<!ELEMENT protocol (#PCDATA) >
+<!ATTLIST protocol
+	name CDATA #REQUIRED >

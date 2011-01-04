@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<irprotocol name="panasonic" id="panasonic">
+  <jp1data>
+    <protocol number="001F or 00C9 or 00CD" name="panasonic"/>
+    <tohex function="reverse_complement" bits="8"/>
+  </jp1data>
+  <parameters>
+    <parameter id="deviceno" bits="5"/>
+    <parameter id="cmdno" bits="7"/>
+  </parameters>
+  <frequency value="40000"/>
+  <irpnotation-new>
+<![CDATA[
+{40k,600}<1,-1|2,-1>(4,-1,F:7,D:5,^45m)+
+]]>
+  </irpnotation-new>
+  <body>
+    <timings>
+      <timing id="t1" cycles="24"/>
+      <timing id="t2" cycles="48"/>
+      <timing id="t4" cycles="96"/>
+      <timing id="t45m" cycles="1800"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <one timing="t1"/>
+        <zero timing="t1"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t2"/>
+        <zero timing="t1"/>
+      </pair>
+    </pairs>
+    <intro>
+      <one timing="t4"/>
+      <zero timing="t1"/>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="7">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="5">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <zeropadding timing="t45m"/>
+    </intro>
+    <repeat/>
+  </body>
+</irprotocol>

@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="denon_avr3808" name="Denon AVR-3808 Receiver" vendor="Denon" model="AVR-3808" type="receiver" pingable_on="yes" pingable_standby="yes">
+  <attributes>
+    <attribute name="north-america"/>
+    <attribute name="japan"/>
+    <attribute name="ipod"/>
+    <attribute name="bidirectional-rc"/>
+  </attributes>
+  <commandset type="ir" protocol="denon" deviceno="2" remotename="denon_avr3808">
+    <!-- page 4-->
+    <command cmdno="072" zone="3" cmdref="cmd_zone3_tuner"/>
+    <command cmdno="073" zone="3" cmdref="cmd_zone3_phono"/>
+    <command cmdno="074" zone="3" cmdref="cmd_zone3_cd"/>
+    <command cmdno="078" zone="3" cmdref="cmd_zone3_dvd"/>
+    <command cmdno="079" zone="3" cmdref="cmd_zone3_hdp"/>
+    <command cmdno="082" zone="3" cmdref="cmd_zone3_tv_cbl"/>
+    <command cmdno="083" zone="3" cmdref="cmd_zone3_sat"/>
+    <command cmdno="084" zone="3" cmdref="cmd_zone3_vcr"/>
+    <command cmdno="085" zone="3" cmdref="cmd_zone3_dvr"/>
+    <command cmdno="087" zone="3" cmdref="cmd_zone3_video_aux"/>
+    <command cmdno="093" zone="2" cmdref="cmd_zone2_toggle"/>
+    <command cmdno="101" zone="3" cmdref="cmd_zone3_volume_down"/>
+    <command cmdno="102" zone="3" cmdref="cmd_zone3_volume_up"/>
+    <command cmdno="106" cmdref="cmd_pure_direct" type="toggle"/>
+    <command cmdno="121" cmdref="cmd_zone1_on" name="main zone on"/>
+    <command cmdno="122" cmdref="cmd_zone1_off"/>
+    <command cmdno="123" zone="2" cmdref="cmd_zone2_on" name="multi zone 2 on"/>
+    <command cmdno="124" zone="2" cmdref="cmd_zone2_off"/>
+    <command cmdno="125" zone="3" cmdref="cmd_zone3_on"/>
+    <command cmdno="126" zone="3" cmdref="cmd_zone3_off"/>
+    <!-- page 1 -->
+    <command cmdno="193" cmdref="cmd_power_toggle"/>
+    <command cmdno="194" cmdref="cmd_fl_level_up"/>
+    <command cmdno="195" cmdref="cmd_in_phono"/>
+    <command cmdno="196" cmdref="cmd_in_cd"/>
+    <command cmdno="197" cmdref="cmd_in_tuner"/>
+    <command cmdno="199" cmdref="cmd_fl_level_down"/>
+    <command cmdno="200" cmdref="cmd_in_sat"/>
+    <command cmdno="201" cmdref="cmd_in_tv_cbl"/>
+    <command cmdno="202" cmdref="cmd_in_hdp"/>
+    <command cmdno="203" cmdref="cmd_fr_level_up"/>
+    <command cmdno="204" cmdref="cmd_in_video_aux"/>
+    <command cmdno="205" cmdref="cmd_in_vcr"/>
+    <command cmdno="206" cmdref="cmd_in_dvr"/>
+    <command cmdno="208" cmdref="cmd_fr_level_down"/>
+    <command cmdno="214" cmdref="cmd_sr_level_up"/>
+    <command cmdno="215" cmdref="cmd_sr_level_down"/>
+    <command cmdno="216" cmdref="cmd_video_select" type="cyclic"/>
+    <command cmdno="220" cmdref="cmd_input_mode_analog"/>
+    <command cmdno="221" cmdref="cmd_right"/>
+    <!--command cmdno="222" cmdref="cmd_get_status"/--><!-- ??? -->
+    <command cmdno="223" cmdref="cmd_osd" name="on screen" remark="menu->status" type="toggle"/>
+    <command cmdno="224" cmdref="cmd_ok"/>
+    <command cmdno="225" cmdref="cmd_power_on"/>
+    <command cmdno="226" cmdref="cmd_power_off"/>
+    <command cmdno="227" cmdref="cmd_in_dvd"/>
+    <command cmdno="228" cmdref="cmd_standard_dolby_dts_surr"/>
+    <command cmdno="229" cmdref="cmd_sw_level_down"/>
+    <command cmdno="230" cmdref="cmd_soundfield" name="cmd_dsp_simulation" type="cyclic"/>
+    <command cmdno="231" cmdref="cmd_sb_level_up"/>
+    <command cmdno="234" cmdref="cmd_test_tone"/><!-- no function?? -->
+    <command cmdno="235" cmdref="cmd_sb_level_down"/>
+    <command cmdno="236" cmdref="cmd_sw_level_up"/>
+    <command cmdno="237" cmdref="cmd_main_spk_toggle" name="speaker"/><!-- ??? -->
+    <command cmdno="240" cmdref="cmd_mute_toggle"/>
+    <command cmdno="241" cmdref="cmd_volume_up "/>
+    <command cmdno="242" cmdref="cmd_volume_down"/>
+    <command cmdno="243" cmdref="cmd_sl_level_up"/>
+    <command cmdno="244" cmdref="cmd_sl_level_down"/>
+    <command cmdno="245" cmdref="cmd_c_level_up"/>
+    <command cmdno="246" cmdref="cmd_c_level_down"/>
+    <command cmdno="247" cmdref="cmd_sbr_level_up"/>
+    <command cmdno="248" cmdref="cmd_sbr_level_down"/>
+    <command cmdno="249" cmdref="cmd_tone_defeat_on"/>
+    <command cmdno="250" cmdref="cmd_tone_defeat_off"/>
+  </commandset>
+
+  <commandset type="ir" protocol="denon" deviceno="4" remotename="denon_avr3808">
+    <!-- page 5 -->
+    <command cmdno="129" cmdref="cmd_movie_theatre" name="wide_screen"/>
+    <command cmdno="130" cmdref="cmd_super_stadium"/>
+    <command cmdno="131" cmdref="cmd_rock_concert"/>
+    <command cmdno="132" cmdref="cmd_jazz_club"/>
+    <command cmdno="133" cmdref="cmd_hall" name="classic_concert"/>
+    <command cmdno="134" cmdref="cmd_mono_movie"/>
+    <command cmdno="135" cmdref="cmd_matrix"/>
+    <command cmdno="136" cmdref="cmd_game"/>
+    <command cmdno="137" cmdref="cmd_virtual"/><!-- ?? -->
+    <command cmdno="141" cmdref="cmd_dts_neo_6_cinema"/>
+    <command cmdno="142" cmdref="cmd_dts_neo_6_music"/>
+    <command cmdno="143" cmdref="cmd_dolby_pl_ii_cinema"/>
+    <command cmdno="144" cmdref="cmd_dolby_pl_ii_music"/>
+    <command cmdno="145" cmdref="cmd_dolby_pl" remark="last selected version"/>
+    <command cmdno="149" cmdref="cmd_cinema_mode"/>
+    <command cmdno="150" cmdref="cmd_music_mode"/>
+    <command cmdno="151" cmdref="cmd_game_mode"/>
+    <command cmdno="157" cmdref="cmd_room_eq" type="cyclic"/>
+    <command cmdno="179" cmdref="cmd_input_mode_auto"/>
+    <command cmdno="183" cmdref="cmd_input_mode_ext_in" type="discrete"/>
+  </commandset>
+
+  <commandset type="ir" protocol="denon" deviceno="12" remotename="denon_avr3808">
+    <command cmdno="127" cmdref="cmd_left"/><!--page 3 -->
+    <!-- page 2-->
+    <command cmdno="128" cmdref="cmd_bass_down" name="all bass down"/>
+    <command cmdno="130" cmdref="cmd_surround_back"/>
+    <command cmdno="131" cmdref="cmd_master_vol_preset1" name="_0db"/>
+    <command cmdno="133" cmdref="cmd_master_vol_preset2" name="__20db"/>
+    <command cmdno="134" cmdref="cmd_master_vol_preset3" name="__40db"/>
+    <command cmdno="135" zone="2" cmdref="cmd_zone2_vol_preset1" name="_0db"/>
+    <command cmdno="136" zone="2" cmdref="cmd_zone2_vol_preset2" name="__20db"/>
+    <command cmdno="137" zone="2" cmdref="cmd_zone2_vol_preset3" name="__40db"/>
+    <command cmdno="138" zone="2" cmdref="cmd_zone2_sat"/>
+    <command cmdno="140" zone="3" cmdref="cmd_zone3_vol_preset1" name="_0db"/>
+    <command cmdno="141" zone="2" cmdref="cmd_zone2_volume_up"/>
+    <command cmdno="142" zone="2" cmdref="cmd_zone2_volume_down"/>
+    <command cmdno="143" zone="2" cmdref="cmd_zone2_phono"/>
+    <command cmdno="144" zone="2" cmdref="cmd_zone2_cd"/>
+    <command cmdno="145" zone="2" cmdref="cmd_zone2_tuner"/>
+    <command cmdno="146" zone="2" cmdref="cmd_zone2_hdp"/>
+    <command cmdno="147" zone="2" cmdref="cmd_zone2_video_aux"/>
+    <command cmdno="148" zone="2" cmdref="cmd_zone2_vcr"/>
+    <command cmdno="150" cmdref="cmd_multi_preset_up"/><!-- ??? -->
+    <command cmdno="151" cmdref="cmd_multi_preset_down"/><!-- ??? -->
+    <command cmdno="153" zone="2" cmdref="cmd_zone2_dvr"/>
+    <command cmdno="155" zone="2" cmdref="cmd_zone2_tv_cbl"/>
+    <command cmdno="157" cmdref="cmd_stereo"/>
+    <command cmdno="158" cmdref="cmd_direct"/>
+    <command cmdno="159" zone="3" cmdref="cmd_zone3_vol_preset2" name="_0db"/>
+    <command cmdno="160" cmdref="cmd_setup" type="toggle"/>
+    <command cmdno="161" cmdref="cmd_surround_parameters" remark="shortcut into menu"/>
+    <command cmdno="162" zone="3" cmdref="cmd_zone3_vol_preset3"/>
+    <command cmdno="163" cmdref="cmd_up"/>
+    <command cmdno="164" cmdref="cmd_down"/>
+    <command cmdno="168" cmdref="cmd_7ch_stereo"/>
+    <command cmdno="171" cmdref="cmd_tuner_shift_f"/>
+    <command cmdno="174" cmdref="cmd_tuner_shift_g"/>
+    <command cmdno="175" cmdref="cmd_ch_select"/><!-- ??? -->
+    <command cmdno="176" cmdref="cmd_ch_volume_up"/><!-- ??? -->
+    <command cmdno="177" cmdref="cmd_ch_volume_down"/><!-- ??? -->
+    <command cmdno="181" cmdref="cmd_input_mode_ext_in"/>
+    <command cmdno="182" cmdref="cmd_input_mode"/>
+    <command cmdno="183" cmdref="cmd_treble_up" name="all treble up"/>
+    <command cmdno="184" cmdref="cmd_treble_down" name="all treble down"/>
+    <command cmdno="185" cmdref="cmd_tuner_shift_a"/>
+    <command cmdno="186" cmdref="cmd_tuner_shift_b"/>
+    <command cmdno="187" cmdref="cmd_tuner_shift_c"/>
+    <command cmdno="188" cmdref="cmd_tuner_shift_d"/>
+    <command cmdno="189" cmdref="cmd_tuner_shift_e"/>
+    <command cmdno="190" zone="2" cmdref="cmd_zone2_dvd"/>
+    <command cmdno="191" cmdref="cmd_bass_up" name="all bass up"/>
+    <command cmdno="193" cmdref="cmd_tuner_preset_ch_1"/><!-- ??? -->
+    <command cmdno="194" cmdref="cmd_tuner_preset_ch_2"/>
+    <command cmdno="195" cmdref="cmd_tuner_preset_ch_3"/>
+    <command cmdno="196" cmdref="cmd_tuner_preset_ch_4"/>
+    <command cmdno="197" cmdref="cmd_tuner_preset_ch_5"/>
+    <command cmdno="198" cmdref="cmd_tuner_preset_ch_6"/>
+    <command cmdno="199" cmdref="cmd_tuner_preset_ch_7"/>
+    <command cmdno="200" cmdref="cmd_tuner_preset_ch_8"/>
+    <command cmdno="204" cmdref="cmd_tuner_memory"/>
+    <command cmdno="205" cmdref="cmd_tuner_shift"/>
+    <command cmdno="206" cmdref="cmd_tuner_rt"/>
+    <command cmdno="210" cmdref="cmd_tuner_rds"/>
+    <command cmdno="212" cmdref="cmd_tuner_pty"/>
+    <command cmdno="213" cmdref="cmd_channel_down" name="tuner preset down"/>
+    <command cmdno="214" cmdref="cmd_channel_up" name="tuner_preset_up"/>
+    <command cmdno="215" cmdref="cmd_tuner_band"/>
+    <command cmdno="216" cmdref="cmd_tuner_tuning_mode"/>
+    <command cmdno="217" cmdref="cmd_frequency_up" name="tuner_tuning_up"/>
+    <command cmdno="218" cmdref="cmd_frequency_down" name="tuner_tuning_down"/>
+    <command cmdno="223" cmdref="cmd_dimmer" type="cyclic"/>
+  </commandset>
+
+  <!-- only ID=1, at least for now -->
+  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="1" remotename="denon_avr3808_k">
+    <commandgroup><!-- page 8 -->
+      <command cmdref="cmd_return" cmdno="34"/>
+      <command cmdref="cmd_menu" cmdno="35"/>
+      <command cmdref="cmd_quick1" cmdno="292"/>
+      <command cmdref="cmd_quick2" cmdno="293"/>
+      <command cmdref="cmd_quick3" cmdno="294"/>
+      <command cmdref="cmd_stereo_direct" cmdno="305" type="toggle"/>
+      <command cmdref="cmd_neural" ifattribute="north-america" cmdno="347"/>
+      <command cmdref="cmd_input_mode_hdmi" cmdno="357"/><!-- non funct? -->
+      <command cmdref="cmd_input_mode_digital" cmdno="359"/>
+      <command cmdref="cmd_decode_mode" cmdno="364"/>
+      <command cmdref="cmd_restorer" cmdno="548"/>
+      <command cmdref="cmd_restorer_off" cmdno="556"/>
+      <command cmdref="cmd_restorer_1" cmdno="557"/>
+      <command cmdref="cmd_restorer_2" cmdno="558"/>
+      <command cmdref="cmd_restorer_3" cmdno="559"/>
+      <command cmdref="cmd_delay_time" cmdno="620"/>
+      <command cmdref="cmd_delay_time_up" cmdno="621"/>
+      <command cmdref="cmd_delay_time_down" cmdno="622"/>
+      <command cmdref="cmd_restorer_off" cmdno="556"/>
+      <command cmdref="cmd_get_status" ifattribute="bidirectional-" cmdno="645"/>
+      <command cmdref="cmd_in_net_usb" cmdno="711"/>
+      <command cmdref="cmd_in_xm" ifattribute="north-america" cmdno="714"/>
+      <command cmdref="cmd_in_net" cmdno="716"/>
+      <command cmdref="cmd_in_ipod" cmdno="717"/>
+      <command cmdref="cmd_in_usb" cmdno="718"/>
+      <command cmdref="cmd_in_dvd_hdp" type="toggle" cmdno="732"/>
+      <command cmdref="cmd_in_vcr_dvr" type="toggle" cmdno="735"/>
+      <!--command cmdref="0xff" name="cmd_hdmi_monitor_select" remark="no function" cmdno="753"/-->
+      <!--command cmdref="cmd_resolution" remark="no function" cmdno="754"/-->
+
+      <command cmdref="cmd_repeat" name="main zone repeat" cmdno="956"/>
+      <command cmdref="cmd_shuffle" name="main zone random/shuffle" cmdno="957"/>
+      <command cmdref="cmd_usb_direct_play" name="main zone usb direct play" cmdno="958"/>
+      <command cmdref="cmd_favorite_direct_play" name="main zone favorite direct play" cmdno="959"/>
+      <command cmdref="cmd_channel_up" name="main zone preset ch up" cmdno="972"/>
+      <command cmdref="cmd_channel_down" name="main zone preset ch down" cmdno="973"/>
+      <command cmdref="cmd_channel_shift" name="main zone preset ch shift" cmdno="974"/><!-- ??? -->
+      <command cmdref="cmd_search" name="main zone search (rds)" cmdno="983"/><!-- ??? -->
+      <command cmdref="cmd_play_pause" name="main zone play/pause" cmdno="992"/><!-- ??? -->
+      <command cmdref="cmd_stop" name="main zone stop" cmdno="993"/><!-- ??? -->
+      <command cmdref="cmd_frequency_down" name="main zone skip minus/tuning down" cmdno="995"/><!-- ??? -->
+      <command cmdref="cmd_frequency_up" name="main zone skip plus/tuning up" cmdno="996"/><!-- ??? -->
+    </commandgroup>
+  </commandset>
+
+  <!-- page 9 -->
+  <!-- for id=1,2,3,4 -->
+  <!--commandset type="ir" protocol="denon_k" deviceno="4" subdevice="2" remotename="denon_avr3808_k"/-->
+
+  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="3" remotename="denon_avr3808_k">
+    <command cmdref="cmd_zone2_up" zone="2" cmdno="27"/><!-- ??? -->
+    <command cmdref="cmd_zone2_down" zone="2" cmdno="28"/>
+    <command cmdref="cmd_zone2_left" zone="2" cmdno="29"/>
+    <command cmdref="cmd_zone2_right" zone="2" cmdno="30"/>
+    <command cmdref="cmd_zone2_ok" zone="2" cmdno="31"/>
+    <command cmdref="cmd_zone2_return" zone="2" cmdno="34"/>
+    <command cmdref="cmd_zone2_menu" zone="2" cmdno="35"/>
+    <command cmdref="cmd_zone2_mute_toggle" zone="2" cmdno="370"/>
+    <command cmdref="cmd_zone2_setup" zone="2" cmdno="560"/>
+    <command cmdref="get_zone2_status" zone="2" cmdno="645"/>
+    <command cmdref="cmd_zone2_net_usb" zone="2" cmdno="711"/>
+    <command cmdref="cmd_zone2_xm" zone="2" ifattribute="north-america" cmdno="714"/>
+    <command cmdref="cmd_zone2_net" zone="2" cmdno="716"/>
+    <command cmdref="cmd_zone2_ipod" zone="2" cmdno="717"/>
+    <command cmdref="cmd_zone2_usb" zone="2" cmdno="718"/>
+    <command cmdref="cmd_zone2_video_aux" zone="2" cmdno="729"/>
+    <command cmdref="cmd_zone2_dvd_hdp" zone="2" type="toggle" cmdno="732"/>
+    <command cmdref="cmd_zone2_vcr_dvr" zone="2" type="toggle" cmdno="735"/>
+
+    <command cmdref="cmd_zone2_repeat" name="zone2 repeat" cmdno="956"/>
+    <command cmdref="cmd_zone2_shuffle" name="zone2 random/shuffle" cmdno="957"/>
+    <command cmdref="cmd_zone2_usb_direct_play" name="zone2 usb direct play" cmdno="958"/>
+    <command cmdref="cmd_zone2_favorite_direct_play" name="zone2 favorite direct play" cmdno="959"/>
+    <command cmdref="cmd_zone2_channel_up" name="zone2 preset ch up" cmdno="972"/>
+    <command cmdref="cmd_zone2_channel_down" name="zone2 preset ch down" cmdno="973"/>
+    <command cmdref="cmd_zone2_channel_shift" name="zone2 preset ch shift" cmdno="974"/><!-- ??? -->
+    <command cmdref="cmd_zone2_search" name="zone2 search (rds)" cmdno="983"/><!-- ??? -->
+    <command cmdref="cmd_zone2_play_pause" name="zone2 play/pause" cmdno="992"/><!-- ??? -->
+    <command cmdref="cmd_zone2_stop" name="zone2 stop" cmdno="993"/><!-- ??? -->
+    <command cmdref="cmd_zone2_frequency_down" name="zone2 skip minus/tuning down" cmdno="995"/><!-- ??? -->
+    <command cmdref="cmd_zone2_frequency_up" name="zone2 skip plus/tuning up" cmdno="996"/><!-- ??? -->
+  </commandset>
+
+  <!-- page 14 -->
+  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="4" remotename="denon_avr3808_k">
+    <command cmdref="cmd_zone2_toggle" zone="2" cmdno="5"/>
+    <command cmdref="cmd_zone2_on" zone="2" cmdno="6"/>
+    <command cmdref="cmd_zone2_off" zone="2" cmdno="7"/>
+    <!-- ... -->
+  </commandset>
+
+  <!-- page 15 -->
+  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="5" remotename="denon_avr3808_k">
+    <command cmdref="cmd_zone3_toggle" zone="3" cmdno="5"/>
+    <command cmdref="cmd_zone3_up" zone="3" cmdno="27"/>
+    <command cmdref="cmd_zone3_down" zone="3" cmdno="28"/>
+    <command cmdref="cmd_zone3_left" zone="3" cmdno="29"/>
+    <command cmdref="cmd_zone3_right" zone="3" cmdno="30"/>
+    <command cmdref="cmd_zone3_ok" zone="3" cmdno="31"/>
+    <command cmdref="cmd_zone3_return" zone="3" cmdno="34"/>
+    <command cmdref="cmd_zone3_menu" zone="3" cmdno="35"/>
+    <command cmdref="cmd_zone3_mute_toggle" zone="3" cmdno="370"/>
+    <command cmdref="cmd_zone3_setup" zone="3" cmdno="560"/>
+    <command cmdref="get_zone3_status" zone="3" cmdno="645"/>
+    <command cmdref="cmd_zone3_net_usb" zone="3" cmdno="711"/>
+    <command cmdref="cmd_zone3_xm" zone="3" ifattribute="north-america" cmdno="714"/>
+    <command cmdref="cmd_zone3_net" zone="3" cmdno="716"/>
+    <command cmdref="cmd_zone3_ipod" zone="3" cmdno="717"/>
+    <command cmdref="cmd_zone3_usb" zone="3" cmdno="718"/>
+    <command cmdref="cmd_zone3_video_aux" zone="3" cmdno="729"/>
+    <command cmdref="cmd_zone3_dvd_hdp" zone="3" type="toggle" cmdno="732"/>
+    <command cmdref="cmd_zone3_vcr_dvr" zone="3" type="toggle" cmdno="735"/>
+
+    <command cmdref="cmd_zone3_repeat" name="zone3 repeat" cmdno="956"/>
+    <command cmdref="cmd_zone3_shuffle" name="zone3 random/shuffle" cmdno="957"/>
+    <command cmdref="cmd_zone3_usb_direct_play" name="zone3 usb direct play" cmdno="958"/>
+    <command cmdref="cmd_zone3_favorite_direct_play" name="zone3 favorite direct play" cmdno="959"/>
+    <command cmdref="cmd_zone3_channel_up" name="zone3 preset ch up" cmdno="972"/>
+    <command cmdref="cmd_zone3_channel_down" name="zone3 preset ch down" cmdno="973"/>
+    <command cmdref="cmd_zone3_channel_shift" name="zone3 preset ch shift" cmdno="974"/><!-- ??? -->
+    <command cmdref="cmd_zone3_search" name="zone3 search (rds)" cmdno="983"/><!-- ??? -->
+    <command cmdref="cmd_zone3_play_pause" name="zone3 play/pause" cmdno="992"/><!-- ??? -->
+    <command cmdref="cmd_zone3_stop" name="zone3 stop" cmdno="993"/><!-- ??? -->
+    <command cmdref="cmd_zone3_frequency_down" name="zone3 skip minus/tuning down" cmdno="995"/><!-- ??? -->
+    <command cmdref="cmd_zone3_frequency_up" name="zone3 skip plus/tuning up" cmdno="996"/><!-- ??? -->
+  </commandset>
+
+  <!-- page 18; analog tuner -->
+  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="1" remotename="denon_avr3808_k">
+    <command cmdref="cmd_fm" cmdno="153"/>
+    <command cmdref="cmd_am" cmdno="154"/>
+  </commandset>
+
+  <!-- page 19; net audio -->
+  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="7" remotename="denon_avr3808_k">
+    <command cmdref="0xff" name="cursor_up" cmdno="27"/>
+    <!-- FIXME -->
+  </commandset>
+
+  <!-- page 20; iPod -->
+  <commandset type="ir" protocol="denon_k" deviceno="2" subdevice="3" ifattribute="ipod">
+    <!--command cmdref="cmd_browse_remote"cmdno="45" ifattribute="ipod_dock_firstgen"/-->
+    <!--command cmdref="cmd_power_toggle"cmdno="71" ifattribute="ipod_dock_firstgen"/-->
+    <command cmdref="cmd_previous"	cmdno="5"/>
+    <command cmdref="cmd_ipod_play_pause"	cmdno="1"/>
+    <command cmdref="cmd_next"		cmdno="4"/>
+    <command cmdref="cmd_ipod_menu"	cmdno="23"/>
+    <!--command cmdref="cmd_favorites"	cmdno="72" name="favorites/all music"	/-->
+
+    <!-- Can just as well use the normal Denon commands -->
+    <!--command cmdref="cmd_right"	cmdno="28" ifattribute="ipod_dock_firstgen"/-->
+    <!--command cmdref="cmd_left"	cmdno="27" ifattribute="ipod_dock_firstgen"/-->
+    <!--command cmdref="cmd_up"		cmdno="25" ifattribute="ipod_dock_firstgen"/-->
+    <!--command cmdref="cmd_down"	cmdno="26" ifattribute="ipod_dock_firstgen"/-->
+    <!--command cmdref="cmd_ok"		cmdno="24" ifattribute="ipod_dock_firstgen"/-->
+    <!--command cmdref="cmd_return"	cmdno="35"/-->
+
+    <!--command cmdref="cmd_radio_mode"	cmdno="75" name="internet radio" ifattribute="ipod_dock_firstgen"/-->
+    <!--command cmdref="cmd_ipod_mode"	cmdno="76" name="iPod"	ifattribute="ipod_dock_firstgen"/-->
+
+    <command cmdref="cmd_shuffle"	cmdno="17"/>
+    <command cmdref="cmd_repeat"	cmdno="16"/>
+    <!--command cmdref="cmd_memory"	cmdno="80"/-->
+    <!--command cmdref="cmd_mute_toggle"cmdno="77" ifattribute="ipod_dock_firstgen"/-->
+    <!--command cmdref="cmd_volume_up"	cmdno="2" ifattribute="ipod_dock_firstgen"/-->
+    <!--command cmdref="cmd_volume_down"cmdno="3" ifattribute="ipod_dock_firstgen"/-->
+    <command cmdref="cmd_page_down"	cmdno="73"/><!-- no function -->
+    <command cmdref="cmd_page_up"	cmdno="74"/> <!-- no function -->
+    <command cmdref="get_status"	cmdno="31" ifattribute="bidirectional-rc"/>
+
+    <command cmdref="cmd_ipod_stop"	cmdno="8"/>
+    <command cmdref="cmd_fast_forward" cmdno="21"/>
+    <command cmdref="cmd_rewind" cmdno="22"/>
+    <!--command cmdref="cmd_page_search"cmdno="34"/-->
+    <!--command cmdref="cmd_page_search"cmdno="34"/-->
+
+    <!-- Discrete versions of some commands above -->
+    <command cmdref="cmd_browse_mode"	cmdno="46"/>
+    <command cmdref="cmd_remote_mode"	cmdno="47"/>
+    <command cmdref="cmd_shuffle_songs"	cmdno="64"/>
+    <command cmdref="cmd_shuffle_albums"	cmdno="65"/>
+    <command cmdref="cmd_shuffle_off"	cmdno="66"/>
+    <command cmdref="cmd_repeat_one"	cmdno="67"/>
+    <command cmdref="cmd_repeat_all"	cmdno="68"/>
+    <command cmdref="cmd_repeat_off"	cmdno="69"/>
+  </commandset>
+
+  <commandset type="ir" protocol="denon_k" deviceno="2" subdevice="3" remotename="denon_asd_3n" ifattribute="north-america">
+    <command cmdref="memory"/>
+  </commandset>
+
+  <commandset type="serial" suffix="\r" delay_between_reps="150">
+    <commandgroupref commandgroup="serial_tcp_commands"/>
+  </commandset>
+  
+  <commandset type="tcp" suffix="\r" portnumber="23" delay_between_reps="50">
+    <commandgroup id="serial_tcp_commands">
+      <command cmdref="power_on" transmit="PWON"/>
+      <command cmdref="power_off" transmit="PWSTANDBY"/>
+      <command cmdref="get_power" transmit="PW?" response_lines="1">
+	<returnvalues>
+	  <syntax parse="%s\r">
+	    <!--semantics>
+	    <table>
+	    <entry value="PWON" descr="Power On"/>
+	    <entry value="PWSTANDBY" descr="Power Off"/>
+	  </table>
+	  </semantics-->
+	  </syntax>
+	</returnvalues>
+      </command>
+      <!-- Master volume -->
+      <command cmdref="cmd_volume_up" transmit="MVUP"/>
+      <command cmdref="cmd_volume_down" transmit="MVDOWN"/>
+      <command cmdref="set_volume" transmit="MV$1">
+	<argument name="vol"/>
+	<!-- ** **:00 to 99 by ASCII , 80=0dB, 99=- - -(MIN) MV80\r -->
+      </command>
+      <command cmdref="get_volume" transmit="MV?" response_lines="1">
+      </command>
+
+      <!-- Channel volume, CV -->
+      <command cmdref="cmd_fl_level_up" transmit="CVFL UP"/>
+      <command cmdref="cmd_fl_level_down" transmit="CVFL DOWN"/>
+      <command cmdref="set_fl_level" transmit="CVFL $1">
+	<argument name="vol"/>
+      </command>
+      <command cmdref="cmd_fr_level_up" transmit="CVFR UP"/>
+      <command cmdref="cmd_fr_level_down" transmit="CVFR DOWN"/>
+      <command cmdref="set_fr_level" transmit="CVFR $1">
+	<argument name="vol"/>
+      </command>
+
+      <command cmdref="cmd_sl_level_up" transmit="CVSL UP"/>
+      <command cmdref="cmd_sl_level_down" transmit="CVSL DOWN"/>
+      <command cmdref="set_sl_level" transmit="CVSL $1">
+	<argument name="vol"/>
+      </command>
+      <command cmdref="cmd_sr_level_up" transmit="CVSR UP"/>
+      <command cmdref="cmd_sr_level_down" transmit="CVSR DOWN"/>
+      <command cmdref="set_sr_level" transmit="CVSR $1">
+	<argument name="vol"/>
+      </command>
+
+      <command cmdref="cmd_sbl_level_up" transmit="CVSBL UP"/>
+      <command cmdref="cmd_sbl_level_down" transmit="CVSBL DOWN"/>
+      <command cmdref="set_sbl_level" transmit="CVSBL $1">
+	<argument name="vol"/>
+      </command>
+      <!-- sbch 1sp -->
+      <command cmdref="cmd_sbr_level_up" transmit="CVSBR UP"/>
+      <command cmdref="cmd_sbr_level_down" transmit="CVSBR DOWN"/>
+      <command cmdref="set_sbr_level" transmit="CVSBR $1">
+	<argument name="vol"/>
+      </command>
+      
+      <command cmdref="cmd_mute_on" transmit="MUON"/>
+      <command cmdref="cmd_mute_off" transmit="MUOFF"/>
+      <command cmdref="get_mute" transmit="MU?" response_lines="1">
+	<returnvalues>
+	  <syntax parse="%s\r">
+	    <!--semantics>
+	    <table>
+	    <entry value="MUON" descr="Mute On"/>
+	    <entry value="MUOFF" descr="Mute Off"/>
+	  </table>
+	  </semantics-->
+	  </syntax>
+	</returnvalues>
+      </command>
+
+      <!-- Select input -->
+      <command cmdref="cmd_in_phono" transmit="SIPHONO"/>
+      <command cmdref="cmd_in_cd" transmit="SICD"/>
+      <command cmdref="cmd_in_tuner" transmit="SITUNER"/>
+      <command cmdref="cmd_in_dvd" transmit="SIDVD"/>
+      <command cmdref="cmd_in_hdp" transmit="SIHDP"/>
+      <command cmdref="cmd_in_tv_cbl" transmit="SITV/CBL"/>
+      <command cmdref="cmd_in_sat" transmit="SISAT"/>
+      <command cmdref="cmd_in_vcr" transmit="SIVCR"/>
+      <command cmdref="cmd_in_dvr" transmit="SIDVR"/>
+      <command cmdref="cmd_in_video_aux" transmit="SIV.AUX"/>
+      <command cmdref="cmd_in_net_usb" transmit="SINET/USB"/>
+      <command cmdref="cmd_in_xm" remark="North America model Only" transmit="SIXM"/>
+      <command cmdref="cmd_in_ipod" transmit="SIIPOD" remark="really finds the input connected to the iPod"/>
+      <command cmdref="get_input" transmit="SI?" response_lines="1">
+	<returnvalues>
+	  <syntax>
+	  </syntax>
+	</returnvalues>
+      </command>
+
+      <command cmdref="cmd_zone1_on" transmit="ZMON"/>
+      <command cmdref="cmd_zone1_off" transmit="ZMOFF"/>
+      <command cmdref="get_zone1" transmit="ZM?">
+	<returnvalues>
+	</returnvalues>
+      </command>
+
+      <!-- record select -->
+      <command cmdref="cmd_recordsrc_phono" zone="record" transmit="SRPHONO"/>
+      <command cmdref="cmd_recordsrc_cd" zone="record" transmit="SRCD"/>
+      <command cmdref="cmd_recordsrc_tuner" zone="record" transmit="SRTUNER"/>
+      <command cmdref="cmd_recordsrc_dvd" zone="record" transmit="SRDVD"/>
+      <command cmdref="cmd_recordsrc_hdp" zone="record" transmit="SRHDP"/>
+      <command cmdref="cmd_recordsrc_tv_cbl" zone="record" transmit="CBL SITV/CBL"/>
+      <command cmdref="cmd_recordsrc_sat" zone="record" transmit="SRSAT"/>
+      <command cmdref="cmd_recordsrc_vcr" zone="record" transmit="SRVCR"/>
+      <command cmdref="cmd_recordsrc_dvr" zone="record" transmit="SRDVR"/>
+      <command cmdref="cmd_recordsrc_video_aux" zone="record" transmit="SRV.AUX"/>
+      <command cmdref="cmd_recordsrc_net_usb" zone="record" transmit="SRNET/USB"/>
+      <command cmdref="cmd_recordsrc_xm" remark="north-america" zone="record" transmit="SRXM"/>
+      <command cmdref="cmd_recordsrc_ipod" zone="record" transmit="SRIPOD"/>
+      <command cmdref="cmd_recordsrc_source" zone="record" transmit="SRSOURCE"/>
+      <command cmdref="get_recordsrc" zone="record" transmit="SR?" response_lines="1">
+	<returnvalues>
+	</returnvalues>
+      </command>
+
+      <!-- SD -->
+      <command cmdref="cmd_input_mode_auto" transmit="SDAUTO"/>
+      <command cmdref="cmd_input_mode_hdmi" transmit="SDHDMI"/>
+      <command cmdref="cmd_input_mode_digital" transmit="SDDIGITAL"/>
+      <command cmdref="cmd_input_mode_analog" transmit="SDANALOG"/>
+      <command cmdref="cmd_ext_input_on" transmit="SDEXT.IN-1"/>
+      <command cmdref="get_input_mode" transmit="SD?" response_lines="1">
+	<returnvalues>
+	</returnvalues>
+      </command>
+
+      <!-- DC -->
+      <command cmdref="cmd_decode_mode_auto" transmit="DCAUTO"/>
+      <command cmdref="cmd_decode_mode_pcm" transmit="DCPCM"/>
+      <command cmdref="cmd_decode_mode_dts" transmit="DCDTS"/>
+      <command cmdref="get_decode_mode" transmit="DC?" response_lines="1"/>
+
+      <!-- SV -->
+      <command cmdref="cmd_videoinput_dvd" transmit="SVDVD"/>
+      <command cmdref="cmd_videoinput_hdp" transmit="SVHDP"/>
+      <command cmdref="cmd_videoinput_tv_cbl" transmit="SITV/CBL"/>
+      <command cmdref="cmd_videoinput_sat" transmit="SVSAT"/>
+      <command cmdref="cmd_videoinput_vcr" transmit="SVVCR"/>
+      <command cmdref="cmd_videoinput_dvr" transmit="SVDVR"/>
+      <command cmdref="cmd_videoinput_video_aux" transmit="SVV.AUX"/>
+      <command cmdref="cmd_videoinput_source" transmit="SVSOURCE"/>
+      <command cmdref="cmd_videoinput_ipod" transmit="SVIPOD"/>
+      <command cmdref="get_videoinput" transmit="SV?">
+	<returnvalues>
+	</returnvalues>
+      </command>
+
+      <!-- MS Select SURROUND mode -->
+      <command cmdref="cmd_direct"  transmit="MSDIRECT"/>
+      <command cmdref="cmd_pure_direct" transmit="MSPURE DIRECT"/>
+      <command cmdref="cmd_stereo" transmit="MSSTEREO"/>
+      <command cmdref="cmd_standard" transmit="MS STANDARD"/>
+      <command cmdref="cmd_dolby_digital" transmit="MSDOLBY DIGITAL"/>
+      <command cmdref="cmd_dts" transmit="MSDTS SURROUND"/>
+      <command cmdref="cmd_neural" ifattribute="north-america" transmit="MS NEURAL"/>
+      <command cmdref="cmd_movie_theatre" transmit="MSWIDE SCREEN"/>
+      <command cmdref="cmd_7ch_stereo" transmit="MS7CH STEREO"/>
+      <command cmdref="cmd_super_stadium" transmit="MSSUPER STADIUM"/>
+      <command cmdref="cmd_rock_concert" transmit="MSROCK ARENA"/>
+      <command cmdref="cmd_jazz_club" transmit="MSJAZZ CLUB"/>
+      <command cmdref="cmd_hall" transmit="MSCLASSIC CONCERT"/>
+      <command cmdref="cmd_mono_movie" transmit="MSMONO MOVIE"/>
+      <command cmdref="cmd_matrix" transmit="MSMATRIX"/>
+      <command cmdref="cmd_game" transmit="MSVIDEO GAME"/>
+      <command cmdref="cmd_virtual" transmit="MSVIRTUAL"/>
+      <command cmdref="cmd_mpeg2_aac" ifattribute="japan" transmit="MSMPEG2 AAC"/>
+      <command cmdref="get_dsp_program" name="Return MS Status" transmit="MS?" response_lines="1"/>
+      
+      <!-- MSQUICK QUICK SELECT 1-3 MODE SELECT -->
+      <command cmdref="cmd_quick1" transmit="MSQUICK1"/>
+      <command cmdref="cmd_quick2" transmit="MSQUICK2"/>
+      <command cmdref="cmd_quick3" transmit="MSQUICK3"/>
+      <command cmdref="cmd_quick1_store" transmit="MSQUICK1 MEMORY"/>
+      <command cmdref="cmd_quick2_store" transmit="MSQUICK2 MEMORY"/>
+      <command cmdref="cmd_quick3_store" transmit="MSQUICK3 MEMORY"/>
+      <command cmdref="get_quick_status" transmit="MSQUICK ?" response_lines="1"/>
+
+      <!-- VS -->
+      <!--command cmdref="VS MONIAUTO Set HDMI MONITOR automatic detection"/>
+      (Japan model only)
+      VSMONIAUTO"/-->
+      <!--command cmdref="MONI1 Set HDMI MONITOR OUT-1 (Japan model only) VSMONI1"/-->
+      <!--command cmdref="MONI2 Set HDMI MONITOR OUT-2 (Japan model only) VSMONI2"/-->
+      <!--command cmdref="MONI? Return VSMONITOR Status (Japan model only) VSMONI?"/-->
+      <command cmdref="cmd_ar_4_3" transmit="VSASPNRM"/>
+      <command cmdref="cmd_ar_16_9" transmit="VSASPFUL"/>
+      <command cmdref="get_ar" transmit="VSASP?"/>
+      <command cmdref="cmd_resolution_480p" transmit="VSSC48P" name="Resolution to 480p/576p"/>
+      <command cmdref="cmd_resolution_1080i" transmit="VSSC10I"/>
+      <command cmdref="cmd_resolution_720p" transmit="VSSC72P"/>
+      <command cmdref="cmd_resolution_1080p" transmit="VSSC10P"/>
+      <command cmdref="cmd_resolution_auto" transmit="VSSCAUTO"/>
+      <command cmdref="get_resolution" transmit="VSSC?" response_lines="1"/>
+
+      <!-- PS Parameter settings -->
+      <command cmdref="cmd_tone_defeat_on" transmit="PSTONE DEFEAT ON"/>
+      <command cmdref="cmd_tone_defeat_off" transmit="PSTONE DEFEAT OFF"/>
+      <command cmdref="get_tone_defeat" transmit="PSTONE DEFEAT ?" response_lines="1"/>
+      <command cmdref="cmd_sb_mtrx_on" transmit="PSSB:MTRX ON"/>
+      <command cmdref="cmd_sb_non_mtrx" transmit="PSSB:NON MTRX"/>
+      <command cmdref="cmd_sb_pl2xcinema" transmit="PSSB:PL2X CINEMA" remark="broken?"/>
+      <command cmdref="cmd_sb_pl2xmusic" transmit="PSSB:PL2X MUSIC"/>
+      <command cmdref="cmd_sb_on" transmit="PSSB:ON"/>
+      <command cmdref="cmd_sb_off" transmit="PSSB:OFF"/>
+      <command cmdref="get_sb" transmit="PSSB: ?" response_lines="1"/>
+      <command cmdref="cmd_cinema_eq_on" transmit="PSCINEMA EQ.ON"/>
+      <command cmdref="cmd_cinema_eq_off" transmit="PSCINEMA EQ.OFF"/>
+      <command cmdref="get_cinema_eq" transmit="PSCINEMA EQ. ?"/>
+      <command cmdref="cmd_music_mode" transmit="PSMODE:MUSIC"/>
+      <command cmdref="cmd_cinema_mode" transmit="PSMODE:CINEMA"/>
+      <command cmdref="cmd_game_mode" transmit="PSMODE:GAME"/>
+      <command cmdref="cmd_pro_logic" transmit="PSMODE:PRO LOGIC"/>
+      <command cmdref="get_mode" transmit="PSMODE: ?" response_lines="1"/>
+      <command cmdref="cmd_room_eq_audyssey" transmit="PSROOM EQ:AUDYSSEY"/>
+      <command cmdref="cmd_room_eq_byp_lr" transmit="PSROOM EQ:BYP.LR"/>
+      <command cmdref="cmd_room_eq_flat" transmit="PSROOM EQ:FLAT"/>
+      <command cmdref="cmd_room_eq_manual" transmit="PSROOM EQ:MANUAL"/>
+      <command cmdref="cmd_room_eq_off" transmit="PSROOM EQ:OFF"/>
+      <command cmdref="get_room_eq" transmit="PSROOM EQ: ?"/>
+      <command cmdref="cmd_bass_up" transmit="PSBAS UP"/>
+      <command cmdref="cmd_bass_down" transmit="PSBAS DOWN"/>
+      <command cmdref="set_bass" transmit="PSBAS $1">
+	<argument name="bass">
+	</argument>
+      </command>
+      <command cmdref="get_bass" transmit="PSBAS ?" response_lines="1"/>
+      <command cmdref="cmd_treble_up" transmit="PSTRE UP"/>
+      <command cmdref="cmd_treble_down" transmit="PSTRE DOWN"/>
+      <command cmdref="set_treble" transmit="PSTRE $1">
+	<argument name="treble">
+	</argument>
+      </command>
+      <command cmdref="get_treble" transmit="PSTRE ?" response_lines="1"/>
+      <!--
+      <command cmdref="cmd_DRC AUTO DRC direct change PSDRC AUTO"/>
+      <command cmdref="cmd_DRC LOW PSDRC LOW"/>
+      <command cmdref="cmd_DRC MID PSDRC MID"/>
+      <command cmdref="cmd_DRC HI PSDRC HI"/>
+      <command cmdref="cmd_DRC OFF PSDRC OFF"/>
+      <command cmdref="cmd_DRC ? PSDRC ?"/>
+      <command cmdref="cmd_DCO OFF D.COMP direct change PSDCO OFF"/>
+      <command cmdref="cmd_DCO LOW PSDCO LOW"/>
+      <command cmdref="cmd_DCO MID PSDCO MID"/>
+      <command cmdref="cmd_DCO HIGH PSDCO HIGH"/>
+      <command cmdref="cmd_DCO ? Return PSDCO Status PSDCO ?"/>
+      <command cmdref="cmd_LFE UP LFE UP/DOWN , direct change to **dB PSLEE UP"/>
+      <command cmdref="cmd_LFE DOWN **:00 to 99 by ASCII , 00=0dB, 10=-10dB PSLFE DOWN"/>
+      <command cmdref="cmd_LFE ** ___AVR-3808 can be operated from 0 to -10 PSLFE 10"/>
+      <command cmdref="cmd_LFE ? Return PSLFE Status PSLFE ?"/>
+      -->
+      <command cmdref="cmd_effect_on" transmit="PSEFF UP"/>
+      <command cmdref="cmd_effect_off" transmit="PSEFF DOWN"/>
+      <command cmdref="set_effect" transmit="PSEFF arg"/>
+      <command cmdref="get_effect" transmit="PSEFF ?"/>
+      <!--
+      <command cmdref="cmd_DEL UP DELAY UP/DOWN , direct change to ***dB PSDEL UP"/>
+      <command cmdref="cmd_DEL DOWN ***:000 to 999 by ASCII , 000=0ms, 300=300ms PSDEL DOWN"/>
+      <command cmdref="cmd_DEL *** ___AVR-3808 can be operated from 0 to 300 PSDEL ***"/>
+      <command cmdref="cmd_DEL ? Return PSDEL Status PSDEL ?"/>
+      <command cmdref="cmd_AFD ON AFDM ON/OFF PSAFD ON"/>
+      <command cmdref="cmd_AFD OFF PSAFD OFF"/>
+      <command cmdref="cmd_AFD ? Return PSAFD Status PSAFD ?"/>
+      <command cmdref="cmd_PS COMMAND : "*" parameter uses two or three ASCII characters. (see page4 J) section)"/>
+
+      <command cmdref="cmd_COMMAND PARAMETER function example"/>
+      <command cmdref="cmd_PS PAN ON PANORAMA ON/OFF PSPAN ON"/>
+      <command cmdref="cmd_PAN OFF PSPAN OFF"/>
+      <command cmdref="cmd_PAN ? Return PSPAN Status PSPAN ?"/>
+      <command cmdref="cmd_DIM UP DIMENSION UP/DOWN , direct change to **dB PSDIM UP"/>
+      <command cmdref="cmd_DIM DOWN **:00 to 99 by ASCII , 00=0, PSDIM DOWN"/>
+      <command cmdref="cmd_DIM ** ___AVR-3808 can be operated from 0 to 6 PSDIM **"/>
+      <command cmdref="cmd_DIM ? Return PSDIM Status PSDIM ?"/>
+      <command cmdref="cmd_CEN UP CENTER WIDTH UP/DOWN , direct change to **dB PSCEN UP"/>
+      <command cmdref="cmd_CEN DOWN **:00 to 99 by ASCII , 00=0 PSCEN DOWN"/>
+      <command cmdref="cmd_CEN ** ___AVR-3808 can be operated from 0 to 7 PSCEN 07"/>
+      <command cmdref="cmd_CEN ? Return PSCEN Status PSCEN ?"/>
+      <command cmdref="cmd_CEI UP CENTER IMAGE UP/DOWN , direct change to **dB PSCEI UP"/>
+      <command cmdref="cmd_CEI DOWN **:00 to 99 by ASCII , 00=0.0 PSCEI DOWN"/>
+      <command cmdref="cmd_CEI ** ___AVR-3808 can be operated from 0.0 to 1.0 PSCEI 10"/>
+      <command cmdref="cmd_CEI? Return PSCEI Status OSCEI ?"/>
+      <command cmdref="cmd_ATT ON SW ATT ON/OFF PSATT ON"/>
+      <command cmdref="cmd_ATT OFF PSATT OFF"/>
+      <command cmdref="cmd_ATT ? Return PSATT Status PSATT ?"/>
+      <command cmdref="cmd_SWR ON SW ON/OFF PSSWR ON"/>
+      <command cmdref="cmd_SWR OFF PSSWR OFF"/>
+      <command cmdref="cmd_SWR ? Return PSSWR Status PSSWR ?"/>
+      <command cmdref="cmd_RSZ S ROOM SIZE direct change PSRSZ S"/>
+      <command cmdref="cmd_RSZ MS PSRSZ MS"/>
+      <command cmdref="cmd_RSZ M PSRSZ M"/>
+      <command cmdref="cmd_RSZ ML PSRSZ ML"/>
+      <command cmdref="cmd_RSZ L PSRSZ L"/>
+      <command cmdref="cmd_RSZ ? Return PSRSZ Status PSRSZ ?"/>
+      <command cmdref="cmd_DELAY UP AUDIO DELAY UP/DOWN , direct change to ***dB PSDELAY UP"/>
+      <command cmdref="cmd_DELAY DOWN ***:000 to 999 by ASCII , 000=0ms, 200=200ms PSDELAY DOWN"/>
+      <command cmdref="cmd_DELAY *** ___AVR-3808 can be operated from 0 to 200 PSDELAY 200"/>
+-->
+      
+      <command cmdref="cmd_night_off" transmit="PSNIGHT OFF"/>
+      <command cmdref="cmd_night_low" transmit="PSNIGHT LOW"/>
+      <command cmdref="cmd_night_mid" transmit="PSNIGHT MID"/>
+      <command cmdref="cmd_night_hi" transmit="PSNIGHT HI"/>
+      <command cmdref="get_night" transmit="PSNIGHT ?" response_lines="1"/>
+      <command cmdref="cmd_restorer_off" transmit="PSRSTR OFF"/>
+      <command cmdref="cmd_restorer_1" transmit="PSRSTR MODE1"/>
+      <command cmdref="cmd_restorer_2" transmit="PSRSTR MODE2"/>
+      <command cmdref="cmd_restorer_3" transmit="PSRSTR MODE3"/>
+      <command cmdref="get_restorer" transmit="PSRSTR ?" response_lines="1"/>
+
+      <!-- PV Parameter video -->
+      <!--
+      <command cmdref="cmd_PV CN UP CONTRAST UP/DOWN , direct change to **dB PVCN UP"/>
+      <command cmdref="cmd_CN DOWN **:44 to 56 by ASCII , 50=0 PVCN DOWN"/>
+      <command cmdref="cmd_CN ** ___AVR-3808 can be operated from -6 to +6(44 to 56) PVCN 06"/>
+      <command cmdref="cmd_CN ? Return PSCN Status PVCN ?"/>
+      <command cmdref="cmd_BR UP BRIGHTNESS UP/DOWN , direct change to **dB PVBR UP"/>
+      <command cmdref="cmd_BR DOWN **:00 to 12 by ASCII , 00=0 PVBR DOWN"/>
+      <command cmdref="cmd_BR ** ___AVR-3808 can be operated from 0 to 12 PVBR 12"/>
+      <command cmdref="cmd_BR ? Return PSBR Status PVBR ?"/>
+      <command cmdref="cmd_CM UP CROMA LEVET UP/DOWN , direct change to **dB PVCM UP"/>
+      <command cmdref="cmd_CM DOWN **:44 to 56 by ASCII , 50=0 PVSCM DOWN"/>
+      <command cmdref="cmd_CM ** ___AVR-3808 can be operated from -6 to +6(44 to 56) PVCM 06"/>
+      <command cmdref="cmd_CM ? Return PSCN Status PVCM ?"/>
+      <command cmdref="cmd_HUE UP HUE UP/DOWN , direct change to **dB PVHUE UP"/>
+      <command cmdref="cmd_HUE DOWN **:44 to 56 by ASCII , 50=0 PVHUE DOWN"/>
+      <command cmdref="cmd_HUE ** ___AVR-3808 can be operated from -6 to +6(44 to 56) PVHUE 06"/>
+      <command cmdref="cmd_HUE ? Return PSCN Status PVHUE ?"/>
+      <command cmdref="cmd_PV COMMAND : "*" parameter uses two ASCII characters. (see page4 J) section)"/>
+      -->
+
+      <!-- Zone 2 -->
+      <!-- Z2, input selection -->
+      <command cmdref="cmd_zone2_phono" zone="2" transmit="Z2PHONO"/>
+      <command cmdref="cmd_zone2_cd" zone="2" transmit="Z2CD"/>
+      <command cmdref="cmd_zone2_tuner" zone="2" transmit="Z2TUNER"/>
+      <command cmdref="cmd_zone2_dvd" zone="2" transmit="Z2DVD"/>
+      <command cmdref="cmd_zone2_hdp" zone="2" transmit="Z2HDP"/>
+      <command cmdref="cmd_zone2_tv_cbl" zone="2" transmit="Z2TV/CBL"/>
+      <command cmdref="cmd_zone2_sat" zone="2" transmit="Z2SAT"/>
+      <command cmdref="cmd_zone2_vcr" zone="2" transmit="Z2VCR"/>
+      <command cmdref="cmd_zone2_dvr" zone="2" transmit="Z2DVR"/>
+      <command cmdref="cmd_zone2_video_aux" zone="2" transmit="Z2V.AUX"/>
+      <command cmdref="cmd_zone2_net_usb" zone="2" transmit="Z2NET/USB"/>
+      <command cmdref="cmd_zone2_xm" remark="North America model Only" zone="2" transmit="Z2XM"/>
+      <command cmdref="cmd_zone2_ipod" zone="2" transmit="Z2IPOD"/>
+      <command cmdref="cmd_zone2_source" zone="2" transmit="Z2SOURCE"/>
+      <command cmdref="cmd_zone2_volume_up" zone="2" transmit="Z2UP"/>
+      <command cmdref="cmd_zone2_volume_down" zone="2" transmit="Z2DOWN"/>
+      <command cmdref="set_zone2_volume" transmit="Z2$1">
+	<argument name="vol"/>
+	<!-- ** **:00 to 99 by ASCII , 80=0dB, 99=- - -(MIN) MV80\r -->
+      </command>
+      <command cmdref="cmd_zone2_on" transmit="Z2ON"/>
+      <command cmdref="cmd_zone2_off" transmit="Z2OFF"/>
+      <command cmdref="get_zone2" transmit="Z2?" response_lines="1">
+	<returnvalues>
+	</returnvalues>
+      </command>
+
+      <!-- Z2MU -->
+      <command cmdref="cmd_zone2_mute_on" zone="2" transmit="Z2MUON"/>
+      <command cmdref="cmd_zone2_mute_off" zone="2" transmit="Z2MUOFF"/>
+      <command cmdref="get_zone2_mute" zone="2" transmit="Z2MU?" response_lines="1">
+	<returnvalues>
+	  <syntax parse="%s\r">
+	    <!--semantics>
+	    <table>
+	    <entry value="Z2MUON" descr="Mute On"/>
+	    <entry value="Z2MUOFF" descr="Mute Off"/>
+	  </table>
+	  </semantics-->
+	  </syntax>
+	</returnvalues>
+      </command>
+
+      <!-- Z2CS -->
+      <command cmdref="cmd_zone2_stereo" zone="2" transmit="Z2CSST"/>
+      <command cmdref="cmd_zone2_mono" zone="2" transmit="Z2CSMONO"/>
+      <command cmdref="get_zone2_channel_setting" zone="2" transmit="Z2CS?" response_lines="1"/>
+
+      <!-- Z2CV -->
+      <command cmdref="cmd_zone2_fl_level_up" zone="2" transmit="Z2CVFL UP"/>
+      <command cmdref="cmd_zone2_fl_level_down" zone="2" transmit="Z2CVFL DOWN"/>
+      <command cmdref="set_zone2_fl_level" zone="2" transmit="Z2CVFL $1">
+	<argument name="vol"/>
+      </command>
+      <command cmdref="cmd_zone2_fr_level_up" zone="2" transmit="Z2CVFR UP"/>
+      <command cmdref="cmd_zone2_fr_level_down" zone="2" transmit="Z2CVFR DOWN"/>
+      <command cmdref="set_zone2_fr_level" zone="2" transmit="Z2CVFR $1">
+	<argument name="vol"/>
+      </command>
+
+      <!-- Z2HPF (???) -->
+      <command cmdref="cmd_0xfe" zone="2" transmit="Z2HPFON"/>
+      <command cmdref="cmd_0xfd" zone="2" transmit="Z2HPFOFF"/>
+      <command cmdref="cmd_0xfc" zone="2" transmit="Z2HPF?"/>
+      
+      <!-- Z2PS, page 18 -->
+      <command cmdref="cmd_zone2_bass_up" zone="2" transmit="Z2PSBAS UP"/>
+      <command cmdref="cmd_zone2_bass_down" zone="2" transmit="Z2PSBAS DOWN"/>
+      <command cmdref="set_zone2_bass" zone="2" transmit="Z2PSBAS $1">
+	<argument name="bass">
+	</argument>
+      </command>
+      <command cmdref="get_zone2_bass" zone="2" transmit="Z2PSBAS ?" response_lines="1"/>
+      <command cmdref="cmd_zone2_treble_up" zone="2" transmit="Z2PSTRE UP"/>
+      <command cmdref="cmd_zone2_treble_down" zone="2" transmit="Z2PSTRE DOWN"/>
+      <command cmdref="set_zone2_treble" zone="2" transmit="Z2PSTRE arg"/>
+      <command cmdref="get_zone2_treble" zone="2" transmit="Z2PSTRE ?"/>
+
+      <!-- Z3 -->
+      <!-- Z3, input selection -->
+      <command cmdref="cmd_zone3_phono" zone="3" transmit="Z3PHONO"/>
+      <command cmdref="cmd_zone3_cd" zone="3" transmit="Z3CD"/>
+      <command cmdref="cmd_zone3_tuner" zone="3" transmit="Z3TUNER"/>
+      <command cmdref="cmd_zone3_dvd" zone="3" transmit="Z3DVD"/>
+      <command cmdref="cmd_zone3_hdp" zone="3" transmit="Z3HDP"/>
+      <command cmdref="cmd_zone3_tv_cbl" zone="3" transmit="Z3TV/CBL"/>
+      <command cmdref="cmd_zone3_sat" zone="3" transmit="Z3SAT"/>
+      <command cmdref="cmd_zone3_vcr" zone="3" transmit="Z3VCR"/>
+      <command cmdref="cmd_zone3_dvr" zone="3" transmit="Z3DVR"/>
+      <command cmdref="cmd_zone3_video_aux" zone="3" transmit="Z3V.AUX"/>
+      <command cmdref="cmd_zone3_net_usb" zone="3" transmit="Z3NET/USB"/>
+      <command cmdref="cmd_zone3_xm" remark="North America model Only" zone="3" transmit="Z3XM"/>
+      <command cmdref="cmd_zone3_ipod" zone="3" transmit="Z3IPOD"/>
+      <command cmdref="cmd_zone3_source" zone="3" transmit="Z3SOURCE"/>
+      <command cmdref="cmd_zone3_volume_up" zone="3" transmit="Z3UP"/>
+      <command cmdref="cmd_zone3_volume_down" zone="3" transmit="Z3DOWN"/>
+      <command cmdref="set_zone3_volume" transmit="Z3$1">
+	<argument name="vol"/>
+	<!-- ** **:00 to 99 by ASCII , 80=0dB, 99=- - -(MIN) MV80\r -->
+      </command>
+      <command cmdref="cmd_zone3_on" transmit="Z3ON"/>
+      <command cmdref="cmd_zone3_off" transmit="Z3OFF"/>
+      <command cmdref="get_zone3" transmit="Z3?" response_lines="1">
+	<returnvalues>
+	</returnvalues>
+      </command>
+
+      <!-- Z3MU -->
+      <command cmdref="cmd_zone3_mute_on" zone="3" transmit="Z3MUON"/>
+      <command cmdref="cmd_zone3_mute_off" zone="3" transmit="Z3MUOFF"/>
+      <command cmdref="get_zone3_mute" zone="3" transmit="Z3MU?" response_lines="1">
+	<returnvalues>
+	  <syntax parse="%s\r">
+	    <!--semantics>
+	    <table>
+	    <entry value="Z3MUON" descr="Mute On"/>
+	    <entry value="Z3MUOFF" descr="Mute Off"/>
+	  </table>
+	  </semantics-->
+	  </syntax>
+	</returnvalues>
+      </command>
+
+      <!-- Z3CS -->
+      <command cmdref="cmd_zone3_stereo" zone="3" transmit="Z3CSST"/>
+      <command cmdref="cmd_zone3_mono" zone="3" transmit="Z3CSMONO"/>
+      <command cmdref="get_zone3_channel_setting" zone="3" transmit="Z3CS?" response_lines="1"/>
+
+      <!-- Z3CV -->
+      <command cmdref="cmd_zone3_fl_level_up" zone="3" transmit="Z3CVFL UP"/>
+      <command cmdref="cmd_zone3_fl_level_down" zone="3" transmit="Z3CVFL DOWN"/>
+      <command cmdref="set_zone3_fl_level" zone="3" transmit="Z3CVFL $1">
+	<argument name="vol"/>
+      </command>
+      <command cmdref="cmd_zone3_fr_level_up" zone="3" transmit="Z3CVFR UP"/>
+      <command cmdref="cmd_zone3_fr_level_down" zone="3" transmit="Z3CVFR DOWN"/>
+      <command cmdref="set_zone3_fr_level" zone="3" transmit="Z3CVFR $1">
+	<argument name="vol"/>
+      </command>
+
+      <!-- Z3HPF -->
+      <command cmdref="cmd_0xfe" zone="3" transmit="Z3HPFON"/>
+      <command cmdref="cmd_0xfd" zone="3" transmit="Z3HPFOFF"/>
+      <command cmdref="cmd_0xfc" zone="3" transmit="Z3HPF?"/>
+      
+      <!-- Z3PS, page 20 -->
+      <command cmdref="cmd_zone3_bass_up" zone="3" transmit="Z3PSBAS UP"/>
+      <command cmdref="cmd_zone3_bass_down" zone="3" transmit="Z3PSBAS DOWN"/>
+      <command cmdref="set_zone3_bass" zone="3" transmit="Z3PSBAS $1">
+	<argument name="bass">
+	</argument>
+      </command>
+      <command cmdref="get_zone3_bass" zone="3" transmit="Z3PSBAS ?" response_lines="1"/>
+      <command cmdref="cmd_zone3_treble_up" zone="3" transmit="Z3PSTRE UP"/>
+      <command cmdref="cmd_zone3_treble_down" zone="3" transmit="Z3PSTRE DOWN"/>
+      <command cmdref="set_zone3_treble" zone="3" transmit="Z3PSTRE $">
+	<argument name="treble">
+	</argument>
+      </command>
+      <command cmdref="get_zone3_treble" zone="3" transmit="Z3PSTRE ?" response_lines="1"/>
+
+      <!-- analog tuner -->
+      <!-- TF -->
+      <command cmdref="cmd_frequency_up" transmit="TFANUP"/>
+      <command cmdref="cmd_frequency_down" transmit="TFANDOWN"/>
+      <command cmdref="set_frequency" transmit="TFAN$1">
+	<argument name="freq">
+	  <description>
+            <![CDATA[
+	  (6 digits) 
+	  ****.** kHz at AM band (>050000 is AM.)
+	  ****.** MHz at FM band (<050000 is FM.)
+            ]]>
+	  </description>
+	</argument>
+      </command>
+      <command cmdref="get_frequency" transmit="TFAN?" response_lines="1">
+	<returnvalues>
+	</returnvalues>
+      </command>
+
+      <!-- TP -->
+      <command cmdref="cmd_channel_up" transmit="TPANUP"/>
+      <command cmdref="cmd_channel_down" transmit="TPANDOWN"/>
+      <command cmdref="set_channel" transmit="TPAN$1">
+	<argument name="channel"/>
+      </command>
+      <command cmdref="get_channel" transmit="TPAN?" response_lines="1">
+	<returnvalues>
+	</returnvalues>
+      </command>
+      <command cmdref="cmd_tuner_memory" transmit="TPANMEMORY"/>
+
+      <!-- TM -->
+      <command cmdref="cmd_am" transmit="TMANAM"/>
+      <command cmdref="cmd_fm" transmit="TMANFM"/>
+      <command cmdref="get_tuner_band" transmit="TMAN?" response_lines="1"/>
+      <command cmdref="cmd_tuner_auto" transmit="TMANAUTO"/>
+      <command cmdref="cmd_tuner_manual" transmit="TMANMANUAL"/>
+
+      <!-- XM Control(North America model only) -->
+      <!-- 
+      <command cmdref="cmd_TF XMUP XM Channel UP/DOWN TFXMUP"/>
+      <command cmdref="cmd_XMDOWN TFXMDOWN"/>
+      XM***
+      (3 digits)
+      ___ ***:XM CH No. TFXM001
+      (XM001 CH at XM)
+      <command cmdref="cmd_XM? Return TFXM Status TFXM?"/>
+      <command cmdref="cmd_TP XMUP XM PRESET CH UP/DOWN , direct change to No.** TPXMUP"/>
+      <command cmdref="cmd_XMDOWN TPXMDOWN"/>
+      <command cmdref="cmd_XM**(PRESET"/>
+      No.)"/>
+      <command cmdref="cmd_TPXMA1
+      <command cmdref="cmd_(PRESET No.”A1”)"/>
+      <command cmdref="cmd_XM? Return TPXM Status TPXM?"/>
+      <command cmdref="cmd_XMMEM XM PRESET MEMORY TPXMMEM"/>
+      <command cmdref="cmd_XM ? Return XM Status"/>
+      <command cmdref="cmd_- CHANNEL NAME, ARTIST, TITLE, SIGNAL LEVEL
+      XM?"/>
+      -->
+
+      <!-- iRadio/mServer/USB Extended Control, page 23 -->
+      <command cmdref="cmd_in_usb" remark="Select INPUT source NET/USB and start USB Playback" transmit="SIUSB"/>
+  <command cmdref="cmd_zone2_usb" zone="2" remark="Select MULTI ZONE-2 source NET/USB and start USB Playback" transmit="Z2USB"/>
+      <command cmdref="cmd_zone3_usb" zone="3" remark="Select MULTI ZONE-3 source NET/USB and start USB Playback" transmit="Z3USB"/>
+
+      <command cmdref="cmd_0x90" name="Cursor Up Control" transmit="NS90"/>
+      <command cmdref="cmd_0x91" name="Cursor Down Control" transmit="NS91"/>
+      <command cmdref="cmd_0x92" name="Cursor Left Control" transmit="NS92"/>
+      <command cmdref="cmd_0x93" name="Cursor Right Control" transmit="NS93"/>
+      <command cmdref="cmd_0x94" name="Enter (Play/Pause) Control" transmit="NS94"/>
+      <command cmdref="cmd_0x9a" name="Play Control" transmit="NS9A"/>
+      <command cmdref="cmd_0x9b" name="Pause Control" transmit="NS9B"/>
+      <command cmdref="cmd_0x9c" name="Stop Control" transmit="NS9C"/>
+      <command cmdref="cmd_0x9d" name="Skip Plus Control" transmit="NS9D"/>
+      <command cmdref="cmd_0x9e" name="Skip Minus Control" transmit="NS9E"/>
+      <command cmdref="cmd_0x9H" name="Repeat One (USB Only)" transmit="NS9H"/>
+      <command cmdref="cmd_0x9I" name="Repeat All (USB Only)" transmit="NS9I"/>
+      <command cmdref="cmd_0x9J" name="Repeat Off (USB Only)" transmit="NS9J"/>
+      <command cmdref="cmd_0x9K" name="Random On/Repeat ALL (USB Only)" transmit="NS9K"/>
+      <command cmdref="cmd_0x9L" name="Random Off (USB Only)" transmit="NS9L"/>
+      <command cmdref="cmd_0x9X" name="Page Up Control" transmit="NS9X"/>
+      <command cmdref="cmd_0x9Y" name="Page Down Control" transmit="NS9Y"/>
+      <command cmdref="cmd_NSA" name="Return Onscreen Display Information List" transmit="NSA"/>
+      <!--command cmdref="cmd_(ASCII CODE Character) (Return NSA0-NSA8,Refer to Page 38）"-->
+      <command cmdref="cmd_NSE" name="Request Onscreen Display Information List" transmit="NSE"/>
+      <!--command cmdref="cmd_(UTF-8 CODE Character) (Return NSE0-NSE8,Refer to Page 39）"/-->
+      <!--command cmdref="cmd_NSB **" name="Direct Preset CH Play NSB00"/-->
+      <!--command cmdref="cmd_(**:00-55,00=A1,01=A2,B1=08,G8=55)"/-->
+      <!--command cmdref="cmd_NSC **" name="Direct Preset CH Memory NSC00"/-->
+      <!--command cmdref="cmd_(**:00-55,00=A1,01=A2,B1=08,G8=55)"/-->
+      <!--command cmdref="cmd_NSD *" name="Direct Character Search" transmit="NSD0"/-->
+      <!--command cmdref="cmd_(*:0-9,A-Z)"/-->
+
+      <!-- iPod Extended Control, page 24 -->
+
+      <!-- not needed, use normal -->
+      <!--command cmdref="cmd_91" name="Cursor Down Control" transmit="IP91"/-->
+      <!--command cmdref="cmd_92" name="Cursor Left Control" transmit="IP92"/-->
+      <!--command cmdref="cmd_93" name="Cursor Right Control" transmit="IP93"/-->
+      <!--command cmdref="cmd_94" name="Enter (Play/Pause) Control" transmit="IP94"/-->
+      <command cmdref="cmd_ipod_play_pause" name="Play/Pause Control" transmit="IP9A"/>
+      <command cmdref="cmd_ipod_stop" name="Stop Control" transmit="IP9C"/>
+      <command cmdref="cmd_next" name="Skip Plus Control" transmit="IP9D"/>
+      <command cmdref="cmd_previous" name="Skip Minus Control" transmit="IP9E"/>
+      <command cmdref="cmd_fast_forward" name="Manual Search Plus Control" transmit="IP9F"/>
+      <command cmdref="cmd_rewind" name="Manual Search Minus Control" transmit="IP9G"/>
+      <command cmdref="cmd_repeat_one" name="Repeat One Control" transmit="IP9H"/>
+      <command cmdref="cmd_repeat_all" name="Repeat All Control" transmit="IP9I"/>
+      <command cmdref="cmd_repeat_off" name="Repeat Off Control" transmit="IP9J"/>
+      <command cmdref="cmd_shuffle_songs" name="Shuffle Songs Control" transmit="IP9K"/>
+      <command cmdref="cmd_shuffle_albums" name="Shuffle Album Control" transmit="IP9L"/>
+      <command cmdref="cmd_shuffle_off" name="Shuffle Off Control" transmit="IP9M"/>
+      <command cmdref="cmd_ipod_menu" name="MENU Control" transmit="IP9N"/>
+      <command cmdref="cmd_browse_mode" name="Switch the Browse Mode Control" transmit="IP9P"/>
+      <command cmdref="cmd_remote_mode" name="Switch the Remote Mode Control" transmit="IP9Q"/>
+      <command cmdref="cmd_page_up" name="Page Up Control" transmit="IP9X"/>
+      <command cmdref="cmd_page_down" name="Page Down Control" transmit="IP9Y"/>
+      <command cmdref="get_status" name="Return Onscreen Display Information List" transmit="IPA" response_lines="9"/>
+      <!--Return IPA0-IPA9 (ASCII), Refer to Page 40-41"/-->
+      <command cmdref="cmd_IPE" name="Request Onscreen Display Information List(iPOD)" transmit="IPE"/>
+      <!--Return IPE0-IPE9 (UTF-8), Refer to Page 42-43"/-->
+
+      <!-- Cursol/Enter/Menu(Setup); page 25 -->
+      <command cmdref="cmd_up" name="Cursor Up Control" transmit="MNCUP"/>
+      <command cmdref="cmd_down" name="Cursor Down Control" transmit="MNCDN"/>
+      <command cmdref="cmd_left" name="Cursor Left Control" transmit="MNCLT"/>
+      <command cmdref="cmd_right" name="Cursor Right Control" transmit="MNCRT"/>
+      <command cmdref="cmd_ok" name="Enter Control" transmit="MNENT"/>
+      <command cmdref="cmd_return" name="RETURN Control" transmit="MNRTN"/>
+      <command cmdref="cmd_menu_on" name="GUI Menu ON Control" transmit="MNMEN ON"/>
+      <command cmdref="cmd_menu_off" name="GUI Menu OFF Control" transmit="MNMEN OFF"/>
+
+
+      <!-- Remote Lock/Panel Lock; page 26 -->
+      <command cmdref="cmd_remote_lock_on" name="Remote control lock on" transmit="SYREMOTE LOCK ON"/>
+      <command cmdref="cmd_remote_lock_off" name="Remote control lock off" transmit="SYREMOTE LOCK OFF"/>
+      <command cmdref="cmd_panel_lock_on" name="Panel button (except master vol.) control lock on" transmit="SYPANEL LOCK ON"/>
+      <command cmdref="cmd_panel_vol_lock_on" name="Panel button and master vol. control lock on" transmit="SYPANEL+V LOCK ON"/>
+      <command cmdref="cmd_panel_lock_off" name="Panel buttum and master vol. control lock off" transmit="SYPANEL LOCK OFF"/>
+    </commandgroup>
+  </commandset>
+</device>

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<devices>
+  <device id="yamaha_rxv1400" name="Yamaha RX-V 1400 Receiver" vendor="Yamaha" model="RX-V 1400" type="receiver">
+    <attributes>
+      <attribute name="zone2"/>
+      <attribute name="zone3"/>
+    </attributes>
+    <commandset type="ir" protocol="nec1" deviceno="122" remotename="yamaha_rxv1400" original_remote="RAV239" name="Yamaha standard IR commands">
+
+	<!-- Input -->
+      <command cmdref="in_phono" 			cmdno="0x14"/>
+      <command cmdref="in_cd"			cmdno="0x15"/>
+      <command cmdref="in_tuner" 			cmdno="0x16"/>
+      <command cmdref="in_tape" 			cmdno="0x18"/>
+      <command cmdref="in_cd_r" 			cmdno="0x19"/>
+      <command cmdref="in_dvd" 			cmdno="0xc1"/>
+      <command cmdref="in_dtv" 			cmdno="0x54"/>
+      <command cmdref="in_cable" 			cmdno="0xc0"/>
+      <command cmdref="in_vcr1" 			cmdno="0x0f"/>
+      <command cmdref="in_vcr2" 			cmdno="0x13"/>
+      <command cmdref="in_video_aux"		cmdno="0x55"/>
+      <command cmdref="input_mode" 			cmdno="0xc3"/> <!-- not in the list -->
+
+      <!-- System -->
+      <command cmdref="volume_up" 			cmdno="0x1a"/>
+      <command cmdref="volume_down" 		cmdno="0x1b"/>
+      <command cmdref="power_on" 			cmdno="0x1d"/>
+      <command cmdref="power_off" 			cmdno="0x1e"/>
+      <command cmdref="power_toggle" 		cmdno="0x1f"/> <!-- not implemented -->
+      <command cmdref="mute_toggle" 		cmdno="0x1c"/>
+      <command cmdref="ext_input_toggle"		cmdno="0x87"/>
+      <command cmdref="osd" 			cmdno="0xc2"/>
+      <command cmdref="sleep" 			cmdno="0x57"/>
+      <command cmdref="menu" 			cmdno="0x9c"/>	<!-- not in the list -->
+
+      <!-- DSP -->
+      <command cmdref="stereo"			cmdno="0x88"/>
+      <command cmdref="hall" 			cmdno="0x89"/>
+      <command cmdref="jazz_club" 			cmdno="0x8a"/>
+      <command cmdref="rock_concert" 		cmdno="0x8b"/>
+      <command cmdref="entertainment" 		cmdno="0x8c"/>
+      <command cmdref="music_video" 		cmdno="0x8d"/>
+      <command cmdref="tv_theatre" 			cmdno="0x8e"/>
+      <command cmdref="movie_theatre" 		cmdno="0x8f"/>
+      <command cmdref="thx" 			cmdno="0x90"/>
+      <command cmdref="dolby_dts" 			cmdno="0x91"/>
+      <command cmdref="ok"	 			cmdno="0x96"/>
+      <command cmdref="night_toggle" 		cmdno="0x95"/>
+      <command cmdref="ex_es" 			cmdno="0x97"/>
+      <command cmdref="effect_toggle" 		cmdno="0x56"/>
+      <command cmdref="effect_level_select"		cmdno="0x86"/>
+      <command cmdref="test_mode" 			cmdno="0x85"/>
+
+      <!-- Other -->
+      <command cmdref="up"				cmdno="0x98"/>
+      <command cmdref="down" 			cmdno="0x99"/>
+      <command cmdref="plus" 			cmdno="0x52"/>
+      <command cmdref="minus" 			cmdno="0x53"/>
+      
+      <!-- Tuner -->
+      <command cmdref="preset_page_toggle"		cmdno="0x12"/>
+      <command cmdref="channel_up" 			cmdno="0x10"/>
+      <command cmdref="channel_down" 		cmdno="0x11"/>
+	
+      <command cmdref="service_menu"		cmdno="0xdf"/>	<!-- undocumented -->
+
+      <command cmdref="page_a"			cmdno="0xe0"/>	<!-- undocumented -->
+      <command cmdref="page_b"			cmdno="0xe1"/>	<!-- undocumented -->
+      <command cmdref="page_c"			cmdno="0xe2"/>	<!-- undocumented -->
+      <command cmdref="page_d"			cmdno="0xe3"/>	<!-- undocumented -->
+      <command cmdref="page_e"			cmdno="0xe4"/>	<!-- undocumented -->
+
+      <command cmdref="cmd_1" 				cmdno="0xe5"/>	<!-- No cmd_0 and cmd_9! -->
+      <command cmdref="cmd_2" 				cmdno="0xe6"/>
+      <command cmdref="cmd_3"	 			cmdno="0xe7"/>
+      <command cmdref="cmd_4" 				cmdno="0xe8"/>
+      <command cmdref="cmd_5" 				cmdno="0xe9"/>
+      <command cmdref="cmd_6" 				cmdno="0xea"/>
+      <command cmdref="cmd_7" 				cmdno="0xeb"/>
+      <command cmdref="cmd_8" 				cmdno="0xec"/>
+	
+      <!-- Zone2 -->
+      <command cmdref="zone2_volume_up" ifattribute="zone2"	cmdno="0xda"/>
+      <command cmdref="zone2_volume_down" ifattribute="zone2" cmdno="0xdb"/>
+      <command cmdref="zone2_mute_toggle" ifattribute="zone2"	cmdno="0xdc"/>
+      <command cmdref="zone2_phono"	ifattribute="zone2"	cmdno="0xd0"/>
+      <command cmdref="zone2_cd"		ifattribute="zone2" 	cmdno="0xd1"/>
+      <command cmdref="zone2_tuner"	ifattribute="zone2" 	cmdno="0xd2"/>
+      <command cmdref="zone2_md_tape"		ifattribute="zone2" 	cmdno="0xd3"/>
+      <command cmdref="zone2_cd_r"	ifattribute="zone2" 			cmdno="0xd4"/>
+      <command cmdref="zone2_dvd"		ifattribute="zone2"	cmdno="0xcd"/>
+      <command cmdref="zone2_d_tv"	ifattribute="zone2"	cmdno="0xd9"/>
+      <command cmdref="zone2_cbl_sat"	ifattribute="zone2"	cmdno="0xcc"/>
+      <command cmdref="zone2_vcr1"	ifattribute="zone2"	cmdno="0xd6"/>
+      <command cmdref="zone2_vcr2"	ifattribute="zone2"	cmdno="0xd7"/>
+      <command cmdref="zone2_video_aux"	ifattribute="zone2"	cmdno="0xd8"/>
+      
+      <!-- Zone3 -->
+      <command cmdref="zone3_on" ifattribute="zone3"	cmdno="0xed"/>
+      <command cmdref="zone3_off" ifattribute="zone3" cmdno="0xee"/>
+      <command cmdref="zone3_mute_toggle" ifattribute="zone3" cmdno="0xff"/>
+      <command cmdref="zone3_phono"	ifattribute="zone3"	cmdno="0xf1"/>
+      <command cmdref="zone3_cd"		ifattribute="zone3"	cmdno="0xf2"/>
+      <command cmdref="zone3_tuner"	ifattribute="zone3"	cmdno="0xf3"/>
+      <command cmdref="zone3_md_tape"	ifattribute="zone3"	cmdno="0xf4"/>
+      <command cmdref="zone3_cd_r"	ifattribute="zone3"	cmdno="0xf5"/>
+      <command cmdref="zone3_dvd"		ifattribute="zone3"	cmdno="0xfc"/>
+      <command cmdref="zone3_d_tv"	ifattribute="zone3"	cmdno="0xf6"/>
+      <command cmdref="zone3_cbl_sat"	ifattribute="zone3"	cmdno="0xf7"/>
+      <command cmdref="zone3_vcr1"	ifattribute="zone3"	cmdno="0xf9"/>
+      <command cmdref="zone3_vcr2"	ifattribute="zone3"	cmdno="0xfa"/>
+      <command cmdref="zone3_video_aux"	ifattribute="zone3"	cmdno="0xf0"/>
+    </commandset>
+    <commandset type="ir" protocol="nec1" deviceno="126" remotename="yamaha_rxv1400" original_remote="none" name="Yamaha extended IR commands">
+      <command cmdref="zone2_on" ifattribute="zone2"	cmdno="0xba"/>
+      <command cmdref="zone2_off" ifattribute="zone2" cmdno="0xbb"/>
+      <command cmdref="power_on"			cmdno="0x7e"/>
+      <command cmdref="power_off"			cmdno="0x7f"/>
+      <command cmdref="zone2_mute_on" ifattribute="zone2"	cmdno="0xa0"/>
+      <command cmdref="zone2_mute_off" ifattribute="zone2"	cmdno="0xa1"/>
+
+      <command cmdref="mute_on"				cmdno="0xa2"/>
+      <command cmdref="mute_off"				cmdno="0xa3"/>
+      
+      <command cmdref="zone3_mute_on" ifattribute="zone3"	cmdno="0x26"/>
+      <command cmdref="zone3_mute_off" ifattribute="zone3"	cmdno="0x66"/>
+	
+      <command cmdref="ext_input_on"		cmdno="0xa4"/>
+      <command cmdref="ext_input_off"		cmdno="0xa5"/>
+      <command cmdref="input_mode_auto"		cmdno="0xa6"/>
+      <command cmdref="input_mode_d_d_rf"		cmdno="0xa7"/>
+      <command cmdref="input_mode_dts"		cmdno="0xa8"/>
+      <command cmdref="input_mode_digital"		cmdno="0xa9"/>
+      <command cmdref="input_mode_analog"		cmdno="0xaa"/>
+      <command cmdref="spk_a_on"			cmdno="0xab"/>
+      <command cmdref="spk_a_off"			cmdno="0xac"/>
+      <command cmdref="spk_b_on"			cmdno="0xad"/>
+      <command cmdref="spk_b_off"			cmdno="0xae"/>
+      <command cmdref="osd_off"			cmdno="0xb0"/>
+      <command cmdref="osd_short"			cmdno="0xb1"/>
+      <command cmdref="osd_full"			cmdno="0xb2"/>
+      <command cmdref="sleep_off"			cmdno="0xb3"/>
+      <command cmdref="sleep_120"			cmdno="0xb4"/>
+      <command cmdref="sleep_90"			cmdno="0xb5"/>
+      <command cmdref="sleep_60"			cmdno="0xb6"/>
+      <command cmdref="sleep_30"			cmdno="0xb7"/>
+      <command cmdref="ex_es_auto"			cmdno="0x7c"/>
+      <command cmdref="ex_es_on"			cmdno="0x7d"/>
+      <command cmdref="ex_es_off"			cmdno="0xb9"/>
+
+      <command cmdref="dc1_trg_control_zone1"	cmdno="0x32"/>
+      <command cmdref="dc1_trg_control_zone2" ifattribute="zone2"	cmdno="0x33"/>
+      <command cmdref="dc1_trg_control_zone3" ifattribute="zone3" 	cmdno="0x31"/>
+      <command cmdref="dc1_trg_control_all_or"	cmdno="0x34"/>
+      <command cmdref="dc2_trg_control_zone1"	ifattribute="zone2" cmdno="0x96"/>
+      <command cmdref="dc2_trg_control_zone2" ifattribute="zone2" 	cmdno="0x97"/>
+      <command cmdref="dc2_trg_control_zone3" ifattribute="zone3" 	cmdno="0x9f"/>
+      <command cmdref="dc2_trg_control_all_or"	cmdno="0x98"/>
+      <command cmdref="dc1_trigger_zone1_on"	cmdno="0x73"/>
+      <command cmdref="dc1_trigger_zone1_off"	cmdno="0x74"/>
+      <command cmdref="dc1_trigger_zone2_on"	ifattribute="zone2" cmdno="0x71"/>
+      <command cmdref="dc1_trigger_zone2_off"	ifattribute="zone2" cmdno="0x72"/>
+      <command cmdref="dc1_trigger_zone3_on"	ifattribute="zone3" cmdno="0x83"/>
+      <command cmdref="dc1_trigger_zone3_off"	ifattribute="zone3" cmdno="0x84"/>
+      <command cmdref="dc2_trigger_zone1_on"	cmdno="0x3e"/>
+      <command cmdref="dc2_trigger_zone1_off"	cmdno="0x3f"/>
+      <command cmdref="dc2_trigger_zone2_on"	ifattribute="zone2" cmdno="0x3c"/>
+      <command cmdref="dc2_trigger_zone2_off"	ifattribute="zone2" cmdno="0x3d"/>
+      <command cmdref="dc2_trigger_zone3_on"	ifattribute="zone3" cmdno="0x85"/>
+      <command cmdref="dc2_trigger_zone3_off"	ifattribute="zone3" cmdno="0x86"/>
+	
+      <!-- DSP -->
+      <command cmdref="effect_off"			cmdno="0xe0"/>
+      <command cmdref="effect_on"			cmdno="0x27"/>
+      <command cmdref="night_on"			cmdno="0x9b"/>
+      <command cmdref="night_off"			cmdno="0x9c"/>
+	
+      <command cmdref="hall_a"			cmdno="0xe1"/>
+      <command cmdref="hall_b"			cmdno="0xe2"/>
+      <command cmdref="hall_c"			cmdno="0xe3"/>
+      <command cmdref="hall_d"			cmdno="0xe4"/>
+      <command cmdref="hall_e"			cmdno="0xe5"/>
+      <command cmdref="live_concert"		cmdno="0xe6"/>
+      <command cmdref="tokyo"			cmdno="0xe7"/>
+      <command cmdref="freiburg"			cmdno="0xe8"/>
+      <command cmdref="royaumont"			cmdno="0xe9"/>
+      <command cmdref="village_gate"		cmdno="0xea"/>
+      <command cmdref="village_vanguard"		cmdno="0xeb"/>
+      <command cmdref="the_bottom_line"		cmdno="0xec"/>
+      <command cmdref="the_roxy_theatre"		cmdno="0xed"/>
+      <command cmdref="loft"			cmdno="0xee"/>
+      <command cmdref="arena"			cmdno="0xef"/>
+      
+      <command cmdref="disco"			cmdno="0xf0"/>
+      <command cmdref="party"			cmdno="0xf1"/>
+      <command cmdref="game"			cmdno="0xf2"/>
+      <command cmdref="cmd_7ch_stereo"			cmdno="0xff"/>
+      
+      <command cmdref="pop_rock"			cmdno="0xf3"/>
+      <command cmdref="dj"				cmdno="0xf4"/>
+      <command cmdref="classical_opera"		cmdno="0xf5"/>
+      <command cmdref="pavilion"			cmdno="0xf6"/>
+	
+      <command cmdref="mono_movie"			cmdno="0xf7"/>
+      <command cmdref="variety_sports"		cmdno="0xf8"/>
+      <command cmdref="spectacle"			cmdno="0xf9"/>
+      <command cmdref="sci_fi"			cmdno="0xfa"/>
+      <command cmdref="adventure"			cmdno="0xfb"/>
+      <command cmdref="general"			cmdno="0xfc"/>
+      <command cmdref="normal"			cmdno="0xfd"/>
+      <command cmdref="enhanced"			cmdno="0xfe"/>
+      <command cmdref="plii_movie"			cmdno="0x67"/>
+      <command cmdref="plii_music"			cmdno="0x68"/>
+      <command cmdref="neo_6_movie"			cmdno="0x69"/>
+      <command cmdref="neo_6_music"			cmdno="0x6a"/>
+      <command cmdref="thx_cinema_sur_ex"		cmdno="0xc2"/>
+      <command cmdref="cmd_2ch_stereo"			cmdno="0xc0"/>
+      <command cmdref="direct_stereo"		cmdno="0xc1"/>
+	
+      <!-- Home -->
+      <command cmdref="preset_home_memory_a"	cmdno="0x2b"/>
+      <command cmdref="preset_home_memory_b"	cmdno="0x2c"/>
+      <command cmdref="preset_home_memory_c"	cmdno="0x2d"/>
+      <command cmdref="preset_home_memory_d"	cmdno="0x2e"/>
+      <command cmdref="preset_home_memory_e"	cmdno="0x2f"/>
+      <command cmdref="preset_home_memory_f"	cmdno="0x30"/>
+      <command cmdref="preset_home_recall_a"	cmdno="0x35"/>
+      <command cmdref="preset_home_recall_b"	cmdno="0x36"/>
+      <command cmdref="preset_home_recall_c"	cmdno="0x37"/>
+      <command cmdref="preset_home_recall_d"	cmdno="0x38"/>
+      <command cmdref="preset_home_recall_e"	cmdno="0x39"/>
+      <command cmdref="preset_home_recall_f"	cmdno="0x3a"/>
+
+      <!-- Volume -->
+      <command cmdref="preset_vol_memory_a"		cmdno="0x6b"/>
+      <command cmdref="preset_vol_memory_b"		cmdno="0x6c"/>
+      <command cmdref="preset_vol_memory_c"		cmdno="0x6d"/>
+      <command cmdref="preset_vol_memory_d"		cmdno="0x6e"/>
+      <command cmdref="preset_vol_memory_e"		cmdno="0x6f"/>
+      <command cmdref="preset_vol_memory_f"		cmdno="0x70"/>
+      <command cmdref="preset_vol_recall_a"		cmdno="0x75"/>
+      <command cmdref="preset_vol_recall_b"		cmdno="0x76"/>
+      <command cmdref="preset_vol_recall_c"		cmdno="0x77"/>
+      <command cmdref="preset_vol_recall_d"		cmdno="0x78"/>
+      <command cmdref="preset_vol_recall_e"		cmdno="0x79"/>
+      <command cmdref="preset_vol_recall_f"		cmdno="0x7a"/>
+
+	<!-- Zone 2 volume -->
+      
+      <command cmdref="zone2_preset_vol_memory_a"	ifattribute="zone2"	cmdno="0x87"/>
+      <command cmdref="zone2_preset_vol_memory_b"	ifattribute="zone2"	cmdno="0x88"/>
+      <command cmdref="zone2_preset_vol_memory_c"	ifattribute="zone2"	cmdno="0x89"/>
+      <command cmdref="zone2_preset_vol_memory_d"	ifattribute="zone2"	cmdno="0x8a"/>
+      <command cmdref="zone2_preset_vol_memory_e"	ifattribute="zone2"	cmdno="0x8b"/>
+      <command cmdref="zone2_preset_vol_memory_f"	ifattribute="zone2"	cmdno="0x8c"/>
+      <command cmdref="zone2_preset_vol_recall_a"	ifattribute="zone2"	cmdno="0x8d"/>
+      <command cmdref="zone2_preset_vol_recall_b"	ifattribute="zone2"	cmdno="0x8e"/>
+      <command cmdref="zone2_preset_vol_recall_c"	ifattribute="zone2"	cmdno="0x8f"/>
+      <command cmdref="zone2_preset_vol_recall_d"	ifattribute="zone2"	cmdno="0x90"/>
+      <command cmdref="zone2_preset_vol_recall_e"	ifattribute="zone2"	cmdno="0x91"/>
+      <command cmdref="zone2_preset_vol_recall_f"	ifattribute="zone2"	cmdno="0x92"/>
+
+      <!-- Zone 3 volume -->
+      <command cmdref="zone3_preset_vol_memory_a"	ifattribute="zone3"	cmdno="0x20"/>
+      <command cmdref="zone3_preset_vol_memory_b"	ifattribute="zone3"	cmdno="0x21"/>
+      <command cmdref="zone3_preset_vol_memory_c"	ifattribute="zone3"	cmdno="0x22"/>
+      <command cmdref="zone3_preset_vol_memory_d"	ifattribute="zone3"	cmdno="0x23"/>
+      <command cmdref="zone3_preset_vol_memory_e"	ifattribute="zone3"	cmdno="0x24"/>
+      <command cmdref="zone3_preset_vol_memory_f"	ifattribute="zone3"	cmdno="0x25"/>
+      <command cmdref="zone3_preset_vol_recall_a"	ifattribute="zone3"	cmdno="0x60"/>
+      <command cmdref="zone3_preset_vol_recall_b"	ifattribute="zone3"	cmdno="0x61"/>
+      <command cmdref="zone3_preset_vol_recall_c"	ifattribute="zone3"	cmdno="0x62"/>
+      <command cmdref="zone3_preset_vol_recall_d"	ifattribute="zone3"	cmdno="0x63"/>
+      <command cmdref="zone3_preset_vol_recall_e"	ifattribute="zone3"	cmdno="0x64"/>
+      <command cmdref="zone3_preset_vol_recall_f"	ifattribute="zone3"	cmdno="0x65"/>
+
+      <!-- Tuner -->
+      <command cmdref="fm"				cmdno="0xbc"/>
+      <command cmdref="am"				cmdno="0xbd"/>
+      <command cmdref="auto_tuning_up"		cmdno="0xbe"/>
+      <command cmdref="auto_tuning_down"		cmdno="0xbf"/>
+    </commandset>
+  </device>
+</devices>

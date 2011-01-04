@@ -1,0 +1,1300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE homemap PUBLIC "-//bengt-martensson.de//home//en" "../dtds/home.dtd">
+<!--
+Description of devices, applications, gateways, groups, zones.
+-->
+<homemap>
+  <aliases>
+    <alias id="main-receiver" device="denon"/>
+    <alias id="receiver" device="denon"/>
+    <alias id="amp" device="denon"/>
+    <alias id="sat-receiver" device="dbox"/>
+    <alias id="cable-receiver" device="dbox"/>
+    <alias id="digital-receiver" device="dbox"/>
+    <alias id="dvd" device="oppo"/>
+    <alias id="hddvd" device="toshiba"/>
+    <alias id="bluray" device="samsung"/>
+    <alias id="tv" device="philips_37pfl9603"/>
+    <alias id="vcr" device="vr1100"/>
+    <alias id="projector" device="z2000"/>
+  </aliases>
+  <device-groups>
+    <device-group id="light" name="Light">
+      <deviceref device="front_light"/>
+      <deviceref device="left_light"/>
+      <deviceref device="right_light"/>
+      <deviceref device="shelf_light"/>
+      <deviceref device="work_light"/>
+      <!--deviceref device="tv_light"/-->
+      <deviceref device="lamp_column"/>
+      <deviceref device="floor_lamp_1"/>
+      <deviceref device="floor_lamp_2"/>
+      <deviceref device="floor_lamp_3"/>
+      <deviceref device="bedroom_light"/>
+      <deviceref device="hall_light"/>
+      <deviceref device="kitchen_light"/>
+      <!--deviceref device="bathroom_light"/-->
+    </device-group>
+
+    <device-group id="blinds" name="Blinds">
+      <deviceref device="large_blind"/>
+      <deviceref device="small_blind"/>
+      <deviceref device="balcony_blind"/>
+      <deviceref device="kitchen_blind"/>
+      <deviceref device="bedroom_blind"/>
+    </device-group>
+
+    <device-group id="misc" name="Misc.">
+      <deviceref device="balcony_door"/>
+      <deviceref device="screen"/>
+      <deviceref device="rotating_flower"/>
+      <deviceref device="water"/>
+      <deviceref device="water_wall"/>
+      <deviceref device="column_pump"/>
+      <deviceref device="lamp_column"/>
+      <!--deviceref device="aux_1"/-->      
+      <!--deviceref device="aux_2"/-->      
+      <deviceref device="aux_3"/>   
+      <deviceref device="floor_fan"/>   
+      <deviceref device="desk_fan"/>   
+      <deviceref device="conrad_test"/>  
+      <deviceref device="x10-N1"/>  
+      <deviceref device="x10-N2"/>  
+      <deviceref device="x10-N3"/>  
+    </device-group>
+
+    <device-group id="living_room" name="Living Room">
+      <deviceref device="front_light">Front Lightning</deviceref>
+      <deviceref device="left_light">Left Lightning</deviceref>
+      <deviceref device="right_light">Right Lightning</deviceref>
+      <deviceref device="shelf_light">Shelf Lightning</deviceref>
+      <deviceref device="work_light">Work Lightning</deviceref>
+      <deviceref device="balcony_door">Balcony Door</deviceref>
+      <!--deviceref device="tv_light"/-->
+      <deviceref device="rotating_flower"/>
+      <deviceref device="screen"/>
+      <deviceref device="water"/>
+      <deviceref device="lamp_column"/>
+      <deviceref device="column_pump"/>
+      <deviceref device="water_wall"/>
+      <deviceref device="large_blind"/>
+      <deviceref device="small_blind"/>
+      <deviceref device="balcony_blind"/>
+      <deviceref device="floor_lamp_1"/>
+      <deviceref device="floor_lamp_2"/>
+      <deviceref device="floor_lamp_3"/>
+      <deviceref device="floor_fan"/>   
+      <deviceref device="desk_fan"/>   
+    </device-group>
+
+    <device-group id="kitchen_hall_bedroom" name="Kitchen/Hall/Bedroom">
+      <deviceref device="kitchen_light"/>
+      <deviceref device="kitchen_blind"/>
+      <deviceref device="hall_light"/>
+      <!--deviceref device="bathroom_light"/-->
+      <deviceref device="bedroom_light"/>
+      <deviceref device="bedroom_blind"/>
+    </device-group>
+
+    <device-group id="bedroom" name="Bedroom zone" zone="2">
+      <!--from-gateway gateway="globalcache" connector="2"/-->
+      <deviceref device="yamaha_bedroom"/>
+      <deviceref device="pioneer_cld925"/>
+      <deviceref device="marantz_cd42"/>
+      <deviceref device="marantz_tape"/>
+      <deviceref device="marantz_ipod_dock"/>
+      <!--deviceref device="pioneer_dvd525"/-->
+      <!--deviceref device="lg_vcr"/-->
+      <deviceref device="panasonic_dvd_s75"/>
+      <!--deviceref device="panasonic_dvd_s33"/-->
+      <deviceref device="tiny_tv"/>
+    </device-group>
+
+    <device-group id="deskzone" name="desk" zone="3">
+       <!--from-gateway gateway="globalcache" connector="3"/-->
+       <deviceref device="yamaha_desk"/>
+       <deviceref device="godzilla"/>
+    </device-group>
+
+    <device-group id="main" name="Main Devices" zone="1">
+      <deviceref device="denon"/>
+      <deviceref device="denon_ipod_dock"/>
+      <!--deviceref device="pioneer_cld925"/-->
+      <deviceref device="vr1100"/>
+      <deviceref device="oppo"/>
+      <deviceref device="popcorn"/>
+      <!--deviceref device="panasonic_dvd_s75"/-->
+      <deviceref device="toshiba"/>
+      <deviceref device="samsung"/>
+      <deviceref device="analog-8ch-switch"/>
+      <deviceref device="dbox"/>
+      <deviceref device="thorens"/>
+      <!--deviceref device="philips_28ml8805"/-->
+      <deviceref device="philips_37pfl9603"/>
+      <deviceref device="nubert"/>
+      <deviceref device="z2000"/>
+    </device-group>
+
+    <device-group id="mobiles" name="Mobile devices">
+      <deviceref device="zoom_vaio"/>
+      <deviceref device="sagem_dbox"/>
+      <deviceref device="philips_dbox"/>
+    </device-group>
+  </device-groups>
+
+  <devices>
+    <device id="denon" class="denon_avr3808" name="Denon AVR-3808">
+      <from-gateway gateway="lan" connector="tcp" hostname="denon" portnumber="23"/>
+      <from-gateway gateway="lan" connector="www" hostname="denon" portnumber="80"/>
+      <!--from-gateway gateway="dbox_lirc"/-->
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="denon_serial_gw"/>
+      <inputs>
+	<input name="phono" video="no">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_phono" audio_only="cmd_in_phono"/>
+	    <querycommand cmd="get_input" val="SIPHONO"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_phono" audio_only="cmd_zone2_phono"/>
+	    <querycommand cmd="get_zone2" val="Z2PHONO"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_phono" audio_only="cmd_zone3_phono"/>
+	    <querycommand cmd="get_zone3" val="Z3PHONO"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_phono"/>
+	    <querycommand cmd="get_recordsrc" val="SRPHONO"/>
+	  </zone>
+	  <deviceref device="thorens"/>
+	</input>
+	<input name="cd" myname="tv/pc" video="no">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_cd" audio_only="cmd_in_cd"/>
+	    <querycommand cmd="get_input" val="SICD"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_cd" audio_only="cmd_zone2_cd"/>
+	    <querycommand cmd="get_zone2" val="Z2CD"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_cd" audio_only="cmd_zone3_cd"/>
+	    <querycommand cmd="get_zone3" val="Z3CD"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_cd" audio_only="cmd_recordsrc_cd"/>
+	    <querycommand cmd="get_recordsrc" val="SRCD"/>
+	  </zone>
+	  <deviceref device="philips_37pfl9603"/>
+	  <!--deviceref device="godzilla"/-->
+	</input>
+	<input name="tuner" video="no">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_tuner" audio_only="cmd_in_tuner"/>
+	    <querycommand cmd="get_input" val="SITUNER"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_tuner" audio_only="cmd_zone2_tuner"/>
+	    <querycommand cmd="get_zone2" val="Z2TUNER"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_tuner" audio_only="cmd_zone3_tuner"/>
+	    <querycommand cmd="get_zone3" val="Z3TUNER"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_tuner" audio_only="cmd_recordsrc_tuner"/>
+	    <querycommand cmd="get_recordsrc" val="SRTUNER"/>
+	  </zone>
+	  <internalsrc name="tuner"/>
+	</input>
+	<input name="dvd" audio="yes" video="yes">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_dvd" video_only="cmd_videoinput_dvd"/>
+	    <querycommand cmd="get_input" val="SIDVD"/>
+	    <querycommand cmd="get_videoinput" val="SVDVD"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_dvd"/>
+	    <querycommand cmd="get_zone2" val="Z2DVD"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_dvd"/>
+	    <querycommand cmd="get_zone3" val="Z3DVD"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_dvd"/>
+	    <querycommand cmd="get_recordsrc" val="SRDVD"/>
+	  </zone>
+	  <deviceref device="oppo"/>
+	</input>
+	<input name="hdp" myname="Blu Ray" audio="yes" video="yes">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_hdp" video_only="cmd_videoinput_hdp"/>
+	    <querycommand cmd="get_input" val="SIHDP"/>
+	    <querycommand cmd="get_videoinput" mediatype="video_only" val="SVHDP"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_hdp"/>
+	    <querycommand cmd="get_zone2" val="Z2HDP"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_hdp"/>
+	    <querycommand cmd="get_zone3" val="Z3HDP"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_hdp"/>
+	    <querycommand cmd="get_recordsrc" val="SRHDP"/>
+	  </zone>
+	  <deviceref device="samsung"/>
+	</input>
+	<input name="tv/cbl" myname="iPod" audio="yes" video="yes">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_tv_cbl" video_only="cmd_videoinput_tv_cbl"/>
+	    <querycommand cmd="get_input" val="SITV/CBL"/>
+	    <querycommand cmd="get_videoinput" mediatype="video_only" val="SVTV/CBL"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_tv_cbl"/>
+	    <querycommand cmd="get_zone2" val="Z2TV/CBL"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_tv_cbl"/>
+	    <querycommand cmd="get_zone2" val="Z2TV/CBL"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_tv_cbl"/>
+	    <querycommand cmd="get_recordsrc" val="SRTV/CBL"/>
+	  </zone>
+	  <deviceref device="denon_ipod_dock"/>
+	  <!--deviceref device="marantz_ipod_dock"/-->
+	</input>
+	<input name="sat" myname="dBox" audio="yes" video="yes">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_sat" video_only="cmd_videoinput_sat"/>
+	    <querycommand cmd="get_input" val="SISAT"/>
+	    <querycommand cmd="get_videoinput" mediatype="video_only" val="SVSAT"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_sat"/>
+	    <querycommand cmd="get_zone2" val="Z2SAT"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_sat"/>
+	    <querycommand cmd="get_zone3" val="Z3SAT"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_sat"/>
+	    <querycommand cmd="get_recordsrc" val="SRSAT"/>
+	  </zone>
+	  <deviceref device="dbox"/>
+	</input>
+	<input name="vcr" audio="yes" video="yes">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_vcr" video_only="cmd_videoinput_vcr"/>
+        <querycommand cmd="get_input" val="SIVCR"/>
+	    <querycommand cmd="get_videoinput" mediatype="video_only" val="SVVCR"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_vcr"/>
+	    <querycommand cmd="get_zone2" val="Z2VCR"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_vcr"/>
+	    <querycommand cmd="get_zone3" val="Z3VCR"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_vcr"/>
+	    <querycommand cmd="get_recordsrc" val="SRVCR"/>
+	  </zone>
+	  <deviceref device="vr1100"/>
+	</input>
+	<input name="dvr" myname="HD-DVD" audio="yes" video="yes">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_dvr" video_only="cmd_videoinput_dvr"/>
+        <querycommand cmd="get_input" val="SIDVR"/>
+	    <querycommand cmd="get_videoinput" mediatype="video_only" val="SVDVR"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_dvr"/>
+	    <querycommand cmd="get_zone2" val="Z2VCR"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_dvr"/>
+	    <querycommand cmd="get_zone3" val="Z3VCR"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_dvr"/>
+	    <querycommand cmd="get_recordsrc" val="SRDVR"/>
+	  </zone>
+	  <deviceref device="toshiba"/>
+	</input>
+	<input name="v.aux" audio="yes" video="yes">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_video_aux" video_only="cmd_videoinput_video_aux"/>
+	    <querycommand cmd="get_input" val="SIV.AUX"/>
+	    <querycommand cmd="get_videoinput" mediatype="video_only" val="SVV.AUX"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_video_aux"/>
+	    <querycommand cmd="get_zone2" val="Z2V.AUX"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_video_aux"/>
+	    <querycommand cmd="get_zone3" val="Z3V.AUX"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_video_aux"/>
+	    <querycommand cmd="get_recordsrc" val="SRV.AUX"/>
+	  </zone>
+	  <externalsrc name="vaio"/>
+	</input>
+	<input name="net/usb" audio="yes" video="no">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_net_usb" audio_only="cmd_in_net_usb"/>
+	    <querycommand cmd="get_input" val="SINET/USB"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_net_usb"/>
+	    <querycommand cmd="get_zone2" val="Z2NET/USB"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_net_usb"/>
+	    <querycommand cmd="get_zone3" val="Z3NET/USB"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_net_usb"/>
+	    <querycommand cmd="get_recordsrc" val="SRNET/USB"/>
+	  </zone>
+	  <internalsrc name="usb"/>
+	  <internalsrc name="net"/>
+	</input>
+	<input name="iPod" myname="iPod" audio="yes" video="yes">
+	  <zone name="1">
+	    <selectcommand select="cmd_in_ipod" video_only="cmd_videoinput_ipod"/>
+	    <querycommand cmd="get_input" val="SIIPOD"/>
+	    <querycommand cmd="get_videoinput" mediatype="video_only" val="SVIPOD"/>
+	  </zone>
+	  <zone name="2">
+	    <selectcommand select="cmd_zone2_ipod"/>
+	    <querycommand cmd="get_zone2" val="Z2IPOD"/>
+	  </zone>
+	  <zone name="3">
+	    <selectcommand select="cmd_zone3_ipod"/>
+	    <querycommand cmd="get_zone3" val="Z3IPOD"/>
+	  </zone>
+	  <zone name="record">
+	    <selectcommand select="cmd_recordsrc_ipod"/>
+	    <querycommand cmd="get_recordsrc" val="SRIPOD"/>
+	  </zone>
+	  <deviceref device="denon_ipod_dock"/>
+	  <!--deviceref device="marantz_ipod_dock"/-->
+	</input>
+	<!--input name="xm"/-->
+      </inputs>
+    </device>
+
+    <device id="z2000" class="sanyo_plv_z2000" name="Sanyo Z2000">
+      <from-gateway gateway="dbox_lirc"/>
+      <from-gateway-ref from-gateway="projector_serial_gw"/>
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+    </device>
+
+    <device id="denon_ipod_dock" class="denon_asd_3n" name="Denon iPod dock">
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway gateway="lan" connector="www" hostname="ipod" portnumber="80"/>
+    </device>
+
+    <device id="marantz_ipod_dock" class="marantz_is201" name="Marantz iPod dock">
+      <!--from-gateway-ref from-gateway="ipod_serial_gw"/-->
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+      <!--from-gateway-ref from-gateway="ipod_ir_gw"/-->
+      <!--from-gateway-ref from-gateway="irtrans_mainzone"/-->
+      <!--from-gateway-ref from-gateway="globalcache_mainzone"/-->
+      <!--from-gateway-ref from-gateway="ipod_ir_gw"/-->
+    </device>
+
+    <device id="oppo" class="oppo_dv983" name="Oppo DVD player">
+      <from-gateway-ref from-gateway="dvd_serial_gw"/>
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway gateway="dbox_lirc"/>
+      <from-gateway-ref from-gateway="dvd_ir_gw"/>
+    </device>
+
+    <device id="vr1100" class="philips_vr1100" name="Philips VR1100">
+      <from-gateway gateway="dbox_lirc"/>
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <inputs>
+	<input name="AV1">
+	  <selectcommand select="cmd_in_av1"/> <!-- nonexisting (?) -->
+	  <connectiontype type="s-video"/>
+	  <deviceref device="denon"/>
+	</input>
+	<input name="av2">
+	  <selectcommand select="cmd_in_av2"/> <!-- nonexisting (?) -->
+	  <connectiontype type="cvbs"/>
+	  <deviceref device="dbox"/>
+	</input>
+      </inputs>
+    </device>
+
+    <device id="analog-8ch-switch" class="analog_8ch_switch" name="Analog 8channel switch">
+      <!--from-gateway gateway="dbox_lirc"/-->
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <!--from-gateway gateway="gc2" connector="serial_2"/-->
+    </device>
+
+    <device id="samsung" class="samsung_bdp1400" name="Samsung BDP1400">
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway gateway="dbox_lirc"/>
+      <from-gateway gateway="lan" connector="ip" hostname="samsung" wol="no" mac="00:16:6C:1B:CC:2A"/>
+    </device>
+
+    <device id="toshiba" class="toshiba_hd-ep30" name="Toshiba HD-EP30">
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway-ref from-gateway="irtrans_mainzone"/> <!-- Presently not working due to bug -->
+      <from-gateway gateway="dbox_lirc"/>
+      <from-gateway gateway="lan" connector="ip" hostname="toshiba" wol="no" mac="00:15:B7:E9:B6:8B"/>
+    </device>
+
+    <device id="dbox" class="dbox2_nokia" name="dBox">
+      <from-gateway gateway="lan" connector="web_api" hostname="dbox" portnumber="80"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway gateway="lan" connector="www" hostname="dbox" portnumber="80"/>
+    </device>
+
+    <device id="thorens" class="null" name="Thorens turntable, absolutely electronics free zone."/>
+
+    <device id="popcorn" class="popcorn_hour_a100" name="Popcorn Hour">
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway gateway="lan" connector="ip" hostname="toshiba" wol="no" mac="00:06:DC:42:17:0F"/>
+      <!--from-gateway gateway="gc2" connector="2"/-->
+    </device>
+
+    <device id="nubert" class="nubert" name="Nubert AW-850">
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+    </device>
+
+    <!--device id="philips_28ml8805" class="philips_28ml8805" name="Philips 28ML8805">
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway gateway="dbox_lirc"/>
+    </device-->
+
+    <device id="philips_37pfl9603" class="philips_37pfl9603"
+      name="Philips 37pfl9603">
+      <!--from-gateway-ref from-gateway="irtrans_mainzone"/-->
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway gateway="dbox_lirc"/>
+      <!--from-gateway-ref from-gateway="globalcache_test"/-->
+      <from-gateway gateway="lan" connector="ip" hostname="tv" wol="no" mac="00:90:3E:9F:C1:97"/>
+      <inputs>
+	<input name="hdmi1">
+	  <selectcommand select="cmd_in_hdmi1"/>
+	  <connectiontype type="hdmi"/>
+	  <deviceref device="denon"/>
+	</input>
+	<input name="hdmi2">
+	  <selectcommand select="cmd_in_hdmi2"/>
+	</input>
+	<input name="hdmi3">
+	  <selectcommand select="cmd_in_hdmi3"/>
+	</input>
+	<input name="hdmi4">
+	  <selectcommand select="cmd_in_hdmi4"/>
+	  <deviceref device="vaio"/>
+	</input>
+	<input name="ext1">
+	  <selectcommand select="cmd_in_ext1"/>
+	</input>
+	<input name="ext2">
+	  <selectcommand select="cmd_in_ext2"/>
+	</input>
+	<input name="ext3">
+	  <selectcommand select="cmd_in_ext3"/>
+	  <connectiontype type="yuv"/>
+	  <deviceref device="denon"/>
+	</input>
+	<input name="side">
+	  <selectcommand select="cmd_in_side"/>
+	  <!--deviceref device="denon"/-->
+	</input>
+      </inputs>
+    </device>
+
+    <device id="yamaha_bedroom" class="yamaha_rxv1400" name="Yamaha RX-V 1400">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+      <inputs>
+	<input name="phono" video="no">
+	  <selectcommand select="cmd_in_phono"/>
+	</input>
+	<input name="tuner" video="no">
+	  <selectcommand select="cmd_in_tuner"/>
+	  <internalsrc name="tuner"/>
+	</input>
+	<input name="cd" video="no">
+	  <selectcommand select="cmd_in_cd"/>
+	  <deviceref device="marantz_cd42"/>
+	  <internalsrc name="tuner"/>
+	</input>
+	<input name="v_aux">
+	  <selectcommand select="cmd_in_video_aux"/>
+	</input>
+	<input name="cbl/sat" myname="iPod">
+	  <selectcommand select="cmd_in_cable"/>
+	  <deviceref device="marantz_ipod_dock"/>
+	</input>
+	<input name="md/tape" video="no">
+	  <selectcommand select="cmd_in_tape"/>
+	  <deviceref device="marantz_tape"/>
+	</input>
+	<input name="cd-r" myname="TV">
+	  <selectcommand select="cmd_in_cd_r"/>
+	</input>
+	<input name="dtv" myname="Laserdsc">
+	  <selectcommand select="cmd_in_dtv"/>
+	  <deviceref device="pioneer_cld925"/>
+	</input>
+	<input name="vcr1" myname="VCR">
+	  <selectcommand select="cmd_in_vcr1"/>
+	</input>
+	<input name="dvr/vcr2" myname="Main zon">
+	  <selectcommand select="cmd_in_vcr2"/>
+	  <deviceref device="denon"/>
+	  <externalsrc name="main_zone"/>
+	</input>
+	<input name="dvd">
+	  <selectcommand select="cmd_in_dvd"/>
+	  <deviceref device="panasonic_dvd_s75"/>
+	</input>
+      </inputs>
+    </device>
+
+    <device id="marantz_cd42" class="rc5_cd" name="Marantz CD42">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device>
+
+    <device id="marantz_tape" class="rc5_tape" name="Marantz Tapedeck">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device>
+
+    <device id="pioneer_cld925" class="pioneer_cld925" name="Pioneer CLD-925">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device>
+
+    <device id="panasonic_dvd_s33" class="panasonic_dvd_s33" name="Panasonic S33">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device>
+
+    <device id="panasonic_dvd_s75" class="panasonic_dvd_s75" name="Panasonic S75">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device>
+
+    <device id="tiny_tv" class="rc5_tv" name="Philips mobile TV">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device>
+
+    <device id="zoom_vaio" class="zoomplayer" name="Zoom player">
+      <from-gateway gateway="lan" hostname="vaio"/>
+    </device>
+
+    <device id="yamaha_desk" class="yamaha_rxv596" name="Yamaha RX-V 596">
+      <from-gateway-ref from-gateway="desk_gw"/>
+      <inputs>
+	<input name="dvd/ld">
+	  <selectcommand select="cmd_in_dvd"/>
+	  <!--deviceref device="godzilla"/-->
+	</input>
+	<input name="dtv">
+	  <selectcommand select="cmd_in_dtv"/>
+	</input>
+ 	<input name="vcr">
+	  <selectcommand select="cmd_in_vcr"/>
+	</input>
+  	<input name="v_aux">
+	  <selectcommand select="cmd_in_video_aux"/>
+	</input>
+  	<input name="cbl/sat">
+	  <selectcommand select="cmd_in_cable"/>
+	  <deviceref device="denon"/>
+	  <externalsrc name="zone3"/>
+	</input>
+  	<input name="tuner">
+	  <selectcommand select="cmd_in_tuner"/>
+	  <internalsrc name="tuner"/>
+	</input>
+  	<input name="cd">
+	  <selectcommand select="cmd_in_cd"/>
+	  <deviceref device="deltatronic"/>
+	</input>
+ 	<input name="phono">
+	  <selectcommand select="cmd_in_phono"/>
+	</input>
+      </inputs>
+    </device>
+
+    <device id="onkyo" class="onkyo_tx_sv9041" name="Onkyo TX-SV9041"><!-- FIXME -->
+      <from-gateway-ref from-gateway="desk_gw"/>
+    </device>
+
+    <!-- Computers -->
+
+    <device id="godzilla" class="computer">
+      <from-gateway gateway="lan" hostname="godzilla"/>
+    </device>
+
+    <device id="vaio" class="computer_wol">
+      <from-gateway gateway="lan" connector="ip" hostname="vaio" mac="00:1B:77:3C:6A:5D"/>
+    </device>
+
+    <device id="deltatronic" class="computer_wol">
+      <from-gateway gateway="lan" hostname="delta" mac="00:22:15:1B:F2:D4"/>
+    </device>
+
+    <!-- Programs -->
+    <device id="vaio-zoomplayer" class="zoomplayer">
+      <from-gateway gateway="lan" hostname="vaio"/>
+    </device>
+    <!-- Not currently connected -->
+    <!--device id="pioneer_dvd525" class="pioneer_dvd525" name="Pioneer DVD525">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device-->
+    <device id="lg_vcr" class="lg_vcr_xxx" name="LG vcr">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device>
+    <device id="sagem_dbox" class="dbox2_sagem" name="Sagem dBox">
+      <from-gateway gateway="lan" connector="www" hostname="sagem" portnumber="80"/>
+      <from-gateway gateway="lan" connector="web_api" hostname="sagem" portnumber="80"/>
+    </device>
+    <device id="philips_dbox" class="dbox2_philips" name="Philips dBox (SAT)">
+      <from-gateway gateway="lan" connector="www" hostname="philips" portnumber="80"/>
+      <from-gateway gateway="lan" connector="web_api" hostname="philips" portnumber="80"/>
+    </device>
+
+    <device id="balcony_door" class="door_toggle_memory" model="Rademacher_Samson_AL-2102" name="Balcony door">
+      <description>Automatic balcony door opener</description>
+      <from-gateway-ref from-gateway="balcony_relay_gw"/>
+      <from-gateway-ref from-gateway="balcony_sensor_gw"/>
+      <!--from-gateway gateway="gc2" connector="relay_1"/-->
+    </device>
+
+    <device id="front_light" class="lamp" name="Front">
+      <description>Front Halogen Lights</description>
+      <from-gateway gateway="mypowerbox" connector="1"/>
+    </device>
+    <device id="left_light" class="lamp" name="Left">
+      <description>Left Halogen Lights</description>
+      <from-gateway gateway="mypowerbox" connector="2"/>
+    </device>
+    <device id="right_light"     class="lamp" name="Right">
+      <description>Right Halogen Lights</description>
+      <from-gateway gateway="mypowerbox" connector="3"/>
+    </device>
+    <device id="shelf_light"     class="lamp" name="Shelf">
+      <description>Shelf Halogen Lights</description>
+      <from-gateway gateway="mypowerbox" connector="4"/>
+    </device>
+    <device id="column_pump"     class="lamp" name="Pump">
+      <description>Air Pump for Water Column</description>
+      <from-gateway gateway="mypowerbox" connector="5"/>
+    </device>
+    <!--device id="tv_light"        class="lamp" name="TV Bgd.">
+      <description>TV Background Lights</description>
+      <from-gateway gateway="mypowerbox" connector="6"/>
+    </device-->
+    <device id="rotating_flower" class="lamp" name="Flower">
+      <description>Rotating Flower</description>
+      <from-gateway gateway="mypowerbox" connector="7"/>
+    </device>
+    <device id="power8"          class="lamp" name="power8">
+      <description>Not currently used</description>
+      <from-gateway gateway="mypowerbox" connector="8"/>
+    </device>
+
+    <device id="screen" class="blind_nomemory" name="Screen">
+      <description>Projector Screen Motor</description>
+      <from-gateway gateway="intertechno_screen"/>
+    </device>
+
+    <device id="work_light" class="lamp" name="Work_lamp">
+      <description>Cealing Lamp in Workshop</description>
+      <from-gateway gateway="intertechno_work_light"/>
+    </device>
+    <device id="water" class="lamp" name="Water">
+      <description>Water pump in fountain</description>
+      <from-gateway gateway="intertechno_water"/>
+    </device>
+    <device id="lamp_column" class="lamp" name="Lamp Column">
+      <description>Light in the water column</description>
+      <from-gateway gateway="intertechno_lamp_column"/>
+    </device>
+    <device id="water_wall" class="lamp" name="Wall">
+      <description>Water Wall</description>
+      <from-gateway gateway="intertechno_water_wall"/>
+    </device>
+    <device id="large_blind" class="blind_memory" name="Large Blind">
+      <description>Large Blind in Living Room</description>
+      <from-gateway gateway="intertechno_large_blind"/>
+    </device>
+    <device id="small_blind" class="blind_memory" name="Small Blind">
+      <description>Small Blind in Living Room</description>
+      <from-gateway gateway="intertechno_small_blind"/>
+    </device>
+    <device id="balcony_blind" class="blind_memory" name="Balcony Blind">
+      <description>Balcony Blind in Living Room</description>
+      <from-gateway gateway="intertechno_balcony_blind"/>
+    </device>
+    <device id="kitchen_blind" class="blind_memory" name="Kitchen Blind">
+      <description>Blind in Kitchen</description>
+      <from-gateway gateway="intertechno_kitchen_blind"/>
+    </device>
+    <device id="bedroom_light" class="lamp_dimmable_dumb" name="Bedroom Light">
+      <description>Bedroom Light (dimmable)</description>
+      <from-gateway gateway="intertechno_bedroom_light"/>
+    </device>
+    <device id="bedroom_blind" class="blind_memory" name="Bedroom Blind">
+      <description>Blind in Bedroom</description>
+      <from-gateway gateway="intertechno_bedroom_blind"/>
+    </device>
+    <device id="kitchen_light" class="lamp" name="Kitchen_lamp">
+      <description>Cealing Lamp in Kitchen</description>
+      <from-gateway gateway="intertechno_kitchen_light"/>
+    </device>
+    <!--device id="bathroom_light" class="lamp" name="Bathroom Light">
+      <description>Bathroom light</description>
+      <from-gateway gateway="intertechno_bathroom_light"/>
+    </device-->
+    <device id="hall_light" class="lamp" name="Hall_lamp">
+      <description>Cealing Lamp in Hallway</description>
+      <from-gateway gateway="intertechno_hall_light"/>
+    </device>
+    
+    <device id="floor_lamp_1" class="lamp" name="Floor Lamp 1">
+      <from-gateway gateway="intertechno_floor_lamp_1"/>
+    </device>
+    <device id="floor_lamp_2" class="lamp" name="Floor Lamp 2">
+      <from-gateway gateway="intertechno_floor_lamp_2"/>
+    </device>
+    <device id="floor_lamp_3" class="lamp" name="Floor Lamp 3">
+      <from-gateway gateway="intertechno_floor_lamp_3"/>
+    </device>
+
+    <device id="floor_fan" class="lamp" name="Floor Fan">
+      <from-gateway gateway="intertechno_floor_fan"/>
+    </device>
+    <device id="desk_fan" class="lamp" name="Desk Fan">
+      <from-gateway gateway="intertechno_desk_fan"/>
+    </device>
+    <device id="aux_3" class="lamp" name="Aux 3">
+      <from-gateway gateway="intertechno_aux_3"/>
+    </device>
+
+    <device id="conrad_test" class="lamp" name="conrad_test">
+      <description>Conrad 1324:1</description>
+      <from-gateway gateway="gw_rs200_test"/>
+    </device>
+
+    <device id="x10-N1" class="lamp" name="x10:N1">
+      <from-gateway gateway="gw_x10-N1"/>
+    </device>
+    <device id="x10-N2" class="lamp" name="x10:N2">
+      <from-gateway gateway="gw_x10-N2"/>
+    </device>
+    <device id="x10-N3" class="lamp" name="x10:N3">
+      <from-gateway gateway="gw_x10-N3"/>
+    </device>
+
+    <!-- Gateways as devices -->
+    <device id="gc_dev" class="globalcache">
+      <from-gateway gateway="lan" connector="tcp" hostname="globalcache" portnumber="4998"/>
+      <from-gateway gateway="lan" connector="ip" hostname="globalcache"/>
+    </device>
+    <device id="gc_serial" class="netcat">
+      <from-gateway gateway="lan" connector="tcp" hostname="globalcache" portnumber="4999"/>
+    </device>
+    <device id="gc2_dev" class="globalcache">
+      <from-gateway gateway="lan" connector="tcp" hostname="gc2" portnumber="4998"/>
+      <from-gateway gateway="lan" connector="ip" hostname="gc2" portnumber="4998"/>
+    </device>
+    <device id="gc2_serial1" class="netcat">
+      <from-gateway gateway="lan" connector="tcp" hostname="gc2" portnumber="4999"/>
+    </device>
+    <device id="gc2_serial2" class="netcat">
+      <from-gateway gateway="lan" connector="tcp" hostname="gc2" portnumber="5000"/>
+    </device>
+    <device id="irtrans_dev" class="irtrans">
+      <from-gateway gateway="lan" connector="www" hostname="irtrans" portnumber="80"/>
+      <from-gateway gateway="lan" connector="web_api" hostname="irtrans" portnumber="80"/>
+      <from-gateway gateway="lan" connector="ip" hostname="irtrans"/>
+    </device>
+    <device id="t10_dev" class="t10">
+      <from-gateway gateway="lan" connector="web_api" hostname="t10" portnumber="80"/>
+      <from-gateway gateway="lan" connector="ip" hostname="t10"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+    </device>
+    <device id="mypowerbox_dev" class="mypowerbox">
+      <!--from-gateway gateway="dbox_lirc"/-->
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+    </device>
+
+  </devices>
+
+  <from-gateways>
+    <from-gateway id="irtrans_mainzone" gateway="irtrans" connector="intern"/>
+    <from-gateway id="irtrans_extern" gateway="irtrans" connector="extern"/>
+
+    <!-- small Globalcache -->
+    <from-gateway id="globalcache_mainzone" gateway="globalcache" connector="ir_1"/>
+    <from-gateway id="bedroom_gw" gateway="globalcache" connector="ir_2"/>
+    <from-gateway id="desk_gw" gateway="globalcache" connector="ir_3"/>
+    <from-gateway id="projector_serial_gw" gateway="globalcache" connector="serial_1"/>
+
+    <!-- big Globalcache -->
+    <from-gateway id="globalcache_test" gateway="gc2" connector="ir_1"/>
+    <from-gateway id="dvd_serial_gw" gateway="gc2" connector="serial_1"/>
+    <from-gateway id="ipod_serial_gw" gateway="gc2" connector="serial_2"/>
+    <from-gateway id="denon_serial_gw" gateway="gc2" connector="serial_1"/>
+    <from-gateway id="balcony_relay_gw" gateway="gc2" connector="relay_1"/>
+    <from-gateway id="balcony_sensor_gw" gateway="gc2" connector="sensor_6"/>
+    <from-gateway id="dvd_ir_gw" gateway="gc2" connector="ir_5"/>
+    <from-gateway id="ipod_ir_gw" gateway="gc2" connector="ir_2"/>
+    <from-gateway id="conrad_egg_ir_gw" gateway="gc2" connector="ir_6"/>
+  </from-gateways>
+
+  <gateways>
+
+    <gateway id="lan" class="lan">
+      <lan/>
+      <output type="tcp" connector="tcp"/>
+      <output type="web_api" connector="web_api"/>
+      <output type="www" connector="www"/>
+      <output type="ip" connector="ip"/>
+    </gateway>
+
+    <gateway id="conrad_egg" class="ir_to_rf433">
+      <from-gateway-ref from-gateway="conrad_egg_ir_gw"/>
+      <output type="rf433"/>
+    </gateway>
+
+    <gateway id="dbox_lirc" class="lirc_server">
+      <hostname ipname="dbox"/>
+      <output type="ir"/>
+    </gateway>
+
+    <gateway id="globalcache" class="globalcache" model="gc_100_06" www="yes"
+      name="GlobalCache" firmware="2.4-06">
+      <hostname ipname="globalcache"/> 
+      <output type="ir" connector="ir_1"/>
+      <output type="ir" connector="ir_2"/>
+      <output type="ir" connector="ir_3"/>
+      <output type="serial" connector="serial_1" baud="19200"/>
+    </gateway>
+
+    <gateway id="gc2" class="globalcache" model="gc_100_12" www="yes"
+      name="GlobalCache_2" firmware="3.0-12">
+      <hostname ipname="gc2"/>
+      <output type="ir" connector="ir_1"/>
+      <output type="ir" connector="ir_2"/>
+      <output type="ir" connector="ir_3"/>
+      <output type="ir" connector="ir_4"/>
+      <output type="ir" connector="ir_5"/>
+      <!--output type="ir" connector="ir_6"/-->
+      <output type="on_off" connector="sensor_6"/>
+      <output type="on_off" connector="relay_1"/>
+      <output type="on_off" connector="relay_2"/>
+      <output type="on_off" connector="relay_3"/>
+      <output type="serial" connector="serial_1"/>
+      <output type="serial" connector="serial_2"/>
+    </gateway>
+
+    <gateway  id="irtrans" class="irtrans" model="IRT-LAN-DB" www="yes"
+      name="Irtrans" web_api="yes" web_api_portnumber="80" interface="preprog_ascii">
+      <hostname ipname="irtrans"/>
+      <output type="ir" connector="intern"/>
+      <output type="ir" connector="extern"/>
+    </gateway>
+
+    <gateway id="mypowerbox" class="mypowerbox" deviceclass="mypowerbox">
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <output type="on_off" connector="1">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="mypowerbox" commandname="cmd_1on"/>
+	  <command cmd="cmd_power_off" remotename="mypowerbox" commandname="cmd_1off"/>
+	  <command cmd="cmd_power_toggle" remotename="mypowerbox" commandname="cmd_1toggle"/>
+	</commands>
+      </output>
+      <output type="on_off" connector="2">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="mypowerbox" commandname="cmd_2on"/>
+	  <command cmd="cmd_power_off" remotename="mypowerbox" commandname="cmd_2off"/>
+	  <command cmd="cmd_power_toggle" remotename="mypowerbox" commandname="cmd_2toggle"/>
+	</commands>
+      </output>
+      <output type="on_off" connector="3">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="mypowerbox" commandname="cmd_3on"/>
+	  <command cmd="cmd_power_off" remotename="mypowerbox" commandname="cmd_3off"/>
+	  <command cmd="cmd_power_toggle" remotename="mypowerbox" commandname="cmd_3toggle"/>
+	</commands>
+      </output>
+      <output type="on_off" connector="4">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="mypowerbox" commandname="cmd_4on"/>
+	  <command cmd="cmd_power_off" remotename="mypowerbox" commandname="cmd_4off"/>
+	  <command cmd="cmd_power_toggle" remotename="mypowerbox" commandname="cmd_4toggle"/>
+	</commands>
+      </output>
+      <output type="on_off" connector="5">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="mypowerbox" commandname="cmd_5on"/>
+	  <command cmd="cmd_power_off" remotename="mypowerbox" commandname="cmd_5off"/>
+	  <command cmd="cmd_power_toggle" remotename="mypowerbox" commandname="cmd_5toggle"/>
+	</commands>
+      </output>
+      <output type="on_off" connector="6">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="mypowerbox" commandname="cmd_6on"/>
+	  <command cmd="cmd_power_off" remotename="mypowerbox" commandname="cmd_6off"/>
+	  <command cmd="cmd_power_toggle" remotename="mypowerbox" commandname="cmd_6toggle"/>
+	</commands>
+      </output>
+      <output type="on_off" connector="7">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="mypowerbox" commandname="cmd_7on"/>
+	  <command cmd="cmd_power_off" remotename="mypowerbox" commandname="cmd_7off"/>
+	  <command cmd="cmd_power_toggle" remotename="mypowerbox" commandname="cmd_7toggle"/>
+	</commands>
+      </output>
+      <output type="on_off" connector="8">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="mypowerbox" commandname="cmd_8on"/>
+	  <command cmd="cmd_power_off" remotename="mypowerbox" commandname="cmd_8off"/>
+	  <command cmd="cmd_power_toggle" remotename="mypowerbox" commandname="cmd_8toggle"/>
+	</commands>
+      </output>
+      <commands>
+	<command cmd="cmd_power_on" remotename="mypowerbox" commandname="cmd_all_on"/>
+	<command cmd="cmd_power_off" remotename="mypowerbox" commandname="cmd_all_off"/>
+      </commands>
+    </gateway>
+
+    <gateway id="intertechno_screen" class="intertechno" model="cmr-500">
+      <from-gateway gateway="t10" connector="preset_4"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="4" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_reverse_on" remotename="intertechno" house="M" deviceno="4" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_bedroom_light" model="cmr-1001">
+      <from-gateway gateway="t10" connector="preset_13"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="1" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_dim" remotename="intertechno" house="M" deviceno="1" commandname="cmd_power_on"/>
+	  <!--command cmd="cmd_power_off" remotename="intertechno" house="M" deviceno="1" commandname="cmd_power_off"/-->
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_bedroom_blind" model="cmr-500">
+      <from-gateway gateway="t10" connector="preset_11"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="2" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_reverse_on" remotename="intertechno" house="M" deviceno="2" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_work_light" model="cmr-1000">
+      <from-gateway gateway="t10" connector="preset_5"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="5" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="M" deviceno="5" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_water" model="cmr-1000">
+      <from-gateway gateway="t10" connector="preset_6"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="6" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="M" deviceno="6" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_lamp_column" model="cmr-1000">
+      <from-gateway gateway="t10" connector="preset_7"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="7" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="M" deviceno="7" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_water_wall" model="cmr-1000">
+      <from-gateway gateway="t10" connector="preset_8"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="8" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="M" deviceno="8" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_large_blind" model="cmr-500">
+      <from-gateway gateway="t10" connector="preset_9"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="9" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_reverse_on" remotename="intertechno" house="M" deviceno="9" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_small_blind" model="cmr-500">
+      <from-gateway gateway="t10" connector="preset_10"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="10" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_reverse_on" remotename="intertechno" house="M" deviceno="10" commandname="cmd_power_off"/>
+	  <!--command cmd="get_status" remotename="intertechno" house="M" deviceno="10" commandname="cmd_power_off"/-->
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_balcony_blind" model="cmr-500">
+      <from-gateway gateway="t10" connector="preset_11"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="11" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_reverse_on" remotename="intertechno" house="M" deviceno="11" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_kitchen_blind" model="cmr-500">
+      <from-gateway gateway="t10" connector="preset_12"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="12" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_reverse_on" remotename="intertechno" house="M" deviceno="12" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_kitchen_light" model="cmr-1000">
+      <from-gateway gateway="t10" connector="preset_15"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="15" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="M" deviceno="15" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_hall_light" model="cmr-1000">
+      <from-gateway gateway="t10" connector="preset_16"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="M" deviceno="16" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="M" deviceno="16" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+    
+    <gateway class="intertechno" id="intertechno_floor_lamp_1" model="PA3">
+      <from-gateway gateway="t10" connector="preset_1"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="D" deviceno="1" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="D" deviceno="1" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_floor_lamp_2" model="PA3">
+      <from-gateway gateway="t10" connector="preset_2"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="D" deviceno="2" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="D" deviceno="2" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_floor_lamp_3" model="PA3">
+      <from-gateway gateway="t10" connector="preset_3"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="D" deviceno="3" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="D" deviceno="3" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_floor_fan" model="PA3">
+      <from-gateway gateway="t10" connector="preset_17"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="C" deviceno="1" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="C" deviceno="1" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_desk_fan" model="PA3">
+      <from-gateway gateway="t10" connector="preset_18"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="C" deviceno="2" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="C" deviceno="2" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_aux_3" model="PA3">
+      <from-gateway gateway="conrad_egg"/>
+      <from-gateway gateway="t10" connector="preset_19"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="C" deviceno="3" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="C" deviceno="3" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="rs200" id="gw_rs200_test" model="FIXME">
+      <from-gateway gateway="t10" connector="preset_20"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="rs200" house="1324" deviceno="1" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="rs200" house="1324" deviceno="1" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="x10" id="gw_x10-N1" model="FIXME">
+      <from-gateway gateway="t10" connector="preset_21"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="x10" house="N" deviceno="1" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="x10" house="N" deviceno="1" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="x10" id="gw_x10-N2" model="FIXME">
+      <from-gateway gateway="t10" connector="preset_22"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="x10" house="N" deviceno="2" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="x10" house="N" deviceno="2" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="x10" id="gw_x10-N3" model="FIXME">
+      <from-gateway gateway="t10" connector="preset_23"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="cmd_power_on" remotename="intertechno" house="N" deviceno="3" commandname="cmd_power_on"/>
+	  <command cmd="cmd_power_off" remotename="intertechno" house="N" deviceno="3" commandname="cmd_power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway  id="t10" class="ezcontrol_t10" firmware="2.21" www="yes" name="Ezcontrol T-10" web_api="yes" web_api_portnumber="80">
+      <hostname ipname="t10"/>
+      <output type="rf433" connector="preset_1"/>
+      <output type="rf433" connector="preset_2"/>
+      <output type="rf433" connector="preset_3"/>
+      <output type="rf433" connector="preset_4"/>
+      <output type="rf433" connector="preset_5"/>
+      <output type="rf433" connector="preset_6"/>
+      <output type="rf433" connector="preset_7"/>
+      <output type="rf433" connector="preset_8"/>
+      <output type="rf433" connector="preset_9"/>
+      <output type="rf433" connector="preset_10"/>
+      <output type="rf433" connector="preset_11"/>
+      <output type="rf433" connector="preset_12"/>
+      <output type="rf433" connector="preset_13"/>
+      <output type="rf433" connector="preset_14"/>
+      <output type="rf433" connector="preset_15"/>
+      <output type="rf433" connector="preset_16"/>
+      <output type="rf433" connector="preset_17"/>
+      <output type="rf433" connector="preset_18"/>
+      <output type="rf433" connector="preset_19"/>
+      <output type="rf433" connector="preset_20"/>
+      <output type="rf433" connector="preset_21"/>
+      <output type="rf433" connector="preset_22"/>
+      <output type="rf433" connector="preset_23"/>
+      <output type="rf433" connector="preset_24"/>
+      <output type="rf433" connector="preset_25"/>
+      <output type="rf433" connector="preset_26"/>
+      <output type="rf433" connector="preset_27"/>
+      <output type="rf433" connector="preset_28"/>
+      <output type="rf433" connector="preset_29"/>
+      <output type="rf433" connector="preset_30"/>
+      <output type="rf433" connector="preset_31"/>
+      <output type="rf433" connector="preset_32"/>
+      <output type="rf433" connector="433"/>
+      <output type="rf868" connector="868"/>
+      <presets>
+        <preset programno="1" device="floor_lamp_1"/>
+        <preset programno="2" device="floor_lamp_2"/>
+        <preset programno="3" device="floor_lamp_3"/>
+        <preset programno="4" device="screen"/>
+        <preset programno="5" device="work_light"/>
+        <preset programno="6" device="water"/>
+        <preset programno="7" device="lamp_column"/>
+        <preset programno="8" device="water_wall"/>
+        <preset programno="9" device="large_blind"/>
+        <preset programno="10" device="small_blind"/>
+        <preset programno="11" device="balcony_blind"/>
+        <preset programno="12" device="kitchen_blind"/>
+        <preset programno="13" device="bedroom_light"/>
+        <preset programno="14" device="bedroom_blind"/>
+        <preset programno="15" device="kitchen_light"/>
+        <preset programno="16" device="hall_light"/>
+        <preset programno="17" device="floor_fan"/>
+        <preset programno="18" device="desk_fan"/>
+        <preset programno="19" device="aux_3"/>
+        <preset programno="20" device="conrad_test"/>
+        <preset programno="21" device="x10-N1"/>
+        <preset programno="22" device="x10-N2"/>
+        <preset programno="23" device="x10-N3"/>
+        <!--
+        <preset programno="24" device="unassigned"/>
+        <preset programno="25" device="unassigned"/>
+        <preset programno="26" device="unassigned"/>
+        <preset programno="27" device="unassigned"/>
+        <preset programno="28" device="unassigned"/>
+        <preset programno="29" device="unassigned"/>
+        <preset programno="30" device="unassigned"/>
+        <preset programno="31" device="unassigned"/>
+        <preset programno="32" device="unassigned"/>
+        -->
+      </presets>
+    </gateway>
+  </gateways>
+</homemap>

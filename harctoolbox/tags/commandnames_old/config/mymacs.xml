@@ -1,0 +1,1127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE macros PUBLIC "-//bengt-martensson.de//macros//en" "../dtds/macros.dtd">
+<macros name="mymacs">
+    <description>Convention:
+watch-DEVICE: turn to DEVICE for audio and video,
+listen-DEVICE: turn to DEVICE for audio, leaving video alone (as far as possible)
+look-DEVICE: turn to DEVICE for video, leave audio alone as far as
+possible.
+
+In macro names, we prefer hyphens (-) over underscores (_).
+
+Macros are uniquely identified by their name. The folder structure ist just
+imposing some visually pleasing order for humans.
+    </description>
+    <macros name="AV-component-macros">
+        <description>Macros for Audio- and Video Components</description>
+        <macros name="Receivermacros">
+            <description>Macros for setting volume to a preset value</description>
+            <macro name="louder">
+                <description>Turn up the volume slightly.</description>
+                <command device="amp" command="cmd_volume_up" count="10"/>
+            </macro>
+            <macro name="quieter">
+                <command device="amp" command="cmd_volume_down" count="10"/>
+            </macro>
+            <macro name="volume-loud">
+                <description>Somewhat loud (-20 dB)</description>
+                <command device="amp" command="set_volume">
+                    <argument>60</argument>
+                </command>
+            </macro>
+            <macro name="volume-normal">
+                <description>-27 dB</description>
+                <command device="amp" command="set_volume">
+                    <argument>53</argument>
+                </command>
+            </macro>
+            <macro name="volume-room">
+                <description>-35 dB</description>
+                <command device="amp" command="set_volume">
+                    <argument>45</argument>
+                </command>
+            </macro>
+            <macro name="volume-quiet">
+                <description>-42 dB</description>
+                <command device="amp" command="set_volume">
+                    <argument>38</argument>
+                </command>
+            </macro>
+            <macro name="volume-feeble">
+                <description>Very quiet (-50 dB)</description>
+                <command device="amp" command="set_volume">
+                    <argument>30</argument>
+                </command>
+            </macro>
+            <macro name="volume-faint">
+                <description>Barely audible (-65 dB)</description>
+                <command device="amp" command="set_volume">
+                    <argument>15</argument>
+                </command>
+            </macro>
+
+            <macro name="volume-standard">
+                <description>"Standard" volume, whatever that means</description>
+                <delay duration="1"/>
+                <macrocall macro="volume-room"/>
+            </macro>
+
+            <macro name="desk-amp-on">
+                <description>Turn on the desk amplifier</description>
+                <command device="yamaha_desk" command="cmd_power_on"/>
+            </macro>
+	
+        </macros>
+
+        <macros name="start-macros">
+            <macro name="start-dbox-tv">
+                <command device="amp" command="cmd_power_on"/>
+                <command device="dbox" command="cmd_power_on"/>
+                <delay duration="30000"/>
+                <command device="tv" command="cmd_power_on"/>
+                <select-src device="amp" src="dbox"/>
+                <select-src device="tv" src="denon"/>
+            </macro>
+        </macros>
+
+        <macros name="tunermacros">
+            <description>Tuner</description>
+            <macro name="listen-tuner">
+                <description>Listen to the tuner</description>
+                <command device="amp" command="cmd_in_tuner"/>
+                <jump pagegroup="receiver" page="tuner"/>
+	<!--message>Hello world</message-->
+            </macro>
+        </macros>
+
+        <macros name="div">
+            <macro name="listen-dvd">
+                <description>Listen to DVD.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                    <prerequisite device="dvd" state="on"/>
+                </prerequisites>
+                <select-src device="main-receiver" src="dvd"/>
+                <command device="main-receiver" command="cmd_ext_input_off"/>
+                <command device="dvd" command="cmd_power_on"/>
+            </macro>
+
+            <macro name="watch-dvd">
+                <description>Watch to DVD on TV or projector.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <macrocall macro="listen-dvd"/>
+	<!--cond>
+	  <clause>
+	    <test device="sanyo_plv_z4_serial" function="is_on"/>
+	    <message>The projector is on!</message>
+	    <command device="sanyo_plv_z4" command="cmd_component1"/>
+	  </clause>
+	  <clause>
+	    <test value="true"/>
+	    <message>The projector is not on!</message>
+	    <macrocall macro="look-dvd"/>
+	  </clause>
+	</cond-->
+                <set-variable name="Hometheatre.selectedDevice" value='"dvd"'/>
+                <jump pagegroup="dvd" page="main"/>
+            </macro>
+
+            <macro name="look-dvd">
+                <description>Watch to DVD on TV, without sound.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                    <prerequisite device="dvd" state="on"/>
+                </prerequisites>
+                <macrocall macro="avc5_dvd"/>
+                <command device="tv" command="cmd_aux"/>
+                <jump pagegroup="dvd" page="main"/>
+            </macro>
+
+            <macro name="watch-dvd-tv">
+                <description>Watch to DVD on TV.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                    <prerequisite device="dvd" state="on"/>
+                </prerequisites>
+                <macrocall macro="look-dvd"/>
+                <set-variable name="Hometheatre.selectedDevice" value='"dvd"'/>
+                <jump pagegroup="dvd" page="main"/>
+            </macro>
+
+            <macro name="watch-dvd-audio-tv">
+                <description>Sets up the system for DVD audio with 5.1 channels with support of back rear speakers. TV support.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <command device="amp" command="cmd_dvd"/>
+                <macrocall macro="listen-dvd-audio"/>
+                <delay duration="100"/>
+                <macrocall macro="avc5_dvd"/>
+                <command device="tv" command="cmd_aux"/>
+                <set-variable name="Hometheatre.selectedDevice" value='"dvd"'/>
+                <jump pagegroup="dvd" page="main"/>
+            </macro>
+
+            <macro name="watch-dvd-audio">
+                <description>Sets up the system for DVD audio with 5.1 channels with support of back rear speakers. TV support.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <macrocall macro="watch-dvd-audio-tv"/>
+                <set-variable name="Hometheatre.selectedDevice" value='"dvd"'/>
+                <jump pagegroup="dvd" page="main"/>
+            </macro>
+
+            <macro name="listen-dvd-audio">
+                <description>Sets up the system for DVD audio with 5.1 channels with support of back rear speakers. Leaves picture alone.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <macrocall macro="listen-dvd"/>
+                <command device="amp" command="cmd_ext_input_on"/>
+                <command device="analog_8ch_switch" command="cmd_dvd_audio_bs"/>
+                <set-variable name="Hometheatre.selectedDevice" value='"dvd"'/>
+                <jump pagegroup="dvd" page="main"/>
+            </macro>
+
+            <macro name="dvd-rgb">
+                <description>Put the DVD player in RGB mode</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                    <prerequisite device="dvd" state="setup_responsible"/>
+                    <prerequisite device="dvd" state="mode_yuv"/>
+                </prerequisites>
+                <command device="panasonic_dvd_s75" command="cmd_setup"/>
+                <delay duration="2000"/>
+                <command device="panasonic_dvd_s75" command="cmd_right"/>
+                <delay duration="1000"/>
+                <command device="panasonic_dvd_s75" command="cmd_down"/>
+                <command device="panasonic_dvd_s75" command="cmd_down"/>
+                <command device="panasonic_dvd_s75" command="cmd_down"/>
+                <delay duration="1000"/>
+                <command device="panasonic_dvd_s75" command="cmd_ok"/>
+                <delay duration="1000"/>
+                <command device="panasonic_dvd_s75" command="cmd_down"/>
+                <command device="panasonic_dvd_s75" command="cmd_down"/>
+                <command device="panasonic_dvd_s75" command="cmd_ok"/>
+                <command device="panasonic_dvd_s75" command="cmd_setup"/>
+            </macro>
+
+            <macro name="dvd-yuv">
+                <description>Put the DVD player in RGB mode</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                    <prerequisite device="dvd" state="setup_responsible"/>
+                    <prerequisite device="dvd" state="mode_yuv"/>
+                </prerequisites>
+                <command device="panasonic_dvd_s75" command="cmd_setup"/>
+                <delay duration="2000"/>
+                <command device="panasonic_dvd_s75" command="cmd_right"/>
+                <delay duration="1000"/>
+                <command device="panasonic_dvd_s75" command="cmd_down"/>
+                <command device="panasonic_dvd_s75" command="cmd_down"/>
+                <command device="panasonic_dvd_s75" command="cmd_down"/>
+                <delay duration="1000"/>
+                <command device="panasonic_dvd_s75" command="cmd_ok"/>
+                <delay duration="1000"/>
+                <command device="panasonic_dvd_s75" command="cmd_down"/>
+                <command device="panasonic_dvd_s75" command="cmd_ok"/>
+                <command device="panasonic_dvd_s75" command="cmd_setup"/>
+            </macro>
+
+            <macro name="pause-on-dvd">
+                <description>Pause the dvd player</description>
+                <command device="dvd" command="cmd_pause"/>
+            </macro>
+            <macro name="pause-off-dvd">
+                <description>Unpause the dvd player</description>
+                <command device="dvd" command="cmd_play"/>
+            </macro>
+
+            <macro name="hbdelay" visibility="private">
+                <delay duration="2000"/>
+            </macro>
+
+            <macro name="hb">
+                <command device="dvd" command="cmd_ok"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_left"/>
+                <command device="dvd" command="cmd_left"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_ok"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_right"/>
+                <command device="dvd" command="cmd_right"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_ok"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_left"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_ok"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_right"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_ok"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_right"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_ok"/>
+                <macrocall macro="hbdelay"/>
+                <command device="dvd" command="cmd_ok"/>
+            </macro>
+
+        </macros>
+
+        <macros name="dboxmacros">
+            <macro name="listen-dbox">
+                <description>Sets up the system for dBox viewing on TV (just sound).</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <command device="amp" command="cmd_ext_input_off"/>
+                <command device="dbox" command="cmd_home"/>
+                <select-src device="amp" src="dbox"/>
+                <macrocall macro="volume-standard"/>
+                <set-variable name="Hometheatre.selectedDevice" value='"dbox"'/>
+                <jump class="device" pagegroup="dbox" page="main"/>
+            </macro>
+
+            <macro name="look-dbox">
+                <description>Sets up the system for dBox viewing on TV, without sound.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <command device="dbox2_old" command="cmd_home"/>
+                <delay duration="100"/>
+	<!--macrocall macro="avc5_sat"/-->
+                <command device="amp" command="cmd_dtv"/>
+                <delay duration="100"/>
+                <command device="dbox" command="cmd_out_rgb"/>
+                <jump class="device" pagegroup="dbox" page="main"/>
+            </macro>
+
+            <macro name="watch-dbox-tv">
+                <description>Sets up the system for dBox viewing on TV.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                    <prerequisite device="tv" state="on"/>
+                </prerequisites>
+                <select-src mediatype="audio_video" device="amp" src="dbox"/>
+                <select-src connectiontype="yuv" device="tv" src="amp"/>
+                <command device="dbox" command="cmd_standby_off"/>
+                <command device="dbox" command="cmd_aspectratio_automatic"/>
+	<!--set-variable name="Hometheatre.selectedDevice" value='"dbox"'/-->
+   	<!--jump class="device" pagegroup="dbox" page="main"/-->
+            </macro>
+
+            <macro name="watch-dbox-proj">
+                <description>Sets up the system for dBox viewing on projector.</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                    <prerequisite device="projector" state="on"/>
+                </prerequisites>
+                <command device="amp" command="cmd_ext_input_off"/>
+                <command device="dbox2_old" command="cmd_home"/>
+                <command device="amp" command="cmd_dtv"/>
+                <command device="sanyo_plv_z4" command="cmd_component1"/>
+                <command device="dbox" command="cmd_out_yuv_cvbs"/>
+                <macrocall macro="volume-standard"/>
+                <set-variable name="Hometheatre.selectedDevice" value='"dbox"'/>
+                <jump class="device" pagegroup="dbox" page="main"/>
+            </macro>
+
+            <macro name="watch-dbox">
+                <description>Sets up the system for dBox viewing on TV or projector, depending on status of projector.</description>
+	<!--cond>
+	  <clause>
+	    <test device="sanyo_plv_z4_serial" function="is_on"/>
+	    <test value="false"/>
+	    <message>The projector is on!</message>
+	    <macrocall macro="watch-dbox-proj"/>
+	  </clause>
+	  <clause>
+	    <test value="true"/>
+	    <message>The projector is not on</message>
+	    <macrocall macro="watch-dbox-tv"/>
+	  </clause>
+	</cond-->
+                <set-variable name="Hometheatre.selectedDevice" value='"dbox"'/>
+                <jump class="device" pagegroup="dbox" page="main"/>
+            </macro>
+
+            <macro name="disney">
+	<description>Turn dBox to Disney Channel</description>
+                <command device="dbox" command="set_program_by_name">
+                    <argument>Disney Channel</argument>
+                </command>
+            </macro>
+            <macro name="deluxe">
+	<description>Turn dBox to Deluxe Music</description>
+                <command device="dbox" command="set_program_by_name">
+                    <argument>DELUXE MUSIC</argument>
+                </command>
+            </macro>
+            <macro name="prosieben">
+	<description>Turn dBox to Pro Sieben</description>
+                <command device="dbox" command="set_program_by_name">
+                    <argument>ProSieben</argument>
+                </command>
+            </macro>
+     
+        </macros>
+
+        <macros name="TV-macros">
+            <macro name="watch-tv">
+                <description>Turn on TV (not using projector)</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <command device="amp" command="cmd_ext_input_off"/>
+                <command device="tv" command="cmd_tv"/>
+                <command device="amp" command="cmd_cd_r"/>
+                <macrocall macro="volume-standard"/>
+                <set-variable name="Hometheatre.selectedDevice" value='"tv"'/>
+                <jump class="device" pagegroup="tv" page="main"/>
+            </macro>
+      
+            <macro name="look-tv">
+                <description>Turn on TV, leavin audio alone</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <command device="tv" command="cmd_mode_tv"/>
+                <jump class="device" pagegroup="tv" page="main"/>
+            </macro>
+
+            <macro name="rtl-f1">
+                <description>Display the RTL Formula 1 teletext pages</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                    <prerequisite device="tv" state="on"/>
+                </prerequisites>
+                <macrocall macro="look-tv"/>
+                <delay duration="1000"/>
+                <command device="tv" command="cmd_4" toggle="0"/>
+                <delay duration="1000"/>
+                <command device="tv" command="cmd_teletext" toggle="1"/>
+                <delay duration="1000"/>
+                <command device="tv" command="cmd_2" toggle="0"/>
+                <command device="tv" command="cmd_5" toggle="1"/>
+                <command device="tv" command="cmd_0" toggle="0"/>
+                <jump class="device" pagegroup="tv" page="teletext"/>
+            </macro>
+        </macros>
+
+        <macros name="VCR-macros">
+            <macro name="listen-vcr">
+                <description>Listen to VCR (not affecting video)</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                    <prerequisite device="vcr" state="on"/>
+                </prerequisites>
+	<!--command device="philips_vr1100" command="cmd_standby"/-->
+                <command device="amp" command="cmd_vcr1"/>
+	<!--command device="philips_vr1100" command="cmd_power_toggle"/-->
+                <set-variable name="Hometheatre.selectedDevice" value='"vcr"'/>
+            </macro>
+    
+      <!--macro name="watch-vcr">
+	<description>Watch VCR</description>
+	<prerequisites>
+	  <prerequisite device="receiver" state="on"/>
+	  <prerequisite device="vcr" state="on"/>
+	</prerequisites>
+	<macrocall macro="listen-vcr"/>
+	<cond>
+	  <clause>
+	    <test device="sanyo_plv_z4_serial" function="is_on"/>
+	    <command device="sanyo_plv_z4" command="cmd_component1"/>
+	  </clause>
+	  <clause>
+	    <test value="true"/>
+	    <message>Projector is not on</message>
+	    <command device="tv" command="cmd_s_video"/>
+	  </clause>
+	</cond>
+    	<set-variable name="Hometheatre.selectedDevice" value='"vcr"'/>
+ 	<jump class="device" pagegroup="vcr" page="main"/>
+     </macro-->
+
+            <macro name="vcr-on">
+                <description>Turns on VCR</description>
+                <command device="philips_vr1100" command="cmd_standby"/>
+                <command device="philips_vr1100" command="cmd_power_toggle"/>
+            </macro>
+
+            <macro name="vcr-off">
+                <description>Turns on VCR</description>
+                <command device="philips_vr1100" command="cmd_standby"/>
+                <command device="philips_vr1100" command="cmd_standby"/>
+            </macro>
+
+            <macro name="pause-on-vcr">
+                <description>Pause the vcr player</description>
+                <command device="philips_vr1100" command="cmd_still_advance"/>
+            </macro>
+            <macro name="pause-off-vcr">
+                <description>Unpause the vcr player</description>
+                <command device="philips_vr1100" command="cmd_play"/>
+            </macro>
+
+        </macros>
+
+        <macros name="LD-macros">
+
+            <macro name="listen-ld">
+                <description>Listen to the Laserdisc player</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <command device="amp" command="cmd_ext_input_off"/>
+                <command device="sony_mdp650" command="cmd_power_on"/>
+                <command device="amp" command="cmd_vcr2"/>
+                <jump class="device" pagegroup="ld" page="main"/>
+            </macro>
+
+      <!--macro name="watch-ld">
+	<description>Watching Laserdisc on TV or projector.</description>
+	<prerequisites>
+	  <prerequisite device="receiver" state="on"/>
+	</prerequisites>
+	<macrocall macro="listen-ld"/>
+	<cond>
+	  <clause>
+	    <test device="sanyo_plv_z4_serial" function="is_on"/>
+	    <command device="sanyo_plv_z4" command="cmd_component1"/>
+	  </clause>
+	  <clause>
+	    <test value="true"/>
+	    <message>Projector is not on</message>
+	    <command device="tv" command="cmd_s_video"/>
+	  </clause>
+	</cond>
+    	<set-variable name="Hometheatre.selectedDevice" value='"ld"'/>
+     	<jump class="device" pagegroup="ld" page="main"/>
+     </macro-->
+            <macro name="pause-on-ld">
+                <description>Pause the LD player</description>
+                <command device="sony_mdp650" command="cmd_pause"/>
+            </macro>
+            <macro name="pause-off-ld">
+                <description>Unpause the LD player</description>
+                <command device="sony_mdp650" command="cmd_play"/>
+            </macro>
+        </macros>
+    
+        <macros name="HTPC-macros">
+            <macros name="HTPC-listen-macros">
+                <macro name="listen-htpc-2-0">
+                    <description>Listen to the HTPC soundblaster on the digital input</description>
+                    <command device="amp" command="cmd_ext_input_off"/>
+                    <command device="amp" command="cmd_cable"/>
+                    <command device="amp" command="cmd_input_mode_digital"/>
+                    <set-variable name="Hometheatre.selectedDevice" value='"htpc"'/>
+                    <jump class="device" pagegroup="htpc" page="main"/>
+                </macro>
+ 
+                <macro name="listen-htpc-5-1">
+                    <description>Listen to the HTPC with 5.1 channel sound</description>
+                    <command device="amp" command="cmd_cable"/>
+                    <command device="amp" command="cmd_ext_input_on"/>
+                    <command device="analog_8ch_switch" command="cmd_HTPC_5_1"/>
+                    <set-variable name="Hometheatre.selectedDevice" value='"htpc"'/>
+                    <jump class="device" pagegroup="htpc" page="main"/>
+                </macro>
+
+                <macro name="listen-htpc-7-1">
+                    <description>Listen to the HTPC with 5.1 channel sound</description>
+                    <command device="amp" command="cmd_cable"/>
+                    <command device="amp" command="cmd_ext_input_on"/>
+                    <command device="analog_8ch_switch" command="cmd_HTPC_7_1"/>
+                    <set-variable name="Hometheatre.selectedDevice" value='"htpc"'/>
+                    <jump class="device" pagegroup="htpc" page="main"/>
+                </macro>
+
+                <macro name="listen-mediabridge">
+                    <description>Mediabridge</description>
+                    <macrocall macro="listen-htpc-2-0"/>
+	  <!-- presently does not work -->
+                    <set-variable name="Hometheatre.selectedDevice" value='"mediabridge"'/>
+                    <jump pagegroup="mediabridge" page="dummy"/>
+                </macro>
+            </macros>
+
+            <macros name="HTPC-watchmacros">
+                <macro name="watch-htpc-2-0">
+                    <description>View HTPC content on projector</description>
+                    <prerequisites>
+                        <prerequisite device="receiver" state="on"/>
+                        <prerequisite device="projector" state="on"/>
+                    </prerequisites>
+                    <macrocall macro="listen-htpc-2-0"/>
+                    <command device="sanyo_plv_z4" command="cmd_hdmi"/>
+                    <set-variable name="Hometheatre.selectedDevice" value='"mediabridge"'/>
+                    <jump class="device" pagegroup="htpc" page="main"/>
+                </macro>
+	
+                <macro name="watch-htpc-5-1">
+                    <description>View HTPC content on projector</description>
+                    <prerequisites>
+                        <prerequisite device="receiver" state="on"/>
+                        <prerequisite device="projector" state="on"/>
+                    </prerequisites>
+                    <macrocall macro="listen-htpc-5-1"/>
+                    <command device="sanyo_plv_z4" command="cmd_hdmi"/>
+                    <set-variable name="Hometheatre.selectedDevice" value='"mediabridge"'/>
+                    <jump class="device" pagegroup="htpc" page="main"/>
+                </macro>
+   
+                <macro name="watch-htpc-7-1">
+                    <description>View HTPC content on projector</description>
+                    <prerequisites>
+                        <prerequisite device="receiver" state="on"/>
+                        <prerequisite device="projector" state="on"/>
+                    </prerequisites>
+                    <macrocall macro="listen-htpc-7-1"/>
+                    <command device="sanyo_plv_z4" command="cmd_hdmi"/>
+                    <set-variable name="Hometheatre.selectedDevice" value='"mediabridge"'/>
+                    <jump class="device" pagegroup="htpc" page="main"/>
+                </macro>
+            </macros>
+        </macros>
+
+        <macros name="Phonomacros">
+            <macro name="listen-phono">
+                <description>Listen to vinyl</description>
+                <prerequisites>
+                    <prerequisite device="receiver" state="on"/>
+                </prerequisites>
+                <command device="amp" command="cmd_ext_input_off"/>
+                <command device="amp" command="cmd_phono"/>
+            </macro>
+        </macros>
+
+        <macros name="remove-macros">
+            <macro name="remove-dvd">
+                <command device="dvd" command="cmd_power_on"/>
+                <delay duration="3000"/>
+                <command device="dvd" command="cmd_open_close"/>
+                <message>Now remove the DVD within 60 seconds.</message>
+                <delay duration="60000"/>
+                <command device="dvd" command="cmd_open_close"/>
+                <command device="dvd" command="cmd_power_off"/>
+            </macro>
+        </macros>
+
+    </macros>
+
+    <macros name="Powermacros">
+        <description>Macros for turning on light, lowering blinds, etc</description>
+        <macros name="Lightning">
+            <description>Macros for dealing with light (not heavy...)</description>
+            <macro name="front-left-right-on">
+                <description>Turn on halogen light front, left, and right</description>
+                <prerequisites/>
+                <command device="front_light" command="cmd_power_on"/>
+                <command device="left_light" command="cmd_power_on"/>
+                <command device="right_light" command="cmd_power_on"/>
+            </macro>
+
+            <macro name="front-left-right-off">
+                <description>Turn off halogen light front, left, and right</description>
+                <prerequisites/>
+                <command device="front_light" command="cmd_power_off"/>
+                <command device="left_light" command="cmd_power_off"/>
+                <command device="right_light" command="cmd_power_off"/>
+            </macro>
+
+            <macro name="front-left-right-toggle">
+                <description>Toggle halogen light front, left, and right</description>
+                <prerequisites/>
+                <command device="front_light" command="cmd_power_toggle"/>
+                <command device="left_light" command="cmd_power_toggle"/>
+                <command device="right_light" command="cmd_power_toggle"/>
+            </macro>
+
+            <macro name="floor-lamps-on">
+                <description>Turn on all floor lamps</description>
+                <command device="floor_lamp_1" command="cmd_power_on"/>
+                <command device="floor_lamp_2" command="cmd_power_on"/>
+                <command device="floor_lamp_3" command="cmd_power_on"/>
+            </macro>
+
+            <macro name="floor-lamps-off">
+                <description>Turn off all floor lamps</description>
+                <command device="floor_lamp_1" command="cmd_power_off"/>
+                <command device="floor_lamp_2" command="cmd_power_off"/>
+                <command device="floor_lamp_3" command="cmd_power_off"/>
+            </macro>
+        </macros>
+
+        <macros name="Blinds">
+            <description>Macros for raising and lowering blinds</description>
+            <macro name="all-down">
+                <description>Lowers all blinds, except bedroom.</description>
+                <command device="large_blind" command="cmd_power_on"/>
+                <command device="small_blind" command="cmd_power_on"/>
+                <command device="balcony_blind" command="cmd_power_on"/>
+                <command device="kitchen_blind" command="cmd_power_on"/>
+            </macro>
+
+            <macro name="all-up">
+                <description>Raises all blinds, except bedroom.</description>
+                <command device="large_blind" command="cmd_power_off"/>
+                <command device="small_blind" command="cmd_power_off"/>
+                <command device="balcony_blind" command="cmd_power_off"/>
+                <command device="kitchen_blind" command="cmd_power_off"/>
+            </macro>
+
+            <macro name="all-down-smart">
+                <description>...also inhibits the relay signal.</description>
+                <macrocall macro="all-down"/>
+                <macrocall macro="all-down"/>
+            </macro>
+
+            <macro name="all-up-smart">
+                <description>...also inhibits the relay signal.</description>
+                <macrocall macro="all-up"/>
+                <macrocall macro="all-up"/>
+            </macro>
+        </macros>
+
+        <macros name="decoration">
+            <macro name="column-on">
+                <description>Turn on column (light and air)</description>
+                <command device="lamp_column" command="cmd_power_on"/>
+                <command device="column_pump" command="cmd_power_on"/>
+                <command device="lamp_column" command="cmd_power_on"/>
+            </macro>
+
+            <macro name="column-off">
+                <description>Turn off column (light and air)</description>
+                <command device="lamp_column" command="cmd_power_off"/>
+                <command device="column_pump" command="cmd_power_off"/>
+                <command device="lamp_column" command="cmd_power_off"/>
+            </macro>
+
+            <macro name="decoration-on">
+                <description>Turn on funny decoration elements</description>
+                <macrocall macro="column-on"/>
+                <command device="rotating_flower" command="cmd_power_on"/>
+                <command device="water" command="cmd_power_on"/>
+                <command device="water_wall" command="cmd_power_on"/>
+            </macro>
+
+            <macro name="decoration-off">
+                <description>Turn off funny decoration elements</description>
+                <macrocall macro="column-off"/>
+                <command device="rotating_flower" command="cmd_power_off"/>
+                <command device="water" command="cmd_power_off"/>
+                <command device="water_wall" command="cmd_power_off"/>
+            </macro>
+        </macros>
+
+        <macros name="misc-power">
+            <macro name="flashy">
+                <description>Turn on lots of fun stuff</description>
+                <macrocall macro="front-left-right-on"/>
+                <macrocall macro="decoration-on"/>
+                <command device="shelf_light" command="cmd_power_on"/>
+            </macro>
+
+            <macro name="fundelay">
+                <delay duration="2000"/>
+            </macro>
+
+            <macro name="flashy-slow">
+                <description>Turn on lots of fun stuff (slowly)</description>
+                <command device="rotating_flower" command="cmd_power_on"/>
+                <macrocall macro="fundelay"/>
+                <command device="front_light" command="cmd_power_on"/>
+                <macrocall macro="fundelay"/>
+                <command device="left_light" command="cmd_power_on"/>
+                <macrocall macro="fundelay"/>
+                <command device="right_light" command="cmd_power_on"/>
+                <macrocall macro="fundelay"/>
+                <command device="shelf_light" command="cmd_power_on"/>
+                <macrocall macro="fundelay"/>
+                <command device="water" command="cmd_power_on"/>
+                <macrocall macro="fundelay"/>
+                <macrocall macro="column-on"/>
+                <macrocall macro="fundelay"/>
+                <command device="water_wall" command="cmd_power_on"/>
+            </macro>
+
+      <!--macro name="gazonk">
+	<command device="water_wall" command="cmd_power_on"/>
+      </macro-->
+            <macro name="lights-off">
+                <description>Turns off all lights</description>
+                <command device="mypowerbox_dev" command="cmd_all_off"/>
+                <macrocall macro="floor-lamps-off"/>
+                <macrocall macro="decoration-off"/>
+                <command device="tv_light" command="cmd_power_off"/>
+                <command device="work_light" command="cmd_power_off"/>
+                <command device="hall_light" command="cmd_power_off"/>
+                <command device="kitchen_light" command="cmd_power_off"/>
+            </macro>
+
+            <macro name="fans-on">
+                <description>Turn on all available fans</description>
+                <command device="floor_fan" command="cmd_power_on"/>
+                <command device="desk_fan" command="cmd_power_on"/>
+            </macro>
+  
+            <macro name="fans-off">
+                <description>Turn on all available fans</description>
+                <command device="floor_fan" command="cmd_power_off"/>
+                <command device="desk_fan" command="cmd_power_off"/>
+            </macro>
+  
+            <macro name="dark">
+                <description>Lights off, blinds down</description>
+                <macrocall macro="all-down"/>
+                <macrocall macro="lights-off"/>
+                <macrocall macro="all-down"/>
+            </macro>
+        </macros>
+
+        <macros name="scenarios">
+            <macro name="movie-daylight">
+                <description>Prepares for movie viewing without lowering blinds</description>
+                <macrocall macro="projector-mode"/>
+                <macrocall macro="lights-off"/>
+            </macro>
+
+            <macro name="movie">
+                <description>Prepares for movie</description>
+                <macrocall macro="movie-daylight"/>
+                <macrocall macro="all-down-smart"/>
+            </macro>
+
+            <macro name="dvd-daylight-movie">
+                <description>DVD movie without blinds</description>
+                <command device="dvd" command="cmd_power_on"/>
+                <macrocall macro="movie-daylight"/>
+                <macrocall macro="watch-dvd"/>
+                <jump pagegroup="dvd" page="main"/>
+            </macro>
+
+            <macro name="dvd-movie">
+                <description>DVD movie</description>
+                <command device="dvd" command="cmd_power_on"/>
+                <macrocall macro="movie"/>
+                <macrocall macro="watch-dvd"/>
+                <jump pagegroup="dvd" page="main"/>
+            </macro>
+
+            <macro name="dbox-daylight-movie">
+                <description>dBOX movie without blinds</description>
+                <command device="dbox_old" command="cmd_home"/>
+                <macrocall macro="movie-daylight"/>
+                <macrocall macro="watch-dbox"/>
+                <jump pagegroup="dbox" page="main"/>
+            </macro>
+
+            <macro name="dbox-movie">
+                <description>dBOX movie</description>
+                <command device="dbox_old" command="cmd_home"/>
+                <macrocall macro="movie"/>
+                <macrocall macro="watch-dbox"/>
+                <jump pagegroup="dbox" page="main"/>
+            </macro>
+
+            <macro name="bedtime">
+                <description>Turns everything off, lights for going to bed</description>
+                <command device="amp" command="cmd_power_off"/>
+                <command device="projector" command="cmd_power_off"/>
+                <macrocall macro="lights-off"/>
+                <command device="dbox" command="cmd_power_off"/>
+                <command device="hall_light" command="cmd_power_on"/>
+            </macro>
+    
+            <macro name="door_open">
+                <description>Opens the balcony door, unless already open.</description>
+                <cond>
+                    <clause>
+                        <match regexp="on">
+                            <command device="balcony_door" command="get_state"/>
+                        </match>
+                        <command device="balcony_door" command="cmd_open_close"/>
+                    </clause>
+                    <clause>
+                        <true/>
+                    </clause>
+                </cond>
+            </macro>
+
+            <macro name="door_close">
+                <description>Closes the balcony door, unless already closed.</description>
+                <cond>
+                    <clause>
+                        <match regexp="off">
+                            <command device="balcony_door" command="get_state"/>
+                        </match>
+                        <command device="balcony_door" command="cmd_open_close"/>
+                    </clause>
+                    <clause>
+                        <true/>
+                    </clause>
+                </cond>
+            </macro>
+
+            <macro name="balcony">
+                <command device="balcony_door" command="cmd_open_close"/>
+            </macro>
+
+            <macro name="break-on">
+                <description>Break, some guidance light</description>
+                <command device="kitchen_light" command="cmd_power_on"/>
+	<!--cond>
+	  <clause>
+	    <test mode="lua"/>
+	    	    <code>lua_break(true);</code>
+	  </clause>
+	</cond-->
+            </macro>
+
+      <!--macro name="break-off">
+	<description>Resume after break</description>
+	<command device="kitchen_light" command="cmd_power_off"/>
+	<cond>
+	  <clause>
+	    <test mode="lua"/>
+	    <code>lua_break(false);</code>
+	  </clause>
+	</cond>
+      </macro-->
+      
+            <macro name="morning">
+                <description>(Daylight) All blinds up, all lights out</description>
+                <command device="screen" command="cmd_power_off"/>
+                <macrocall macro="all-up"/>
+                <macrocall macro="lights-off"/>
+                <macrocall macro="all-up"/>
+            </macro>
+
+            <macro name="early-evening">
+                <description>Turn on decent lights</description>
+                <macrocall macro="front-left-right-on"/>
+            </macro>
+
+            <macro name="evening">
+                <description>Blinds down, appropriate lights</description>
+                <macrocall macro="all-down"/>
+                <macrocall macro="early-evening"/>
+                <macrocall macro="all-down"/>
+            </macro>
+        </macros>
+    </macros>
+
+    <macros name="av-macros">
+        <macro name="start">
+            <description>Start up the system</description>
+            <command device="amp" command="cmd_power_on"/>
+        </macro>
+
+        <macro name="shutdown">
+            <description>Shuts down the system</description>
+            <command device="dvd" command="cmd_power_off"/>
+            <command device="dbox" command="cmd_power_off"/>
+            <macrocall macro="vcr-off"/>
+            <command device="amp" command="cmd_power_off"/>
+            <command device="projector" command="cmd_power_off"/>
+        </macro>
+
+        <macro name="projector-mode">
+            <description>Turn on projector, and use it</description>
+            <command device="screen" command="cmd_power_on"/>
+            <command device="projector" command="cmd_power_on"/>
+            <command device="dbox" command="cmd_out_yuv_cvbs"/>
+            <command device="tv" command="cmd_power_off"/>
+        </macro>
+
+        <macro name="tv-mode">
+            <description>Turn on TV, and use it</description>
+            <command device="projector" command="cmd_power_off"/>
+            <command device="tv" command="cmd_in_aux"/>
+        </macro>
+
+        <macro name="tv-mode-no-screen">
+            <description>Turn on TV, and use it</description>
+            <command device="screen" command="cmd_power_off"/>
+            <command device="projector" command="cmd_power_off"/>
+            <command device="tv" command="cmd_aux"/>
+            <command device="dbox" command="cmd_out_rgb"/>
+        </macro>
+
+        <macro name="speakers-a">
+            <description>Turn on speaker pair A exclusively</description>
+            <command device="yamaha_bedroom" command="cmd_spk_a_on"/>
+            <command device="yamaha_bedroom" command="cmd_spk_b_off"/>
+        </macro>
+
+        <macro name="speakers-b">
+            <description>Turn on speaker pair B exclusively</description>
+            <command device="yamaha_bedroom" command="cmd_spk_b_on"/>
+            <command device="yamaha_bedroom" command="cmd_spk_a_off"/>
+        </macro>
+
+        <macro name="avc5_dvd">
+            <description>Turn the Scart switch to DVD</description>
+            <message>jfsdkkjgd</message>
+      <!--cond>
+	<clause>
+	  <test mode="lua"/>
+	  <code>avc5_action('dvd');</code>
+	</clause>
+	<clause>
+	  <test mode="java"/>
+	  <code wait="true">avc5 dvd</code>
+	</clause>
+	<clause>
+	  <test value="true"/>
+	  <command device="avc5" command="cmd_dvd" toggle="0"/>
+	  <delay duration="100"/>
+	  <command device="avc5" command="cmd_dvd" toggle="1"/>
+	</clause>
+      </cond-->
+        </macro>
+
+    <!--macro name="avc5_sat">
+      <description>Turn the Scart switch to SAT (= dBox)</description>
+      <cond>
+	<clause>
+	  <test mode="lua"/>
+	  <code>avc5_action('sat');</code>
+	</clause>
+	<clause>
+	  <test mode="java"/>
+	  <code wait="true">avc5 sat</code>
+	</clause>
+	<clause>
+	  <test value="true"/>
+	  <command device="avc5" command="cmd_sat" toggle="0"/>
+	  <delay duration="100"/>
+	  <command device="avc5" command="cmd_sat" toggle="1"/>
+	</clause>
+      </cond>
+    </macro-->
+    </macros>
+
+    <macros name="testfolder" visibility="private">
+        <description>Testing stuff</description>
+        <macro name="test">
+            <command device="philips_vr1100" command="cmd_power_toggle" count="2"/>
+            <delay duration="100"/>
+            <message class="info">Hello world</message>
+        </macro>
+
+        <macro name="volume-mute-on">
+            <description>Master mute</description>
+            <command device="amp" command="cmd_mute_on"/>
+        </macro>
+
+        <macro name="volume-mute-off">
+            <description>Master mute</description>
+            <command device="amp" command="cmd_mute_off"/>
+        </macro>
+
+        <macro name="projectortest">
+            <description>Returns true if the projector is on</description>
+            <match regexp="00|04">
+                <command device="projector" command="cmd_get_status"/>
+            </match>
+        </macro>
+
+        <macro name="test4projector">
+            <description>Investigates if the projector is on</description>
+            <cond>
+                <clause>
+                    <macrocall macro="projectortest"/>
+                    <message class="confirm">The projector is on!</message>
+                </clause>
+                <clause>
+                    <true/>
+                    <message class="confirm">The projector is NOT on!</message>
+                </clause>
+            </cond>
+        </macro>
+
+        <macro name="projector-is-on">
+            <description>Test macro to find out if the projecor is available.</description>
+            <cond>
+                <clause>
+                    <match regexp="00|04">
+                        <command device="projector" command="cmd_get_status"/>
+                    </match>
+                    <message class="confirm">The projector is on!</message>
+                </clause>
+                <clause>
+                    <true/>
+                    <message class="confirm">The projector is not on!</message>
+                </clause>
+            </cond>
+        </macro>
+    </macros>
+
+    <macro name="get-projector-status">
+        <description>Returns a readable string describing the state of the projector.</description>
+        <message>x</message>
+    </macro>
+
+    <macros name="menu-macros">
+        <menu name="Watch macros" id="watch" nuke-prefix="watch_">
+            <description>Macros for turning the home theatre to selected device</description>
+            <macrocall macro="watch-dvd"/>
+      <!--macrocall macro="watch-dvd-tv"/-->
+      <!--macrocall macro="watch-dvd-audio-tv"/-->
+            <macrocall macro="watch-dvd-audio"/>
+      <!--macrocall macro="watch-dbox-tv"/-->
+      <!--macrocall macro="watch-dbox-proj"/-->
+            <macrocall macro="watch-dbox"/>
+            <macrocall macro="watch-tv"/>
+      <!--macrocall macro="watch-vcr"/-->
+      <!--macrocall macro="watch-ld"/-->
+            <macrocall macro="watch-htpc-2-0"/>
+            <macrocall macro="watch-htpc-5-1"/>
+            <macrocall macro="watch-htpc-7-1"/>
+        </menu>
+
+        <menu name="Listen macros" id="listen" nuke-prefix="listen_">
+            <description>Macros for turning only the audio to selected device, leaving video alone if possible</description>
+            <macrocall macro="listen-dvd"/>
+            <macrocall macro="listen-dvd-audio"/>
+            <macrocall macro="listen-dbox"/>
+            <macrocall macro="listen-vcr"/>
+            <macrocall macro="listen-ld"/>
+            <macrocall macro="listen-mediabridge"/>
+            <macrocall macro="listen-htpc-2-0"/>
+            <macrocall macro="listen-htpc-5-1"/>
+            <macrocall macro="listen-htpc-7-1"/>
+            <macrocall macro="listen-phono"/>
+            <macrocall macro="listen-tuner"/>
+        </menu>
+
+        <menu name="Look macros" id="look" nuke-prefix="look_">
+            <description>Macros for turning only the video to selected device, leaving audio alone if possible</description>
+            <macrocall macro="look-dvd"/>
+            <macrocall macro="look-dbox"/>
+            <macrocall macro="look-tv"/>
+        </menu>
+
+        <menu name="Volume macros" id="volume" nuke-prefix="volume_">
+            <description>Macros for setting a preset volume</description>
+            <macrocall macro="volume-loud"/>
+            <macrocall macro="volume-normal"/>
+            <macrocall macro="volume-room"/>
+            <macrocall macro="volume-quiet"/>
+            <macrocall macro="volume-feeble"/>
+            <macrocall macro="volume-faint"/>
+      <!--macrocall macro="louder"/-->
+      <!--macrocall macro="quieter"/-->
+        </menu>
+    </macros>
+</macros>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="rc5_cd" name="Canonical RC5 CD-Player" vendor="" model="" type="cd">
+  <commandset type="ir" protocol="rc5" deviceno="20" toggle="yes" remotename="rc5_cd">
+    <command cmdref="cmd_0" 			cmdno="0"/>
+    <command cmdref="cmd_1" 			cmdno="1"/>
+    <command cmdref="cmd_2" 			cmdno="2"/>
+    <command cmdref="cmd_3" 			cmdno="3"/>
+    <command cmdref="cmd_4" 			cmdno="4"/>
+    <command cmdref="cmd_5" 			cmdno="5"/>
+    <command cmdref="cmd_6" 			cmdno="6"/>
+    <command cmdref="cmd_7" 			cmdno="7"/>
+    <command cmdref="cmd_8" 			cmdno="8"/>
+    <command cmdref="cmd_9" 			cmdno="9"/>
+    <command cmdref="power_toggle" 		cmdno="12"/>
+    <command cmdref="in_cd"			cmdno="63"/>
+    <command cmdref="previous" 			cmdno="33"/>
+    <command cmdref="next" 			cmdno="32"/>
+    <command cmdref="play" 			cmdno="53"/>
+    <command cmdref="rewind" 			cmdno="50"/>
+    <command cmdref="fast_forward" 		cmdno="52"/>
+    <command cmdref="stop" 			cmdno="54"/>
+    <command cmdref="pause_toggle" 		cmdno="48"/>
+  </commandset>
+</device>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="samsung_bdp1400" name="Samsung BD-P1400" vendor="Samsung"
+  model="BD-P1400" type="dvd" pingable_on="yes" pingable_standby="no">
+  <jp1data>
+    <setupcode value="0199"/>
+<!--
+Protocol=00 B5
+Protocol.name=Manual Settings
+ProtocolParms=4 0 224
+FixedData=04 00 E0
+DevParms=Device 1\=0,Device 2\=0,Device 3\=0
+DeviceTranslator=Translator(0) Translator(1,8,8) Translator(2,8,16)
+CmdParms=OBC
+CmdTranslator=Translator(0)
+DefaultCmd=00
+CmdIndex=0
+FixedData=04 00 E0
+-->
+  </jp1data>
+  <commandset type="ir" protocol="samsung36" deviceno="32" remotename="samsung_bdp1400" original_remote="00070B" pseudo_power_on="play_pause">
+    <command cmdref="cmd_0" 				cmdno="0xD0"/>
+    <command cmdref="cmd_1" 				cmdno="0x40"/>
+    <command cmdref="cmd_2" 				cmdno="0xC0"/>
+    <command cmdref="cmd_3" 				cmdno="0x20"/>
+    <command cmdref="cmd_4" 				cmdno="0xA0"/>
+    <command cmdref="cmd_5" 				cmdno="0x60"/>
+    <command cmdref="cmd_6" 				cmdno="0xE0"/>
+    <command cmdref="cmd_7" 				cmdno="0x10"/>
+    <command cmdref="cmd_8" 				cmdno="0x90"/>
+    <command cmdref="cmd_9" 				cmdno="0x50"/>
+    <command cmdref="next" 				cmdno="0x88"/>
+    <command cmdref="a_b" 				cmdno="0x14"/>
+    <command cmdref="audio" 				cmdno="0xA4"/>
+    <command cmdref="yellow" 				cmdno="0xC4"/>
+    <command cmdref="home" name="exit"			cmdno="0xD4"/><!-- ??? -->
+    <command cmdref="open_close" name="open/close" 	wakeup="yes" cmdno="0x80"/>
+    <command cmdref="slow_reverse" 			cmdno="0xF0"/>
+    <command cmdref="repeat" 				cmdno="0xE4"/>
+    <command cmdref="slow_forward" 			cmdno="0x08"/>
+    <command cmdref="marker" 				cmdno="0x94"/>
+    <command cmdref="power_toggle" wakeup="yes"		cmdno="0x00"/>
+    <command cmdref="play_pause" name="play/pause" wakeup="yes" cmdno="0x28"/>
+    <command cmdref="rewind" 				cmdno="0x48"/>
+    <command cmdref="fast_forward"			cmdno="0xA8"/>
+    <command cmdref="stop" 				cmdno="0xC8"/>
+    <command cmdref="ok" 				cmdno="0x38"/>
+    <command cmdref="title" name="disc_menu"		cmdno="0xB8"/>
+    <command cmdref="up" 				cmdno="0x18"/>
+    <command cmdref="down" 				cmdno="0x98"/>
+    <command cmdref="left" 				cmdno="0xD8"/>
+    <command cmdref="right" 				cmdno="0x58"/>
+    <command cmdref="info" 				cmdno="0x78"/>
+    <command cmdref="cmd_return" 			cmdno="0xE8"/>
+    <command cmdref="previous" 				cmdno="0xB0"/>
+    <command cmdref="dvd_menu" 				cmdno="0x68"/>
+    <command cmdref="subtitle" 				cmdno="0x64"/>
+    <command cmdref="zoom" 				cmdno="0x54"/>
+    <command cmdref="slow" 				cmdno="0x70"/>
+    <command cmdref="cancel" 				cmdno="0xF8"/>
+    <command cmdref="scene_search" 			cmdno="0x30"/>
+    <command cmdref="menu" name="popup menu"		cmdno="0x04"/>
+    <command cmdref="red" 				cmdno="0x84"/>
+    <command cmdref="green" 				cmdno="0x44"/>
+    <command cmdref="blue" 				cmdno="0x24"/>
+  </commandset>
+  <commandset type="ip">
+    <command cmdref="ping"/>
+  </commandset>
+</device>

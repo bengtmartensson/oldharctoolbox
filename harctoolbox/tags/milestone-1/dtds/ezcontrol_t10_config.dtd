@@ -1,0 +1,63 @@
+<!ELEMENT ezcontrol_t10 (presets?,preset_configuration?,timers?,network)>
+<!ATTLIST ezcontrol_t10
+    hostname CDATA #REQUIRED
+  >
+
+<!ELEMENT presets (preset)+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT preset (#PCDATA)>
+<!ATTLIST preset
+    state (on|off|-) #IMPLIED
+    number CDATA #IMPLIED
+    id CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT preset_configuration EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT timers (timer)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT timer (presetrefs|days|off|on)*>
+<!ATTLIST timer
+    name CDATA #IMPLIED
+    enabled CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT on EMPTY>
+<!ATTLIST on
+    minute CDATA #IMPLIED
+    hour CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT off EMPTY>
+<!ATTLIST off
+    minute CDATA #IMPLIED
+    hour CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT days (day)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT day EMPTY>
+<!ATTLIST day
+    weekday CDATA #IMPLIED
+    name CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT presetrefs (presetref)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT presetref (#PCDATA)>
+<!ATTLIST presetref
+    preset CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT network EMPTY>

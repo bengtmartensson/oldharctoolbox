@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<devices>
+  <device id="door_toggle_memory" vendor="generic" name="open/close door with
+    only one command, and memory, as well as a sensor" model="generic" type="dumb">
+    <attributes>
+      <has-attribute name="memory"/>
+      <has-attribute name="forget" value="no"/>
+    </attributes>
+    <aliases>
+      <alias name="open_close" command="power_pulse"/>
+    </aliases>
+    <commandset type="on_off">
+      <command cmdref="cmd_power_on"/>
+      <command cmdref="cmd_power_off"/>
+      <command cmdref="cmd_power_toggle"/>
+      <command cmdref="cmd_power_pulse"/>
+      <command cmdref="get_state">
+	<returnvalues>
+	  <semantics>
+	    <table>
+	      <entry value="on" desc="closed"/>
+	      <entry value="off" desc="open"/>
+	    </table>
+	  </semantics>
+	</returnvalues>
+      </command>
+    </commandset>
+  </device>
+</devices>
