@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
 <device id="panasonic_dvd_s75" name="Panasonic DVD S75" vendor="Panasonic" model="S75" type="dvd">
-  <jp1data>
-    <setupcode value="0490"/>
-  </jp1data>
   <commandset type="ir" protocol="panasonic" toggle="no" deviceno="176" subdevice="0" remotename="panasonic_dvd_s75">
 <!--
     <command cmdref="cmd_0"		      cmdno="0x98"/>

@@ -1,29 +1,14 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
 package harc;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.xml.sax.*;
 
 /**
- * This class exports a device to a text file in the format used by <a href="http://www.lirc.org">LIRC</a>.
- * It is influenced by pronto2lirc.py from <a href="mailto:olavi.akerman@gmail.com">Olavi Akerman</a>.
+ * This class exports a device to a text file in the format used by LIRC.
+ * It is influenced by pronto2lirc.py by Olavi Akerman <olavi.akerman@gmail.com>
  */
 public class lirc_export {
 
@@ -75,12 +60,12 @@ public class lirc_export {
         private String timings() {
             int freq = the_device.get_frequency();
             if (freq == -1) {
-                commandset[] cmdsets = the_device.get_commandsets(remotename, commandtype_t.ir);
+                commandset[] cmdsets = the_device.get_commandsets(remotename);
                 freq = ccf_parse.get_frequency(cmdsets[0].get_entry(0).get_ccf_toggle_0());
             }
             int gap = the_device.get_gap();
             if (gap == 0) {
-                commandset[] cmdsets = the_device.get_commandsets(remotename, commandtype_t.ir);
+                commandset[] cmdsets = the_device.get_commandsets(remotename);
                 gap = ccf_parse.get_gap(cmdsets[0].get_entry(0).get_ccf_toggle_0());
             }
             return "\tflags\tRAW_CODES\n\teps\t30\n\taeps\t100\n\tfrequency\t"
@@ -90,7 +75,7 @@ public class lirc_export {
         private String commands() {
             int no_commands = 0;
             String result = "\t\tbegin raw_codes\n";
-            commandset[] cmdsets = the_device.get_commandsets(remotename, commandtype_t.ir);
+            commandset[] cmdsets = the_device.get_commandsets(remotename);
             for (int i = 0; i < cmdsets.length; i++) {
                 commandset cs = cmdsets[i];
                 short devno = cs.get_deviceno();
@@ -195,11 +180,11 @@ public class lirc_export {
         return success;
     }
 
-    public static void export(String exportdir, String devicename) throws IOException, SAXParseException, SAXException {
+    public static void export(String exportdir, String devicename) throws IOException, SAXParseException {
         (new lirc_export(new device(devicename))).export(exportdir);
     }
 
-    public static void export(String filename, String[] devices) throws FileNotFoundException, IOException, SAXParseException, SAXException {
+    public static void export(String filename, String[] devices) throws FileNotFoundException, IOException, SAXParseException {
         PrintStream str = new PrintStream(new FileOutputStream(filename));
         for (int i = 0; i < devices.length; i++) {
             (new lirc_export(new device(devices[i]))).export(str);
@@ -221,8 +206,6 @@ public class lirc_export {
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             } catch (SAXParseException e) {
-                System.err.println(e.getMessage());
-            } catch (SAXException e) {
                 System.err.println(e.getMessage());
             }
             (new lirc_export(dev)).export(exportdir);
@@ -259,8 +242,6 @@ public class lirc_export {
             } catch (IOException e) {
                 System.err.println("Could not instantiate device: " + e.getMessage());
             } catch (SAXParseException e) {
-                System.err.println("Could not parse device: " + e.getMessage());
-            } catch (SAXException e) {
                 System.err.println("Could not parse device: " + e.getMessage());
             }
             if (dev != null && dev.is_valid())

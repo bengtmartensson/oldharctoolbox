@@ -1,27 +1,12 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
 package harc;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.xml.sax.*;
 
 /**
- * This class exports a device to a text file in the format used by the <a href="http://www.irtrans.com">IRTrans</a> device.
+ * This class exports a device to a text file in the format used by the IRTrans device,
  * Note that the semantics of the file format is not fully documented. Creating rem-files
  * in this way is not condoned by the IRTrans manufacturer.
  *
@@ -85,7 +70,7 @@ public class rem_export {
         private String commands() {
             int no_commands = 0;
             String result = "[COMMANDS]\n";
-            commandset[] cmdsets = the_device.get_commandsets(remotename, commandtype_t.ir);
+            commandset[] cmdsets = the_device.get_commandsets(remotename);
             for (int i = 0; i < cmdsets.length; i++) {
                 commandset cs = cmdsets[i];
                 short devno = cs.get_deviceno();
@@ -344,8 +329,6 @@ public class rem_export {
             } catch (IOException e) {
                 System.err.println("Could not instantiate device: " + e.getMessage());
             } catch (SAXParseException e) {
-                System.err.println("Could not parse device: " + e.getMessage());
-            } catch (SAXException e) {
                 System.err.println("Could not parse device: " + e.getMessage());
             }
             if (dev != null && dev.is_valid())

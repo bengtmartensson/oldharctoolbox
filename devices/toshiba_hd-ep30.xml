@@ -38,10 +38,10 @@
     <!--command cmdref="tab" cmdno="50"/--> <!-- ??? -->
     <!--command cmdref="cursor" cmdno="51"/--> <!-- ??? -->
     <command cmdref="slow" cmdno="13"/>
-    <command cmdref="a" cmdno="52"/>
-    <command cmdref="b" cmdno="53"/>
-    <command cmdref="c" cmdno="54"/>
-    <command cmdref="d" cmdno="55"/>
+    <command cmdref="A" cmdno="52"/>
+    <command cmdref="B" cmdno="53"/>
+    <command cmdref="C" cmdno="54"/>
+    <command cmdref="D" cmdno="55"/>
     <command cmdref="audio" cmdno="39"/>
     <command cmdref="subtitle" cmdno="40"/>
     <command cmdref="angle" cmdno="41"/>
@@ -105,5 +105,7 @@ Here's how to get the above screen with the Tosh remote:
 Display - 1 -9 - 5 - Display
     -->
   </commandset>
-  <xi:include href="ping.xi"/>
+  <commandset type="ip">
+    <command cmdref="ping"/>
+  </commandset>
 </device>

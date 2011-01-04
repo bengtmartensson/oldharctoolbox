@@ -3,9 +3,6 @@
  "../dtds/devices.dtd">
 <devices>
   <device id="rc5_tape" name="Canonical RC5 TAPE-Player" vendor="" model="" type="tape">
-  <jp1data>
-    <setupcode value="1557"/>
-  </jp1data>
     <commandset type="ir" protocol="rc5" deviceno="18" toggle="yes" remotename="rc5_tape">
       <command cmdref="cmd_0" 				cmdno="0"/>
       <command cmdref="cmd_1" 				cmdno="1"/>

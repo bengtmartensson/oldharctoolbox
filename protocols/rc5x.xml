@@ -10,7 +10,7 @@
   -->
   <jp1data>
     <protocol number="00 F2" name="RC5x"/>
-    <tohex function="reverse_complement" bits="8"/>
+    <tohex function="reverse-invert" bits="8"/>
   </jp1data>
   <cooked-ccf-string format="FIXME 5000 0073 0000 0001 %04x %04x">
     <parameterref parameter="deviceno"/>

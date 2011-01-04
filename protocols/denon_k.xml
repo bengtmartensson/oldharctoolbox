@@ -4,7 +4,7 @@
 <irprotocol name="denon_k" id="denon_k">
   <jp1data>
     <protocol number="00 xx" name="Denon-K"/>
-    <tohex function="reverse_complement" bits="8"/>
+    <tohex function="reverse-invert" bits="8"/>
   </jp1data>
   <parameters>
     <parameter id="deviceno" bits="4"/>
@@ -89,7 +89,7 @@ user=f,Function
       <coded_number direction="lsb" zero="p0" one="p1" bits="8">
 	<xor>
 	  <!--  (device * 16) -->
-	  <mask mask="15" shift="4">
+	  <mask shift="4">
 	    <parameterref parameter="deviceno"/>
 	  </mask>
 	  <!-- ^ (subdevice -->
@@ -99,7 +99,7 @@ user=f,Function
 	    <parameterref parameter="cmdno"/>
 	  </mask>
 	  <!-- (command / 16); -->
-	  <mask mask="4095" shift="-4">
+	  <mask shift="-4">
 	    <parameterref parameter="cmdno"/>
 	  </mask>
        </xor>

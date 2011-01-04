@@ -3,9 +3,6 @@
  "../dtds/devices.dtd">
 <devices>
   <device id="yamaha_rxv596" name="Yamaha RX-V 596 Receiver" vendor="Yamaha" model="RX-V 596" type="receiver">
-  <jp1data>
-    <setupcode value="2034"/>
-  </jp1data>
     <commandset type="ir" protocol="nec1" deviceno="122" remotename="yamaha_rxv596" original_remote="xxx">
 
       <!-- Input -->

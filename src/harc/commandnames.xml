@@ -1,1915 +1,1797 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copying and distribution of this file, with or without modification,
-     are permitted in any medium without royalty provided the copyright
-     notice and this notice are preserved.  This file is offered as-is,
-     without any warranty.
--->
 <!DOCTYPE commandnames PUBLIC "-//bengt-martensson.de//commandnames//en"
  "../../dtds/commandnames.dtd">
-<!--
-The valid command names are defined in this file. The names should describe the
-action of the command as accurately as possible (without being overly long).
-
-Names have to be valid Java identifiers: consisting of letters, numbers, and
-underscores; starting with a letter, not being identical to a reserved name. If
-the "natural" name is invalid, "cmd_" can be prepended. The names are
-interpreted case sensitively, although presently all names are in lower case, 
-please do not use upper case unless you have a good reason.
-DoNotUseCamelCaseNames.
-
-A name, theoretically, consists/contains a verb. A noun is in general not a
-good command name. On/off/toggle/cyclic character of a command should have a
-name that makes this clear. Commands, which return a value other than a status
-message and are normally executed for this, should in general have a name
-starting with "get_". The use of other prefixes should be clear from already
-used names.
-
-Ideally, there should be no semantic redundancy, i.e. no two names for the same
-command (see "ok" with the synonyms "enter" and "select").
--->
 <commandnames>
-    <group id="getting_commands" description="Command for getting some information by bidirectional communication">
-        <command id="get_recordsrc" />
-        <command id="get_channellist"/>
-        <command id="get_programs_channel"/>
-        <command id="get_programs_event"/>
-        <command id="get_programs_eventid"/>
-        <command id="get_current_programs"/>
-        <command id="get_standby"/>
-        <command id="get_power"/>
-        <command id="get_volume"/>
-        <command id="get_mute"/>
-        <command id="get_program"/>
-        <command id="get_program_pids"/>
-        <command id="get_program_allpids"/>
-        <command id="get_subchannels"/>
-        <command id="get_playback"/>
-        <command id="get_sectionsd"/>
-        <command id="get_recordmode"/>
-        <command id="get_mode"/>
-        <command id="get_date"/>
-        <command id="get_time"/>
-        <command id="get_rawtime"/>
-        <command id="get_info"/>
-        <command id="get_version"/>
-        <command id="get_devicetype"/>
-        <command id="get_settings"/>
-        <command id="get_bouquets"/>
-        <command id="get_bouquetsender"/>
-        <command id="get_bouquetsender_radio"/>
-        <command id="get_videoformat"/>
-        <command id="get_videooutput"/>
-        <command id="get_vcroutput"/>
-        <command id="get_scartmode"/>
-        <command id="get_status"/>
-        <command id="get_zone2_status"/>
-        <command id="get_zone3_status"/>
-        <command id="get_input"/>
-        <command id="get_lamp_hours"/>
-        <command id="get_temperatures"/>
-        <command id="get_soundfield"/>
-        <command id="get_equalizing"/>
-        <command id="get_resolution"/>
-        <command id="get_title"/>
-        <command id="get_artist"/>
-        <command id="get_album"/>
-        <command id="get_chapter"/>
-        <command id="get_elapsed_time"/>
-        <command id="get_remaining_time"/>
-        <command id="get_chapter_elapsed_time"/>
-        <command id="get_chapter_remaining_time"/>
-        <command id="get_total_elapsed_time"/>
-        <command id="get_total_remaining_time"/>
-        <command id="get_disc_type"/>
-        <command id="get_audio_type"/>
-        <command id="get_subtitle_type"/>
-        <command id="get_subtitle_shift"/>
-        <command id="get_contents_data1"/>
-        <command id="get_contents_data2"/>
-        <command id="get_contents_data3"/>
-        <command id="get_contents_data4"/>
-        <command id="get_contents_data_all"/>
-        <command id="get_devices"/>
-        <command id="get_net"/>
-        <command id="get_ir"/>
-        <command id="get_serial"/>
-        <command id="get_state"/>
-        <command id="get_timer"/>
-        <command id="get_timers"/>
-        <command id="get_configuration"/>
-        <command id="get_remotes"/>
-        <command id="get_commands"/>
-        <command id="get_verbosity"/>
-    </group>
+  <group id="getting_commands" description="Command for getting some information by bidirectional communication">
+    <command id="get_recordsrc"/>
+    <command id="get_channellist"/>
+    <command id="get_programs_channel"/>
+    <command id="get_programs_event"/>
+    <command id="get_programs_eventid"/>
+    <command id="get_current_programs"/>
+    <command id="get_standby"/>
+    <command id="get_power"/>
+    <command id="get_volume"/>
+    <command id="get_mute"/>
+    <command id="get_program"/>
+    <command id="get_program_pids"/>
+    <command id="get_program_allpids"/>
+    <command id="get_subchannels"/>
+    <command id="get_playback"/>
+    <command id="get_sectionsd"/>
+    <command id="get_recordmode"/>
+    <command id="get_mode"/>
+    <command id="get_date"/>
+    <command id="get_time"/>
+    <command id="get_rawtime"/>
+    <command id="get_info"/>
+    <command id="get_version"/>
+    <command id="get_settings"/>
+    <command id="get_bouquets"/>
+    <command id="get_bouquetsender"/>
+    <command id="get_bouquetsender_radio"/>
+    <command id="get_videoformat"/>
+    <command id="get_videooutput"/>
+    <command id="get_vcroutput"/>
+    <command id="get_scartmode"/>
+    <command id="get_status"/>
+    <command id="get_zone2_status"/>
+    <command id="get_zone3_status"/>
+    <command id="get_input"/>
+    <command id="get_lamp_hours"/>
+    <command id="get_temperatures"/>
+    <command id="get_soundfield"/>
+    <command id="get_equalizing"/>
+    <command id="get_resolution"/>
+    <command id="get_title"/>
+    <command id="get_artist"/>
+    <command id="get_album"/>
+    <command id="get_chapter"/>
+    <command id="get_elapsed_time"/>
+    <command id="get_remaining_time"/>
+    <command id="get_chapter_elapsed_time"/>
+    <command id="get_chapter_remaining_time"/>
+    <command id="get_total_elapsed_time"/>
+    <command id="get_total_remaining_time"/>
+    <command id="get_disc_type"/>
+    <command id="get_audio_type"/>
+    <command id="get_subtitle_type"/>
+    <command id="get_contents_data1"/>
+    <command id="get_contents_data2"/>
+    <command id="get_contents_data3"/>
+    <command id="get_contents_data4"/>
+    <command id="get_contents_data_all"/>
+    <command id="get_devices"/>
+    <command id="get_net"/>
+    <command id="get_ir"/>
+    <command id="get_serial"/>
+    <command id="get_state"/>
+    <command id="get_timer"/>
+    <command id="get_timers"/>
+    <command id="get_configuration"/>
+    <command id="get_remotes"/>
+    <command id="get_commands"/>
+  </group>
 
-    <group id="netcat_commands">
-        <command id="talk">
-            <parameter name="transmit"/>
-        </command>
-        <command id="talk_listen"/>
-        <command id="talk_listen1"/>
-        <command id="talk_listen2"/>
-        <command id="talk_listen3"/>
-        <command id="listen"/>
-        <command id="listen1"/>
-        <command id="listen2"/>
-        <command id="listen3"/>
-    </group>
+  <group id="netcat_commands">
+    <command id="talk">
+      <parameter name="transmit"/>
+    </command>
+    <command id="talk_listen"/>
+    <command id="talk_listen1"/>
+    <command id="talk_listen2"/>
+    <command id="talk_listen3"/>
+    <command id="listen"/>
+    <command id="listen1"/>
+    <command id="listen2"/>
+    <command id="listen3"/>
+  </group>
 
-    <group id="set_commands" description="Command for setting some stuff requiring a parameter">
-        <command id="set_volume">
-            <parameter name="volume"/>
-        </command>
-        <command id="set_zone2_volume">
-            <parameter name="volume"/>
-        </command>
-        <command id="set_zone3_volume">
-            <parameter name="volume"/>
-        </command>
-        <command id="set_tv_system">
-            <parameter name="tv_system"/>
-        </command>
-        <command id="set_program_by_id">
-            <parameter name="program_id"/>
-        </command>
-        <command id="set_program_by_name">
-            <parameter name="programname"/>
-        </command>
-        <command id="set_popup_window">
-            <parameter name="text"/>
-        </command>
-        <command id="set_message_window">
-            <parameter name="text"/>
-        </command>
-        <command id="set_resolution">
-            <parameter name="resolution"/>
-        </command>
-        <command id="set_forward_speed">
-            <parameter name="speed"/>
-        </command>
-        <command id="set_reverse_speed">
-            <parameter name="speed"/>
-        </command>
-        <command id="set_repeat">
-            <parameter name="mode"/>
-        </command>
-        <command id="set_regioncode">
-            <parameter name="regioncode"/>
-        </command>
-        <command id="set_position">
-            <parameter name="position"/>
-        </command>
-        <command id="set_net">
-            <parameter name="configlock"/>
-            <parameter name="ip_settings"/>
-        </command>
-        <command id="set_ir">
-            <parameter name="module"/>
-            <parameter name="connector"/>
-            <parameter name="mode"/>
-        </command>
-        <command id="set_serial">
-            <parameter name="module"/>
-            <parameter name="baudrate"/>
-            <parameter name="flowcontrol"/>
-            <parameter name="parity"/>
-        </command>
-        <command id="set_state">
-            <parameter name="module"/>
-            <parameter name="connector"/>
-            <parameter name="mode"/>
-        </command>
-        <command id="send_ir">
-            <parameter name="module"/>
-            <parameter name="connector"/>
-            <parameter name="id"/>
-            <parameter name="frequency"/>
-            <parameter name="count"/>
-            <parameter name="offset"/>
-            <parameter name="timings"/>
-        </command>
-        <command id="stop_ir">
-            <parameter name="module"/>
-            <parameter name="connector"/>
-        </command>
-        <command id="set_verbosity">
-            <parameter name="code"/>
-        </command>
-    </group>
+  <group id="set_commands" description="Command for setting some stuff requiring a parameter">
+    <command id="set_volume">
+      <parameter name="volume"/>
+    </command>
+    <command id="set_zone2_volume">
+      <parameter name="volume"/>
+    </command>
+    <command id="set_zone3_volume">
+      <parameter name="volume"/>
+    </command>
+    <command id="set_program_by_id">
+      <parameter name="program_id"/>
+    </command>
+    <command id="set_program_by_name">
+      <parameter name="programname"/>
+    </command>
+    <command id="set_popup_window">
+      <parameter name="text"/>
+    </command>
+    <command id="set_message_window">
+      <parameter name="text"/>
+    </command>
+    <command id="set_resolution">
+      <parameter name="resolution"/>
+    </command>
+    <command id="set_forward_speed">
+      <parameter name="speed"/>
+    </command>
+    <command id="set_reverse_speed">
+      <parameter name="speed"/>
+    </command>
+    <command id="set_repeatmode">
+      <parameter name="mode"/>
+    </command>
+    <command id="set_position">
+      <parameter name="position"/>
+    </command>
+    <command id="set_net">
+      <parameter name="configlock"/>
+      <parameter name="ip_settings"/>
+    </command>
+    <command id="set_ir">
+      <parameter name="module"/>
+      <parameter name="connector"/>
+      <parameter name="mode"/>
+    </command>
+    <command id="set_serial">
+      <parameter name="module"/>
+      <parameter name="baudrate"/>
+      <parameter name="flowcontrol"/>
+      <parameter name="parity"/>
+    </command>
+    <command id="set_state">
+      <parameter name="module"/>
+      <parameter name="connector"/>
+      <parameter name="mode"/>
+    </command>
+    <command id="send_ir">
+      <parameter name="module"/>
+      <parameter name="connector"/>
+      <parameter name="id"/>
+      <parameter name="frequency"/>
+      <parameter name="count"/>
+      <parameter name="offset"/>
+      <parameter name="timings"/>
+    </command>
+    <command id="stop_ir">
+      <parameter name="module"/>
+      <parameter name="connector"/>
+    </command>
+  </group>
 
-    <group id="special_stuff" description="some special stuff">
-        <command id="execute_script">
-            <parameter name="script_name"/>
-        </command>
-        <command id="execute_plugin">
-            <parameter name="plugin_name"/>
-        </command>
-        <command id="send_key">
-            <parameter name="key_name"/>
-        </command>
+  <group id="special_stuff" description="some special stuff">
+    <command id="execute_script">
+      <parameter name="script_name"/>
+    </command>
+    <command id="execute_plugin">
+      <parameter name="plugin_name"/>
+    </command>
+    <command id="send_key">
+      <parameter name="key_name"/>
+    </command>
+  </group>
 
-    <!-- These commands are there for more-or-less temporary experimenting -->
-        <command id="special_0"/>
-        <command id="special_1"/>
-        <command id="special_2"/>
-        <command id="special_3"/>
-        <command id="special_4"/>
-        <command id="special_5"/>
-        <command id="special_6"/>
-        <command id="special_7"/>
-        <command id="special_8"/>
-        <command id="special_9"/>
-    </group>
+  <group id="numerical" description="Numerical keys">
+    <command id="cmd_0" name="0"/>
+    <command id="cmd_1" name="1"/>
+    <command id="cmd_2" name="2"/>
+    <command id="cmd_3" name="3"/>
+    <command id="cmd_4" name="4"/>
+    <command id="cmd_5" name="5"/>
+    <command id="cmd_6" name="6"/>
+    <command id="cmd_7" name="7"/>
+    <command id="cmd_8" name="8"/>
+    <command id="cmd_9" name="9"/>
+    <command id="two_digit" displayname="./.."/>
+    <command id="plus10" displayname="+10"/>
+  </group>
 
-    <group id="numerical" description="Numerical keys">
-        <command id="cmd_0" name="0"/>
-        <command id="cmd_1" name="1"/>
-        <command id="cmd_2" name="2"/>
-        <command id="cmd_3" name="3"/>
-        <command id="cmd_4" name="4"/>
-        <command id="cmd_5" name="5"/>
-        <command id="cmd_6" name="6"/>
-        <command id="cmd_7" name="7"/>
-        <command id="cmd_8" name="8"/>
-        <command id="cmd_9" name="9"/>
-        <command id="two_digit" displayname="./.."/>
-        <command id="plus10" displayname="+10"/>
-    </group>
-
-    <group id="power">
+  <group id="power">
     <!-- Note: there is no, and should be no "power" -->
-        <command id="power_on" displayname="Power on">
-            <synonym name="on"/>
-        </command>
-        <command id="power_off" displayname="Power off">
-            <synonym name="off"/>
-        </command>
-        <command id="power_reverse_on" displayname="Power reverse on" remark="For something moving in the 'other' direction, like a blind."/>
-        <command id="power_reverse_off" displayname="Power reverse off"/>
-        <command id="power_off_confirm" displayname="Power off"/>
-        <command id="set_power">
-            <parameter name="value"/>
-        </command>
-        <command id="power_toggle" displayname="Power">
-            <synonym name="power"/>
-        </command>
-        <command id="dim_up" displayname="Dim+"/>
-        <command id="dim_down" displayname="Dim-"/>
-        <command id="dim_off_time">
-            <parameter name="time"/>
-        </command>
-        <command id="dim_value_time">
-            <parameter name="value"/>
-            <parameter name="time"/>
-        </command>
-        <command id="dim_max_time">
-            <parameter name="time"/>
-        </command>
-        <command id="power_pulse" displayname="Power pulse"/>
-        <command id="power_dim" displayname="Power dim"/><!-- dumb dimmer -->
-        <command id="dimmer"/><!-- generic -->
-        <command id="standby_toggle"/>
-        <command id="standby_on"/>
-        <command id="standby_off"/>
-        <command id="blink_on"/>
-        <command id="blink_off"/>
-        <command id="reboot"/>
-        <command id="suspend"/>
+    <command id="power_on" displayname="Power on">
+      <synonym name="on"/>
+    </command>
+    <command id="power_off" displayname="Power off">
+      <synonym name="off"/>
+    </command>
+    <command id="power_reverse_on" displayname="Power reverse on" remark="For something moving in the 'other' direction, like a blind."/>
+    <command id="power_reverse_off" displayname="Power reverse off"/>
+    <command id="power_off_confirm" displayname="Power off"/>
+    <command id="power_toggle" displayname="Power">
+      <synonym name="power"/>
+    </command>
+    <command id="power_pulse" displayname="Power pulse"/>
+    <command id="power_dim" displayname="Power dim"/><!-- dumb dimmer -->
+    <command id="dimmer"/><!-- generic -->
+    <command id="standby_toggle"/>
+    <command id="standby_on"/>
+    <command id="standby_off"/>
+    <command id="blink_on"/>
+    <command id="blink_off"/>
+    <command id="reboot"/>
+    <command id="suspend"/>
 
-        <command id="zone1_on" zone="1">
-            <synonym name="zone1_power_on"/>
-        </command>
-        <command id="zone1_off" zone="1"/>
-        <command id="zone1_toggle" zone="1"/>
-        <command id="get_zone1" zone="1"/>
-        <command id="zone2_on" zone="2"/>
-        <command id="zone2_off" zone="2"/>
-        <command id="zone2_toggle" zone="2"/>
-        <command id="get_zone2" zone="2"/>
-        <command id="zone3_on" zone="3"/>
-        <command id="zone3_off" zone="3"/>
-        <command id="zone3_toggle" zone="2"/>
-        <command id="get_zone3" zone="3"/>
-    </group>
+    <command id="zone1_on" zone="1">
+      <synonym name="zone1_power_on"/>
+    </command>
+    <command id="zone1_off" zone="1"/>
+    <command id="zone1_toggle" zone="1"/>
+    <command id="get_zone1" zone="1"/>
+    <command id="zone2_on" zone="2"/>
+    <command id="zone2_off" zone="2"/>
+    <command id="zone2_toggle" zone="2"/>
+    <command id="get_zone2" zone="2"/>
+    <command id="zone3_on" zone="3"/>
+    <command id="zone3_off" zone="3"/>
+    <command id="zone3_toggle" zone="2"/>
+    <command id="get_zone3" zone="3"/>
+  </group>
 
-    <group id="mode_selection">
-        <command id="vcr_tv" type="toggle"/>
-        <command id="disc_tv" type="toggle"/>
-        <command id="tv_radio" type="toggle"/>
-        <command id="scartmode_on"/>
-        <command id="scartmode_off"/>
-        <command id="tv_mode"/>
-        <command id="radio_mode"/>
-        <command id="file_mode"/>
-        <command id="ipod_mode"/>
-        <command id="games_mode"/>
-    </group>
+  <group id="mode_selection">
+    <command id="vcr_tv" type="toggle"/>
+    <command id="disc_tv" type="toggle"/>
+    <command id="scartmode_on"/>
+    <command id="scartmode_off"/>
+    <command id="tv_mode"/>
+    <command id="radio_mode"/>
+    <command id="file_mode"/>
+    <command id="ipod_mode"/>
+  </group>
 
-    <group id="input_commands">
-        <command id="input_select" type="cyclic">
-            <synonym name="input"/>
-        </command>
-        <command id="in_tv"/>
-        <command id="in_dtv"/>
-        <command id="in_vcr"/>
-        <command id="in_vcr1"/>
-        <command id="in_vcr2"/>
-        <command id="in_dvd"/>
-        <command id="in_dock"/>
-        <command id="in_sat"/>
-        <command id="in_sat_cbl"/>
-        <command id="in_dvb_t"/>
-        <command id="in_tv_cbl"/>
-        <command id="in_aux"/>
-        <command id="in_ext1"/>
-        <command id="in_ext2"/>
-        <command id="in_ext3"/>
-        <command id="in_hdp"/>
-        <command id="in_bluray"/>
-        <command id="in_tape"/><!-- Discrete, do not confuse with following -->
-        <command id="in_tape_mon" type="toggle"/>
-        <command id="in_tape1"/>
-        <command id="in_tape2"/>
-        <command id="in_cd"/>
-        <command id="in_cd_r"/>
-        <command id="in_video1"/>
-        <command id="in_video2"/>
-        <command id="in_video3"/>
-        <command id="in_video_aux"/>
-        <command id="in_phono"/>
-        <command id="in_xm"/><!-- North America -->
-        <command id="in_tuner">
-            <synonym name="in_radio"/>
-        </command>
-        <command id="in_hd_radio"/> <!-- North America? -->
-        <command id="in_cable"/>
-        <command id="in_dvr"/>
-        <command id="in_ipod"/>
-        <command id="in_usb"/>
-        <command id="in_net_usb"/>
-        <command id="in_dvd_hdp"/>
-        <command id="in_vcr_dvr"/>
-        <command id="in_net"/>
-        <command id="in_game"/>
-        <command id="in_av" remark="typically a SCART input on a TV"/>
-        <command id="in_av1" remark="typically a SCART input on a TV"/>
-        <command id="in_av2" remark="typically a SCART input on a TV"/>
-        <command id="source"/>
-        <command id="lock_input"/>
+  <group id="input_commands">
+    <command id="input_select" type="cyclic">
+      <synonym name="input"/>
+    </command>
+    <command id="in_tv"/>
+    <command id="in_dtv"/>
+    <command id="in_vcr"/>
+    <command id="in_vcr1"/>
+    <command id="in_vcr2"/>
+    <command id="in_dvd"/>
+    <command id="in_sat"/>
+    <command id="in_dvb_t"/>
+    <command id="in_tv_cbl"/>
+    <command id="in_aux"/>
+    <command id="in_ext1"/>
+    <command id="in_ext2"/>
+    <command id="in_ext3"/>
+    <command id="in_hdp"/>
+    <command id="in_tape"/><!-- Discrete, do not confuse with following -->
+    <command id="in_tape_mon" type="toggle"/>
+    <command id="in_tape1"/>
+    <command id="in_tape2"/>
+    <command id="in_cd"/>
+    <command id="in_cd_r"/>
+    <command id="in_video1"/>
+    <command id="in_video2"/>
+    <command id="in_video3"/>
+    <command id="in_video_aux"/>
+    <command id="in_phono"/>
+    <command id="in_xm"/><!-- North America -->
+    <command id="in_tuner">
+      <synonym name="in_radio"/>
+    </command>
+    <command id="in_cable"/>
+    <command id="in_dvr"/>
+    <command id="in_ipod"/>
+    <command id="in_usb"/>
+    <command id="in_net_usb"/>
+    <command id="in_dvd_hdp"/>
+    <command id="in_vcr_dvr"/>
+    <command id="in_net"/>
+    <command id="in_av" remark="typically a SCART input on a TV"/>
+    <command id="in_av1" remark="typically a SCART input on a TV"/>
+    <command id="in_av2" remark="typically a SCART input on a TV"/>
+    <command id="source"/>
+    <command id="lock_input"/>
 
-        <command id="video_select"/>
+    <command id="video_select"/>
 
-        <command id="satellites" type="cyclic"/>
+    <command id="in_video" remark="cvbs"/>
+    <command id="in_component1">
+      <synonym name="in_yuv"/>
+    </command>
+    <command id="in_component2"/>
+    <command id="in_hdmi"/>
+    <command id="in_hdmi1"/>
+    <command id="in_hdmi2"/>
+    <command id="in_hdmi3"/>
+    <command id="in_hdmi4"/>
+    <command id="in_vga">
+      <synonym name="in_pc"/>
+      <synonym name="in_computer"/>
+    </command>
+    <command id="in_s_video"/>
+    <command id="in_scart"/>
+    <command id="in_front"/>
+    <command id="in_side"/>
+    <command id="input" type="cyclic"/>
 
-        <command id="in_video" remark="cvbs"/>
-        <command id="in_component1">
-            <synonym name="in_yuv"/>
-        </command>
-        <command id="in_component2"/>
-        <command id="in_hdmi"/>
-        <command id="in_hdmi1"/>
-        <command id="in_hdmi2"/>
-        <command id="in_hdmi3"/>
-        <command id="in_hdmi4"/>
-        <command id="in_vga">
-            <synonym name="in_pc"/>
-            <synonym name="in_computer"/>
-        </command>
-        <command id="in_s_video"/>
-        <command id="in_scart"/>
-        <command id="in_front"/>
-        <command id="in_side"/>
-        <command id="input" type="cyclic"/>
+    <command id="d5_control_on"/>
+    <command id="d5_control_off"/>
 
-        <command id="d5_control_on"/>
-        <command id="d5_control_off"/>
+    <command id="recordsrc_tv"/>
+    <command id="recordsrc_dtv"/>
+    <command id="recordsrc_vcr"/>
+    <command id="recordsrc_vcr1"/>
+    <command id="recordsrc_vcr2"/>
+    <command id="recordsrc_dvd"/>
+    <command id="recordsrc_sat"/>
+    <command id="recordsrc_dvb_t"/>
+    <command id="recordsrc_tv_cbl"/>
+    <command id="recordsrc_aux"/>
+    <command id="recordsrc_hdp"/>
+    <command id="recordsrc_tape"/>
+    <command id="recordsrc_tape1"/>
+    <command id="recordsrc_tape2"/>
+    <command id="recordsrc_cd"/>
+    <command id="recordsrc_cd_r"/>
+    <command id="recordsrc_video1"/>
+    <command id="recordsrc_video2"/>
+    <command id="recordsrc_video3"/>
+    <command id="recordsrc_video_aux"/>
+    <command id="recordsrc_phono"/>
+    <command id="recordsrc_xm"/><!-- North America -->
+    <command id="recordsrc_tuner">
+      <synonym name="recordsrc_radio"/>
+    </command>
+    <command id="recordsrc_cable"/>
+    <command id="recordsrc_dvr"/>
+    <command id="recordsrc_ipod"/>
+    <command id="recordsrc_usb"/>
+    <command id="recordsrc_net_usb"/>
+    <command id="recordsrc_source"/>
 
-        <command id="recordsrc_tv"/>
-        <command id="recordsrc_dtv"/>
-        <command id="recordsrc_vcr"/>
-        <command id="recordsrc_vcr1"/>
-        <command id="recordsrc_vcr2"/>
-        <command id="recordsrc_dvd"/>
-        <command id="recordsrc_sat"/>
-        <command id="recordsrc_dvb_t"/>
-        <command id="recordsrc_tv_cbl"/>
-        <command id="recordsrc_aux"/>
-        <command id="recordsrc_hdp"/>
-        <command id="recordsrc_tape"/>
-        <command id="recordsrc_tape1"/>
-        <command id="recordsrc_tape2"/>
-        <command id="recordsrc_cd"/>
-        <command id="recordsrc_cd_r"/>
-        <command id="recordsrc_video1"/>
-        <command id="recordsrc_video2"/>
-        <command id="recordsrc_video3"/>
-        <command id="recordsrc_video_aux"/>
-        <command id="recordsrc_phono"/>
-        <command id="recordsrc_xm"/><!-- North America -->
-        <command id="recordsrc_tuner">
-            <synonym name="recordsrc_radio"/>
-        </command>
-        <command id="recordsrc_cable"/>
-        <command id="recordsrc_dvr"/>
-        <command id="recordsrc_ipod"/>
-        <command id="recordsrc_usb"/>
-        <command id="recordsrc_net_usb"/>
-        <command id="recordsrc_game"/>
-        <command id="recordsrc_sat_cbl"/>
-        <command id="recordsrc_bluray"/>
-        <command id="recordsrc_source"/>
+    <command id="videoinput_tv"/>
+    <command id="videoinput_dtv"/>
+    <command id="videoinput_vcr"/>
+    <command id="videoinput_vcr1"/>
+    <command id="videoinput_vcr2"/>
+    <command id="videoinput_dvd"/>
+    <command id="videoinput_sat"/>
+    <command id="videoinput_dvb_t"/>
+    <command id="videoinput_tv_cbl"/>
+    <command id="videoinput_aux"/>
+    <command id="videoinput_hdp"/>
+    <command id="videoinput_tape"/>
+    <command id="videoinput_tape1"/>
+    <command id="videoinput_tape2"/>
+    <command id="videoinput_cd"/>
+    <command id="videoinput_cd_r"/>
+    <command id="videoinput_video1"/>
+    <command id="videoinput_video2"/>
+    <command id="videoinput_video3"/>
+    <command id="videoinput_video_aux"/>
+    <command id="videoinput_phono"/>
+    <command id="videoinput_xm"/><!-- North America -->
+    <command id="videoinput_tuner"/>
+    <command id="videoinput_cable"/>
+    <command id="videoinput_dvr"/>
+    <command id="videoinput_ipod"/>
+    <command id="videoinput_usb"/>
+    <command id="videoinput_net_usb"/>
+    <command id="videoinput_source"/>
+    <command id="get_videoinput"/>
 
-        <command id="videoinput_tv"/>
-        <command id="videoinput_dtv"/>
-        <command id="videoinput_vcr"/>
-        <command id="videoinput_vcr1"/>
-        <command id="videoinput_vcr2"/>
-        <command id="videoinput_dvd"/>
-        <command id="videoinput_sat"/>
-        <command id="videoinput_dvb_t"/>
-        <command id="videoinput_tv_cbl"/>
-        <command id="videoinput_aux"/>
-        <command id="videoinput_hdp"/>
-        <command id="videoinput_tape"/>
-        <command id="videoinput_tape1"/>
-        <command id="videoinput_tape2"/>
-        <command id="videoinput_cd"/>
-        <command id="videoinput_cd_r"/>
-        <command id="videoinput_video1"/>
-        <command id="videoinput_video2"/>
-        <command id="videoinput_video3"/>
-        <command id="videoinput_video_aux"/>
-        <command id="videoinput_phono"/>
-        <command id="videoinput_xm"/><!-- North America -->
-        <command id="videoinput_tuner"/>
-        <command id="videoinput_cable"/>
-        <command id="videoinput_dvr"/>
-        <command id="videoinput_ipod"/>
-        <command id="videoinput_usb"/>
-        <command id="videoinput_net_usb"/>
-        <command id="videoinput_bluray"/>
-        <command id="videoinput_sat_cbl"/>
-        <command id="videoinput_game"/>
-        <command id="videoinput_source"/>
-        <command id="get_videoinput"/>
+    <command id="zone2_source" zone="2"/>
+    <command id="zone2_phono" zone="2"/>
+    <command id="zone2_cd" zone="2"/>
+    <command id="zone2_tuner" zone="2"/>
+    <command id="zone2_cd_r" zone="2"/>
+    <command id="zone2_dvd" zone="2"/>
+    <command id="zone2_hdp" zone="2"/>
+    <command id="zone2_d_tv" zone="2"/>
+    <command id="zone2_cbl_sat" zone="2"/>
+    <command id="zone2_tv_cbl" zone="2"/>
+    <command id="zone2_sat" zone="2"/>
+    <command id="zone2_md_tape" zone="2"/>
+    <command id="zone2_dvr" zone="2"/>
+    <command id="zone2_vcr" zone="2"/>
+    <command id="zone2_vcr1" zone="2"/>
+    <command id="zone2_vcr2" zone="2"/>
+    <command id="zone2_video_aux" zone="2"/>
+    <command id="zone2_net_usb" zone="2"/>
+    <command id="zone2_usb" zone="2"/>
+    <command id="zone2_net" zone="2"/>
+    <command id="zone2_xm" zone="2"/>
+    <command id="zone2_ipod" zone="2"/>
+    <command id="zone2_dvd_hdp" zone="2"/>
+    <command id="zone2_vcr_dvr" zone="2"/>
+    <command id="get_zone2_input" zone="2"/>
 
-        <command id="zone2_source" zone="2"/>
-        <command id="zone2_phono" zone="2"/>
-        <command id="zone2_cd" zone="2"/>
-        <command id="zone2_tuner" zone="2"/>
-        <command id="zone2_cd_r" zone="2"/>
-        <command id="zone2_dvd" zone="2"/>
-        <command id="zone2_hdp" zone="2"/>
-        <command id="zone2_bluray" zone="2"/>
-        <command id="zone2_d_tv" zone="2"/>
-        <command id="zone2_sat_cbl" zone="2"/>
-        <command id="zone2_tv_cbl" zone="2"/>
-        <command id="zone2_sat" zone="2"/>
-        <command id="zone2_md_tape" zone="2"/>
-        <command id="zone2_dvr" zone="2"/>
-        <command id="zone2_vcr" zone="2"/>
-        <command id="zone2_vcr1" zone="2"/>
-        <command id="zone2_vcr2" zone="2"/>
-        <command id="zone2_video_aux" zone="2"/>
-        <command id="zone2_net_usb" zone="2"/>
-        <command id="zone2_usb" zone="2"/>
-        <command id="zone2_net" zone="2"/>
-        <command id="zone2_xm" zone="2"/>
-        <command id="zone2_ipod" zone="2"/>
-        <command id="zone2_dvd_hdp" zone="2"/>
-        <command id="zone2_vcr_dvr" zone="2"/>
-        <command id="zone2_game" zone="2"/>
-        <command id="zone2_tv" zone="2"/>
-        <command id="get_zone2_input" zone="2"/>
-
-        <command id="zone3_source" zone="3"/>
-        <command id="zone3_phono" zone="3"/>
-        <command id="zone3_cd" zone="3"/>
-        <command id="zone3_tuner" zone="3"/>
-        <command id="zone3_cd_r" zone="3"/>
-        <command id="zone3_dvd" zone="3"/>
-        <command id="zone3_hdp" zone="3"/>
-        <command id="zone3_bluray" zone="3"/>
-        <command id="zone3_tv_cbl" zone="3"/>
-        <command id="zone3_d_tv" zone="3"/>
-        <command id="zone3_sat_cbl" zone="3"/>
-        <command id="zone3_sat" zone="3"/>
-        <command id="zone3_md_tape" zone="3"/>
-        <command id="zone3_dvr" zone="3"/>
-        <command id="zone3_vcr" zone="3"/>
-        <command id="zone3_vcr1" zone="3"/>
-        <command id="zone3_vcr2" zone="3"/>
-        <command id="zone3_video_aux" zone="3"/>
-        <command id="zone3_xm" zone="3"/>
-        <command id="zone3_net_usb" zone="3"/>
-        <command id="zone3_net" zone="3"/>
-        <command id="zone3_usb" zone="3"/>
-        <command id="zone3_ipod" zone="3"/>
-        <command id="zone3_dvd_hdp" zone="3"/>
-        <command id="zone3_vcr_dvr" zone="3"/>
-        <command id="zone3_game" zone="3"/>
-        <command id="zone3_tv" zone="3"/>
-        <command id="get_zone3_input" zone="3"/>
-    </group>
-    <group id="input_flavor">
+    <command id="zone3_source" zone="3"/>
+    <command id="zone3_phono" zone="3"/>
+    <command id="zone3_cd" zone="3"/>
+    <command id="zone3_tuner" zone="3"/>
+    <command id="zone3_cd_r" zone="3"/>
+    <command id="zone3_dvd" zone="3"/>
+    <command id="zone3_hdp" zone="3"/>
+    <command id="zone3_tv_cbl" zone="3"/>
+    <command id="zone3_d_tv" zone="3"/>
+    <command id="zone3_cbl_sat" zone="3"/>
+    <command id="zone3_sat" zone="3"/>
+    <command id="zone3_md_tape" zone="3"/>
+    <command id="zone3_dvr" zone="3"/>
+    <command id="zone3_vcr" zone="3"/>
+    <command id="zone3_vcr1" zone="3"/>
+    <command id="zone3_vcr2" zone="3"/>
+    <command id="zone3_video_aux" zone="3"/>
+    <command id="zone3_xm" zone="3"/>
+    <command id="zone3_net_usb" zone="3"/>
+    <command id="zone3_net" zone="3"/>
+    <command id="zone3_usb" zone="3"/>
+    <command id="zone3_ipod" zone="3"/>
+    <command id="zone3_dvd_hdp" zone="3"/>
+    <command id="zone3_vcr_dvr" zone="3"/>
+    <command id="get_zone3_input" zone="3"/>
+  </group>
+  <group id="input_flavor">
     <!-- these are for receivers that treat ext in as a switch -->
-        <command id="ext_input_toggle"/>
-        <command id="ext_input_on"/>
-        <command id="ext_input_off"/>
+    <command id="ext_input_toggle"/>
+    <command id="ext_input_on"/>
+    <command id="ext_input_off"/>
 
-        <command id="input_mode" type="cyclic"/>
-        <command id="decode_mode"/>
-        <command id="input_mode_auto"/>
-        <command id="input_mode_ext_in"/>
-        <command id="input_mode_d_d_rf"/>
-        <command id="input_mode_digital"/>
-        <command id="input_mode_analog"/>
-        <command id="input_mode_hdmi"/>
-        <command id="get_input_mode"/>
-        <command id="decode_mode_auto"/>
-        <command id="decode_mode_pcm"/>
-        <command id="decode_mode_dts"/>
-        <command id="input_mode_dts"/>
-        <command id="get_decode_mode"/>
+    <command id="input_mode" type="cyclic"/>
+    <command id="decode_mode"/>
+    <command id="input_mode_auto"/>
+    <command id="input_mode_ext_in"/>
+    <command id="input_mode_d_d_rf"/>
+    <command id="input_mode_digital"/>
+    <command id="input_mode_analog"/>
+    <command id="input_mode_hdmi"/>
+    <command id="get_input_mode"/>
+    <command id="decode_mode_auto"/>
+    <command id="decode_mode_pcm"/>
+    <command id="decode_mode_dts"/>
+    <command id="input_mode_dts"/>
+    <command id="get_decode_mode"/>
+  </group>
+
+  <group id="osd_commands">
+    <command id="osd" type="toggle">
+      <synonym name="display"/>
+    </command>
+    <command id="osd_on"/>
+    <command id="osd_off">
+      <synonym name="display_clear"/>
+    </command>
+    <command id="osd_short"/>
+    <command id="osd_full"/>
+    <command id="get_osd"/>
+  </group>
+
+  <group id="display_commands">
+    <command id="display"/><!-- generic -->
+    <command id="frame_time" type="toggle"/>
+    <command id="chapter_time" type="toggle"/>
+    <command id="tape_remaining"/>
+    <command id="clock_counter"/>
+    <command id="clock_toggle"/>
+    <command id="av_time"/>
+    <command id="time"/>
+    <command id="firmware_version"/>
+  </group>
+
+  <group id="timer_commands">
+    <command id="timer"/>
+    <command id="turbo_timer"/>
+  </group>
+
+  <group id="speaker_control">
+    <command id="spk_a_on"/>
+    <command id="spk_a_off"/>
+    <command id="spk_b_on"/>
+    <command id="spk_b_off"/>
+    <command id="main_spk_toggle" 	zone="1"/>
+    <command id="zone2_spk_toggle"	zone="2"/>
+    <command id="zone2_spk_on" 	zone="2"/>
+    <command id="zone2_spk_off" 	zone="2"/>
+    <command id="zone3_spk_on"	zone="3"/>
+    <command id="zone3_spk_off"	zone="3"/>
+  </group>
+
+  <group id="volume">
+    <command id="volume_up" name="volume+"/>
+    <command id="volume_down" name="volume-"/>
+    <command id="rear_up" name="rear+"/>
+    <command id="rear_down" name="rear-"/>
+    <command id="center_up" name="center+"/>
+    <command id="center_down" name="center-"/>
+
+    <command id="mute_on"/>
+    <command id="mute_off"/>
+    <command id="mute_toggle"/>
+
+    <command id="bass_up"/><!-- also all bass up -->
+    <command id="bass_down"/><!-- also all bass down -->
+    <command id="set_bass"/>
+    <command id="get_bass"/>
+    <command id="treble_up"/><!-- also all treble up -->
+    <command id="treble_down"/><!-- also all treble down -->
+    <command id="set_treble"/>
+    <command id="get_treble"/>
+
+    <command id="zone2_volume_up" name="zone2_volume+" zone="2"/>
+    <command id="zone2_volume_down" name="zone2_volume-" zone="2"/>
+    <command id="zone3_volume_up" name="zone3_volume+" zone="3"/>
+    <command id="zone3_volume_down" name="zone3_volume-" zone="3"/>
+
+    <command id="zone2_fl_level_up" zone="2"/>
+    <command id="zone2_fl_level_down" zone="2"/>
+    <command id="set_zone2_fl_level" zone="2"/>
+    <command id="zone2_fr_level_up" zone="2"/>
+    <command id="zone2_fr_level_down" zone="2"/>
+    <command id="set_zone2_fr_level" zone="2"/>
+
+    <command id="zone3_fl_level_up" zone="3"/>
+    <command id="zone3_fl_level_down" zone="3"/>
+    <command id="set_zone3_fl_level" zone="3"/>
+    <command id="zone3_fr_level_up" zone="3"/>
+    <command id="zone3_fr_level_down" zone="3"/>
+    <command id="set_zone3_fr_level" zone="3"/>
+
+    <command id="zone2_mute_toggle" zone="2"/>
+    <command id="zone2_mute_on" zone="2"/>
+    <command id="zone2_mute_off" zone="2"/>
+    <command id="get_zone2_mute" zone="2"/>
+    <command id="zone3_mute_toggle" zone="2"/>
+    <command id="zone3_mute_on" zone="3"/>
+    <command id="zone3_mute_off" zone="3"/>
+    <command id="get_zone3_mute" zone="3"/>
+
+    <command id="master_vol_preset1"/>
+    <command id="master_vol_preset2"/>
+    <command id="master_vol_preset3"/>
+    <command id="zone2_vol_preset1" zone="2"/>
+    <command id="zone2_vol_preset2" zone="2"/>
+    <command id="zone2_vol_preset3" zone="2"/>
+    <command id="zone3_vol_preset1" zone="3"/>
+    <command id="zone3_vol_preset2" zone="3"/>
+    <command id="zone3_vol_preset3" zone="3"/>
+    <command id="zone2_preset_vol_memory_a" zone="2"/>
+    <command id="zone2_preset_vol_memory_b" zone="2"/>
+    <command id="zone2_preset_vol_memory_c" zone="2"/>
+    <command id="zone2_preset_vol_memory_d" zone="2"/>
+    <command id="zone2_preset_vol_memory_e" zone="2"/>
+    <command id="zone2_preset_vol_memory_f" zone="2"/>
+    <command id="zone2_preset_vol_recall_a" zone="2"/>
+    <command id="zone2_preset_vol_recall_b" zone="2"/>
+    <command id="zone2_preset_vol_recall_c" zone="2"/>
+    <command id="zone2_preset_vol_recall_d" zone="2"/>
+    <command id="zone2_preset_vol_recall_e" zone="2"/>
+    <command id="zone2_preset_vol_recall_f" zone="2"/>
+    <command id="zone3_preset_vol_memory_a" zone="3"/>
+    <command id="zone3_preset_vol_memory_b" zone="3"/>
+    <command id="zone3_preset_vol_memory_c" zone="3"/>
+    <command id="zone3_preset_vol_memory_d" zone="3"/>
+    <command id="zone3_preset_vol_memory_e" zone="3"/>
+    <command id="zone3_preset_vol_memory_f" zone="3"/>
+    <command id="zone3_preset_vol_recall_a" zone="3"/>
+    <command id="zone3_preset_vol_recall_b" zone="3"/>
+    <command id="zone3_preset_vol_recall_c" zone="3"/>
+    <command id="zone3_preset_vol_recall_d" zone="3"/>
+    <command id="zone3_preset_vol_recall_e" zone="3"/>
+    <command id="zone3_preset_vol_recall_f" zone="3"/>
+
+    <command id="zone2_stereo" zone="2"/>
+    <command id="zone2_mono" zone="2"/>
+    <command id="get_zone2_channel_setting" zone="2"/>
+    <command id="zone3_stereo" zone="3"/>
+    <command id="zone3_mono" zone="3"/>
+    <command id="get_zone3_channel_setting" zone="3"/>
+
+    <command id="zone2_bass_up" zone="2"/>
+    <command id="zone2_bass_down" zone="2"/>
+    <command id="set_zone2_bass" zone="2"/>
+    <command id="get_zone2_bass" zone="2"/>
+    <command id="zone2_treble_up" zone="2"/>
+    <command id="zone2_treble_down" zone="2"/>
+    <command id="set_zone2_treble" zone="2"/>
+    <command id="get_zone2_treble" zone="2"/>
+
+    <command id="zone3_bass_up" zone="3"/>
+    <command id="zone3_bass_down" zone="3"/>
+    <command id="set_zone3_bass" zone="3"/>
+    <command id="get_zone3_bass" zone="3"/>
+    <command id="zone3_treble_up" zone="3"/>
+    <command id="zone3_treble_down" zone="3"/>
+    <command id="set_zone3_treble" zone="3"/>
+    <command id="get_zone3_treble" zone="3"/>
+
+    <group id="store_recall">
+      <command id="preset_vol_memory_a"/>
+      <command id="preset_vol_memory_b"/>
+      <command id="preset_vol_memory_c"/>
+      <command id="preset_vol_memory_d"/>
+      <command id="preset_vol_memory_e"/>
+      <command id="preset_vol_memory_f"/>
+      <command id="preset_vol_recall_a"/>
+      <command id="preset_vol_recall_b"/>
+      <command id="preset_vol_recall_c"/>
+      <command id="preset_vol_recall_d"/>
+      <command id="preset_vol_recall_e"/>
+      <command id="preset_vol_recall_f"/>
     </group>
+  </group>
 
-    <group id="osd_commands">
-        <command id="osd" type="toggle">
-            <synonym name="display"/>
-        </command>
-        <command id="osd_on"/>
-        <command id="osd_off">
-            <synonym name="display_clear"/>
-        </command>
-        <command id="osd_short"/>
-        <command id="osd_full"/>
-        <command id="get_osd"/>
-        <command id="get_osd_position"/>
-    </group>
+  <group id="quick_selects">
+      <command id="quick1"/>
+      <command id="quick2"/>
+      <command id="quick3"/>
+      <command id="quick1_store"/>
+      <command id="quick2_store"/>
+      <command id="quick3_store"/>
+      <command id="get_quick_status"/>
+  </group>
 
-    <group id="display_commands">
-        <command id="display"/><!-- generic -->
-        <command id="frame_time" type="toggle"/>
-        <command id="chapter_time" type="toggle"/>
-        <command id="tape_remaining"/>
-        <command id="clock_counter"/>
-        <command id="clock_toggle"/>
-        <command id="av_time"/>
-        <command id="time"/>
-        <command id="firmware_version"/>
-    </group>
+  <group id="triggers">
+    <command id="dc1_trg_control_zone1"/>
+    <command id="dc1_trg_control_zone2" zone="2"/>
+    <command id="dc1_trg_control_zone3" zone="3"/>
+    <command id="dc1_trg_control_all_or"/>
+    <command id="dc2_trg_control_zone1"	zone="2"/>
+    <command id="dc2_trg_control_zone2" zone="2"/>
+    <command id="dc2_trg_control_zone3" zone="3"/>
+    <command id="dc2_trg_control_all_or"/>
+    <command id="dc1_trigger_zone1_on"/>
+    <command id="dc1_trigger_zone1_off"/>
+    <command id="dc1_trigger_zone2_on"	zone="2"/>
+    <command id="dc1_trigger_zone2_off"	zone="2"/>
+    <command id="dc1_trigger_zone3_on"	zone="3"/>
+    <command id="dc1_trigger_zone3_off"	zone="3"/>
+    <command id="dc2_trigger_zone1_on"/>
+    <command id="dc2_trigger_zone1_off"/>
+    <command id="dc2_trigger_zone2_on"	zone="2"/>
+    <command id="dc2_trigger_zone2_off"	zone="2"/>
+    <command id="dc2_trigger_zone3_on"	zone="3"/>
+    <command id="dc2_trigger_zone3_off"	zone="3"/>
+  </group>
 
-    <group id="timer_commands">
-        <command id="timer"/>
-        <command id="turbo_timer"/>
-    </group>
+  <group id="sleep_commands">
+    <command id="sleep" type="cyclic"/>
+    <command id="sleep_off"/>
+    <command id="sleep_120"/>
+    <command id="sleep_90"/>
+    <command id="sleep_60"/>
+    <command id="sleep_30"/>
+  </group>
 
-    <group id="speaker_control">
-        <command id="spk_a_on"/>
-        <command id="spk_a_off"/>
-        <command id="spk_a_toggle"/>
-        <command id="spk_b_on"/>
-        <command id="spk_b_off"/>
-        <command id="spk_b_toggle"/>
-        <command id="main_spk_toggle" 	zone="1"/>
-        <command id="zone2_spk_toggle"	zone="2"/>
-        <command id="zone2_spk_on" 	zone="2"/>
-        <command id="zone2_spk_off" 	zone="2"/>
-        <command id="zone3_spk_on"	zone="3"/>
-        <command id="zone3_spk_off"	zone="3"/>
-    </group>
+  <group id="lightning">
+    <command id="light_on"/>
+    <command id="light_off"/>
 
-    <group id="volume">
-        <command id="volume_up" name="volume+"/>
-        <command id="volume_down" name="volume-"/>
-        <command id="rear_up" name="rear+"/>
-        <command id="rear_down" name="rear-"/>
-        <command id="center_up" name="center+"/>
-        <command id="center_down" name="center-"/>
+    <command id="ambilight_on"/>
+    <command id="ambilight_off"/>
+    <command id="ambilight_toggle"/>
+    <command id="ambilight_mode"/>
+  </group>
 
-        <command id="mute_on"/>
-        <command id="mute_off"/>
-        <command id="mute_toggle"/>
+  <group id="dsp_commands">
+    <command id="surround_back"/><!-- ??? -->
+    <command id="surround_parameters"/>
+    <command id="multi_preset_up"/>
+    <command id="multi_preset_down"/>
 
-        <command id="bass_up"/><!-- also all bass up -->
-        <command id="bass_down"/><!-- also all bass down -->
-        <command id="set_bass"/>
-        <command id="get_bass"/>
-        <command id="treble_up"/><!-- also all treble up -->
-        <command id="treble_down"/><!-- also all treble down -->
-        <command id="set_treble"/>
-        <command id="get_treble"/>
+    <command id="pure_direct"/>
+    <command id="direct"/>
+    <command id="tone_defeat_on"/>
+    <command id="tone_defeat_off"/>
+    <command id="get_tone_defeat"/>
+    <command id="soundfield" type="cyclic"/>
+    <command id="equalizing" type="cyclic"/>
+    <command id="surr_mode" type="cyclic"/>
+    <command id="dsp_simulation"/>
+    <command id="standard_dolby_dts_surr"/>
+    <command id="stereo"/>
+    <command id="matrix"/>
+    <command id="virtual"/>
+    <command id="hall"/>
+    <command id="jazz_club"/>
+    <command id="rock_concert"/>
+    <command id="entertainment"/>
+    <command id="music_video"/>
+    <command id="tv_theatre"/>
+    <command id="movie_theatre"/>
+    <command id="dolby_dts"/>
+    <command id="dolby_digital"/>
+    <command id="dts"/>
+    <command id="standard"/>
+    <command id="thx"/>
+    <command id="ex_es"/>
+    <command id="neural"/>
+    <command id="mpeg2_aac"/>
+    <command id="effect_toggle"/>
+    <command id="effect_off"/>
+    <command id="effect_on"/>
+    <command id="set_effect"/>
+    <command id="get_effect"/>
+    <command id="effect_level_select"/>
 
-        <command id="zone2_volume_up" name="zone2_volume+" zone="2"/>
-        <command id="zone2_volume_down" name="zone2_volume-" zone="2"/>
-        <command id="zone3_volume_up" name="zone3_volume+" zone="3"/>
-        <command id="zone3_volume_down" name="zone3_volume-" zone="3"/>
+    <command id="ex_es_auto"/>
+    <command id="ex_es_on"/>
+    <command id="ex_es_off"/>
+    <command id="dts_neo_6_cinema"/>
+    <command id="dts_neo_6_music"/>
+    <command id="dolby_pl_ii_cinema"/>
+    <command id="dolby_pl_ii_music"/>
+    <command id="dolby_pl"/>
+    <command id="pro_logic"/>
+    <command id="cinema_mode"/>
+    <command id="music_mode"/>
+    <command id="game_mode"/>
+    <command id="room_eq"/>
+    <command id="room_eq_audyssey"/>
+    <command id="room_eq_byp_lr"/>
+    <command id="room_eq_flat"/>
+    <command id="room_eq_manual"/>
+    <command id="room_eq_off"/>
+    <command id="cinema_eq_on"/>
+    <command id="cinema_eq_off"/>
+    <command id="get_cinema_eq"/>
+    <command id="get_room_eq"/>
+    <command id="get_dsp_program"/>
 
-        <command id="zone2_fl_level_up" zone="2"/>
-        <command id="zone2_fl_level_down" zone="2"/>
-        <command id="set_zone2_fl_level" zone="2"/>
-        <command id="zone2_fr_level_up" zone="2"/>
-        <command id="zone2_fr_level_down" zone="2"/>
-        <command id="set_zone2_fr_level" zone="2"/>
+    <command id="sb_mtrx_on"/>
+    <command id="sb_non_mtrx"/>
+    <command id="sb_pl2xcinema"/>
+    <command id="sb_pl2xmusic"/>
+    <command id="sb_on"/>
+    <command id="sb_off"/>
+    <command id="get_sb"/>
 
-        <command id="zone3_fl_level_up" zone="3"/>
-        <command id="zone3_fl_level_down" zone="3"/>
-        <command id="set_zone3_fl_level" zone="3"/>
-        <command id="zone3_fr_level_up" zone="3"/>
-        <command id="zone3_fr_level_down" zone="3"/>
-        <command id="set_zone3_fr_level" zone="3"/>
+    <command id="test_tone"/>
+    <command id="test_mode"/>
+    <command id="level_setmenu_parameter_up"/>
+    <command id="delay_time"/>
+    <command id="delay_time_up"/>
+    <command id="delay_time_down"/>
+    <command id="surround_mode"/>
 
-        <command id="zone2_mute_toggle" zone="2"/>
-        <command id="zone2_mute_on" zone="2"/>
-        <command id="zone2_mute_off" zone="2"/>
-        <command id="get_zone2_mute" zone="2"/>
-        <command id="zone3_mute_toggle" zone="2"/>
-        <command id="zone3_mute_on" zone="3"/>
-        <command id="zone3_mute_off" zone="3"/>
-        <command id="get_zone3_mute" zone="3"/>
+    <command id="night_toggle"/>
+    <command id="night_on"/>
+    <command id="night_low"/>
+    <command id="night_mid"/>
+    <command id="night_hi"/>
+    <command id="night_off"/>
+    <command id="get_night"/>
 
-        <command id="master_vol_preset1"/>
-        <command id="master_vol_preset2"/>
-        <command id="master_vol_preset3"/>
-        <command id="zone2_vol_preset1" zone="2"/>
-        <command id="zone2_vol_preset2" zone="2"/>
-        <command id="zone2_vol_preset3" zone="2"/>
-        <command id="zone3_vol_preset1" zone="3"/>
-        <command id="zone3_vol_preset2" zone="3"/>
-        <command id="zone3_vol_preset3" zone="3"/>
-        <command id="zone2_preset_vol_memory_a" zone="2"/>
-        <command id="zone2_preset_vol_memory_b" zone="2"/>
-        <command id="zone2_preset_vol_memory_c" zone="2"/>
-        <command id="zone2_preset_vol_memory_d" zone="2"/>
-        <command id="zone2_preset_vol_memory_e" zone="2"/>
-        <command id="zone2_preset_vol_memory_f" zone="2"/>
-        <command id="zone2_preset_vol_recall_a" zone="2"/>
-        <command id="zone2_preset_vol_recall_b" zone="2"/>
-        <command id="zone2_preset_vol_recall_c" zone="2"/>
-        <command id="zone2_preset_vol_recall_d" zone="2"/>
-        <command id="zone2_preset_vol_recall_e" zone="2"/>
-        <command id="zone2_preset_vol_recall_f" zone="2"/>
-        <command id="zone3_preset_vol_memory_a" zone="3"/>
-        <command id="zone3_preset_vol_memory_b" zone="3"/>
-        <command id="zone3_preset_vol_memory_c" zone="3"/>
-        <command id="zone3_preset_vol_memory_d" zone="3"/>
-        <command id="zone3_preset_vol_memory_e" zone="3"/>
-        <command id="zone3_preset_vol_memory_f" zone="3"/>
-        <command id="zone3_preset_vol_recall_a" zone="3"/>
-        <command id="zone3_preset_vol_recall_b" zone="3"/>
-        <command id="zone3_preset_vol_recall_c" zone="3"/>
-        <command id="zone3_preset_vol_recall_d" zone="3"/>
-        <command id="zone3_preset_vol_recall_e" zone="3"/>
-        <command id="zone3_preset_vol_recall_f" zone="3"/>
+    <command id="restorer" type="cyclic"/>
+    <command id="restorer_off"/>
+    <command id="restorer_1"/>
+    <command id="restorer_2"/>
+    <command id="restorer_3"/>
+    <command id="get_restorer"/>
 
-        <command id="zone2_stereo" zone="2"/>
-        <command id="zone2_mono" zone="2"/>
-        <command id="get_zone2_channel_setting" zone="2"/>
-        <command id="zone3_stereo" zone="3"/>
-        <command id="zone3_mono" zone="3"/>
-        <command id="get_zone3_channel_setting" zone="3"/>
+    <command id="super_stadium"/>
+    <command id="hall_a"/>
+    <command id="hall_b"/>
+    <command id="hall_c"/>
+    <command id="hall_d"/>
+    <command id="hall_e"/>
+    <command id="live_concert"/>
+    <command id="tokyo"/>
+    <command id="freiburg"/>
+    <command id="royaumont"/>
+    <command id="village_gate"/>
+    <command id="village_vanguard"/>
+    <command id="the_bottom_line"/>
+    <command id="the_roxy_theatre"/>
+    <command id="loft"/>
+    <command id="arena"/>
+    <command id="disco"/>
+    <command id="party"/>
+    <command id="game"/>
+    <command id="cmd_7ch_stereo" name="7 ch stereo"/>
+    <command id="pop_rock"/>
+    <command id="dj"/>
+    <command id="classical_opera"/>
+    <command id="pavilion"/>
+    <command id="mono_movie"/>
+    <command id="variety_sports"/>
+    <command id="spectacle"/>
+    <command id="sci_fi"/>
+    <command id="adventure"/>
+    <command id="general"/>
+    <command id="normal"/>
+    <command id="enhanced"/>
+    <command id="plii_movie"/>
+    <command id="plii_music"/>
+    <command id="neo_6_movie"/>
+    <command id="neo_6_music"/>
+    <command id="thx_cinema_sur_ex"/>
+    <command id="cmd_2ch_stereo" name="2 ch stereo"/>
+    <command id="direct_stereo"/>
+    <command id="stereo_direct" type="toggle"/>
+  </group>
 
-        <command id="zone2_bass_up" zone="2"/>
-        <command id="zone2_bass_down" zone="2"/>
-        <command id="set_zone2_bass" zone="2"/>
-        <command id="get_zone2_bass" zone="2"/>
-        <command id="zone2_treble_up" zone="2"/>
-        <command id="zone2_treble_down" zone="2"/>
-        <command id="set_zone2_treble" zone="2"/>
-        <command id="get_zone2_treble" zone="2"/>
-
-        <command id="zone3_bass_up" zone="3"/>
-        <command id="zone3_bass_down" zone="3"/>
-        <command id="set_zone3_bass" zone="3"/>
-        <command id="get_zone3_bass" zone="3"/>
-        <command id="zone3_treble_up" zone="3"/>
-        <command id="zone3_treble_down" zone="3"/>
-        <command id="set_zone3_treble" zone="3"/>
-        <command id="get_zone3_treble" zone="3"/>
-
-        <group id="store_recall">
-            <command id="preset_vol_memory_a"/>
-            <command id="preset_vol_memory_b"/>
-            <command id="preset_vol_memory_c"/>
-            <command id="preset_vol_memory_d"/>
-            <command id="preset_vol_memory_e"/>
-            <command id="preset_vol_memory_f"/>
-            <command id="preset_vol_recall_a"/>
-            <command id="preset_vol_recall_b"/>
-            <command id="preset_vol_recall_c"/>
-            <command id="preset_vol_recall_d"/>
-            <command id="preset_vol_recall_e"/>
-            <command id="preset_vol_recall_f"/>
-        </group>
-    </group>
-
-    <group id="quick_selects">
-        <command id="quick1"/>
-        <command id="quick2"/>
-        <command id="quick3"/>
-        <command id="quick1_store"/>
-        <command id="quick2_store"/>
-        <command id="quick3_store"/>
-        <command id="get_quick_status"/>
-    </group>
-
-    <group id="triggers">
-        <command id="dc1_trg_control_zone1"/>
-        <command id="dc1_trg_control_zone2" zone="2"/>
-        <command id="dc1_trg_control_zone3" zone="3"/>
-        <command id="dc1_trg_control_all_or"/>
-        <command id="dc2_trg_control_zone1"	zone="2"/>
-        <command id="dc2_trg_control_zone2" zone="2"/>
-        <command id="dc2_trg_control_zone3" zone="3"/>
-        <command id="dc2_trg_control_all_or"/>
-        <command id="dc1_trigger_zone1_on"/>
-        <command id="dc1_trigger_zone1_off"/>
-        <command id="dc1_trigger_zone2_on"	zone="2"/>
-        <command id="dc1_trigger_zone2_off"	zone="2"/>
-        <command id="dc1_trigger_zone3_on"	zone="3"/>
-        <command id="dc1_trigger_zone3_off"	zone="3"/>
-        <command id="dc2_trigger_zone1_on"/>
-        <command id="dc2_trigger_zone1_off"/>
-        <command id="dc2_trigger_zone2_on"	zone="2"/>
-        <command id="dc2_trigger_zone2_off"	zone="2"/>
-        <command id="dc2_trigger_zone3_on"	zone="3"/>
-        <command id="dc2_trigger_zone3_off"	zone="3"/>
-    </group>
-
-    <group id="sleep_commands">
-        <command id="sleep" type="cyclic"/>
-        <command id="sleep_off"/>
-        <command id="sleep_120"/>
-        <command id="sleep_90"/>
-        <command id="sleep_60"/>
-        <command id="sleep_30"/>
-    </group>
-
-    <group id="lightning">
-        <command id="light_on"/>
-        <command id="light_off"/>
-
-        <command id="ambilight_on"/>
-        <command id="ambilight_off"/>
-        <command id="ambilight_toggle"/>
-        <command id="ambilight_mode"/>
-    </group>
-
-    <group id="dsp_commands">
-        <command id="surround_back"/><!-- ??? -->
-        <command id="surround_parameters"/>
-        <command id="multi_preset_up"/>
-        <command id="multi_preset_down"/>
-
-        <command id="pure_direct"/>
-        <command id="direct"/>
-        <command id="tone_defeat_on"/>
-        <command id="tone_defeat_off"/>
-        <command id="get_tone_defeat"/>
-        <command id="soundfield" type="cyclic"/>
-        <command id="equalizing" type="cyclic"/>
-        <command id="surr_mode" type="cyclic"/>
-        <command id="dsp_simulation"/>
-        <command id="standard_dolby_dts_surr"/>
-        <command id="stereo"/>
-        <command id="matrix"/>
-        <command id="virtual"/>
-        <command id="hall"/>
-        <command id="jazz_club"/>
-        <command id="rock_concert"/>
-        <command id="entertainment"/>
-        <command id="music_video"/>
-        <command id="tv_theatre"/>
-        <command id="movie_theatre"/>
-        <command id="dolby_dts"/>
-        <command id="dolby_digital"/>
-        <command id="dts"/>
-        <command id="standard"/>
-        <command id="thx"/>
-        <command id="ex_es"/>
-        <command id="neural"/>
-        <command id="mpeg2_aac"/>
-        <command id="effect_toggle"/>
-        <command id="effect_off"/>
-        <command id="effect_on"/>
-        <command id="set_effect"/>
-        <command id="get_effect"/>
-        <command id="effect_level_select"/>
-
-        <command id="ex_es_auto"/>
-        <command id="ex_es_on"/>
-        <command id="ex_es_off"/>
-        <command id="dts_neo_6_cinema"/>
-        <command id="dts_neo_6_music"/>
-        <command id="dolby_pl_ii_cinema"/>
-        <command id="dolby_pl_ii_music"/>
-        <command id="dolby_pl"/>
-        <command id="pro_logic"/>
-        <command id="cinema_mode"/>
-        <command id="music_mode"/>
-        <command id="game_mode"/>
-        <command id="room_eq"/>
-        <command id="room_eq_audyssey"/>
-        <command id="room_eq_byp_lr"/>
-        <command id="room_eq_flat"/>
-        <command id="room_eq_manual"/>
-        <command id="room_eq_off"/>
-        <command id="cinema_eq_on"/>
-        <command id="cinema_eq_off"/>
-        <command id="get_cinema_eq"/>
-        <command id="get_room_eq"/>
-        <command id="get_dsp_program"/>
-
-        <command id="sb_mtrx_on"/>
-        <command id="sb_non_mtrx"/>
-        <command id="sb_pl2xcinema"/>
-        <command id="sb_pl2xmusic"/>
-        <command id="sb_on"/>
-        <command id="sb_off"/>
-        <command id="get_sb"/>
-
-        <command id="test_tone"/>
-        <command id="test_mode"/>
-        <command id="level_setmenu_parameter_up"/>
-        <command id="delay_time"/>
-        <command id="delay_time_up"/>
-        <command id="delay_time_down"/>
-        <command id="surround_mode"/>
-
-        <command id="night_toggle"/>
-        <command id="night_on"/>
-        <command id="night_low"/>
-        <command id="night_mid"/>
-        <command id="night_hi"/>
-        <command id="night_off"/>
-        <command id="get_night"/>
-
-        <command id="audyssey_dyn_vol_eq_on"/>
-        <command id="audyssey_dyn_eq_on"/>
-        <command id="audyssey_dyn_vol_eq_off"/>
-        <command id="audyssey_dyn_volume_evening"/>
-        <command id="audyssey_dyn_volume_day"/>
-        <command id="audyssey_dyn_volume_midnight"/>
-
-        <command id="restorer" type="cyclic"/>
-        <command id="restorer_off"/>
-        <command id="restorer_1"/>
-        <command id="restorer_2"/>
-        <command id="restorer_3"/>
-        <command id="get_restorer"/>
-
-        <command id="super_stadium"/>
-        <command id="hall_a"/>
-        <command id="hall_b"/>
-        <command id="hall_c"/>
-        <command id="hall_d"/>
-        <command id="hall_e"/>
-        <command id="live_concert"/>
-        <command id="tokyo"/>
-        <command id="freiburg"/>
-        <command id="royaumont"/>
-        <command id="village_gate"/>
-        <command id="village_vanguard"/>
-        <command id="the_bottom_line"/>
-        <command id="the_roxy_theatre"/>
-        <command id="loft"/>
-        <command id="arena"/>
-        <command id="disco"/>
-        <command id="party"/>
-        <command id="game"/>
-        <command id="cmd_7ch_stereo" name="7 ch stereo"/>
-        <command id="pop_rock"/>
-        <command id="dj"/>
-        <command id="classical_opera"/>
-        <command id="pavilion"/>
-        <command id="mono_movie"/>
-        <command id="variety_sports"/>
-        <command id="spectacle"/>
-        <command id="sci_fi"/>
-        <command id="adventure"/>
-        <command id="general"/>
-        <command id="normal"/>
-        <command id="enhanced"/>
-        <command id="plii_movie"/>
-        <command id="plii_music"/>
-        <command id="neo_6_movie"/>
-        <command id="neo_6_music"/>
-        <command id="thx_cinema_sur_ex"/>
-        <command id="cmd_2ch_stereo" name="2 ch stereo"/>
-        <command id="direct_stereo"/>
-        <command id="stereo_direct" type="toggle"/>
-    </group>
-
-    <group id="transport">
-        <command id="previous"/>
-        <command id="next"/>
-        <command id="still_advance">
-            <synonym name="pause_still_adv"/>
-        </command>
-        <command id="play" remark="do not use for play_pause toggle function"/>
-        <command id="play_pause" type="toggle"/>
-        <command id="rewind"/>
-        <command id="fast_forward"/>
-        <command id="stop"/>
-        <command id="record_toggle"/>
-        <command id="record_on"/>
-        <command id="record_off"/>
-        <command id="pause_toggle" type="toggle"/>
-        <command id="pause_on"/>
-        <command id="pause_off"/>
-        <command id="cmd_goto"/>
-        <command id="reverse"/>
-        <command id="slow"/>
-        <command id="slow_forward"/>
-        <command id="slow_reverse"/>
-        <command id="slow_up" name="slow+"/>
-        <command id="slow_down" name="slow-"/>
-        <command id="side_a"/>
-        <command id="side_b"/>
-        <command id="direct_play"/>
+  <group id="transport">
+    <command id="previous"/>
+    <command id="next"/>
+    <command id="still_advance">
+      <synonym name="pause_still_adv"/>
+    </command>
+    <command id="play" remark="do not use for play_pause toggle function"/>
+    <command id="play_pause" type="toggle"/>
+    <command id="rewind"/>
+    <command id="fast_forward"/>
+    <command id="stop"/>
+    <command id="record_toggle"/>
+    <command id="record_on"/>
+    <command id="record_off"/>
+    <command id="pause_toggle" type="toggle"/>
+    <command id="pause_on"/>
+    <command id="pause_off"/>
+    <command id="cmd_goto"/>
+    <command id="reverse"/>
+    <command id="slow"/>
+    <command id="slow_forward"/>
+    <command id="slow_reverse"/>
+    <command id="slow_up" name="slow+"/>
+    <command id="slow_down" name="slow-"/>
+    <command id="side_a"/>
+    <command id="side_b"/>
 
     <!--command id="back"/-->
-        <command id="speed_down"/>
-        <command id="speed_up"/>
-        <command id="auto_pause"/>
-        <command id="speed_set_down"/>
-        <command id="speed_set_up"/>
-        <command id="step_back"/>
-        <command id="step_forward"/>
-        <command id="forward"/>
-        <command id="fff"/>
-        <command id="rrr"/>
+    <command id="speed_down"/>
+    <command id="speed_up"/>
+    <command id="auto_pause"/>
+    <command id="speed_set_down"/>
+    <command id="speed_set_up"/>
+    <command id="step_back"/>
+    <command id="step_forward"/>
+    <command id="forward"/>
+    <command id="fff"/>
+    <command id="rrr"/>
 
-        <command id="open"/>
-        <command id="close"/>
-        <command id="open_close" type="toggle"/>
-        <command id="tray_lock_toggle" type="toggle"/>
+    <command id="open"/>
+    <command id="close"/>
+    <command id="open_close" type="toggle"/>
+    <command id="tray_lock_toggle" type="toggle"/>
 
-        <command id="lp_sp" type="toggle"/>
-        <command id="auto_rewind"/>
-        <command id="memory"/>
-        <command id="tracking_up" name="tracking+"/>
-        <command id="tracking_down" name="tracking-"/>
-        <command id="time_search"/>
-        <command id="title_search"/>
-        <command id="scene_search"/>
-        <command id="search_next"/>
-        <command id="search"/>
-        <command id="index"/>
+    <command id="lp_sp" type="toggle"/>
+    <command id="auto_rewind"/>
+    <command id="memory"/>
+    <command id="tracking_up" name="tracking+"/>
+    <command id="tracking_down" name="tracking-"/>
+    <command id="time_search"/>
+    <command id="title_search"/>
+    <command id="scene_search"/>
+    <command id="search_next"/>
+    <command id="search"/>
+    <command id="index"/>
 
-        <command id="skip_search"/>
-        <command id="rec_end_search"/>
-        <command id="ams"/>
-        <command id="monitor" remark="found on Panasonic VCR"/>
-        <command id="memo"/>
-        <command id="mode" remark="???"/>
-        <command id="shuffle" type="cyclic">
-            <synonym name="random"/>
-        </command>
-        <command id="shuffle_off"/>
-        <command id="shuffle_songs"/>
-        <command id="shuffle_albums"/>
-        <command id="get_shuffle"/>
-        <command id="intro"/>
+    <command id="skip_search"/>
+    <command id="rec_end_search"/>
+    <command id="ams"/>
+    <command id="monitor" remark="found on Panasonic VCR"/>
+    <command id="memo"/>
+    <command id="mode" remark="???"/>
+    <command id="shuffle" type="cyclic">
+      <synonym name="random"/>
+    </command>
+    <command id="shuffle_off"/>
+    <command id="shuffle_songs"/>
+    <command id="shuffle_albums"/>
+    <command id="get_shuffle"/>
+    <command id="intro"/>
 
-        <command id="usb_direct_play"/>
-        <command id="favorite_direct_play"/>
-        <command id="timeshift"/>
-    </group>
+    <command id="usb_direct_play"/>
+    <command id="favorite_direct_play"/>
+  </group>
 
-    <group id="transport_programming">
-        <command id="bookmark"/>
-        <command id="repeat" type="cyclic"/>
-        <command id="repeat_off"/>
-        <command id="repeat_one"/>
-        <command id="repeat_track"/>
-        <command id="repeat_all"/>
-        <command id="get_repeat"/>
-        <command id="a_b"/>
-        <command id="pos_mem"/>
-        <command id="clear"/>
-        <command id="marker"/>
-        <command id="cancel"/>
-        <command id="program"/>
-        <command id="cmd_1_all" name="1_all"/>
-        <command id="auto_pgm"/>
-        <command id="file"/>
-        <command id="custom_index"/>
-        <command id="memory_play"/>
-    </group>
+  <group id="transport_programming">
+    <command id="bookmark"/>
+    <command id="repeat" type="cyclic"/>
+    <command id="repeat_off"/>
+    <command id="repeat_one"/>
+    <command id="repeat_track"/>
+    <command id="repeat_all"/>
+    <command id="get_repeat"/>
+    <command id="a_b"/>
+    <command id="pos_mem"/>
+    <command id="clear"/>
+    <command id="marker"/>
+    <command id="cancel"/>
+    <command id="program"/>
+    <command id="cmd_1_all" name="1_all"/>
+    <command id="auto_pgm"/>
+    <command id="file"/>
+    <command id="custom_index"/>
+    <command id="memory_play"/>
+  </group>
   
-    <group id="menu_commands">
-        <command id="menu" type="toggle" remark="generic, not for use as dvd menu"/>
-        <command id="dvd_menu" remark="Go to menu on a DVD"/>
-        <command id="service_menu"/>
-        <command id="menu_on"/>
-        <command id="menu_off"/>
-        <command id="up"/>
-        <command id="down"/>
-        <command id="left"/>
-        <command id="right"/>
-        <command id="up_left"/>
-        <command id="up_right"/>
-        <command id="down_left"/>
-        <command id="down_right"/>
-        <command id="ok">
-            <synonym name="enter"/>
-            <synonym name="select"/>
-        </command>
-        <command id="reset"/>
-        <command id="cmd_return">
-            <synonym name="back"/>
-        </command>
-        <command id="page_up"/>
-        <command id="page_down"/>
+  <group id="menu_commands">
+    <command id="menu" type="toggle" remark="generic, not for use as dvd menu"/>
+    <command id="dvd_menu" remark="Go to menu on a DVD"/>
+    <command id="service_menu"/>
+    <command id="menu_on"/>
+    <command id="menu_off"/>
+    <command id="up"/>
+    <command id="down"/>
+    <command id="left"/>
+    <command id="right"/>
+    <command id="up_left"/>
+    <command id="up_right"/>
+    <command id="down_left"/>
+    <command id="down_right"/>
+    <command id="ok">
+      <synonym name="enter"/>
+      <synonym name="select"/>
+    </command>
+    <command id="reset"/>
+    <command id="cmd_return">
+      <synonym name="back"/>
+    </command>
+    <command id="page_up"/>
+    <command id="page_down"/>
 
-        <command id="epg"/>
+    <command id="epg"/>
 
-        <command id="plus" remark="generic menu command"/>
-        <command id="minus" remark="generic menu command"/>
-        <command id="disc_menu" remark="as found on DVD players"/>
-        <command id="title" remark="as found on DVD players">
-            <synonym name="top"/>
-        </command>
-        <command id="group" remark="for DVD Audio"/>
-        <command id="info" name="?">
-            <synonym name="help"/>
-        </command>
-        <command id="home">
-            <synonym name="exit"/>
-        </command>
-        <command id="zone2_up" zone="2"/>
-        <command id="zone2_down" zone="2"/>
-        <command id="zone2_left" zone="2"/>
-        <command id="zone2_right" zone="2"/>
-        <command id="zone2_ok" zone="2"/>
-        <command id="zone2_return" zone="2"/>
-        <command id="zone2_menu" zone="2"/>
-        <command id="zone3_up" zone="3"/>
-        <command id="zone3_down" zone="3"/>
-        <command id="zone3_left" zone="3"/>
-        <command id="zone3_right" zone="3"/>
-        <command id="zone3_ok" zone="3"/>
-        <command id="zone3_return" zone="3"/>
-        <command id="zone3_menu" zone="3"/>
-    </group>
+    <command id="plus" remark="generic menu command"/>
+    <command id="minus" remark="generic menu command"/>
+    <command id="disc_menu" remark="as found on DVD players"/>
+    <command id="title" remark="as found on DVD players">
+      <synonym name="top"/>
+    </command>
+    <command id="group" remark="for DVD Audio"/>
+    <command id="info" name="?">
+      <synonym name="help"/>
+    </command>
+    <command id="home">
+      <synonym name="exit"/>
+    </command>
+    <command id="zone2_up" zone="2"/>
+    <command id="zone2_down" zone="2"/>
+    <command id="zone2_left" zone="2"/>
+    <command id="zone2_right" zone="2"/>
+    <command id="zone2_ok" zone="2"/>
+    <command id="zone2_return" zone="2"/>
+    <command id="zone2_menu" zone="2"/>
+    <command id="zone3_up" zone="3"/>
+    <command id="zone3_down" zone="3"/>
+    <command id="zone3_left" zone="3"/>
+    <command id="zone3_right" zone="3"/>
+    <command id="zone3_ok" zone="3"/>
+    <command id="zone3_return" zone="3"/>
+    <command id="zone3_menu" zone="3"/>
+  </group>
 
-    <group id="function_keys">
-        <command id="red"/>
-        <command id="green"/>
-        <command id="yellow"/>
-        <command id="blue"/>
-        <command id="white"/>
+  <group id="function_keys">
+    <command id="red"/>
+    <command id="green"/>
+    <command id="yellow"/>
+    <command id="blue"/>
+    <command id="white"/>
 
-        <command id="topleft"/>
-        <command id="topright"/>
-        <command id="bottomleft"/>
-        <command id="bottomright"/>
+    <command id="topleft"/>
+    <command id="topright"/>
+    <command id="bottomleft"/>
+    <command id="bottomright"/>
 
-        <command id="a"/>
-        <command id="b"/>
-        <command id="c"/>
-        <command id="d"/>
+    <command id="A"/>
+    <command id="B"/>
+    <command id="C"/>
+    <command id="D"/>
+  </group>
 
-        <command id="nop" description="No Operation"/>
-    </group>
-
-    <group id="audio_subtitle_angle_control">
-        <command id="I_II" remark="analog TV"/>
-        <command id="subtitle"/>
-        <command id="subtitle_shift"/>
-        <command id="audio"/>
-        <command id="angle"/>
-        <command id="audio_only"/>
-        <command id="analog_sound" type="toggle"/>
-        <command id="digital_sound"/>
-        <command id="audio_monitor"/>
-        <command id="cx"/>
-        <command id="special" remark="generic"/>
-        <command id="SAP" remark="Secondary Audio Program"/>
-        <command id="lipsync"/>
-    </group>
+  <group id="audio_subtitle_angle_control">
+    <command id="I_II" remark="analog TV"/>
+    <command id="subtitle"/>
+    <command id="audio"/>
+    <command id="angle"/>
+    <command id="audio_only"/>
+    <command id="analog_sound" type="toggle"/>
+    <command id="digital_sound"/>
+    <command id="audio_monitor"/>
+    <command id="cx"/>
+    <command id="special" remark="generic"/>
+  </group>
   
-    <group id="zone2div">
-        <command id="zone2_repeat" name="zone2 repeat"/>
-        <command id="zone2_shuffle" name="zone2 random/shuffle"/>
-        <command id="zone2_usb_direct_play" name="zone2 usb direct play"/>
-        <command id="zone2_favorite_direct_play" name="zone2 favorite direct play"/>
-        <command id="zone2_channel_up" name="zone2 preset ch up"/>
-        <command id="zone2_channel_down" name="zone2 preset ch down"/>
-        <command id="zone2_channel_shift" name="zone2 preset ch shift"/><!-- ??? -->
-        <command id="zone2_search" name="zone2 search (rds)"/><!-- ??? -->
-        <command id="zone2_play_pause" name="zone2 play/pause"/><!-- ??? -->
-        <command id="zone2_stop" name="zone2 stop"/><!-- ??? -->
-        <command id="zone2_frequency_down" name="zone2 skip minus/tuning down"/><!-- ??? -->
-        <command id="zone2_frequency_up" name="zone2 skip plus/tuning up"/><!-- ??? -->
+  <group id="zone2div">
+    <command id="zone2_repeat" name="zone2 repeat"/>
+    <command id="zone2_shuffle" name="zone2 random/shuffle"/>
+    <command id="zone2_usb_direct_play" name="zone2 usb direct play"/>
+    <command id="zone2_favorite_direct_play" name="zone2 favorite direct play"/>
+    <command id="zone2_channel_up" name="zone2 preset ch up"/>
+    <command id="zone2_channel_down" name="zone2 preset ch down"/>
+    <command id="zone2_channel_shift" name="zone2 preset ch shift"/><!-- ??? -->
+    <command id="zone2_search" name="zone2 search (rds)"/><!-- ??? -->
+    <command id="zone2_play_pause" name="zone2 play/pause"/><!-- ??? -->
+    <command id="zone2_stop" name="zone2 stop"/><!-- ??? -->
+    <command id="zone2_frequency_down" name="zone2 skip minus/tuning down"/><!-- ??? -->
+    <command id="zone2_frequency_up" name="zone2 skip plus/tuning up"/><!-- ??? -->
+  </group>
+
+  <group id="zone3div">
+    <command id="zone3_repeat" name="zone3 repeat"/>
+    <command id="zone3_shuffle" name="zone3 random/shuffle"/>
+    <command id="zone3_usb_direct_play" name="zone3 usb direct play"/>
+    <command id="zone3_favorite_direct_play" name="zone3 favorite direct play"/>
+    <command id="zone3_channel_up" name="zone3 preset ch up"/>
+    <command id="zone3_channel_down" name="zone3 preset ch down"/>
+    <command id="zone3_channel_shift" name="zone3 preset ch shift"/><!-- ??? -->
+    <command id="zone3_search" name="zone3 search (rds)"/><!-- ??? -->
+    <command id="zone3_play_pause" name="zone3 play/pause"/><!-- ??? -->
+    <command id="zone3_stop" name="zone3 stop"/><!-- ??? -->
+    <command id="zone3_frequency_down" name="zone3 skip minus/tuning down"/><!-- ??? -->
+    <command id="zone3_frequency_up" name="zone3 skip plus/tuning up"/><!-- ??? -->
+  </group>
+
+  <group id="setup_commands">
+    <command id="setup"/>
+    <command id="zone2_setup"/>
+    <command id="zone3_setup"/>
+    <command id="setup_cealing_on"/>
+    <command id="setup_cealing_off"/>
+    <command id="setup_rear_on"/>
+    <command id="setup_rear_off"/>
+    <command id="power_mgmt_on"/>
+    <command id="power_mgmt_off"/>
+    <command id="factory_reset"/>
+
+    <command id="fl_level_up"/>
+    <command id="fl_level_down"/>
+    <command id="set_fl_level"/>
+    <command id="fr_level_up"/>
+    <command id="fr_level_down"/>
+    <command id="set_fr_level"/>
+    <command id="sl_level_up"/>
+    <command id="sl_level_down"/>
+    <command id="set_sl_level"/>
+    <command id="sr_level_up"/>
+    <command id="sr_level_down"/>
+    <command id="set_sr_level"/>
+    <command id="sb_level_up"/>
+    <command id="sb_level_down"/>
+    <command id="set_sb_level"/>
+    <command id="sbl_level_up"/>
+    <command id="sbl_level_down"/>
+    <command id="set_sbl_level"/>
+    <command id="sbr_level_up"/>
+    <command id="sbr_level_down"/>
+    <command id="set_sbr_level"/>
+    <command id="c_level_up"/>
+    <command id="c_level_down"/>
+    <command id="set_c_level"/>
+    <command id="sw_level_up"/>
+    <command id="sw_level_down"/>
+    <command id="set_sw_level"/>
+  </group>
+
+  <group id="pictureprops">
+    <command id="PP"/>
+    <command id="brightness_up" name="brightness+"/>
+    <command id="brightness_down" name="brightness-"/>
+    <command id="brightness"/>
+    <command id="color"/>
+    <command id="color_up" name="color+"/>
+    <command id="color_down" name="color-"/>
+    <command id="contrast"/>
+    <command id="contrast_up" name="contrast+"/>
+    <command id="contrast_down" name="contrast-"/>
+    <command id="color_temp"/>
+    <command id="sharpness"/>
+
+    <command id="DNR" type="toggle"/>
+    <command id="zoom"/>
+    <command id="vss"/>
+    <command id="play_mode"/>
+    <command id="double_remaster"/>
+    <command id="depth_enh"/>
+    <command id="a_srd"/>
+    <command id="smart_picture"/>
+    <command id="freeze_toggle"/>
+    <command id="freeze_on"/>
+    <command id="freeze_off"/>
+    <command id="video_mute_toggle">
+      <synonym name="no_show"/>
+    </command>
+    <command id="video_mute_on"/>
+    <command id="video_mute_off"/>
+    <command id="resolution" type="cyclic"/>
+    <command id="resolution_480p"/>
+    <command id="resolution_720p"/>
+    <command id="resolution_1080i"/>
+    <command id="resolution_1080p"/>
+    <command id="resolution_auto"/>
+
+
+    <group id="aspect-ratio">
+      <command id="aspectratio" type="cyclic"/>
+      <command id="aspectratio_automatic"/>
+      <command id="aspectratio_4_3_LB"/>
+      <command id="aspectratio_4_3_PS"/>
+      <command id="aspectratio_4_3">
+	<synonym name="aspectratio_normal"/>
+      </command>
+      <command id="aspectratio_16_9">
+	<synonym name="aspectratio_full"/>
+      </command>
+      <command id="aspectratio_zoom"/>
+      <command id="aspectratio_nat_wide1"/>
+      <command id="aspectratio_nat_wide2"/>
+      <command id="aspectratio_caption_in"/>
+      <command id="aspectratio_full_through"/>
+      <command id="aspectratio_normal_through"/>
+      <command id="get_aspectratio"/>
     </group>
 
-    <group id="zone3div">
-        <command id="zone3_repeat" name="zone3 repeat"/>
-        <command id="zone3_shuffle" name="zone3 random/shuffle"/>
-        <command id="zone3_usb_direct_play" name="zone3 usb direct play"/>
-        <command id="zone3_favorite_direct_play" name="zone3 favorite direct play"/>
-        <command id="zone3_channel_up" name="zone3 preset ch up"/>
-        <command id="zone3_channel_down" name="zone3 preset ch down"/>
-        <command id="zone3_channel_shift" name="zone3 preset ch shift"/><!-- ??? -->
-        <command id="zone3_search" name="zone3 search (rds)"/><!-- ??? -->
-        <command id="zone3_play_pause" name="zone3 play/pause"/><!-- ??? -->
-        <command id="zone3_stop" name="zone3 stop"/><!-- ??? -->
-        <command id="zone3_frequency_down" name="zone3 skip minus/tuning down"/><!-- ??? -->
-        <command id="zone3_frequency_up" name="zone3 skip plus/tuning up"/><!-- ??? -->
+    <group id="preset_img_sets">
+      <command id="img_user_up" type="cyclic"/>
+      <command id="img_preset_up" type="cyclic"/>
+      <command id="img_user"/>
+      <command id="img_powerful"/>
+      <command id="img_living"/>
+      <command id="img_creative_cinema"/>
+      <command id="img_pure_cinema"/>
+      <command id="img_vivid"/>
+      <command id="img_brilliant_cinema"/>
+      <command id="img_dynamic"/>
+      <command id="img_natural"/>
+      <command id="img1"/>
+      <command id="img2"/>
+      <command id="img3"/>
+      <command id="img4"/>
+      <command id="img5"/>
+      <command id="img6"/>
+      <command id="img7"/>
+      <command id="img_my_pic_on"/>
+      <command id="img_my_pic_off"/>
     </group>
 
-    <group id="setup_commands">
-        <command id="setup"/>
-        <command id="zone2_setup"/>
-        <command id="zone3_setup"/>
-        <command id="setup_cealing_on"/>
-        <command id="setup_cealing_off"/>
-        <command id="setup_rear_on"/>
-        <command id="setup_rear_off"/>
-        <command id="power_mgmt_on"/>
-        <command id="power_mgmt_off"/>
-        <command id="factory_reset"/>
-
-        <command id="fl_level_up"/>
-        <command id="fl_level_down"/>
-        <command id="set_fl_level"/>
-        <command id="fr_level_up"/>
-        <command id="fr_level_down"/>
-        <command id="set_fr_level"/>
-        <command id="sl_level_up"/>
-        <command id="sl_level_down"/>
-        <command id="set_sl_level"/>
-        <command id="sr_level_up"/>
-        <command id="sr_level_down"/>
-        <command id="set_sr_level"/>
-        <command id="sb_level_up"/>
-        <command id="sb_level_down"/>
-        <command id="set_sb_level"/>
-        <command id="sbl_level_up"/>
-        <command id="sbl_level_down"/>
-        <command id="set_sbl_level"/>
-        <command id="sbr_level_up"/>
-        <command id="sbr_level_down"/>
-        <command id="set_sbr_level"/>
-        <command id="c_level_up"/>
-        <command id="c_level_down"/>
-        <command id="set_c_level"/>
-        <command id="sw_level_up"/>
-        <command id="sw_level_down"/>
-        <command id="set_sw_level"/>
+    <group id="lamp_modes">
+      <command id="lamp_mode" type="cyclic"/>
+      <command id="lamp_eco"/>
+      <command id="lamp_normal"/>
+      <command id="lamp_auto1"/>
+      <command id="lamp_auto2"/>
     </group>
 
-    <group id="pictureprops">
-        <command id="PP"/>
-        <command id="brightness_up" name="brightness+"/>
-        <command id="brightness_down" name="brightness-"/>
-        <command id="brightness"/>
-        <command id="color"/>
-        <command id="color_up" name="color+"/>
-        <command id="color_down" name="color-"/>
-        <command id="contrast"/>
-        <command id="contrast_up" name="contrast+"/>
-        <command id="contrast_down" name="contrast-"/>
-        <command id="color_temp"/>
-        <command id="sharpness"/>
-
-        <command id="DNR" type="toggle"/>
-        <command id="zoom"/>
-        <command id="vss"/>
-        <command id="play_mode"/>
-        <command id="double_remaster"/>
-        <command id="depth_enh"/>
-        <command id="a_srd"/>
-        <command id="smart_picture"/>
-        <command id="freeze_toggle"/>
-        <command id="freeze_on"/>
-        <command id="freeze_off"/>
-        <command id="video_mute_toggle">
-            <synonym name="no_show"/>
-        </command>
-        <command id="video_mute_on"/>
-        <command id="video_mute_off"/>
-        <command id="resolution" type="cyclic"/>
-        <command id="resolution_480p"/>
-        <command id="resolution_720p"/>
-        <command id="resolution_1080i"/>
-        <command id="resolution_1080p"/>
-        <command id="resolution_auto"/>
-
-
-        <group id="aspect-ratio">
-        <!-- To what extent are "zoom" and "aspectratio" synonyms? -->
-            <command id="aspectratio" type="cyclic"/>
-            <command id="aspectratio_for_4_3" type="cyclic"/>
-            <command id="aspectratio_automatic"/>
-            <command id="aspectratio_4_3_LB"/>
-            <command id="aspectratio_4_3_PS"/>
-            <command id="aspectratio_4_3">
-                <synonym name="aspectratio_normal"/>
-            </command>
-            <command id="aspectratio_16_9">
-                <synonym name="aspectratio_full"/>
-            </command>
-            <command id="aspectratio_14_9"/>
-            <command id="aspectratio_zoom"/>
-            <command id="aspectratio_nat_wide1"/>
-            <command id="aspectratio_nat_wide2"/>
-            <command id="aspectratio_caption_in"/>
-            <command id="aspectratio_full_through"/>
-            <command id="aspectratio_normal_through"/>
-            <command id="get_aspectratio"/>
-            <command id="set_aspectratio"/>
-            <command id="get_zoom"/>
-            <command id="set_zoom"/>
-        </group>
-
-        <group id="preset_img_sets">
-            <command id="img_user_up" type="cyclic"/>
-            <command id="img_preset_up" type="cyclic"/>
-            <command id="img_user"/>
-            <command id="img_powerful"/>
-            <command id="img_living"/>
-            <command id="img_creative_cinema"/>
-            <command id="img_pure_cinema"/>
-            <command id="img_vivid"/>
-            <command id="img_brilliant_cinema"/>
-            <command id="img_dynamic"/>
-            <command id="img_natural"/>
-            <command id="img1"/>
-            <command id="img2"/>
-            <command id="img3"/>
-            <command id="img4"/>
-            <command id="img5"/>
-            <command id="img6"/>
-            <command id="img7"/>
-            <command id="img_my_pic_on"/>
-            <command id="img_my_pic_off"/>
-        </group>
-
-        <group id="lamp_modes">
-            <command id="lamp_mode" type="cyclic"/>
-            <command id="lamp_eco"/>
-            <command id="lamp_normal"/>
-            <command id="lamp_auto1"/>
-            <command id="lamp_auto2"/>
-        </group>
-
-        <command id="iris_reset"/>
-        <command id="iris_toggle"/>
-        <command id="iris"/>
-        <command id="shutter"/>
-        <command id="keystone"/>
+    <command id="iris_reset"/>
+    <command id="iris_toggle"/>
+    <command id="iris"/>
+    <command id="shutter"/>
+    <command id="keystone"/>
     <!--command id="picture"/-->
-        <command id="img_logo_off"/>
-        <command id="img_logo_default"/>
-        <command id="img_logo_user"/>
-        <command id="img_logo_capture"/>
-        <command id="auto_pc_adj"/>
-        <command id="loopback_test"/>
-        <command id="color_off"/>
-        <command id="gamma_toggle"/>
-        <command id="sharpness_toggle"/>
-        <command id="brightness_toggle"/>
-        <command id="tint_toggle"/>
-        <command id="contrast_toggle"/>
-        <command id="color_toggle"/>
-        <command id="high_fan"/>
-        <command id="shutter_demo"/>
-        <command id="logo"/>
-        <command id="image" remark="???"/> <!-- sanyo z4 -->
-    </group>
+    <command id="img_logo_off"/>
+    <command id="img_logo_default"/>
+    <command id="img_logo_user"/>
+    <command id="img_logo_capture"/>
+    <command id="auto_pc_adj"/>
+    <command id="loopback_test"/>
+    <command id="color_off"/>
+    <command id="gamma_toggle"/>
+    <command id="sharpness_toggle"/>
+    <command id="brightness_toggle"/>
+    <command id="tint_toggle"/>
+    <command id="contrast_toggle"/>
+    <command id="color_toggle"/>
+    <command id="high_fan"/>
+    <command id="shutter_demo"/>
+    <command id="logo"/>
+    <command id="image" remark="???"/> <!-- sanyo z4 -->
+  </group>
 
-    <group id="tuner_commands">
-        <command id="tuner_band"/><!-- denon, am/fm? -->
-        <command id="tuner_tuning_mode"/><!-- denon, freq/ch? -->
-        <command id="tuner_memory"/><!-- denon, ? -->
-        <command id="tuner_shift"/><!-- denon, ? -->
-        <command id="tuner_rt"/><!-- denon, ? -->
-        <command id="tuner_rds"/><!-- denon, ? -->
-        <command id="tuner_pty"/><!-- denon, ? -->
-        <command id="tuner_class_preset"/>
-        <command id="preset_page_toggle"/>
-        <command id="page_a"/>
-        <command id="page_b"/>
-        <command id="page_c"/>
-        <command id="page_d"/>
-        <command id="page_e"/>
-        <command id="tuner_shift_a"/><!-- ??? Denon -->
-        <command id="tuner_shift_b"/>
-        <command id="tuner_shift_c"/>
-        <command id="tuner_shift_d"/>
-        <command id="tuner_shift_e"/>
-        <command id="tuner_shift_f"/>
-        <command id="tuner_shift_g"/>
-        <command id="tuner_preset_ch_1"/><!-- Denon -->
-        <command id="tuner_preset_ch_2"/>
-        <command id="tuner_preset_ch_3"/>
-        <command id="tuner_preset_ch_4"/>
-        <command id="tuner_preset_ch_5"/>
-        <command id="tuner_preset_ch_6"/>
-        <command id="tuner_preset_ch_7"/>
-        <command id="tuner_preset_ch_8"/>
-        <command id="channel_up" name="channel+"/>
-        <command id="channel_down" name="channel-"/>
-        <command id="subchannel_up" name="channel+"/>
-        <command id="subchannel_down" name="channel-"/>
-        <command id="channellist" type="toggle"/>
-        <command id="set_channel"/>
-        <command id="get_channel"/>
-        <command id="frequency_up" name="frequency+"/>
-        <command id="frequency_down" name="frequency-"/>
-        <command id="set_frequency"/>
-        <command id="get_frequency"/>
-        <command id="last_channel"/>
-        <command id="fm"/>
-        <command id="am"/>
-        <command id="get_tuner_band" description="AM or FM?"/>
-        <command id="tuner_auto"/>
-        <command id="tuner_manual"/>
-        <command id="auto_tuning_up"/>
-        <command id="auto_tuning_down"/>
-    </group>
+  <group id="tuner_commands">
+    <command id="tuner_band"/><!-- denon, am/fm? -->
+    <command id="tuner_tuning_mode"/><!-- denon, freq/ch? -->
+    <command id="tuner_memory"/><!-- denon, ? -->
+    <command id="tuner_shift"/><!-- denon, ? -->
+    <command id="tuner_rt"/><!-- denon, ? -->
+    <command id="tuner_rds"/><!-- denon, ? -->
+    <command id="tuner_pty"/><!-- denon, ? -->
+    <command id="tuner_class_preset"/>
+    <command id="preset_page_toggle"/>
+    <command id="page_a"/>
+    <command id="page_b"/>
+    <command id="page_c"/>
+    <command id="page_d"/>
+    <command id="page_e"/>
+    <command id="tuner_shift_a"/><!-- ??? Denon -->
+    <command id="tuner_shift_b"/>
+    <command id="tuner_shift_c"/>
+    <command id="tuner_shift_d"/>
+    <command id="tuner_shift_e"/>
+    <command id="tuner_shift_f"/>
+    <command id="tuner_shift_g"/>
+    <command id="tuner_preset_ch_1"/><!-- Denon -->
+    <command id="tuner_preset_ch_2"/>
+    <command id="tuner_preset_ch_3"/>
+    <command id="tuner_preset_ch_4"/>
+    <command id="tuner_preset_ch_5"/>
+    <command id="tuner_preset_ch_6"/>
+    <command id="tuner_preset_ch_7"/>
+    <command id="tuner_preset_ch_8"/>
+    <command id="channel_up" name="channel+"/>
+    <command id="channel_down" name="channel-"/>
+    <command id="set_channel"/>
+    <command id="get_channel"/>
+    <command id="frequency_up" name="frequency+"/>
+    <command id="frequency_down" name="frequency-"/>
+    <command id="set_frequency"/>
+    <command id="get_frequency"/>
+    <command id="last_channel"/>
+    <command id="fm"/>
+    <command id="am"/>
+    <command id="get_tuner_band" description="AM or FM?"/>
+    <command id="tuner_auto"/>
+    <command id="tuner_manual"/>
+    <command id="auto_tuning_up"/>
+    <command id="auto_tuning_down"/>
+  </group>
 
-    <group id="preset_recall_home">
-        <command id="preset_home_memory_a"/>
-        <command id="preset_home_memory_b"/>
-        <command id="preset_home_memory_c"/>
-        <command id="preset_home_memory_d"/>
-        <command id="preset_home_memory_e"/>
-        <command id="preset_home_memory_f"/>
-        <command id="preset_home_recall_a"/>
-        <command id="preset_home_recall_b"/>
-        <command id="preset_home_recall_c"/>
-        <command id="preset_home_recall_d"/>
-        <command id="preset_home_recall_e"/>
-        <command id="preset_home_recall_f"/>
-    </group>
+  <group id="preset_recall_home">
+    <command id="preset_home_memory_a"/>
+    <command id="preset_home_memory_b"/>
+    <command id="preset_home_memory_c"/>
+    <command id="preset_home_memory_d"/>
+    <command id="preset_home_memory_e"/>
+    <command id="preset_home_memory_f"/>
+    <command id="preset_home_recall_a"/>
+    <command id="preset_home_recall_b"/>
+    <command id="preset_home_recall_c"/>
+    <command id="preset_home_recall_d"/>
+    <command id="preset_home_recall_e"/>
+    <command id="preset_home_recall_f"/>
+  </group>
 
-    <group id="ipod_deck">
-        <command id="favorites"/>
-        <command id="browse_remote"/>
-        <command id="browse_mode"/>
-        <command id="remote_mode"/>
-        <command id="sort"/>
-        <command id="sort_playlist"/>
-        <command id="sort_artist"/>
-        <command id="sort_album"/>
-        <command id="sort_song"/>
-        <command id="sort_audiobook"/>
-        <command id="sort_podcast"/>
-        <command id="get_sort"/>
-        <command id="album_up"/>
-        <command id="album_down"/>
-        <command id="playlist_up"/>
-        <command id="playlist_down"/>
-        <command id="ipod_menu"/>
-        <command id="ipod_play_pause"/>
-        <command id="ipod_stop"/>
-        <command id="get_track"/>
-        <command id="get_database"/>
-    </group>
+  <group id="ipod_deck">
+    <command id="favorites"/>
+    <command id="browse_remote"/>
+    <command id="browse_mode"/>
+    <command id="remote_mode"/>
+    <command id="sort"/>
+    <command id="sort_playlist"/>
+    <command id="sort_artist"/>
+    <command id="sort_album"/>
+    <command id="sort_song"/>
+    <command id="sort_audiobook"/>
+    <command id="sort_podcast"/>
+    <command id="get_sort"/>
+    <command id="album_up"/>
+    <command id="album_down"/>
+    <command id="playlist_up"/>
+    <command id="playlist_down"/>
+    <command id="ipod_menu"/>
+    <command id="ipod_play_pause"/>
+    <command id="ipod_stop"/>
+    <command id="get_track"/>
+    <command id="get_database"/>
+  </group>
 
-    <group id="PIP-commands">
-        <command id="PIP" type="toggle"/>
-        <command id="PIP_source" type="cyclic"/>
-        <command id="PIP_exchange"/>
-        <command id="PIP_freeze" type="toggle"/>
-        <command id="PIP_position" type="cyclic"/>
-        <command id="PIP_ch_down" name="PIP_ch-"/>
-        <command id="PIP_ch_up" name="PIP_ch_plus"/>
-    </group>
+  <group id="PIP-commands">
+    <command id="PIP" type="toggle"/>
+    <command id="PIP_source" type="cyclic"/>
+    <command id="PIP_exchange"/>
+    <command id="PIP_freeze" type="toggle"/>
+    <command id="PIP_position" type="cyclic"/>
+    <command id="PIP_ch_down" name="PIP_ch-"/>
+    <command id="PIP_ch_up" name="PIP_ch_plus"/>
+  </group>
 
-    <group id="teletext_control">
-        <command id="teletext_toggle"/>
-        <command id="teletext_on"/>
-        <command id="teletext_off"/>
-        <command id="teletext_freeze"/>
-        <command id="teletext_reveal"/>
-        <command id="teletext_hide"/>
-        <command id="teletext_translucent"/>
-        <command id="teletext_doubleheight"/>
-        <command id="teletext_time"/>
-        <command id="teletext_pip"/>
-    </group>
+  <group id="teletext_control">
+    <command id="teletext"/>
+    <command id="teletext_freeze"/>
+    <command id="teletext_reveal"/>
+    <command id="teletext_hide"/>
+    <command id="teletext_translucent"/>
+    <command id="teletext_doubleheight"/>
+    <command id="teletext_time"/>
+    <command id="teletext_pip"/>
+  </group>
 
-    <group id="output_selection">
-        <command id="out_cvbs"/>
-        <command id="out_s_video" name="s-video"/>
-        <command id="out_rgb"/>
-        <command id="out_yuv_cvbs"/>
-        <command id="out_yuv_vbs"/>
-        <command id="out_vcr_cvbs"/>
-        <command id="out_vcr_s_video"/>
-    </group>
+  <group id="output_selection">
+    <command id="out_cvbs"/>
+    <command id="out_s_video" name="s-video"/>
+    <command id="out_rgb"/>
+    <command id="out_yuv_cvbs"/>
+    <command id="out_yuv_vbs"/>
+    <command id="out_vcr_cvbs"/>
+    <command id="out_vcr_s_video"/>
+  </group>
 
-    <group id="misc">
-        <command id="pal_secam"/>
-        <command id="pal_ntsc"/>
-        <command id="go"/><!-- hauppauge -->
-        <command id="no_id"/>
-        <command id="full"/><!-- hauppauge -->
-        <command id="no_name"/><!-- hauppauge -->
-        <command id="ff"/><!-- hauppauge -->
-        <command id="stop_sectionsd"/>
-        <command id="start_sectionsd"/>
-        <command id="keyboard"/><!-- oppo, means??? -->
-        <command id="caps_num"/>
-        <command id="delete"/>
+  <group id="misc">
+    <command id="pal_secam"/>
+    <command id="pal_ntsc"/>
+    <command id="go"/><!-- hauppauge -->
+    <command id="no_id"/>
+    <command id="full"/><!-- hauppauge -->
+    <command id="no_name"/><!-- hauppauge -->
+    <command id="ff"/><!-- hauppauge -->
+    <command id="stop_sectionsd"/>
+    <command id="start_sectionsd"/>
+    <command id="keyboard"/><!-- oppo, means??? -->
+    <command id="caps_num"/>
+    <command id="delete"/>
 
-        <command id="remote_lock_on"/>
-        <command id="remote_lock_off"/>
-        <command id="panel_lock_on"/>
-        <command id="panel_vol_lock_on"/>
-        <command id="panel_lock_off"/>
-    </group>
+    <command id="remote_lock_on"/>
+    <command id="remote_lock_off"/>
+    <command id="panel_lock_on"/>
+    <command id="panel_vol_lock_on"/>
+    <command id="panel_lock_off"/>
+  </group>
 
-    <group id="switching_commands">
-        <command name="1on" id="cmd_1on"/>
-        <command name="1off" id="cmd_1off"/>
-        <command name="1toggle" id="cmd_1toggle"/>
-        <command name="2on" id="cmd_2on"/>
-        <command name="2off" id="cmd_2off"/>
-        <command name="2toggle" id="cmd_2toggle"/>
-        <command name="3on" id="cmd_3on"/>
-        <command name="3off" id="cmd_3off"/>
-        <command name="3toggle" id="cmd_3toggle"/>
-        <command name="4on" id="cmd_4on"/>
-        <command name="4off" id="cmd_4off"/>
-        <command name="4toggle" id="cmd_4toggle"/>
-        <command name="5on" id="cmd_5on"/>
-        <command name="5off" id="cmd_5off"/>
-        <command name="5toggle" id="cmd_5toggle"/>
-        <command name="6on" id="cmd_6on"/>
-        <command name="6off" id="cmd_6off"/>
-        <command name="6toggle" id="cmd_6toggle"/>
-        <command name="7on" id="cmd_7on"/>
-        <command name="7off" id="cmd_7off"/>
-        <command name="7toggle" id="cmd_7toggle"/>
-        <command name="8on" id="cmd_8on"/>
-        <command name="8off" id="cmd_8off"/>
-        <command name="8toggle" id="cmd_8toggle"/>
-        <command name="9on" id="cmd_9on"/>
-        <command name="9off" id="cmd_9off"/>
-        <command name="9toggle" id="cmd_9toggle"/>
-        <command name="10on" id="cmd_10on"/>
-        <command name="10off" id="cmd_10off"/>
-        <command name="10toggle" id="cmd_10toggle"/>
-        <command name="11on" id="cmd_11on"/>
-        <command name="11off" id="cmd_11off"/>
-        <command name="11toggle" id="cmd_11toggle"/>
-        <command name="12on" id="cmd_12on"/>
-        <command name="12off" id="cmd_12off"/>
-        <command name="12toggle" id="cmd_12toggle"/>
-        <command name="13on" id="cmd_13on"/>
-        <command name="13off" id="cmd_13off"/>
-        <command name="13toggle" id="cmd_13toggle"/>
-        <command name="14on" id="cmd_14on"/>
-        <command name="14off" id="cmd_14off"/>
-        <command name="14toggle" id="cmd_14toggle"/>
-        <command name="15on" id="cmd_15on"/>
-        <command name="15off" id="cmd_15off"/>
-        <command name="15toggle" id="cmd_15toggle"/>
-        <command name="16on" id="cmd_16on"/>
-        <command name="16off" id="cmd_16off"/>
-        <command name="16toggle" id="cmd_16toggle"/>
-        <command name="17on" id="cmd_17on"/>
-        <command name="17off" id="cmd_17off"/>
-        <command name="17toggle" id="cmd_17toggle"/>
-        <command name="18on" id="cmd_18on"/>
-        <command name="18off" id="cmd_18off"/>
-        <command name="18toggle" id="cmd_18toggle"/>
-        <command name="19on" id="cmd_19on"/>
-        <command name="19off" id="cmd_19off"/>
-        <command name="19toggle" id="cmd_19toggle"/>
-        <command name="20on" id="cmd_20on"/>
-        <command name="20off" id="cmd_20off"/>
-        <command name="20toggle" id="cmd_20toggle"/>
-        <command name="21on" id="cmd_21on"/>
-        <command name="21off" id="cmd_21off"/>
-        <command name="21toggle" id="cmd_21toggle"/>
-        <command name="22on" id="cmd_22on"/>
-        <command name="22off" id="cmd_22off"/>
-        <command name="22toggle" id="cmd_22toggle"/>
-        <command name="23on" id="cmd_23on"/>
-        <command name="23off" id="cmd_23off"/>
-        <command name="23toggle" id="cmd_23toggle"/>
-        <command name="24on" id="cmd_24on"/>
-        <command name="24off" id="cmd_24off"/>
-        <command name="24toggle" id="cmd_24toggle"/>
-        <command name="25on" id="cmd_25on"/>
-        <command name="25off" id="cmd_25off"/>
-        <command name="25toggle" id="cmd_25toggle"/>
-        <command name="26on" id="cmd_26on"/>
-        <command name="26off" id="cmd_26off"/>
-        <command name="26toggle" id="cmd_26toggle"/>
-        <command name="27on" id="cmd_27on"/>
-        <command name="27off" id="cmd_27off"/>
-        <command name="27toggle" id="cmd_27toggle"/>
-        <command name="28on" id="cmd_28on"/>
-        <command name="28off" id="cmd_28off"/>
-        <command name="28toggle" id="cmd_28toggle"/>
-        <command name="29on" id="cmd_29on"/>
-        <command name="29off" id="cmd_29off"/>
-        <command name="29toggle" id="cmd_29toggle"/>
-        <command name="30on" id="cmd_30on"/>
-        <command name="30off" id="cmd_30off"/>
-        <command name="30toggle" id="cmd_30toggle"/>
-        <command name="31on" id="cmd_31on"/>
-        <command name="31off" id="cmd_31off"/>
-        <command name="31toggle" id="cmd_31toggle"/>
-        <command name="32on" id="cmd_32on"/>
-        <command name="32off" id="cmd_32off"/>
-        <command name="32toggle" id="cmd_32toggle"/>
-        <command id="all_on"/>
-        <command id="all_off"/>
-        <command id="all_toggle"/>
-        <command id="HTPC_5_1"/>
-        <command id="HTPC_7_1"/>
-        <command id="cmd_2_2_2" name="2_2_2"/>
-        <command id="dvd_audio"/>
-        <command id="dvd_audio_bs"/>
+  <group id="switching_commands">
+    <command name="1on" id="cmd_1on"/>
+    <command name="1off" id="cmd_1off"/>
+    <command name="1toggle" id="cmd_1toggle"/>
+    <command name="2on" id="cmd_2on"/>
+    <command name="2off" id="cmd_2off"/>
+    <command name="2toggle" id="cmd_2toggle"/>
+    <command name="3on" id="cmd_3on"/>
+    <command name="3off" id="cmd_3off"/>
+    <command name="3toggle" id="cmd_3toggle"/>
+    <command name="4on" id="cmd_4on"/>
+    <command name="4off" id="cmd_4off"/>
+    <command name="4toggle" id="cmd_4toggle"/>
+    <command name="5on" id="cmd_5on"/>
+    <command name="5off" id="cmd_5off"/>
+    <command name="5toggle" id="cmd_5toggle"/>
+    <command name="6on" id="cmd_6on"/>
+    <command name="6off" id="cmd_6off"/>
+    <command name="6toggle" id="cmd_6toggle"/>
+    <command name="7on" id="cmd_7on"/>
+    <command name="7off" id="cmd_7off"/>
+    <command name="7toggle" id="cmd_7toggle"/>
+    <command name="8on" id="cmd_8on"/>
+    <command name="8off" id="cmd_8off"/>
+    <command name="8toggle" id="cmd_8toggle"/>
+    <command name="9on" id="cmd_9on"/>
+    <command name="9off" id="cmd_9off"/>
+    <command name="9toggle" id="cmd_9toggle"/>
+    <command name="10on" id="cmd_10on"/>
+    <command name="10off" id="cmd_10off"/>
+    <command name="10toggle" id="cmd_10toggle"/>
+    <command name="11on" id="cmd_11on"/>
+    <command name="11off" id="cmd_11off"/>
+    <command name="11toggle" id="cmd_11toggle"/>
+    <command name="12on" id="cmd_12on"/>
+    <command name="12off" id="cmd_12off"/>
+    <command name="12toggle" id="cmd_12toggle"/>
+    <command name="13on" id="cmd_13on"/>
+    <command name="13off" id="cmd_13off"/>
+    <command name="13toggle" id="cmd_13toggle"/>
+    <command name="14on" id="cmd_14on"/>
+    <command name="14off" id="cmd_14off"/>
+    <command name="14toggle" id="cmd_14toggle"/>
+    <command name="15on" id="cmd_15on"/>
+    <command name="15off" id="cmd_15off"/>
+    <command name="15toggle" id="cmd_15toggle"/>
+    <command name="16on" id="cmd_16on"/>
+    <command name="16off" id="cmd_16off"/>
+    <command name="16toggle" id="cmd_16toggle"/>
+    <command name="17on" id="cmd_17on"/>
+    <command name="17off" id="cmd_17off"/>
+    <command name="17toggle" id="cmd_17toggle"/>
+    <command name="18on" id="cmd_18on"/>
+    <command name="18off" id="cmd_18off"/>
+    <command name="18toggle" id="cmd_18toggle"/>
+    <command name="19on" id="cmd_19on"/>
+    <command name="19off" id="cmd_19off"/>
+    <command name="19toggle" id="cmd_19toggle"/>
+    <command name="20on" id="cmd_20on"/>
+    <command name="20off" id="cmd_20off"/>
+    <command name="20toggle" id="cmd_20toggle"/>
+    <command name="21on" id="cmd_21on"/>
+    <command name="21off" id="cmd_21off"/>
+    <command name="21toggle" id="cmd_21toggle"/>
+    <command name="22on" id="cmd_22on"/>
+    <command name="22off" id="cmd_22off"/>
+    <command name="22toggle" id="cmd_22toggle"/>
+    <command name="23on" id="cmd_23on"/>
+    <command name="23off" id="cmd_23off"/>
+    <command name="23toggle" id="cmd_23toggle"/>
+    <command name="24on" id="cmd_24on"/>
+    <command name="24off" id="cmd_24off"/>
+    <command name="24toggle" id="cmd_24toggle"/>
+    <command name="25on" id="cmd_25on"/>
+    <command name="25off" id="cmd_25off"/>
+    <command name="25toggle" id="cmd_25toggle"/>
+    <command name="26on" id="cmd_26on"/>
+    <command name="26off" id="cmd_26off"/>
+    <command name="26toggle" id="cmd_26toggle"/>
+    <command name="27on" id="cmd_27on"/>
+    <command name="27off" id="cmd_27off"/>
+    <command name="27toggle" id="cmd_27toggle"/>
+    <command name="28on" id="cmd_28on"/>
+    <command name="28off" id="cmd_28off"/>
+    <command name="28toggle" id="cmd_28toggle"/>
+    <command name="29on" id="cmd_29on"/>
+    <command name="29off" id="cmd_29off"/>
+    <command name="29toggle" id="cmd_29toggle"/>
+    <command name="30on" id="cmd_30on"/>
+    <command name="30off" id="cmd_30off"/>
+    <command name="30toggle" id="cmd_30toggle"/>
+    <command name="31on" id="cmd_31on"/>
+    <command name="31off" id="cmd_31off"/>
+    <command name="31toggle" id="cmd_31toggle"/>
+    <command name="32on" id="cmd_32on"/>
+    <command name="32off" id="cmd_32off"/>
+    <command name="32toggle" id="cmd_32toggle"/>
+    <command id="all_on"/>
+    <command id="all_off"/>
+    <command id="all_toggle"/>
+    <command id="HTPC_5_1"/>
+    <command id="HTPC_7_1"/>
+    <command id="cmd_2_2_2" name="2_2_2"/>
+    <command id="dvd_audio"/>
+    <command id="dvd_audio_bs"/>
 
-        <command id="switch_2arg">
-            <parameter name="switch_no"/>
-            <parameter name="value"/>
-        </command>
-    </group>
+    <command id="switch_2arg">
+      <parameter name="switch_no"/>
+      <parameter name="value"/>
+    </command>
+  </group>
   
-    <group id="experimenting">
-        <command id="cmd_0x00"/>
-        <command id="cmd_0x01"/>
-        <command id="cmd_0x02"/>
-        <command id="cmd_0x03"/>
-        <command id="cmd_0x04"/>
-        <command id="cmd_0x05"/>
-        <command id="cmd_0x06"/>
-        <command id="cmd_0x07"/>
-        <command id="cmd_0x08"/>
-        <command id="cmd_0x09"/>
-        <command id="cmd_0x0a"/>
-        <command id="cmd_0x0b"/>
-        <command id="cmd_0x0c"/>
-        <command id="cmd_0x0d"/>
-        <command id="cmd_0x0e"/>
-        <command id="cmd_0x0f"/>
-        <command id="cmd_0x10"/>
-        <command id="cmd_0x11"/>
-        <command id="cmd_0x12"/>
-        <command id="cmd_0x13"/>
-        <command id="cmd_0x14"/>
-        <command id="cmd_0x15"/>
-        <command id="cmd_0x16"/>
-        <command id="cmd_0x17"/>
-        <command id="cmd_0x18"/>
-        <command id="cmd_0x19"/>
-        <command id="cmd_0x1a"/>
-        <command id="cmd_0x1b"/>
-        <command id="cmd_0x1c"/>
-        <command id="cmd_0x1d"/>
-        <command id="cmd_0x1e"/>
-        <command id="cmd_0x1f"/>
-        <command id="cmd_0x20"/>
-        <command id="cmd_0x21"/>
-        <command id="cmd_0x22"/>
-        <command id="cmd_0x23"/>
-        <command id="cmd_0x24"/>
-        <command id="cmd_0x25"/>
-        <command id="cmd_0x26"/>
-        <command id="cmd_0x27"/>
-        <command id="cmd_0x28"/>
-        <command id="cmd_0x29"/>
-        <command id="cmd_0x2a"/>
-        <command id="cmd_0x2b"/>
-        <command id="cmd_0x2c"/>
-        <command id="cmd_0x2d"/>
-        <command id="cmd_0x2e"/>
-        <command id="cmd_0x2f"/>
-        <command id="cmd_0x30"/>
-        <command id="cmd_0x31"/>
-        <command id="cmd_0x32"/>
-        <command id="cmd_0x33"/>
-        <command id="cmd_0x34"/>
-        <command id="cmd_0x35"/>
-        <command id="cmd_0x36"/>
-        <command id="cmd_0x37"/>
-        <command id="cmd_0x38"/>
-        <command id="cmd_0x39"/>
-        <command id="cmd_0x3a"/>
-        <command id="cmd_0x3b"/>
-        <command id="cmd_0x3c"/>
-        <command id="cmd_0x3d"/>
-        <command id="cmd_0x3e"/>
-        <command id="cmd_0x3f"/>
-        <command id="cmd_0x40"/>
-        <command id="cmd_0x41"/>
-        <command id="cmd_0x42"/>
-        <command id="cmd_0x43"/>
-        <command id="cmd_0x44"/>
-        <command id="cmd_0x45"/>
-        <command id="cmd_0x46"/>
-        <command id="cmd_0x47"/>
-        <command id="cmd_0x48"/>
-        <command id="cmd_0x49"/>
-        <command id="cmd_0x4a"/>
-        <command id="cmd_0x4b"/>
-        <command id="cmd_0x4c"/>
-        <command id="cmd_0x4d"/>
-        <command id="cmd_0x4e"/>
-        <command id="cmd_0x4f"/>
-        <command id="cmd_0x50"/>
-        <command id="cmd_0x51"/>
-        <command id="cmd_0x52"/>
-        <command id="cmd_0x53"/>
-        <command id="cmd_0x54"/>
-        <command id="cmd_0x55"/>
-        <command id="cmd_0x56"/>
-        <command id="cmd_0x57"/>
-        <command id="cmd_0x58"/>
-        <command id="cmd_0x59"/>
-        <command id="cmd_0x5a"/>
-        <command id="cmd_0x5b"/>
-        <command id="cmd_0x5c"/>
-        <command id="cmd_0x5d"/>
-        <command id="cmd_0x5e"/>
-        <command id="cmd_0x5f"/>
-        <command id="cmd_0x60"/>
-        <command id="cmd_0x61"/>
-        <command id="cmd_0x62"/>
-        <command id="cmd_0x63"/>
-        <command id="cmd_0x64"/>
-        <command id="cmd_0x65"/>
-        <command id="cmd_0x66"/>
-        <command id="cmd_0x67"/>
-        <command id="cmd_0x68"/>
-        <command id="cmd_0x69"/>
-        <command id="cmd_0x6a"/>
-        <command id="cmd_0x6b"/>
-        <command id="cmd_0x6c"/>
-        <command id="cmd_0x6d"/>
-        <command id="cmd_0x6e"/>
-        <command id="cmd_0x6f"/>
-        <command id="cmd_0x70"/>
-        <command id="cmd_0x71"/>
-        <command id="cmd_0x72"/>
-        <command id="cmd_0x73"/>
-        <command id="cmd_0x74"/>
-        <command id="cmd_0x75"/>
-        <command id="cmd_0x76"/>
-        <command id="cmd_0x77"/>
-        <command id="cmd_0x78"/>
-        <command id="cmd_0x79"/>
-        <command id="cmd_0x7a"/>
-        <command id="cmd_0x7b"/>
-        <command id="cmd_0x7c"/>
-        <command id="cmd_0x7d"/>
-        <command id="cmd_0x7e"/>
-        <command id="cmd_0x7f"/>
-        <command id="cmd_0x80"/>
-        <command id="cmd_0x81"/>
-        <command id="cmd_0x82"/>
-        <command id="cmd_0x83"/>
-        <command id="cmd_0x84"/>
-        <command id="cmd_0x85"/>
-        <command id="cmd_0x86"/>
-        <command id="cmd_0x87"/>
-        <command id="cmd_0x88"/>
-        <command id="cmd_0x89"/>
-        <command id="cmd_0x8a"/>
-        <command id="cmd_0x8b"/>
-        <command id="cmd_0x8c"/>
-        <command id="cmd_0x8d"/>
-        <command id="cmd_0x8e"/>
-        <command id="cmd_0x8f"/>
-        <command id="cmd_0x90"/>
-        <command id="cmd_0x91"/>
-        <command id="cmd_0x92"/>
-        <command id="cmd_0x93"/>
-        <command id="cmd_0x94"/>
-        <command id="cmd_0x95"/>
-        <command id="cmd_0x96"/>
-        <command id="cmd_0x97"/>
-        <command id="cmd_0x98"/>
-        <command id="cmd_0x99"/>
-        <command id="cmd_0x9a"/>
-        <command id="cmd_0x9b"/>
-        <command id="cmd_0x9c"/>
-        <command id="cmd_0x9d"/>
-        <command id="cmd_0x9e"/>
-        <command id="cmd_0x9f"/>
-        <command id="cmd_0xa0"/>
-        <command id="cmd_0xa1"/>
-        <command id="cmd_0xa2"/>
-        <command id="cmd_0xa3"/>
-        <command id="cmd_0xa4"/>
-        <command id="cmd_0xa5"/>
-        <command id="cmd_0xa6"/>
-        <command id="cmd_0xa7"/>
-        <command id="cmd_0xa8"/>
-        <command id="cmd_0xa9"/>
-        <command id="cmd_0xaa"/>
-        <command id="cmd_0xab"/>
-        <command id="cmd_0xac"/>
-        <command id="cmd_0xad"/>
-        <command id="cmd_0xae"/>
-        <command id="cmd_0xaf"/>
-        <command id="cmd_0xb0"/>
-        <command id="cmd_0xb1"/>
-        <command id="cmd_0xb2"/>
-        <command id="cmd_0xb3"/>
-        <command id="cmd_0xb4"/>
-        <command id="cmd_0xb5"/>
-        <command id="cmd_0xb6"/>
-        <command id="cmd_0xb7"/>
-        <command id="cmd_0xb8"/>
-        <command id="cmd_0xb9"/>
-        <command id="cmd_0xba"/>
-        <command id="cmd_0xbb"/>
-        <command id="cmd_0xbc"/>
-        <command id="cmd_0xbd"/>
-        <command id="cmd_0xbe"/>
-        <command id="cmd_0xbf"/>
-        <command id="cmd_0xc0"/>
-        <command id="cmd_0xc1"/>
-        <command id="cmd_0xc2"/>
-        <command id="cmd_0xc3"/>
-        <command id="cmd_0xc4"/>
-        <command id="cmd_0xc5"/>
-        <command id="cmd_0xc6"/>
-        <command id="cmd_0xc7"/>
-        <command id="cmd_0xc8"/>
-        <command id="cmd_0xc9"/>
-        <command id="cmd_0xca"/>
-        <command id="cmd_0xcb"/>
-        <command id="cmd_0xcc"/>
-        <command id="cmd_0xcd"/>
-        <command id="cmd_0xce"/>
-        <command id="cmd_0xcf"/>
-        <command id="cmd_0xd0"/>
-        <command id="cmd_0xd1"/>
-        <command id="cmd_0xd2"/>
-        <command id="cmd_0xd3"/>
-        <command id="cmd_0xd4"/>
-        <command id="cmd_0xd5"/>
-        <command id="cmd_0xd6"/>
-        <command id="cmd_0xd7"/>
-        <command id="cmd_0xd8"/>
-        <command id="cmd_0xd9"/>
-        <command id="cmd_0xda"/>
-        <command id="cmd_0xdb"/>
-        <command id="cmd_0xdc"/>
-        <command id="cmd_0xdd"/>
-        <command id="cmd_0xde"/>
-        <command id="cmd_0xdf"/>
-        <command id="cmd_0xe0"/>
-        <command id="cmd_0xe1"/>
-        <command id="cmd_0xe2"/>
-        <command id="cmd_0xe3"/>
-        <command id="cmd_0xe4"/>
-        <command id="cmd_0xe5"/>
-        <command id="cmd_0xe6"/>
-        <command id="cmd_0xe7"/>
-        <command id="cmd_0xe8"/>
-        <command id="cmd_0xe9"/>
-        <command id="cmd_0xea"/>
-        <command id="cmd_0xeb"/>
-        <command id="cmd_0xec"/>
-        <command id="cmd_0xed"/>
-        <command id="cmd_0xee"/>
-        <command id="cmd_0xef"/>
-        <command id="cmd_0xf0"/>
-        <command id="cmd_0xf1"/>
-        <command id="cmd_0xf2"/>
-        <command id="cmd_0xf3"/>
-        <command id="cmd_0xf4"/>
-        <command id="cmd_0xf5"/>
-        <command id="cmd_0xf6"/>
-        <command id="cmd_0xf7"/>
-        <command id="cmd_0xf8"/>
-        <command id="cmd_0xf9"/>
-        <command id="cmd_0xfa"/>
-        <command id="cmd_0xfb"/>
-        <command id="cmd_0xfc"/>
-        <command id="cmd_0xfd"/>
-        <command id="cmd_0xfe"/>
-        <command id="cmd_0xff"/>
-    </group>
+  <group id="experimenting">
+    <command id="cmd_0x00"/>
+    <command id="cmd_0x01"/>
+    <command id="cmd_0x02"/>
+    <command id="cmd_0x03"/>
+    <command id="cmd_0x04"/>
+    <command id="cmd_0x05"/>
+    <command id="cmd_0x06"/>
+    <command id="cmd_0x07"/>
+    <command id="cmd_0x08"/>
+    <command id="cmd_0x09"/>
+    <command id="cmd_0x0a"/>
+    <command id="cmd_0x0b"/>
+    <command id="cmd_0x0c"/>
+    <command id="cmd_0x0d"/>
+    <command id="cmd_0x0e"/>
+    <command id="cmd_0x0f"/>
+    <command id="cmd_0x10"/>
+    <command id="cmd_0x11"/>
+    <command id="cmd_0x12"/>
+    <command id="cmd_0x13"/>
+    <command id="cmd_0x14"/>
+    <command id="cmd_0x15"/>
+    <command id="cmd_0x16"/>
+    <command id="cmd_0x17"/>
+    <command id="cmd_0x18"/>
+    <command id="cmd_0x19"/>
+    <command id="cmd_0x1a"/>
+    <command id="cmd_0x1b"/>
+    <command id="cmd_0x1c"/>
+    <command id="cmd_0x1d"/>
+    <command id="cmd_0x1e"/>
+    <command id="cmd_0x1f"/>
+    <command id="cmd_0x20"/>
+    <command id="cmd_0x21"/>
+    <command id="cmd_0x22"/>
+    <command id="cmd_0x23"/>
+    <command id="cmd_0x24"/>
+    <command id="cmd_0x25"/>
+    <command id="cmd_0x26"/>
+    <command id="cmd_0x27"/>
+    <command id="cmd_0x28"/>
+    <command id="cmd_0x29"/>
+    <command id="cmd_0x2a"/>
+    <command id="cmd_0x2b"/>
+    <command id="cmd_0x2c"/>
+    <command id="cmd_0x2d"/>
+    <command id="cmd_0x2e"/>
+    <command id="cmd_0x2f"/>
+    <command id="cmd_0x30"/>
+    <command id="cmd_0x31"/>
+    <command id="cmd_0x32"/>
+    <command id="cmd_0x33"/>
+    <command id="cmd_0x34"/>
+    <command id="cmd_0x35"/>
+    <command id="cmd_0x36"/>
+    <command id="cmd_0x37"/>
+    <command id="cmd_0x38"/>
+    <command id="cmd_0x39"/>
+    <command id="cmd_0x3a"/>
+    <command id="cmd_0x3b"/>
+    <command id="cmd_0x3c"/>
+    <command id="cmd_0x3d"/>
+    <command id="cmd_0x3e"/>
+    <command id="cmd_0x3f"/>
+    <command id="cmd_0x40"/>
+    <command id="cmd_0x41"/>
+    <command id="cmd_0x42"/>
+    <command id="cmd_0x43"/>
+    <command id="cmd_0x44"/>
+    <command id="cmd_0x45"/>
+    <command id="cmd_0x46"/>
+    <command id="cmd_0x47"/>
+    <command id="cmd_0x48"/>
+    <command id="cmd_0x49"/>
+    <command id="cmd_0x4a"/>
+    <command id="cmd_0x4b"/>
+    <command id="cmd_0x4c"/>
+    <command id="cmd_0x4d"/>
+    <command id="cmd_0x4e"/>
+    <command id="cmd_0x4f"/>
+    <command id="cmd_0x50"/>
+    <command id="cmd_0x51"/>
+    <command id="cmd_0x52"/>
+    <command id="cmd_0x53"/>
+    <command id="cmd_0x54"/>
+    <command id="cmd_0x55"/>
+    <command id="cmd_0x56"/>
+    <command id="cmd_0x57"/>
+    <command id="cmd_0x58"/>
+    <command id="cmd_0x59"/>
+    <command id="cmd_0x5a"/>
+    <command id="cmd_0x5b"/>
+    <command id="cmd_0x5c"/>
+    <command id="cmd_0x5d"/>
+    <command id="cmd_0x5e"/>
+    <command id="cmd_0x5f"/>
+    <command id="cmd_0x60"/>
+    <command id="cmd_0x61"/>
+    <command id="cmd_0x62"/>
+    <command id="cmd_0x63"/>
+    <command id="cmd_0x64"/>
+    <command id="cmd_0x65"/>
+    <command id="cmd_0x66"/>
+    <command id="cmd_0x67"/>
+    <command id="cmd_0x68"/>
+    <command id="cmd_0x69"/>
+    <command id="cmd_0x6a"/>
+    <command id="cmd_0x6b"/>
+    <command id="cmd_0x6c"/>
+    <command id="cmd_0x6d"/>
+    <command id="cmd_0x6e"/>
+    <command id="cmd_0x6f"/>
+    <command id="cmd_0x70"/>
+    <command id="cmd_0x71"/>
+    <command id="cmd_0x72"/>
+    <command id="cmd_0x73"/>
+    <command id="cmd_0x74"/>
+    <command id="cmd_0x75"/>
+    <command id="cmd_0x76"/>
+    <command id="cmd_0x77"/>
+    <command id="cmd_0x78"/>
+    <command id="cmd_0x79"/>
+    <command id="cmd_0x7a"/>
+    <command id="cmd_0x7b"/>
+    <command id="cmd_0x7c"/>
+    <command id="cmd_0x7d"/>
+    <command id="cmd_0x7e"/>
+    <command id="cmd_0x7f"/>
+    <command id="cmd_0x80"/>
+    <command id="cmd_0x81"/>
+    <command id="cmd_0x82"/>
+    <command id="cmd_0x83"/>
+    <command id="cmd_0x84"/>
+    <command id="cmd_0x85"/>
+    <command id="cmd_0x86"/>
+    <command id="cmd_0x87"/>
+    <command id="cmd_0x88"/>
+    <command id="cmd_0x89"/>
+    <command id="cmd_0x8a"/>
+    <command id="cmd_0x8b"/>
+    <command id="cmd_0x8c"/>
+    <command id="cmd_0x8d"/>
+    <command id="cmd_0x8e"/>
+    <command id="cmd_0x8f"/>
+    <command id="cmd_0x90"/>
+    <command id="cmd_0x91"/>
+    <command id="cmd_0x92"/>
+    <command id="cmd_0x93"/>
+    <command id="cmd_0x94"/>
+    <command id="cmd_0x95"/>
+    <command id="cmd_0x96"/>
+    <command id="cmd_0x97"/>
+    <command id="cmd_0x98"/>
+    <command id="cmd_0x99"/>
+    <command id="cmd_0x9a"/>
+    <command id="cmd_0x9b"/>
+    <command id="cmd_0x9c"/>
+    <command id="cmd_0x9d"/>
+    <command id="cmd_0x9e"/>
+    <command id="cmd_0x9f"/>
+    <command id="cmd_0xa0"/>
+    <command id="cmd_0xa1"/>
+    <command id="cmd_0xa2"/>
+    <command id="cmd_0xa3"/>
+    <command id="cmd_0xa4"/>
+    <command id="cmd_0xa5"/>
+    <command id="cmd_0xa6"/>
+    <command id="cmd_0xa7"/>
+    <command id="cmd_0xa8"/>
+    <command id="cmd_0xa9"/>
+    <command id="cmd_0xaa"/>
+    <command id="cmd_0xab"/>
+    <command id="cmd_0xac"/>
+    <command id="cmd_0xad"/>
+    <command id="cmd_0xae"/>
+    <command id="cmd_0xaf"/>
+    <command id="cmd_0xb0"/>
+    <command id="cmd_0xb1"/>
+    <command id="cmd_0xb2"/>
+    <command id="cmd_0xb3"/>
+    <command id="cmd_0xb4"/>
+    <command id="cmd_0xb5"/>
+    <command id="cmd_0xb6"/>
+    <command id="cmd_0xb7"/>
+    <command id="cmd_0xb8"/>
+    <command id="cmd_0xb9"/>
+    <command id="cmd_0xba"/>
+    <command id="cmd_0xbb"/>
+    <command id="cmd_0xbc"/>
+    <command id="cmd_0xbd"/>
+    <command id="cmd_0xbe"/>
+    <command id="cmd_0xbf"/>
+    <command id="cmd_0xc0"/>
+    <command id="cmd_0xc1"/>
+    <command id="cmd_0xc2"/>
+    <command id="cmd_0xc3"/>
+    <command id="cmd_0xc4"/>
+    <command id="cmd_0xc5"/>
+    <command id="cmd_0xc6"/>
+    <command id="cmd_0xc7"/>
+    <command id="cmd_0xc8"/>
+    <command id="cmd_0xc9"/>
+    <command id="cmd_0xca"/>
+    <command id="cmd_0xcb"/>
+    <command id="cmd_0xcc"/>
+    <command id="cmd_0xcd"/>
+    <command id="cmd_0xce"/>
+    <command id="cmd_0xcf"/>
+    <command id="cmd_0xd0"/>
+    <command id="cmd_0xd1"/>
+    <command id="cmd_0xd2"/>
+    <command id="cmd_0xd3"/>
+    <command id="cmd_0xd4"/>
+    <command id="cmd_0xd5"/>
+    <command id="cmd_0xd6"/>
+    <command id="cmd_0xd7"/>
+    <command id="cmd_0xd8"/>
+    <command id="cmd_0xd9"/>
+    <command id="cmd_0xda"/>
+    <command id="cmd_0xdb"/>
+    <command id="cmd_0xdc"/>
+    <command id="cmd_0xdd"/>
+    <command id="cmd_0xde"/>
+    <command id="cmd_0xdf"/>
+    <command id="cmd_0xe0"/>
+    <command id="cmd_0xe1"/>
+    <command id="cmd_0xe2"/>
+    <command id="cmd_0xe3"/>
+    <command id="cmd_0xe4"/>
+    <command id="cmd_0xe5"/>
+    <command id="cmd_0xe6"/>
+    <command id="cmd_0xe7"/>
+    <command id="cmd_0xe8"/>
+    <command id="cmd_0xe9"/>
+    <command id="cmd_0xea"/>
+    <command id="cmd_0xeb"/>
+    <command id="cmd_0xec"/>
+    <command id="cmd_0xed"/>
+    <command id="cmd_0xee"/>
+    <command id="cmd_0xef"/>
+    <command id="cmd_0xf0"/>
+    <command id="cmd_0xf1"/>
+    <command id="cmd_0xf2"/>
+    <command id="cmd_0xf3"/>
+    <command id="cmd_0xf4"/>
+    <command id="cmd_0xf5"/>
+    <command id="cmd_0xf6"/>
+    <command id="cmd_0xf7"/>
+    <command id="cmd_0xf8"/>
+    <command id="cmd_0xf9"/>
+    <command id="cmd_0xfa"/>
+    <command id="cmd_0xfb"/>
+    <command id="cmd_0xfc"/>
+    <command id="cmd_0xfd"/>
+    <command id="cmd_0xfe"/>
+    <command id="cmd_0xff"/>
+  </group>
 
-    <group id="keyboard_keys">
+  <group id="keyboard_keys">
     <!-- first row -->
-        <command id="key_esc"/>
-        <command id="key_f1"/>
-        <command id="key_f2"/>
-        <command id="key_f3"/>
-        <command id="key_f4"/>
-        <command id="key_f5"/>
-        <command id="key_f6"/>
-        <command id="key_f7"/>
-        <command id="key_f8"/>
-        <command id="key_f9"/>
-        <command id="key_f10"/>
-        <command id="key_numlock"/>
-        <command id="key_sysrq"/>
-        <command id="key_scrolllock"/>
-        <command id="key_pause"/>
-        <command id="key_insert"/>
-        <command id="key_delete"/>
+    <command id="key_esc"/>
+    <command id="key_f1"/>
+    <command id="key_f2"/>
+    <command id="key_f3"/>
+    <command id="key_f4"/>
+    <command id="key_f5"/>
+    <command id="key_f6"/>
+    <command id="key_f7"/>
+    <command id="key_f8"/>
+    <command id="key_f9"/>
+    <command id="key_f10"/>
+    <command id="key_numlock"/>
+    <command id="key_sysrq"/>
+    <command id="key_scrolllock"/>
+    <command id="key_pause"/>
+    <command id="key_insert"/>
+    <command id="key_delete"/>
 
     <!-- second row -->
-        <command id="key_1"/>
-        <command id="key_2"/>
-        <command id="key_3"/>
-        <command id="key_4"/>
-        <command id="key_5"/>
-        <command id="key_6"/>
-        <command id="key_7"/>
-        <command id="key_8"/>
-        <command id="key_9"/>
-        <command id="key_0"/>
-        <command id="key_minus"/>
-        <command id="key_equal"/>
-        <command id="key_backspace"/>
-        <command id="key_home"/>
+    <command id="key_1"/>
+    <command id="key_2"/>
+    <command id="key_3"/>
+    <command id="key_4"/>
+    <command id="key_5"/>
+    <command id="key_6"/>
+    <command id="key_7"/>
+    <command id="key_8"/>
+    <command id="key_9"/>
+    <command id="key_0"/>
+    <command id="key_minus"/>
+    <command id="key_equal"/>
+    <command id="key_backspace"/>
+    <command id="key_home"/>
 
     <!-- third row -->
-        <command id="key_tab"/>
-        <command id="key_q"/>
-        <command id="key_w"/>
-        <command id="key_e"/>
-        <command id="key_r"/>
-        <command id="key_t"/>
-        <command id="key_y"/>
-        <command id="key_u"/>
-        <command id="key_i"/>
-        <command id="key_o"/>
-        <command id="key_p"/>
-        <command id="key_leftbrace"/>
-        <command id="key_rightbrace"/>
-        <command id="key_backslash"/>
-        <command id="key_pageup"/>
+    <command id="key_tab"/>
+    <command id="key_q"/>
+    <command id="key_w"/>
+    <command id="key_e"/>
+    <command id="key_t"/>
+    <command id="key_y"/>
+    <command id="key_u"/>
+    <command id="key_i"/>
+    <command id="key_o"/>
+    <command id="key_p"/>
+    <command id="key_leftbrace"/>
+    <command id="key_rightbrace"/>
+    <command id="key_backslash"/>
+    <command id="key_pageup"/>
 
     <!-- forth row -->
-        <command id="key_capslock"/>
-        <command id="key_a"/>
-        <command id="key_s"/>
-        <command id="key_d"/>
-        <command id="key_f"/>
-        <command id="key_g"/>
-        <command id="key_h"/>
-        <command id="key_j"/>
-        <command id="key_k"/>
-        <command id="key_l"/>
-        <command id="key_semicolon"/>
-        <command id="key_apostrophe"/>
-        <command id="key_enter"/>
-        <command id="key_pagedown"/>
+    <command id="key_capslock"/>
+    <command id="key_a"/>
+    <command id="key_s"/>
+    <command id="key_d"/>
+    <command id="key_f"/>
+    <command id="key_g"/>
+    <command id="key_h"/>
+    <command id="key_j"/>
+    <command id="key_k"/>
+    <command id="key_l"/>
+    <command id="key_semicolon"/>
+    <command id="key_apostrophe"/>
+    <command id="key_enter"/>
+    <command id="key_pagedown"/>
 
     <!-- fifth row -->
-        <command id="key_leftshift"/>
-        <command id="key_z"/>
-        <command id="key_x"/>
-        <command id="key_c"/>
-        <command id="key_v"/>
-        <command id="key_b"/>
-        <command id="key_n"/>
-        <command id="key_m"/>
-        <command id="key_comma"/>
-        <command id="key_dot"/>
-        <command id="key_slash"/>
-        <command id="key_rightshift"/>
-        <command id="key_up"/>
-        <command id="key_end"/>
+    <command id="key_leftshift"/>
+    <command id="key_z"/>
+    <command id="key_x"/>
+    <command id="key_c"/>
+    <command id="key_v"/>
+    <command id="key_b"/>
+    <command id="key_n"/>
+    <command id="key_m"/>
+    <command id="key_comma"/>
+    <command id="key_dot"/>
+    <command id="key_slash"/>
+    <command id="key_rightshift"/>
+    <command id="key_up"/>
+    <command id="key_end"/>
 
     <!-- sixth row -->
-        <command id="key_fn_down" remark="In general not transmitted"/>
-        <command id="key_fn_up" remark="In general not transmitted"/>
-        <command id="key_leftctrl"/>
-        <command id="key_leftmeta"/>
-        <command id="key_leftalt"/>
-        <command id="key_space"/>
-        <command id="key_102nd"/>
-        <command id="key_grave"/>
-        <command id="key_rightalt"/>
-        <command id="key_rightmeta"/>
-        <command id="key_left"/>
-        <command id="key_down"/>
-        <command id="key_right"/>
+    <command id="key_leftctrl"/>
+    <command id="key_leftmeta"/>
+    <command id="key_leftalt"/>
+    <command id="key_space"/>
+    <command id="key_102nd"/>
+    <command id="key_grave"/>
+    <command id="key_rightalt"/>
+    <command id="key_rightmeta"/>
+    <command id="key_left"/>
+    <command id="key_down"/>
+    <command id="key_right"/>
 
-    <!-- mouse -->
-        <command id="key_btnleft"/>
-        <command id="key_btnmiddle"/>
-        <command id="key_btnright"/>
-    </group>
+    <!-- other -->
+    <command id="key_btnleft"/>
+    <command id="key_btnright"/>
+  </group>
 
-    <group id="networking">
-        <command id="ping"/>
-        <command id="wol"/>
-        <command id="browse"/>
-    </group>
+  <group id="networking">
+    <command id="ping"/>
+    <command id="wol"/>
+    <command id="browse"/>
+  </group>
 
-    <group id="camera_commmands">
-        <command id="trigger"/>
-        <command id="delayed_trigger"/>
-    </group>
+  <group id="camera_commmands">
+    <command id="trigger"/>
+    <command id="delayed_trigger"/>
+  </group>
 </commandnames>

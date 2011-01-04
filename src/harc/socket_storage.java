@@ -1,28 +1,8 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
 package harc;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 /**
  *
@@ -42,7 +22,7 @@ public class socket_storage {
     }
 
     private static void debug(String s) {
-        if (debug || debugargs.dbg_socket_storage())
+        if (debug)
             System.err.println(s);
     }
 
@@ -120,9 +100,9 @@ public class socket_storage {
         } else {
             debug("Unknown, available, creating new and checking out");
             try {
-                sock = new Socket(hostname, portno);
-                sockettable.put(addr.toString(), new socket_stat(sock, true));
-                debug("succeeded!");
+            sock = new Socket(hostname, portno);
+            sockettable.put(addr.toString(), new socket_stat(sock, true));
+            debug("succeeded!");
             } catch (java.net.ConnectException e) {
                 System.err.println("]]]host " + hostname + " refused connect");
             }
@@ -164,11 +144,9 @@ public class socket_storage {
             debug("unknown socket, closing");
             sock.close();
         }
-        debug("Now there are " + sockettable.size() + " sockets in the table.");
     }
 
     public static void dispose_sockets(boolean brutal) throws IOException {
-        debug("dispose_socket called");
         for (Enumeration e = sockettable.keys(); e.hasMoreElements();) {
             String addr = (String) e.nextElement();
             Socket skt = sockettable.get(addr).sock;
@@ -195,7 +173,6 @@ public class socket_storage {
             sock1 = getsocket(host, port, unique);
             sock2 = getsocket(host, port, unique);
             sock3 = getsocket(host, port, unique);
-            Thread.sleep(2000);
 
             returnsocket(sock1, false);
             sock4 = getsocket(host, port, unique);

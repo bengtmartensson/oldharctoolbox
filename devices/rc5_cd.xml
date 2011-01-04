@@ -2,9 +2,6 @@
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
 <device id="rc5_cd" name="Canonical RC5 CD-Player" vendor="" model="" type="cd">
-  <jp1data>
-    <setupcode value="1351"/>
-  </jp1data>
   <commandset type="ir" protocol="rc5" deviceno="20" toggle="yes" remotename="rc5_cd">
     <command cmdref="cmd_0" 			cmdno="0"/>
     <command cmdref="cmd_1" 			cmdno="1"/>

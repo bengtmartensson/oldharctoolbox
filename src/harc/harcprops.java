@@ -1,20 +1,3 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
 package harc;
 
 /**
@@ -26,12 +9,8 @@ package harc;
 // instead of a sensible default, or a warning.
 // Rewrite the get* set* function to call a helper function, possibly with default value.
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Properties;
+import java.io.*;
 
 public class harcprops {
 
@@ -39,7 +18,6 @@ public class harcprops {
     private String filename;
     private final static boolean use_xml = true;
     private boolean need_save;
-    public static final String default_propsfilename = "harc.properties.xml";
 
     private String appendable(String env) {
         String str = System.getenv(env);
@@ -61,10 +39,9 @@ public class harcprops {
         update("dtddir",	harc_home + "dtds");
         update("devicesdir",	harc_home + "devices");
         update("protocolsdir",	harc_home + "protocols");
-        update("buttons_remotesdir", harc_home + "button_remotes");
         update("exportdir",	harc_home + "exports");
         update("aliasfilename",	harc_home + "src/harc/commandnames.xml");
-        //update("macrofilename",	harc_home + "config/macros.xml");
+        update("macrofilename",	harc_home + "config/mymacs.xml");
         update("browser",	"firefox");
         update("rl_historyfile", home + ".harc.rl");
         update("appname",	"harc");
@@ -72,17 +49,6 @@ public class harcprops {
         update("helpfilename" , harc_home + "docs/harchelp.html");
         update("resultformat",	"[%2$tY-%2$tm-%2$td %2$tk:%2$tM:%2$tS] >%1$s<");
         update("commandformat", "harc>%1$s");
-        update("remotemaster_home", "/home/bengt/harc/jp1/remotemaster-1.89");
-        update("rmdu_button_rules", harc_home + "config/button_rules.xml");
-        // recognized are: "GnuReadline", "Editline", "Getline", "PureJava"
-        //update("python.console.readlinelib", "GnuReadline");
-        update("pythonlibdir", harc_home + "pythonlib");
-        update("python.home", "/usr/local/jython");
-        update("harcmacros", harc_home + "pythonlib" + File.separator + "harcinit.py");
-    }
-
-    public Properties get_props() {
-        return props;
     }
 
     public harcprops(String filename) {
@@ -159,18 +125,14 @@ public class harcprops {
         return props.getProperty("protocolsdir");
     }
 
-    public String get_buttons_remotesdir() {
-        return props.getProperty("buttons_remotesdir");
-    }
-
    public void set_devicesdir(String s) {
         props.setProperty("devicesdir", s);
         need_save = true;
     }
 
-    //public String get_macrofilename() {
-    //    return props.getProperty("macrofilename");
-    //}
+    public String get_macrofilename() {
+        return props.getProperty("macrofilename");
+    }
 
     public String get_aliasfilename() {
         return props.getProperty("aliasfilename");
@@ -190,10 +152,10 @@ public class harcprops {
         need_save = true;
     }
 
-    //public void set_macrofilename(String s) {
-    //    props.setProperty("macrofilename", s);
-    //    need_save = true;
-    //}
+    public void set_macrofilename(String s) {
+        props.setProperty("macrofilename", s);
+        need_save = true;
+    }
 
     public String get_browser() {
         return props.getProperty("browser");
@@ -228,53 +190,15 @@ public class harcprops {
         return props.getProperty("commandformat");
     }
 
-    public String get_rmdu_button_rules() {
-        return props.getProperty("rmdu_button_rules");
-    }
-
-    public void set_rmdu_button_rules(String s) {
-        props.setProperty("rmdu_button_rules", s);
-        need_save = true;
-    }
-
-    public String get_remotemaster_home() {
-        return props.getProperty("remotemaster_home");
-    }
-
-    public void set_remotemaster_home(String s) {
-        props.setProperty("remotemaster_home", s);
-        need_save = true;
-    }
-    
-    public String get_pythonlibdir() {
-        return props.getProperty("pythonlibdir");
-    }
-
-    public void set_pythonlibdir(String s) {
-        props.setProperty("pythonlibdir", s);
-        need_save = true;
-    }
-
-    public String get_harcmacros() {
-        return props.getProperty("harcmacros");
-    }
-
-    public void set_harcmacros(String s) {
-        props.setProperty("harcmacros", s);
-        need_save = true;
-    }
-
     private static harcprops instance = null;
 
     public static void initialize(String filename) {
-        if (filename == null)
-            filename = default_propsfilename;
         if (instance == null)
             instance = new harcprops(filename);
     }
 
     public static void initialize() {
-        initialize(null);
+        initialize("harc.properties.xml");
     }
 
     public static void finish() throws IOException {
@@ -287,7 +211,7 @@ public class harcprops {
     }
 
     public static void main(String[] args) {
-        String filename = args.length > 0 ? args[0] : null;
+        String filename = args.length > 0 ? args[0] : "harcprops.xml";
         harcprops p = new harcprops(filename);
         p.list();
         try {

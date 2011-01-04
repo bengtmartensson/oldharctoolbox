@@ -2,9 +2,6 @@
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
 <device id="pioneer_cld925" name="Pioneer CLD-925" vendor="Pioneer" model="CLD-925" type="ld">
-  <jp1data>
-    <setupcode value="1059"/>
-  </jp1data>
   <commandset type="ir" protocol="pioneer" deviceno="168" remotename="pioneer_cld925" original_remote="cu-cld115">
     <command cmdref="power_toggle"		cmdno="28"/>
     <command cmdref="power_on"			cmdno="26"/>
@@ -40,7 +37,7 @@
     <command cmdref="next"			cmdno="82"/>
     <command cmdref="rewind"			cmdno="17"/>
     <command cmdref="play"			cmdno="23"/>
-    <!--command cmdref="play"			cmdno="22"/-->
+    <command cmdref="play"			cmdno="22"/>
     <command cmdref="fast_forward"		cmdno="16"/>
     <command cmdref="side_a"			cmdno="77"/>
     <command cmdref="side_b"			cmdno="78"/>

@@ -328,7 +328,7 @@
 	</argument>
       </command>
 
-      <command cmdref="set_repeat" transmit="SRP $1" remark="Set repeat mode.">
+      <command cmdref="set_repeatmode" transmit="SRP $1" remark="Set repeat mode.">
 	<argument name="mode">
 	  <description>The mode parameter can be one of the followings:
 	CH 	Repeat chapter

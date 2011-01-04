@@ -3,7 +3,7 @@
  "../dtds/devices.dtd">
 <device id="pingable" name="Pingable" model="generic" pingable_on="yes" type="dumb">
   <description>Anything that responds to ping.</description>
-  <xi:include href="ping.xi">
-    <xi:fallback/>
-  </xi:include>
+    <commandset type="ip">
+      <command cmdref="ping"/>
+    </commandset>
 </device>

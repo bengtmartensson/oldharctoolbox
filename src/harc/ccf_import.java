@@ -1,20 +1,3 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
 package harc;
 
 import com.neuron.app.tonto.*;
@@ -23,9 +6,6 @@ import com.neuron.app.tonto.*;
 import org.w3c.dom.*;
 import java.io.*;
 
-/**
- * Class for importing Pronto CCF files of the first generation.
- */
 public class ccf_import {
 
     private CCF ccf;
@@ -54,9 +34,9 @@ public class ccf_import {
                             has_content = true;
                             ActionIRCode code = (ActionIRCode) action[j];
                             CCFIRCode ir = code.getIRCode();
-                            Element ccf_el = doc.createElement("ccf");
-                            ccf_el.appendChild(doc.createTextNode(ir.getCode()));
-                            the_code.appendChild(ccf_el);
+                            Element ccf = doc.createElement("ccf");
+                            ccf.appendChild(doc.createTextNode(ir.getCode()));
+                            the_code.appendChild(ccf);
                             no_ccf++;
                         }
                     }

@@ -3,9 +3,6 @@
  "../dtds/devices.dtd">
 <devices>
   <device id="mypowerbox" name="mypowerbox" vendor="Bengt Martensson" model="xyz" type="ha">
-    <jp1data>
-      <setupcode value="1877"/>
-    </jp1data>
     <commandset type="ir" protocol="rc5" deviceno="12" toggle="no" remotename="mypowerbox">
       <command cmdref="all_off" cmdno="0"/>
       <command cmdref="cmd_1toggle" cmdno="1"/>

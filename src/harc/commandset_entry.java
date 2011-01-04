@@ -1,20 +1,8 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
+/**
+ *
+ * @version 0.01
+ * @author Bengt Martensson
+ */
 package harc;
 
 public class commandset_entry {
@@ -26,7 +14,6 @@ public class commandset_entry {
     private int response_lines;
     private String response_ending;
     private String expected_response;
-    private String remark;
     private String[] arguments;
     private String ccf_toggle_0;
     private String ccf_toggle_1;
@@ -104,10 +91,6 @@ public class commandset_entry {
         return expected_response;
     }
 
-    public String get_remark() {
-        return remark;
-    }
-
     public String[] get_arguments() {
         return arguments;
     }
@@ -122,7 +105,7 @@ public class commandset_entry {
 
     private void setup(command_t cmd, short cmdno, String name, String transmit,
             int response_lines, String response_ending,
-            String expected_response, String remark,
+            String expected_response,
             String[] arguments,
             String ccf_toggle_0, String ccf_toggle_1) {
         this.cmd = cmd;
@@ -132,7 +115,6 @@ public class commandset_entry {
         this.response_lines = response_lines;
         this.response_ending = response_ending;
         this.expected_response = expected_response;
-        this.remark = remark;
         this.arguments = arguments;
         this.ccf_toggle_0 = ccf_toggle_0;
         this.ccf_toggle_1 = ccf_toggle_1;
@@ -141,7 +123,7 @@ public class commandset_entry {
     public commandset_entry(String cmdname, String cmdno, String name,
             String transmit, String response_lines,
             String response_end,
-            String expected_response, String remark, String[] arguments,
+            String expected_response, String[] arguments,
             String ccf_toggle_0, String ccf_toggle_1) {
         short cmdnumber =
                 cmdno.equals("")
@@ -151,6 +133,6 @@ public class commandset_entry {
 
         setup(command_t.parse(cmdname), cmdnumber, name, transmit,
                 response_lines.equals("") ? 0 : Integer.parseInt(response_lines),
-                response_end, expected_response, remark, arguments, ccf_toggle_0, ccf_toggle_1);
+                response_end, expected_response, arguments, ccf_toggle_0, ccf_toggle_1);
     }
 }

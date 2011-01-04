@@ -2,16 +2,12 @@
 <!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
 <devices>
-  <device id="yamaha_rxv1400" name="Yamaha RX-V 1400 Receiver" vendor="Yamaha"
-    model="RX-V 1400" type="receiver">
+  <device id="yamaha_rxv1400" name="Yamaha RX-V 1400 Receiver" vendor="Yamaha" model="RX-V 1400" type="receiver">
     <attributes>
       <attribute name="zone2"/>
       <attribute name="zone3"/>
     </attributes>
-    <jp1data>
-      <setupcode value="2033"/>
-    </jp1data>
-    <commandset type="ir" protocol="nec1" deviceno="122" remotename="yamaha_rxv1400_std" original_remote="RAV239" name="Yamaha standard IR commands">
+    <commandset type="ir" protocol="nec1" deviceno="122" remotename="yamaha_rxv1400" original_remote="RAV239" name="Yamaha standard IR commands">
 
 	<!-- Input -->
       <command cmdref="in_phono" 			cmdno="0x14"/>
@@ -32,7 +28,7 @@
       <command cmdref="volume_down" 		cmdno="0x1b"/>
       <command cmdref="power_on" 			cmdno="0x1d"/>
       <command cmdref="power_off" 			cmdno="0x1e"/>
-      <!--command cmdref="power_toggle" 		cmdno="0x1f"/--> <!-- not implemented -->
+      <command cmdref="power_toggle" 		cmdno="0x1f"/> <!-- not implemented -->
       <command cmdref="mute_toggle" 		cmdno="0x1c"/>
       <command cmdref="ext_input_toggle"		cmdno="0x87"/>
       <command cmdref="osd" 			cmdno="0xc2"/>
@@ -117,7 +113,7 @@
       <command cmdref="zone3_vcr2"	ifattribute="zone3"	cmdno="0xfa"/>
       <command cmdref="zone3_video_aux"	ifattribute="zone3"	cmdno="0xf0"/>
     </commandset>
-    <commandset type="ir" protocol="nec1" deviceno="126" remotename="yamaha_rxv1400_ext" original_remote="none" name="Yamaha extended IR commands">
+    <commandset type="ir" protocol="nec1" deviceno="126" remotename="yamaha_rxv1400" original_remote="none" name="Yamaha extended IR commands">
       <command cmdref="zone2_on" ifattribute="zone2"	cmdno="0xba"/>
       <command cmdref="zone2_off" ifattribute="zone2" cmdno="0xbb"/>
       <command cmdref="power_on"			cmdno="0x7e"/>

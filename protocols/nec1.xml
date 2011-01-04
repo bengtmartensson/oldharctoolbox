@@ -4,7 +4,7 @@
 <irprotocol name="nec1" id="nec1">
   <jp1data>
     <protocol number="00 5A" name="NEC1"/>
-    <tohex function="reverse_complement" bits="8"/>
+    <tohex function="reverse-invert" bits="8"/>
   </jp1data>
   <cooked-ccf-string format="900A 006D 0000 0001 %02x%02x %02x%02x">
     <parameterref parameter="deviceno"/>

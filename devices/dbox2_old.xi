@@ -30,12 +30,13 @@
   <command cmdref="home"  	wakeup="yes" cmdno="0x20"/>
 
   <!-- The "double arrows" (?) on very old remotes -->
-  <command cmdref="page_down" 	wakeup="no"  cmdno="0x53"/>
-  <command cmdref="page_up" 	wakeup="no"  cmdno="0x54"/>
+  <command cmdref="page_down" 	wakeup="yes" cmdno="0x53"/>
+  <command cmdref="page_up" 	wakeup="yes" cmdno="0x54"/>
 
-  <!-- Not present on most remotes. -->
-  <command cmdref="topleft" 	wakeup="no"  cmdno="0xff"/>
-  <command cmdref="topright" 	wakeup="no"  cmdno="0xfb"/>
-  <command cmdref="bottomleft" 	wakeup="no"  cmdno="0xfd"/>
-  <command cmdref="bottomright" wakeup="no"  cmdno="0xfc"/>
+  <!-- To use these (other than the first one) modify
+  dbox2_fp_rc.c, line 71-74. -->
+  <command cmdref="topleft" 	wakeup="yes" cmdno="0xff"/>
+  <command cmdref="topright" 	wakeup="yes" cmdno="0xfb"/>
+  <command cmdref="bottomleft" 	wakeup="yes" cmdno="0xfd"/>
+  <command cmdref="bottomright" wakeup="yes" cmdno="0xfc"/>
 </commandset>

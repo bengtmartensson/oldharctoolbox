@@ -2,9 +2,6 @@
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
 "../dtds/devices.dtd">
 <device id="analog_8ch_switch" name="8 channel analog switch" vendor="Bengt Martensson" model="unique!" type="misc_audio">
-  <jp1data>
-    <setupcode value="0031"/>
-  </jp1data>
   <commandset type="ir" protocol="rc5" toggle="no" deviceno="20" remotename="analog_8ch_switch">
     <command cmdref="all_off" cmdno="0"/>
     <command cmdref="cmd_1toggle" cmdno="1"/>

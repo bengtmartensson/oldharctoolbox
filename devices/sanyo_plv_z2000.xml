@@ -131,7 +131,7 @@
 	    <table index="string">
 	      <entry value="00" desc="Power On"/>
 	      <entry value="80" desc="Standby"/>
-	      <entry value="40" desc="Processing Countdown"/><!-- warming up -->
+	      <entry value="40" desc="Processing Countdown"/>
 	      <entry value="20" desc="Processing Cooling down"/>
 	      <entry value="10" desc="Power Failure"/>
 	      <entry value="28" desc="Processing cooling down due to abnormal temperature"/>

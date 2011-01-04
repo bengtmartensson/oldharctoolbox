@@ -1,29 +1,15 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
+/**
+ *
+ * @version 0.01 
+ * @author Bengt Martensson
+ */
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
+// A LIRC network client.
 package harc;
 
 import java.io.*;
 import java.net.*;
 
-/**
- * A <a href="http://www.lirc.org">LIRC</a> client, talking to a remote LIRC
- * server through a TCP port.
- */
 public class lirc {
 
     private String lirc_host;
@@ -197,12 +183,10 @@ public class lirc {
         return result;
     }
 
-    /** Requires a nonstandard LIRC server */
     public void send_ccf(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
         send_command("SEND_CCF_ONCE " + (count - 1) + " " + ccf);
     }
 
-    /** Requires a nonstandard LIRC server */
     public void send_ccf_repeat(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
         send_command("SEND_CCF_START " + ccf);
     }
@@ -231,7 +215,6 @@ public class lirc {
         return send_command("LIST");
     }
 
-    /** Requires a nonstandard LIRC server */
     public String[] get_ccf_remote() throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("CCF");
     }
@@ -240,7 +223,6 @@ public class lirc {
         return send_command("LIST " + remote);
     }
 
-    /** Requires a nonstandard LIRC server */
     public String[] get_ccf_remote(String remote) throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("CCF " + remote);
     }
@@ -249,7 +231,6 @@ public class lirc {
         return send_command("LIST " + remote + " " + command)[0];
     }
 
-    /** Requires a nonstandard LIRC server */
     public String get_ccf_remote_command(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("CCF " + remote + " " + command)[0];
     }

@@ -1,19 +1,7 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
+/**
+ *
+ *
+ */
 
 // In this class, toggletype should not be used, a toggle is just any parameter
 // holding the value 0 or 1 given to us.
@@ -28,10 +16,6 @@ public class protocol_parser extends raw_ir {
 
     private final static int no_value = -1;
     public final static short no_subdevice = -1;
-    private final static short no_device = -1;
-    private final static short no_command = -1;
-
-    private static boolean debug = false;
 
     private static class digested_protocol {
 
@@ -45,22 +29,16 @@ public class protocol_parser extends raw_ir {
         private Document doc = null;
         public Element intro_element = null;
         public Element repeat_element = null;
-        public jp1protocoldata jp1data;// = new jp1protocoldata();
 
         public digested_protocol(String name) {
             this.name = name;
             String filename = harcprops.get_instance().get_protocolsdir() + File.separator + name + harcutils.protocolfile_extension;
             try {
                 doc = harcutils.open_xmlfile(filename);
-                if (doc == null)
-                    return;
             } catch (IOException e) {
                 System.err.println(e.getMessage());
                 return;
             } catch (SAXParseException e) {
-                System.err.println(e.getMessage());
-                return;
-            } catch (SAXException e) {
                 System.err.println(e.getMessage());
                 return;
             }
@@ -113,8 +91,8 @@ public class protocol_parser extends raw_ir {
                 if (nl.getLength() > 0)
                     parameter_defaults.put(param_name, (Element) nl.item(0));
 
-            //if (param_name.equals("toggle"))
-            //    has_toggle = true;
+                //if (param_name.equals("toggle"))
+                //    has_toggle = true;
             }
 
             Element e = (Element) doc.getElementsByTagName("intro").item(0);
@@ -126,48 +104,8 @@ public class protocol_parser extends raw_ir {
 
             valid = true;
             //digested_protocols.put(name, this);
-
-            try {
-                NodeList nl = doc.getElementsByTagName("jp1data");
-                //if (nl.getLength() > 0) {
-                Element jp1dat = (Element) (nl.item(0));
-                Element prot = (Element) (jp1dat.getElementsByTagName("protocol").item(0));
-                //System.err.println(jp1dat.getElementsByTagName("protocol").getLength());
-                String /*jp1data.*/protocol_name = prot.getAttribute("name");
-                int protocol_number = -1;
-                try {
-                    /*jp1data.*/protocol_number = Integer.parseInt(prot.getAttribute("number").replaceAll(" +", ""), 16);
-                } catch(NumberFormatException ex) {
-                    System.err.println("Warning: cannot parse jp1 protocol number in file " + filename);
-                }
-                Element tohex = (Element) jp1dat.getElementsByTagName("tohex").item(0);
-                jp1protocoldata.tohex_function function;
-                try {
-                    /*jp1data.*/function = jp1protocoldata.tohex_function.valueOf(tohex.getAttribute("function"));
-                } catch (IllegalArgumentException ex) {
-                    System.err.println("Nonsensical tohex function, selecting identity instead.");
-                    //System.err.println(ex.getMessage());
-                    function = jp1protocoldata.tohex_function.id;
-                }
-                int /*jp1data.*/bits = Integer.parseInt(tohex.getAttribute("bits"));
-
-                jp1data = new jp1protocoldata(protocol_name, function, bits, protocol_number);
-
-                NodeList codes = jp1dat.getElementsByTagName("urc-code");
-                for (int i = 0; i < codes.getLength(); i++) {
-                    Element code = (Element) codes.item(i);
-                    String cpu = code.getAttribute("cpu");
-                    String data = code.getTextContent();
-                    jp1data.add_code(cpu, data);
-                }
-                //}
-            } catch (NullPointerException ex) {
-                System.err.println(e);
-                System.err.println("JP1 protocol info could not be retrieved");
-            }
         }
     }
-
     private static Hashtable<String, digested_protocol> digested_protocols = new Hashtable<String, digested_protocol>();
     public Hashtable<String, Integer> parameters;
     private String protocol_name;
@@ -178,9 +116,12 @@ public class protocol_parser extends raw_ir {
     //private boolean always_append_repeat = false;
     private boolean valid = false;
     private digested_protocol the_protocol = null;
+
+    // Not really implemented yet...
+    //private toggletype toggle_state;
     private int[][] intro;
     private int[][] repeat;
-
+    
     private static digested_protocol digested_protocol_factory(String protocol_name) {
         if (digested_protocols.containsKey(protocol_name)) {
             return digested_protocols.get(protocol_name);
@@ -203,10 +144,6 @@ public class protocol_parser extends raw_ir {
         return digested_protocol_factory(name).parameter_defaults.containsKey("subdevice");
     }
 
-    public static jp1protocoldata get_jp1data(String name) {
-        return (name == null || name.isEmpty()) ? null : digested_protocol_factory(name).jp1data;
-    }
-
     public protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno, int itoggle) {
         super();
         this.protocol_name = protocol_name;
@@ -216,7 +153,7 @@ public class protocol_parser extends raw_ir {
 
         the_protocol = digested_protocol_factory(protocol_name);
 
-        if (!the_protocol.valid || deviceno < 0)
+        if (!the_protocol.valid)
             return;
 
         set_frequency(the_protocol.frequency);
@@ -342,7 +279,13 @@ public class protocol_parser extends raw_ir {
     }
 
     private static int backwards(int bits, int n) {
-        return Integer.reverse(n) >> (32-bits);
+        int result = 0;
+        int work = n;
+        for (int i = 0; i < bits; i++) {
+            result += (work % 2) * (1 << (bits - i - 1));
+            work = work >> 1;
+        }
+        return result;
     }
 
     private int[][] coded_number(pulse_pair zero, pulse_pair one, pulse_pair two, pulse_pair three,
@@ -439,7 +382,7 @@ public class protocol_parser extends raw_ir {
             System.out.println(repeat[i][0] + "\t" + repeat[i][1]);
         }
     }
-    
+
     public protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno) {
         this(protocol_name, deviceno, subdevice, cmdno, 0);
     }
@@ -450,11 +393,6 @@ public class protocol_parser extends raw_ir {
 
     public protocol_parser(String protocol_name, short deviceno, short cmdno, int itoggle) {
         this(protocol_name, deviceno, no_subdevice, cmdno, itoggle);
-    }
-
-    // This is really a crippled version that can not generate codes
-    public protocol_parser(String protocol_name) {
-        this(protocol_name, no_device, no_subdevice, no_command, 0);
     }
 
     private static Element get_first_child_element(Element e) {
@@ -489,15 +427,12 @@ public class protocol_parser extends raw_ir {
         if (e == null)
             return 0;
         String type = e.getTagName();
-        int result = type.equals("parameterref") ? parameters.get(e.getAttribute("parameter"))
+        return type.equals("parameterref") ? parameters.get(e.getAttribute("parameter"))
                 : type.equals("complement") ? complement(Integer.parseInt(e.getAttribute("bits")), evaluate_number(get_first_child_element(e)))
                 : type.equals("constant") ? Integer.parseInt(e.getAttribute("value"))
                 : type.equals("mask") ? evaluate_mask(evaluate_number(get_first_child_element(e)), Integer.parseInt(e.getAttribute("mask")), Integer.parseInt(e.getAttribute("shift")))
                 : type.equals("xor") ? evaluate_xor(e.getChildNodes())
                 : evaluate_number(get_first_child_element(e));
-        if (debug)
-            System.err.println("evaluate_number from " + type + " = " + result);
-        return result;
     }
 
     @Override
@@ -521,7 +456,7 @@ public class protocol_parser extends raw_ir {
 
     private static void usage() {
         System.err.println("Usage:");
-        System.err.println("protocol_parser [-d] [-t toggle] protocol_name deviceno [subdevice] commandno");
+        System.err.println("protocol_parser [-t toggle] protocol_name deviceno [subdevice] commandno");
         System.exit(harcutils.exit_usage_error);
     }
 
@@ -533,12 +468,7 @@ public class protocol_parser extends raw_ir {
         int itoggle = 0;
         int args_i = 0;
         try {
-            if (args[args_i].equals("-d")) {
-                debug = true;
-                args_i++;
-
-            }
-            if (args[args_i].equals("-t")) {
+            if (args[0].equals("-t")) {
                 itoggle = Integer.parseInt(args[1]);
                 args_i += 2;
             }

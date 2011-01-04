@@ -1,7 +1,7 @@
 <!DOCTYPE commandset PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
     <commandset type="web_api" prefix="control/" name="Tuxbox Web API commands"
-      delay_between_reps="100" charset="iso-8859-1">
+      delay_between_reps="100">
       <!-- 1. Channellist -->
       <command cmdref="get_channellist" transmit="channellist" response_lines="-1">
 	<returnvalues>
@@ -221,13 +221,13 @@
       <command cmdref="yellow" transmit="rcem?KEY_YELLOW" expected_response="ok"/>
       <command cmdref="red" transmit="rcem?KEY_RED" expected_response="ok"/>
       <command cmdref="blue" transmit="rcem?KEY_BLUE" expected_response="ok"/>
-      <command cmdref="volume_up" transmit="rcem?KEY_VOLUMEUP" expected_response="ok"/>
-      <command cmdref="volume_down" transmit="rcem?KEY_VOLUMEDOWN" expected_response="ok"/>
+      <command cmdref="volume_up" transmit="rcem?KEY_VOLUME_UP" expected_response="ok"/>
+      <command cmdref="volume_down" transmit="rcem?KEY_VOLUME_DOWN" expected_response="ok"/>
       <command cmdref="info" name="?" transmit="rcem?KEY_HELP" expected_response="ok"/>
       <command cmdref="setup" name="dBox" transmit="rcem?KEY_SETUP" expected_response="ok"/>
       <command cmdref="home" transmit="rcem?KEY_HOME" expected_response="ok"/>
-      <command cmdref="page_down" transmit="rcem?KEY_PAGEDOWN" expected_response="ok"/>
-      <command cmdref="page_up" transmit="rcem?KEY_PAGEUP" expected_response="ok"/>
+      <command cmdref="page_down" transmit="rcem?KEY_PAGE_DOWN" expected_response="ok"/>
+      <command cmdref="page_up" transmit="rcem?KEY_PAGE_UP" expected_response="ok"/>
       <command cmdref="topleft" transmit="rcem?KEY_TOPLEFT" expected_response="ok"/>
       <command cmdref="topright" transmit="rcem?KEY_TOPRIGHT" expected_response="ok"/>
       <command cmdref="bottomleft" transmit="rcem?KEY_BOTTOMLEFT" expected_response="ok"/>

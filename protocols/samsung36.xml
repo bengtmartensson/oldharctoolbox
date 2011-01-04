@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
  "../dtds/irprotocols.dtd">
-<irprotocol name="samsung36" id="samsung36">
+<irprotocol name="pioneer" id="pioneer">
   <jp1data>
-    <protocol number="01 B5" name="Samsung36"/>
-    <tohex function="reverse" bits="8"/>
-    <urc-code cpu="HCS08">20 15 22 48 31 8F 45 08 04 00 F9 02 E1 00 F9 00 F9 77 83 08 CE 08 C8 4E 63 64 33 64 B6 62 62 B7 62 AE 04 39 64 39 63 39 62 5B F8 3C A9 6E 11 7D CC FF 7A</urc-code>
+    <protocol number="00 xx" name="Samsung36"/>
+    <tohex function="reverse-invert" bits="8"/>
   </jp1data>
   <parameters>
     <parameter id="deviceno" bits="8"/>

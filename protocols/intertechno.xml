@@ -5,7 +5,7 @@
 <!--  http://www.sbprojects.com/knowledge/ir/recs80.htm -->
 <jp1data>
     <protocol number="xx" name=""/>
-    <tohex function="reverse_complement" bits="8"/>
+    <tohex function="reverse-invert" bits="8"/>
   </jp1data>
   <parameters>
     <parameter id="deviceno" name="house" bits="4"/>

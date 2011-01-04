@@ -2,9 +2,6 @@
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
 <device id="marantz_is201" name="Marantz IS201 iPod dock" vendor="Marantz" model="is201" type="misc_audio">
-  <jp1data>
-    <setupcode value="2020"/>
-  </jp1data>
   <commandset type="ir" protocol="rc5" toggle="yes" deviceno="14" remotename="marantz_is201" original_remote="RC201IS">
     <command cmdref="power_toggle" name="power"	cmdno="12"/>
     <command cmdref="mute_toggle" name="power"	cmdno="13"/>

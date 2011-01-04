@@ -1,19 +1,6 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
+/**
+ *
+ */
 
 package harc;
 
@@ -22,11 +9,6 @@ import java.io.*;
 import org.xml.sax.*;
 import java.awt.Point;
 import java.awt.Dimension;
-
-/**
- * Class for exporting one or more devices into a Proto CCF file of the first generation.
- * This uses the Tonto library by Stewart Allen, see http://www.giantlaser.com.
- */
 
 public class ccf_export {
     private static final int default_button_width = 60;
@@ -65,9 +47,6 @@ public class ccf_export {
                 System.err.println(e.getMessage());
                 continue;
             } catch (SAXParseException e) {
-                System.err.println(e.getMessage());
-                continue;
-            } catch (SAXException e) {
                 System.err.println(e.getMessage());
                 continue;
             }
@@ -163,10 +142,7 @@ public class ccf_export {
         System.err.println("Usage: ccf_export [-t[0|1]] [-r] [-w <button_width>] [-h <button_height>] [-p <prontomodel>] [-o <outputfile>] <device(s)>");
         System.exit(harcutils.exit_usage_error);
     }
-    
-    /**
-     * Usage: ccf_export [-t[0|1]] [-r] [-w <button_width>] [-h <button_height>] [-p <prontomodel>] [-o <outputfile>] <device(s)>
-     */
+
     public static void main(String args[]) {
         boolean raw = false;
         toggletype toggle = toggletype.no_toggle;

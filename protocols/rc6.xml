@@ -11,7 +11,7 @@ DecodeIR says:
 <!--  http://www.sbprojects.com/knowledge/ir/rc6.htm -->
 <jp1data>
     <protocol number="00 58" name="RC6"/>
-    <tohex function="reverse_complement" bits="8"/>
+    <tohex function="reverse-invert" bits="8"/>
   </jp1data>
   <cooked-ccf-string format="6000 0073 0000 0002 FIXME %04x %04x">
     <parameterref parameter="deviceno"/>

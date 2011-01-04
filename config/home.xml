@@ -2,8 +2,6 @@
 <!DOCTYPE homemap PUBLIC "-//bengt-martensson.de//home//en" "../dtds/home.dtd">
 <!--
 Description of devices, applications, gateways, groups, zones.
-
-This is a sample file.
 -->
 <homemap>
   <aliases>
@@ -14,42 +12,88 @@ This is a sample file.
     <alias id="cable-receiver" device="dbox"/>
     <alias id="digital-receiver" device="dbox"/>
     <alias id="dvd" device="oppo"/>
+    <alias id="hddvd" device="toshiba"/>
     <alias id="bluray" device="samsung"/>
     <alias id="tv" device="philips_37pfl9603"/>
+    <alias id="vcr" device="vr1100"/>
     <alias id="projector" device="z2000"/>
+    <alias id="phono" device="thorens"/> 
   </aliases>
   <device-groups>
     <device-group id="light" name="Light">
       <deviceref device="front_light"/>
+      <deviceref device="left_light"/>
+      <deviceref device="right_light"/>
+      <deviceref device="shelf_light"/>
       <deviceref device="work_light"/>
+      <!--deviceref device="tv_light"/-->
+      <deviceref device="lamp_column"/>
       <deviceref device="floor_lamp_1"/>
+      <deviceref device="floor_lamp_2"/>
+      <deviceref device="floor_lamp_3"/>
+      <deviceref device="bedroom_light"/>
       <deviceref device="hall_light"/>
       <deviceref device="kitchen_light"/>
+      <!--deviceref device="bathroom_light"/-->
     </device-group>
 
     <device-group id="blinds" name="Blinds">
       <deviceref device="large_blind"/>
+      <deviceref device="small_blind"/>
+      <deviceref device="balcony_blind"/>
+      <deviceref device="kitchen_blind"/>
       <deviceref device="bedroom_blind"/>
     </device-group>
 
     <device-group id="misc" name="Misc.">
       <deviceref device="balcony_door"/>
       <deviceref device="screen"/>
+      <deviceref device="rotating_flower"/>
+      <deviceref device="water"/>
+      <deviceref device="water_wall"/>
+      <deviceref device="column_pump"/>
+      <deviceref device="lamp_column"/>
+      <!--deviceref device="aux_1"/-->      
+      <!--deviceref device="aux_2"/-->      
+      <deviceref device="aux_3"/>   
+      <deviceref device="floor_fan"/>   
+      <deviceref device="desk_fan"/>   
+      <deviceref device="conrad_test"/>  
       <deviceref device="x10-N1"/>  
+      <deviceref device="x10-N2"/>  
+      <deviceref device="x10-N3"/>  
     </device-group>
 
     <device-group id="living_room" name="Living Room">
       <deviceref device="front_light">Front Lightning</deviceref>
+      <deviceref device="left_light">Left Lightning</deviceref>
+      <deviceref device="right_light">Right Lightning</deviceref>
+      <deviceref device="shelf_light">Shelf Lightning</deviceref>
       <deviceref device="work_light">Work Lightning</deviceref>
       <deviceref device="balcony_door">Balcony Door</deviceref>
+      <!--deviceref device="tv_light"/-->
+      <deviceref device="rotating_flower"/>
       <deviceref device="screen"/>
+      <deviceref device="water"/>
+      <deviceref device="lamp_column"/>
+      <deviceref device="column_pump"/>
+      <deviceref device="water_wall"/>
       <deviceref device="large_blind"/>
+      <deviceref device="small_blind"/>
+      <deviceref device="balcony_blind"/>
       <deviceref device="floor_lamp_1"/>
+      <deviceref device="floor_lamp_2"/>
+      <deviceref device="floor_lamp_3"/>
+      <deviceref device="floor_fan"/>   
+      <deviceref device="desk_fan"/>   
     </device-group>
 
     <device-group id="kitchen_hall_bedroom" name="Kitchen/Hall/Bedroom">
       <deviceref device="kitchen_light"/>
+      <deviceref device="kitchen_blind"/>
       <deviceref device="hall_light"/>
+      <!--deviceref device="bathroom_light"/-->
+      <deviceref device="bedroom_light"/>
       <deviceref device="bedroom_blind"/>
     </device-group>
 
@@ -59,26 +103,44 @@ This is a sample file.
       <deviceref device="pioneer_cld925"/>
       <deviceref device="marantz_cd42"/>
       <deviceref device="marantz_tape"/>
+      <deviceref device="marantz_ipod_dock"/>
+      <!--deviceref device="pioneer_dvd525"/-->
+      <!--deviceref device="lg_vcr"/-->
       <deviceref device="panasonic_dvd_s75"/>
+      <!--deviceref device="panasonic_dvd_s33"/-->
       <deviceref device="tiny_tv"/>
     </device-group>
 
     <device-group id="deskzone" name="desk" zone="3">
        <!--from-gateway gateway="globalcache" connector="3"/-->
        <deviceref device="yamaha_desk"/>
+       <deviceref device="godzilla"/>
     </device-group>
 
     <device-group id="main" name="Main Devices" zone="1">
       <deviceref device="denon"/>
+      <deviceref device="denon_ipod_dock"/>
       <!--deviceref device="pioneer_cld925"/-->
+      <deviceref device="vr1100"/>
       <deviceref device="oppo"/>
       <deviceref device="popcorn"/>
       <!--deviceref device="panasonic_dvd_s75"/-->
+      <deviceref device="toshiba"/>
       <deviceref device="samsung"/>
+      <deviceref device="analog_8ch_switch"/>
       <deviceref device="dbox"/>
+      <deviceref device="thorens"/>
       <!--deviceref device="philips_28ml8805"/-->
       <deviceref device="philips_37pfl9603"/>
+      <deviceref device="nubert"/>
       <deviceref device="z2000"/>
+    </device-group>
+
+    <device-group id="mobiles" name="Mobile devices">
+      <deviceref device="zoom_vaio"/>
+      <deviceref device="sagem_dbox"/>
+      <deviceref device="philips_dbox"/>
+      <deviceref device="canon"/>
     </device-group>
 
     <device-group id="gateways" name="Intelligent Gateways">
@@ -91,13 +153,15 @@ This is a sample file.
 
   <devices>
     <device id="denon" class="denon_avr3808" name="Denon AVR-3808">
-      <!-- Here, order is significant, and denotes preference.
-      In particular, make sure that www comes last! -->
+<!-- Here, order is significant, and denotes preference.
+     In particular, make sure that www comes last! -->
       <from-gateway gateway="lan" connector="tcp" hostname="denon" portnumber="23"/>
       <from-gateway-ref from-gateway="globalcache_mainzone"/>
       <from-gateway-ref from-gateway="irtrans_mainzone"/>
       <from-gateway gateway="lan" connector="ip" hostname="denon" wol="no"/>
       <from-gateway gateway="lan" connector="www" hostname="denon" portnumber="80"/>
+      <!--from-gateway gateway="dbox_lirc"/-->
+      <!--from-gateway-ref from-gateway="denon_serial_gw"/-->
       <inputs>
 	<!-- Order in usability order -->
 	<input name="sat" myname="dBox" audio="yes" video="yes">
@@ -178,6 +242,7 @@ This is a sample file.
 	    <selectcommand select="recordsrc_dvr"/>
 	    <querycommand cmd="get_recordsrc" val="SRDVR"/>
 	  </zone>
+	  <deviceref device="toshiba"/>
 	</input>
 	<input name="phono" video="no">
 	  <zone name="1">
@@ -196,6 +261,7 @@ This is a sample file.
 	    <selectcommand select="recordsrc_phono"/>
 	    <querycommand cmd="get_recordsrc" val="SRPHONO"/>
 	  </zone>
+	  <deviceref device="thorens"/>
 	</input>
 	<input name="cd" myname="tv/pc" video="no">
 	  <zone name="1">
@@ -215,6 +281,7 @@ This is a sample file.
 	    <querycommand cmd="get_recordsrc" val="SRCD"/>
 	  </zone>
 	  <deviceref device="philips_37pfl9603"/>
+	  <!--deviceref device="godzilla"/-->
 	</input>
 	<input name="tuner" video="no">
 	  <zone name="1">
@@ -253,6 +320,8 @@ This is a sample file.
 	    <selectcommand select="recordsrc_tv_cbl"/>
 	    <querycommand cmd="get_recordsrc" val="SRTV/CBL"/>
 	  </zone>
+	  <deviceref device="denon_ipod_dock"/>
+	  <!--deviceref device="marantz_ipod_dock"/-->
 	</input>
 	<input name="vcr" audio="yes" video="yes">
 	  <zone name="1">
@@ -272,6 +341,7 @@ This is a sample file.
 	    <selectcommand select="recordsrc_vcr"/>
 	    <querycommand cmd="get_recordsrc" val="SRVCR"/>
 	  </zone>
+	  <deviceref device="vr1100"/>
 	</input>
 
 	<input name="v.aux" audio="yes" video="yes">
@@ -292,6 +362,7 @@ This is a sample file.
 	    <selectcommand select="recordsrc_video_aux"/>
 	    <querycommand cmd="get_recordsrc" val="SRV.AUX"/>
 	  </zone>
+	  <externalsrc name="vaio"/>
 	  <deviceref device="popcorn"/>
 	</input>
 	<input name="net/usb" audio="yes" video="no">
@@ -332,6 +403,8 @@ This is a sample file.
 	    <selectcommand select="recordsrc_ipod"/>
 	    <querycommand cmd="get_recordsrc" val="SRIPOD"/>
 	  </zone>
+	  <deviceref device="denon_ipod_dock"/>
+	  <!--deviceref device="marantz_ipod_dock"/-->
 	</input>
 	<!--input name="xm"/-->
 	<input name="source">
@@ -371,11 +444,27 @@ This is a sample file.
 	<input name="HDMI2">
 	  <selectcommand select="in_hdmi2"/>
 	  <connectiontype type="hdmi"/>
+	  <deviceref device="godzilla"/>
 	</input>
       </inputs>
     </device>
 
-    <device id="oppo" class="oppo_bdp83" name="Oppo DVD player">
+    <device id="denon_ipod_dock" class="denon_asd_3n" name="Denon iPod dock">
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway gateway="lan" connector="www" hostname="ipod" portnumber="80"/>
+    </device>
+
+    <device id="marantz_ipod_dock" class="marantz_is201" name="Marantz iPod dock">
+      <!--from-gateway-ref from-gateway="ipod_serial_gw"/-->
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+      <!--from-gateway-ref from-gateway="ipod_ir_gw"/-->
+      <!--from-gateway-ref from-gateway="irtrans_mainzone"/-->
+      <!--from-gateway-ref from-gateway="globalcache_mainzone"/-->
+      <!--from-gateway-ref from-gateway="ipod_ir_gw"/-->
+    </device>
+
+    <device id="oppo" class="oppo_dv983" name="Oppo DVD player">
       <from-gateway-ref from-gateway="dvd_serial_gw"/>
       <from-gateway-ref from-gateway="globalcache_mainzone"/>
       <from-gateway-ref from-gateway="irtrans_mainzone"/>
@@ -383,11 +472,43 @@ This is a sample file.
       <from-gateway-ref from-gateway="dvd_ir_gw"/>
     </device>
 
+    <device id="vr1100" class="philips_vr1100" name="Philips VR1100">
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway gateway="dbox_lirc"/>
+      <inputs>
+	<input name="AV1">
+	  <selectcommand select="in_av1"/> <!-- nonexisting (?) -->
+	  <connectiontype type="s-video"/>
+	  <deviceref device="denon"/>
+	</input>
+	<input name="av2">
+	  <selectcommand select="in_av2"/> <!-- nonexisting (?) -->
+	  <connectiontype type="cvbs"/>
+	  <deviceref device="dbox"/>
+	</input>
+      </inputs>
+    </device>
+
+    <device id="analog_8ch_switch" class="analog_8ch_switch" name="Analog 8channel switch">
+      <!--from-gateway gateway="dbox_lirc"/-->
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <!--from-gateway gateway="gc2" connector="serial_2"/-->
+    </device>
+
     <device id="samsung" class="samsung_bdp1400" name="Samsung BDP1400">
       <from-gateway-ref from-gateway="globalcache_mainzone"/>
       <from-gateway-ref from-gateway="irtrans_mainzone"/>
       <from-gateway gateway="dbox_lirc"/>
-      <from-gateway gateway="lan" connector="ip" hostname="samsung" wol="no" mac="00:00:00:00:00:00"/>
+      <from-gateway gateway="lan" connector="ip" hostname="samsung" wol="no" mac="00:16:6C:1B:CC:2A"/>
+    </device>
+
+    <device id="toshiba" class="toshiba_hd-ep30" name="Toshiba HD-EP30">
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway-ref from-gateway="dbox_lirc_mainzone"/>
+      <from-gateway gateway="lan" connector="ip" hostname="toshiba" wol="no" mac="00:15:B7:E9:B6:8B"/>
     </device>
 
     <device id="dbox" class="nokia_dbox2" name="dBox">
@@ -398,20 +519,36 @@ This is a sample file.
       <from-gateway gateway="lan" connector="www" hostname="dbox" portnumber="80"/>
     </device>
 
+    <device id="thorens" class="null" name="Thorens turntable, absolutely electronics free zone."/>
+
     <device id="source" class="null" name="Dummy device, for selecting source in receiver"/>
 
     <device id="popcorn" class="popcorn_hour_a100" name="Popcorn Hour">
       <from-gateway-ref from-gateway="globalcache_mainzone"/>
       <from-gateway-ref from-gateway="irtrans_mainzone"/>
-      <from-gateway gateway="lan" connector="ip" hostname="popcorn" wol="no" mac="00:00:00:00:00:00"/>
+      <from-gateway gateway="lan" connector="ip" hostname="popcorn" wol="no" mac="00:06:DC:42:17:0F"/>
+      <!--from-gateway gateway="gc2" connector="2"/-->
     </device>
+
+    <device id="nubert" class="nubert" name="Nubert AW-850">
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway gateway="mypowerbox" connector="6"/>
+    </device>
+
+    <!--device id="philips_28ml8805" class="philips_28ml8805" name="Philips 28ML8805">
+      <from-gateway-ref from-gateway="irtrans_mainzone"/>
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
+      <from-gateway gateway="dbox_lirc"/>
+    </device-->
 
     <device id="philips_37pfl9603" class="philips_37pfl9603"
       name="Philips 37pfl9603">
       <from-gateway-ref from-gateway="globalcache_mainzone"/>
       <from-gateway-ref from-gateway="irtrans_mainzone"/>
       <from-gateway gateway="dbox_lirc"/>
-      <from-gateway gateway="lan" connector="ip" hostname="tv" wol="no" mac="00:00:00:00:00:00"/>
+      <!--from-gateway-ref from-gateway="globalcache_test"/-->
+      <from-gateway gateway="lan" connector="ip" hostname="tv" wol="no" mac="00:90:3E:9F:C1:97"/>
       <inputs>
 	<input name="hdmi1">
 	  <selectcommand select="in_hdmi1"/>
@@ -427,6 +564,7 @@ This is a sample file.
 	<input name="hdmi4">
 	  <selectcommand select="in_hdmi4"/>
 	  <connectiontype type="hdmi"/>
+	  <deviceref device="vaio"/>
 	</input>
 	<input name="ext1">
 	  <selectcommand select="in_ext1"/>
@@ -444,6 +582,10 @@ This is a sample file.
 	  <!--deviceref device="denon"/-->
 	</input>
       </inputs>
+    </device>
+
+    <device id="canon" class="canon">
+      <from-gateway-ref from-gateway="globalcache_mainzone"/>
     </device>
 
     <device id="yamaha_bedroom" class="yamaha_rxv1400" name="Yamaha RX-V 1400">
@@ -466,6 +608,7 @@ This is a sample file.
 	</input>
 	<input name="cbl/sat" myname="iPod">
 	  <selectcommand select="in_cable"/>
+	  <deviceref device="marantz_ipod_dock"/>
 	</input>
 	<input name="md/tape" video="no">
 	  <selectcommand select="in_tape"/>
@@ -505,6 +648,10 @@ This is a sample file.
       <from-gateway-ref from-gateway="bedroom_gw"/>
     </device>
 
+    <!--device id="panasonic_dvd_s33" class="panasonic_dvd_s33" name="Panasonic S33">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device-->
+
     <device id="panasonic_dvd_s75" class="panasonic_dvd_s75" name="Panasonic S75">
       <from-gateway-ref from-gateway="bedroom_gw"/>
     </device>
@@ -513,11 +660,16 @@ This is a sample file.
       <from-gateway-ref from-gateway="bedroom_gw"/>
     </device>
 
+    <device id="zoom_vaio" class="zoomplayer" name="Zoom player">
+      <from-gateway gateway="lan" hostname="vaio"/>
+    </device>
+
     <device id="yamaha_desk" class="yamaha_rxv596" name="Yamaha RX-V 596">
       <from-gateway-ref from-gateway="desk_gw"/>
       <inputs>
 	<input name="dvd/ld">
 	  <selectcommand select="in_dvd"/>
+	  <!--deviceref device="godzilla"/-->
 	</input>
 	<input name="dtv">
 	  <selectcommand select="in_dtv"/>
@@ -539,11 +691,53 @@ This is a sample file.
 	</input>
   	<input name="cd">
 	  <selectcommand select="in_cd"/>
+	  <deviceref device="deltatronic"/>
 	</input>
  	<input name="phono">
 	  <selectcommand select="in_phono"/>
 	</input>
       </inputs>
+    </device>
+
+    <!--device id="onkyo" class="onkyo_tx_sv9041" name="Onkyo TX-SV9041">
+      <from-gateway-ref from-gateway="desk_gw"/>
+    </device-->
+
+    <!-- Computers -->
+
+    <device id="godzilla" class="pingable">
+      <from-gateway gateway="lan" hostname="godzilla"/>
+    </device>
+
+    <device id="vaio" class="computer_wol">
+      <from-gateway gateway="lan" connector="ip" hostname="vaio" mac="00:1B:77:3C:6A:5D"/>
+    </device>
+
+    <device id="deltatronic" class="computer_wol">
+      <from-gateway gateway="lan" connector="ip" hostname="delta" mac="00:22:15:1B:F2:D4"/>
+      <from-gateway gateway="lan" connector="www" hostname="delta"/>
+    </device>
+
+    <!-- Programs -->
+    <device id="vaio-zoomplayer" class="zoomplayer">
+      <from-gateway gateway="lan" hostname="vaio"/>
+    </device>
+    <!-- Not currently connected -->
+    <!--device id="pioneer_dvd525" class="pioneer_dvd525" name="Pioneer DVD525">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device-->
+    <!--device id="lg_vcr" class="lg_vcr_xxx" name="LG vcr">
+      <from-gateway-ref from-gateway="bedroom_gw"/>
+    </device-->
+    <device id="sagem_dbox" class="sagem_dbox2" name="Sagem dBox">
+      <from-gateway gateway="lan" connector="web_api" hostname="sagem" portnumber="80"/>
+      <from-gateway gateway="lan" connector="ip" hostname="sagem"/>
+      <from-gateway gateway="lan" connector="www" hostname="sagem" portnumber="80"/>
+    </device>
+    <device id="philips_dbox" class="philips_dbox2" name="Philips dBox (SAT)">
+      <from-gateway gateway="lan" connector="web_api" hostname="philips" portnumber="80"/>
+      <from-gateway gateway="lan" connector="ip" hostname="philips"/>
+      <from-gateway gateway="lan" connector="www" hostname="philips" portnumber="80"/>
     </device>
 
     <device id="balcony_door" class="door_toggle_memory" model="Rademacher_Samson_AL-2102" name="Balcony door">
@@ -557,6 +751,34 @@ This is a sample file.
       <description>Front Halogen Lights</description>
       <from-gateway gateway="mypowerbox" connector="1"/>
     </device>
+    <device id="left_light" class="lamp_toggle" name="Left">
+      <description>Left Halogen Lights</description>
+      <from-gateway gateway="mypowerbox" connector="2"/>
+    </device>
+    <device id="right_light"     class="lamp_toggle" name="Right">
+      <description>Right Halogen Lights</description>
+      <from-gateway gateway="mypowerbox" connector="3"/>
+    </device>
+    <device id="shelf_light"     class="lamp_toggle" name="Shelf">
+      <description>Shelf Halogen Lights</description>
+      <from-gateway gateway="mypowerbox" connector="4"/>
+    </device>
+    <device id="column_pump"     class="lamp_toggle" name="Pump">
+      <description>Air Pump for Water Column</description>
+      <from-gateway gateway="mypowerbox" connector="5"/>
+    </device>
+    <!--device id="tv_light"        class="lamp_toggle" name="TV Bgd.">
+      <description>TV Background Lights</description>
+      <from-gateway gateway="mypowerbox" connector="6"/>
+    </device-->
+    <device id="rotating_flower" class="lamp_toggle" name="Flower">
+      <description>Rotating Flower</description>
+      <from-gateway gateway="mypowerbox" connector="7"/>
+    </device>
+    <device id="power8"          class="lamp_toggle" name="power8">
+      <description>Not currently used</description>
+      <from-gateway gateway="mypowerbox" connector="8"/>
+    </device>
 
     <device id="screen" class="blind_nomemory" name="Screen">
       <description>Projector Screen Motor</description>
@@ -567,12 +789,38 @@ This is a sample file.
       <description>Cealing Lamp in Workshop</description>
       <from-gateway gateway="intertechno_work_light"/>
     </device>
-
+    <device id="water" class="lamp_status" name="Water">
+      <description>Water pump in fountain</description>
+      <from-gateway gateway="intertechno_water"/>
+    </device>
+    <device id="lamp_column" class="lamp_status" name="Lamp Column">
+      <description>Light in the water column</description>
+      <from-gateway gateway="intertechno_lamp_column"/>
+    </device>
+    <device id="water_wall" class="lamp_status" name="Wall">
+      <description>Water Wall</description>
+      <from-gateway gateway="intertechno_water_wall"/>
+    </device>
     <device id="large_blind" class="blind_memory" name="Large Blind">
       <description>Large Blind in Living Room</description>
       <from-gateway gateway="intertechno_large_blind"/>
     </device>
-
+    <device id="small_blind" class="blind_memory" name="Small Blind">
+      <description>Small Blind in Living Room</description>
+      <from-gateway gateway="intertechno_small_blind"/>
+    </device>
+    <device id="balcony_blind" class="blind_memory" name="Balcony Blind">
+      <description>Balcony Blind in Living Room</description>
+      <from-gateway gateway="intertechno_balcony_blind"/>
+    </device>
+    <device id="kitchen_blind" class="blind_memory" name="Kitchen Blind">
+      <description>Blind in Kitchen</description>
+      <from-gateway gateway="intertechno_kitchen_blind"/>
+    </device>
+    <device id="bedroom_light" class="lamp_dimmable_dumb" name="Bedroom Light">
+      <description>Bedroom Light (dimmable)</description>
+      <from-gateway gateway="intertechno_bedroom_light"/>
+    </device>
     <device id="bedroom_blind" class="blind_memory" name="Bedroom Blind">
       <description>Blind in Bedroom</description>
       <from-gateway gateway="intertechno_bedroom_blind"/>
@@ -581,7 +829,10 @@ This is a sample file.
       <description>Cealing Lamp in Kitchen</description>
       <from-gateway gateway="intertechno_kitchen_light"/>
     </device>
-
+    <!--device id="bathroom_light" class="lamp_status" name="Bathroom Light">
+      <description>Bathroom light</description>
+      <from-gateway gateway="intertechno_bathroom_light"/>
+    </device-->
     <device id="hall_light" class="lamp_status" name="Hall_lamp">
       <description>Cealing Lamp in Hallway</description>
       <from-gateway gateway="intertechno_hall_light"/>
@@ -590,9 +841,36 @@ This is a sample file.
     <device id="floor_lamp_1" class="lamp_status" name="Floor Lamp 1">
       <from-gateway gateway="intertechno_floor_lamp_1"/>
     </device>
+    <device id="floor_lamp_2" class="lamp_status" name="Floor Lamp 2">
+      <from-gateway gateway="intertechno_floor_lamp_2"/>
+    </device>
+    <device id="floor_lamp_3" class="lamp_status" name="Floor Lamp 3">
+      <from-gateway gateway="intertechno_floor_lamp_3"/>
+    </device>
+
+    <device id="floor_fan" class="lamp_status" name="Floor Fan">
+      <from-gateway gateway="intertechno_floor_fan"/>
+    </device>
+    <device id="desk_fan" class="lamp_status" name="Desk Fan">
+      <from-gateway gateway="intertechno_desk_fan"/>
+    </device>
+    <device id="aux_3" class="lamp_status" name="Aux 3">
+      <from-gateway gateway="intertechno_aux_3"/>
+    </device>
+
+    <device id="conrad_test" class="lamp_status" name="conrad_test">
+      <description>Conrad 1324:1</description>
+      <from-gateway gateway="gw_rs200_test"/>
+    </device>
 
     <device id="x10-N1" class="lamp_status" name="x10:N1">
       <from-gateway gateway="gw_x10-N1"/>
+    </device>
+    <device id="x10-N2" class="lamp_status" name="x10:N2">
+      <from-gateway gateway="gw_x10-N2"/>
+    </device>
+    <device id="x10-N3" class="lamp_status" name="x10:N3">
+      <from-gateway gateway="gw_x10-N3"/>
     </device>
 
     <!-- Gateways as devices -->
@@ -815,8 +1093,19 @@ This is a sample file.
       <from-gateway gateway="ir2rf"/>
       <output type="on_off">
 	<commands>
-	  <command cmd="power_on" remotename="intertechno" house="X" deviceno="4" commandname="power_on"/>
-	  <command cmd="power_reverse_on" remotename="intertechno" house="X" deviceno="4" commandname="power_off"/>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="4" commandname="power_on"/>
+	  <command cmd="power_reverse_on" remotename="intertechno" house="M" deviceno="4" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_bedroom_light" model="cmr-1001">
+      <from-gateway gateway="t10" connector="preset_13"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="1" commandname="power_on"/>
+	  <command cmd="power_dim" remotename="intertechno" house="M" deviceno="1" commandname="power_on"/>
+	  <!--command cmd="power_off" remotename="intertechno" house="M" deviceno="1" commandname="power_off"/-->
 	</commands>
       </output>
     </gateway>
@@ -825,8 +1114,8 @@ This is a sample file.
       <from-gateway gateway="t10" connector="preset_11"/>
       <output type="on_off">
 	<commands>
-	  <command cmd="power_on" remotename="intertechno" house="X" deviceno="2" commandname="power_on"/>
-	  <command cmd="power_reverse_on" remotename="intertechno" house="X" deviceno="2" commandname="power_off"/>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="2" commandname="power_on"/>
+	  <command cmd="power_reverse_on" remotename="intertechno" house="M" deviceno="2" commandname="power_off"/>
 	</commands>
       </output>
     </gateway>
@@ -835,8 +1124,38 @@ This is a sample file.
       <from-gateway gateway="t10" connector="preset_5"/>
       <output type="on_off">
 	<commands>
-	  <command cmd="power_on" remotename="intertechno" house="X" deviceno="5" commandname="power_on"/>
-	  <command cmd="power_off" remotename="intertechno" house="X" deviceno="5" commandname="power_off"/>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="5" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="M" deviceno="5" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_water" model="cmr-1000">
+      <from-gateway gateway="t10" connector="preset_6"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="6" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="M" deviceno="6" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_lamp_column" model="cmr-1000">
+      <from-gateway gateway="t10" connector="preset_7"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="7" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="M" deviceno="7" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_water_wall" model="cmr-1000">
+      <from-gateway gateway="t10" connector="preset_8"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="8" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="M" deviceno="8" commandname="power_off"/>
 	</commands>
       </output>
     </gateway>
@@ -845,8 +1164,8 @@ This is a sample file.
       <from-gateway gateway="t10" connector="preset_9"/>
       <output type="on_off">
 	<commands>
-	  <command cmd="power_on" remotename="intertechno" house="X" deviceno="9" commandname="power_on"/>
-	  <command cmd="power_reverse_on" remotename="intertechno" house="X" deviceno="9" commandname="power_off"/>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="9" commandname="power_on"/>
+	  <command cmd="power_reverse_on" remotename="intertechno" house="M" deviceno="9" commandname="power_off"/>
 	</commands>
       </output>
     </gateway>
@@ -855,21 +1174,39 @@ This is a sample file.
       <from-gateway gateway="t10" connector="preset_10"/>
       <output type="on_off">
 	<commands>
-	  <command cmd="power_on" remotename="intertechno" house="X" deviceno="10" commandname="power_on"/>
-	  <command cmd="power_reverse_on" remotename="intertechno" house="X" deviceno="10" commandname="power_off"/>
-	  <!--command cmd="get_status" remotename="intertechno" house="X" deviceno="10" commandname="power_off"/-->
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="10" commandname="power_on"/>
+	  <command cmd="power_reverse_on" remotename="intertechno" house="M" deviceno="10" commandname="power_off"/>
+	  <!--command cmd="get_status" remotename="intertechno" house="M" deviceno="10" commandname="power_off"/-->
 	</commands>
       </output>
     </gateway>
 
+    <gateway class="intertechno" id="intertechno_balcony_blind" model="cmr-500">
+      <from-gateway gateway="t10" connector="preset_11"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="11" commandname="power_on"/>
+	  <command cmd="power_reverse_on" remotename="intertechno" house="M" deviceno="11" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
 
+    <gateway class="intertechno" id="intertechno_kitchen_blind" model="cmr-500">
+      <from-gateway gateway="t10" connector="preset_12"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="12" commandname="power_on"/>
+	  <command cmd="power_reverse_on" remotename="intertechno" house="M" deviceno="12" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
 
     <gateway class="intertechno" id="intertechno_kitchen_light" model="cmr-1000">
       <from-gateway gateway="t10" connector="preset_15"/>
       <output type="on_off">
 	<commands>
-	  <command cmd="power_on" remotename="intertechno" house="X" deviceno="15" commandname="power_on"/>
-	  <command cmd="power_off" remotename="intertechno" house="X" deviceno="15" commandname="power_off"/>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="15" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="M" deviceno="15" commandname="power_off"/>
 	</commands>
       </output>
     </gateway>
@@ -878,8 +1215,8 @@ This is a sample file.
       <from-gateway gateway="t10" connector="preset_16"/>
       <output type="on_off">
 	<commands>
-	  <command cmd="power_on" remotename="intertechno" house="X" deviceno="16" commandname="power_on"/>
-	  <command cmd="power_off" remotename="intertechno" house="X" deviceno="16" commandname="power_off"/>
+	  <command cmd="power_on" remotename="intertechno" house="M" deviceno="16" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="M" deviceno="16" commandname="power_off"/>
 	</commands>
       </output>
     </gateway>
@@ -888,8 +1225,59 @@ This is a sample file.
       <from-gateway gateway="t10" connector="preset_1"/>
       <output type="on_off">
 	<commands>
-	  <command cmd="power_on" remotename="intertechno" house="X" deviceno="1" commandname="power_on"/>
-	  <command cmd="power_off" remotename="intertechno" house="X" deviceno="1" commandname="power_off"/>
+	  <command cmd="power_on" remotename="intertechno" house="D" deviceno="1" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="D" deviceno="1" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_floor_lamp_2" model="PA3">
+      <from-gateway gateway="t10" connector="preset_2"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="D" deviceno="2" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="D" deviceno="2" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_floor_lamp_3" model="PA3">
+      <from-gateway gateway="t10" connector="preset_3"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="D" deviceno="3" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="D" deviceno="3" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_floor_fan" model="PA3">
+      <from-gateway gateway="t10" connector="preset_17"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="C" deviceno="1" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="C" deviceno="1" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_desk_fan" model="PA3">
+      <from-gateway gateway="t10" connector="preset_18"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="C" deviceno="2" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="C" deviceno="2" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="intertechno" id="intertechno_aux_3" model="PA3">
+      <from-gateway gateway="conrad_egg"/>
+      <from-gateway gateway="t10" connector="preset_19"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="C" deviceno="3" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="C" deviceno="3" commandname="power_off"/>
 	</commands>
       </output>
     </gateway>
@@ -910,6 +1298,26 @@ This is a sample file.
 	<commands>
 	  <command cmd="power_on" remotename="x10" house="N" deviceno="1" commandname="power_on"/>
 	  <command cmd="power_off" remotename="x10" house="N" deviceno="1" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="x10" id="gw_x10-N2" model="FIXME">
+      <from-gateway gateway="t10" connector="preset_22"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="x10" house="N" deviceno="2" commandname="power_on"/>
+	  <command cmd="power_off" remotename="x10" house="N" deviceno="2" commandname="power_off"/>
+	</commands>
+      </output>
+    </gateway>
+
+    <gateway class="x10" id="gw_x10-N3" model="FIXME">
+      <from-gateway gateway="t10" connector="preset_23"/>
+      <output type="on_off">
+	<commands>
+	  <command cmd="power_on" remotename="intertechno" house="N" deviceno="3" commandname="power_on"/>
+	  <command cmd="power_off" remotename="intertechno" house="N" deviceno="3" commandname="power_off"/>
 	</commands>
       </output>
     </gateway>
@@ -952,13 +1360,39 @@ This is a sample file.
       <output type="rf868" connector="868"/>
       <presets>
         <preset programno="1" device="floor_lamp_1"/>
+        <preset programno="2" device="floor_lamp_2"/>
+        <preset programno="3" device="floor_lamp_3"/>
         <preset programno="4" device="screen"/>
         <preset programno="5" device="work_light"/>
+        <preset programno="6" device="water"/>
+        <preset programno="7" device="lamp_column"/>
+        <preset programno="8" device="water_wall"/>
         <preset programno="9" device="large_blind"/>
+        <preset programno="10" device="small_blind"/>
+        <preset programno="11" device="balcony_blind"/>
+        <preset programno="12" device="kitchen_blind"/>
+        <preset programno="13" device="bedroom_light"/>
         <preset programno="14" device="bedroom_blind"/>
         <preset programno="15" device="kitchen_light"/>
         <preset programno="16" device="hall_light"/>
+        <preset programno="17" device="floor_fan"/>
+        <preset programno="18" device="desk_fan"/>
+        <preset programno="19" device="aux_3"/>
+        <preset programno="20" device="conrad_test"/>
         <preset programno="21" device="x10-N1"/>
+        <preset programno="22" device="x10-N2"/>
+        <preset programno="23" device="x10-N3"/>
+        <!--
+        <preset programno="24" device="unassigned"/>
+        <preset programno="25" device="unassigned"/>
+        <preset programno="26" device="unassigned"/>
+        <preset programno="27" device="unassigned"/>
+        <preset programno="28" device="unassigned"/>
+        <preset programno="29" device="unassigned"/>
+        <preset programno="30" device="unassigned"/>
+        <preset programno="31" device="unassigned"/>
+        <preset programno="32" device="unassigned"/>
+        -->
       </presets>
     </gateway>
   </gateways>

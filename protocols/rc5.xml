@@ -4,7 +4,7 @@
 <irprotocol name="rc5" id="rc5">
   <jp1data>
     <protocol number="00 E8" name="RC5"/>
-    <tohex function="jp1_00e8" bits="8"/>
+    <tohex function="reverse-invert" bits="8"/>
   </jp1data>
   <cooked-ccf-string format="5000 0073 0000 0001 %04x %04x">
     <parameterref parameter="deviceno"/>

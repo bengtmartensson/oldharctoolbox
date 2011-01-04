@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
  "../dtds/irprotocols.dtd">
-<irprotocol name="nokia" id="nokia">
+<irprotocol name="nec1" id="nec1">
   <jp1data>
-    <protocol number="00 ed" name="Nokia"/>
-    <tohex function="id" bits="8"/>
+    <protocol number="00 xx" name="Nokia"/>
+    <tohex function="reverse-invert" bits="8"/>
   </jp1data>
   <parameters>
     <parameter id="deviceno" bits="8"/>

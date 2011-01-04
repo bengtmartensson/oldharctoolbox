@@ -1,25 +1,6 @@
-/*
-Copyright (C) 2009 Bengt Martensson.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program. If not, see http://www.gnu.org/licenses/.
-*/
-
 package harc;
 
 /**
- * This is the basic abstract class from which all classes describing IR signals
- * are derived.
  *
  * @version 0.01 
  * @author Bengt Martensson
@@ -68,11 +49,7 @@ public abstract class ir_code {
      * subclass must override.
      */
     private int carrier_frequency_code = 0;
-    
-    /** Sent as the first sequence, only once. */
     protected ir_sequence intro_sequence;
-
-    /** Sent repetedly if signal is sent repeatedly */
     protected ir_sequence repeat_sequence;
     /**
      * Name of current package.
@@ -251,6 +228,108 @@ public abstract class ir_code {
         return s.startsWith("0x") ? Short.parseShort(s.substring(2), 16) : Short.parseShort(s);
     }
 
+    /*
+    public static short get_command_code_simple(int cmd, int commands[][]) {
+    for (int i = 0; i < commands.length; i++)
+    if (commands[i][0] == cmd)
+    return (short) commands[i][1];
+
+    // Get here only if the command was not found.
+    return commandnames.cmd_invalid;
+    }
+
+    protected static short get_command_code(int cmd, int commands1[][])
+    throws non_existing_command_exception
+    {
+    short result = get_command_code_simple(cmd, commands1);
+    if (result == commandnames.cmd_invalid) {
+    System.err.println("Command " + command_name(cmd) + " was not found.");
+    throw new non_existing_command_exception(cmd);
+    }
+    return result;
+    }
+
+    protected static short get_command_code(int cmd,
+    int commands1[][],
+    int commands2[][])
+    throws non_existing_command_exception {
+    short result = get_command_code_simple(cmd, commands1);
+    return
+    result != commandnames.cmd_invalid
+    ? result
+    : get_command_code(cmd, commands2);
+    }
+
+    protected static short get_command_code(int cmd,
+    int commands1[][],
+    int commands2[][],
+    int commands3[][])
+    throws non_existing_command_exception {
+    short result = get_command_code_simple(cmd, commands1);
+    return
+    result != commandnames.cmd_invalid
+    ? result
+    : get_command_code(cmd, commands2, commands3);
+    }
+     */
+    protected static int[] get_commands(int[][] cmds1,
+            int[][] cmds2,
+            int[][] cmds3) {
+        int[] cmds = new int[cmds1.length + cmds2.length + cmds3.length];
+        int inx = 0;
+        for (int i = 0; i < cmds1.length; i++) {
+            cmds[inx++] = cmds1[i][0];
+        }
+        for (int i = 0; i < cmds2.length; i++) {
+            cmds[inx++] = cmds2[i][0];
+        }
+        for (int i = 0; i < cmds3.length; i++) {
+            cmds[inx++] = cmds3[i][0];
+        }
+
+        return cmds;
+    }
+
+    protected static int[] get_commands(int[][] cmds1, int[][] cmds2) {
+        int[] cmds = new int[cmds1.length + cmds2.length];
+        int inx = 0;
+        for (int i = 0; i < cmds1.length; i++) {
+            cmds[inx++] = cmds1[i][0];
+        }
+        for (int i = 0; i < cmds2.length; i++) {
+            cmds[inx++] = cmds2[i][0];
+        }
+
+        return cmds;
+    }
+
+    protected static int[] get_commands(int[][] commands) {
+        int[] cmds = new int[commands.length];
+        for (int i = 0; i < commands.length; i++) {
+            cmds[i] = commands[i][0];
+        }
+        return cmds;
+    }
+
+    /**
+     * Returns all commands the class implements.
+     */
+    //    public abstract int[] get_commands();
+//     {
+// 	return extract_commands(commands);
+//     }
+
+//    protected static int [][] commands = {};
+    /**
+     * Returns the name of the command in the argument.
+     * Inverse of decode_command().
+     */
+    /*public static String command_name(int command) {
+    return
+    (command >= 0) && (command < commandnames.command_name_table.length)
+    ? commandnames.command_name_table[command] : "????";
+    }*/
+
     // Override when using different ir_sequences
     protected int[] get_intro_array() {
         return intro_sequence.int_array();
@@ -260,7 +339,6 @@ public abstract class ir_code {
         return repeat_sequence.int_array();
     }
 
-    /** Returns the signal content as an array of integers the CCF way. */
     public int[] raw_ccf_array() {
         int[] intro = get_intro_array();
         int[] repeat = get_repeat_array();
@@ -282,7 +360,6 @@ public abstract class ir_code {
     }
     ;
 
-    /** Returns the singal content as an CCF string. */
     public String raw_ccf_string() {
         int[] intro = get_intro_array();
         int[] repeat = get_repeat_array();

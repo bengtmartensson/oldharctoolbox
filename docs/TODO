@@ -2,38 +2,35 @@ Personal:
 Set up LIRC server delta
 set up harc listener
 
-BUGS:
-br2rmdu maps commandno to hex identically (without considering obc -> hex function)
-
-NOT IMPLEMENTED:
-consider ifattribute in device files
-expand expected_response wrt arguments and newlines.
-
 EXTENSIONS:
+socketlistener (preliminary version finished)
 LIRC: revive/publish CCF-patch, CCF-exporter. dBox.
 Eventghost: ...
 JP1: RemoteMaster, extender, MkJP1, ...
+Tonto: finished
 Pronto-NG: ?
+Guile
+Python
+Lua
 superremote (java/xml) (Nokia N810)
 lua/netremote
 
 Restructuring:
 Rename home -> house?
 home.java restructure transmit_command.
-all xml: parse once and read in
 
 BUGS, necessary features:
+console showing last line
+-->Makefile should be able to build jar-file.
 
 misc missing features in GUI. DONE
 In GUI, facility for rereading macros and/or home file. DOME
 run macros in threads DONE
-sockets performance (improved, still fails sometimes)
+sockets performance (improved)
 Possibility to interrupt commands (e.g. listen) -- DONE
 properites issues DONE
 Generate irdb-file for components using IRTrans as gateway. (Ok, but reject)
 Generate lirc.conf-file for lirc servers. DONE
-console showing last line DONE
-LIRC server?
 
 Export device formats
 lirc.conf	DONE
@@ -47,20 +44,22 @@ pronto-ng?
 
 Import formats
 ccf		DONE (gui integration 2bdone)
-rmdu   		DONE
+rmdu   		Through RemoteMaster integration
 LIRC   		lircpatch, to revive
 
 Very low priority
-EZControl udp support manual switches
 ISO-8859-1 streams from dbox erroneously read.
+XML export of protocol codes (not really useful).
 GC GUI: Blink, relay status and manipulation (questionable usability, NR better)
+support <img> elements in home and devices. (do if/when I need it)
+Ping all in Home/Macros. (can be done in a macro)
+EZControl udp support	 (no advantages wrt web_api)
 USB-Uirt direct support	(can be done indirectly with LIRC)
 TIRA direct support	(can be done indirectly with LIRC)
 cntrl-c-handling (readline) - much better, still not perfect.
+GUI cannot call commands with more than one argument.
 
 Rejected - Probably never
-support <img> elements in home and devices. (do if/when I need it)
-GUI cannot call commands with more than one argument.
 IRTrans Gui: getremotes?, getversion?
 HAL irtransmitter
 Macro arguments
@@ -70,8 +69,6 @@ Open:
 Browser support: XUL?, Java applet?, Javascript?, AJAX?, iPod Touch?
 
 REJECTED:
-Lua
-Guile
 Generate t10-irdb-fragment for t10 actions
 Getline, editline support
 server (listen @port -> Main.main()) (Port EG instead)
@@ -82,13 +79,4 @@ Devices, very low priority:
 
 Pioneer DVD (combination protocol?)
 Windows media center signals
-dbox keyboard -- DONE
-
-
-DONE:
-Ping all in Home/Macros. (can be done in a macro)
-EZControl udp support	 (no advantages wrt web_api)
-XML export of protocol codes (not really useful).
-socketlistener (preliminary version finished)
-Tonto: finished
-Python
+dbox keyboard

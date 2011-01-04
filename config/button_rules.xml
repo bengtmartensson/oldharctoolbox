@@ -1,42 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE button_rules SYSTEM "../dtds/button_rules.dtd">
 <button_rules>
-<!-- reserve-button says that the button may only be assigned to the function -->
-<!-- mentionen in the attribute function; if empty then to no function -->
   <reserve-button button="magic" unshifted-only="no"/>
-  <reserve-button button="vol+"  unshifted-only="yes" function="volume_up"/>
-  <reserve-button button="vol-"  unshifted-only="yes" function="volume_down"/>
-
+  <reserve-button button="volume_up" unshifted-only="yes"/>
+  <reserve-button button="volume_down" unshifted-only="yes"/>
+  <reserve-button button="d" unshifted-only="yes"/>
   <names button="play">
     <add-name name="play_pause"/>
     <add-name name="slow"/>
     <add-name name="slow_forward"/>
   </names>
-  <names button="pause" allow_buttonname="no">
-    <add-name name="pause_toggle"/>
+  <names button="pause">
+    <add-name name="pause_toggle" replace="yes"/>
     <add-name name="pause_on"/>
     <add-name name="pause_off"/>
     <add-name name="play_pause"/>
     <add-name name="still_advance"/>
     <add-name name="freeze_toggle"/>
   </names>
-  <names button="rew">
-    <add-name name="rewind"/>
+  <names button="rewind">
     <add-name name="slow_reverse"/>
     <add-name name="reverse"/>
   </names>
-  <names button="guide" allow_buttonname="no">
-    <add-name name="info"/>
+  <names button="guide">
+    <add-name name="info" replace="yes"/>
     <add-name name="display"/>
   </names>
   <names button="mute">
     <add-name name="mute_toggle"/>
-  </names>
-  <names button="Vol+">
-    <add-name name="volume_up"/>
-  </names>
-  <names button="vol-">
-    <add-name name="volume_down"/>
   </names>
   <names button="menu" devicetype="dvd|misc_audio">
     <add-name name="dvd_menu"/>
@@ -45,53 +36,41 @@
   <names button="menu">
     <add-name name="setup"/>
   </names>
-  <names button="ch+" devicetype="dvd|cd">
+  <names button="channel_up" devicetype="dvd|cd">
     <add-name name="next"/>
   </names>
-  <names button="ch+">
-    <add-name name="channel_up"/>
+  <names button="channel_up" devicetype="sat">
+    <add-name name="up"/>
+  </names>
+  <names button="channel_up" devicetype="misc_audio">
     <add-name name="page_up"/>
   </names>
-  <names button="ch+" devicetype="misc_audio">
-    <add-name name="page_up"/>
-  </names>
-  <names button="ch-" devicetype="dvd">
+  <names button="channel_down" devicetype="dvd">
     <add-name name="previous"/>
   </names>
-  <names button="ch-">
-    <add-name name="channel_down"/>
+  <names button="channel_down" devicetype="sat">
+    <add-name name="down"/>
+  </names>
+  <names button="channel_down" devicetype="misc_audio">
     <add-name name="page_down"/>
   </names>
-  <names button="ch-" devicetype="misc_audio">
-    <add-name name="page_down"/>
-  </names>
-  <names button="Brightness+">
-    <add-name name="brightness_up"/>
-  </names>
-  <names button="Brightness-">
-    <add-name name="brightness_down"/>
-  </names>
-
-
-  <reserve-button button="mute" unshifted-only="yes" function="mute_toggle"/>
-
-  <names button="power" match-required="yes" allow_buttonname="no">
-    <add-name name="power_toggle"/>
+  <reserve-button button="mute" unshifted-only="yes"/>
+  <names button="power" match-required="yes">
+    <add-name name="power_toggle" replace="yes"/>
     <add-name name="power_on"/>
     <add-name name="power_off"/>
-    <add-name name="standby_toggle"/>
+    <add-name name="standby"/>
     <add-name name="suspend"/>
   </names>
-  <names button="rec" allow_buttonname="no">
-    <add-name name="record_toggle"/>
+  <names button="record">
+    <add-name name="record_toggle" replace="yes"/>
     <add-name name="record_on"/>
     <add-name name="record_off"/>
   </names>
-  <names button="rec">
+  <names button="record">
     <add-name name="open_close"/>
   </names>
-  <names button="-/--">
-    <add-name name="two_digit"/>
+  <names button="two_digit">
     <add-name name="plus10"/>
     <add-name name="last_channel"/>
     <add-name name="caps_num"/>
@@ -100,7 +79,6 @@
     <add-name name="home"/>
     <add-name name="return"/>
     <add-name name="menu_off"/>
-    <add-name name="cancel"/>
   </names>
   <names button="a" devicetype="dvd|misc_audio">
     <add-name name="audio"/>
@@ -113,67 +91,17 @@
     <add-name name="zoom"/>
   </names>
 
-  <names button="1">
-    <add-name name="cmd_1toggle"/>
-    <add-name name="cmd_1on"/>
-    <add-name name="cmd_1off"/>
-  </names>
-  <names button="2">
-    <add-name name="cmd_2toggle"/>
-    <add-name name="cmd_2on"/>
-    <add-name name="cmd_2off"/>
-  </names>
-  <names button="3">
-    <add-name name="cmd_3toggle"/>
-    <add-name name="cmd_3on"/>
-    <add-name name="cmd_3off"/>
-  </names>
-  <names button="4">
-    <add-name name="cmd_4toggle"/>
-    <add-name name="cmd_4on"/>
-    <add-name name="cmd_4off"/>
-  </names>
-  <names button="5">
-    <add-name name="cmd_5toggle"/>
-    <add-name name="cmd_5on"/>
-    <add-name name="cmd_5off"/>
-  </names>
-  <names button="6">
-    <add-name name="cmd_6toggle"/>
-    <add-name name="cmd_6on"/>
-    <add-name name="cmd_6off"/>
-  </names>
-  <names button="7">
-    <add-name name="cmd_7toggle"/>
-    <add-name name="cmd_7on"/>
-    <add-name name="cmd_7off"/>
-  </names>
-  <names button="8">
-    <add-name name="cmd_8toggle"/>
-    <add-name name="cmd_8on"/>
-    <add-name name="cmd_8off"/>
-  </names>
-  <names button="9">
-    <add-name name="cmd_9toggle"/>
-    <add-name name="cmd_9on"/>
-    <add-name name="cmd_9off"/>
-  </names>
-
   <names button="a">
-    <add-name name="a"/>
-    <add-name name="topleft"/>
+    <add-name name="A"/>
   </names>
   <names button="b">
-    <add-name name="b"/>
-    <add-name name="topright"/>
+    <add-name name="B"/>
   </names>
   <names button="c">
-    <add-name name="c"/>
-    <add-name name="bottomleft"/>
+    <add-name name="C"/>
   </names>
   <names button="d">
-    <add-name name="d"/>
-    <add-name name="bottomright"/>
+    <add-name name="D"/>
   </names>
 
   <names button="red" devicetype="dvd|misc_audio">
@@ -191,17 +119,15 @@
     <add-name name="goto"/>
   </names>
 
-  <names button="16/9">
-    <add-name name="aspectratio"/>
-    <add-name name="aspectratio_16_9"/>
+  <names button="16_9">
+    <add-name name="ar"/>
     <add-name name="resolution"/>
-    <add-name name="I_II"/>
   </names>
   <names button="av">
     <add-name name="in_usb"/>
     <add-name name="in_aux"/>
+    <add-name name="mode_tv"/>
     <add-name name="tv_mode"/>
-    <add-name name="vcr_tv"/>
     <add-name name="file_mode"/>
     <add-name name="input_select"/>
   </names>
@@ -212,24 +138,19 @@
     <add-name name="page_up"/>
   </names>
 
-  <names button="rew">
-    <add-name name="rewind"/>
+  <names button="rewind">
     <add-name name="teletext"/>
   </names>
   <names button="stop">
     <add-name name="teletext_freeze"/>
   </names>
-  <names button="rec">
+  <names button="record">
     <add-name name="teletext_doubleheight"/>
   </names>
-  <names button="ffw">
-    <add-name name="fast_forward"/>
+  <names button="fast_forward">
     <add-name name="teletext_hide"/>
   </names>
 
-  <names button="a">
-    <add-name name="white"/>
-  </names>
   <names button="a" devicetype="sat">
     <add-name name="topleft"/>
   </names>
@@ -239,20 +160,19 @@
   <names button="c" devicetype="sat">
     <add-name name="bottomleft"/>
   </names>
-  <!--names button="rec" devicetype="sat">
+  <names button="record" devicetype="sat">
     <add-name name="bottomright"/>
-  </names-->
+  </names>
 
   <names button="av">
     <add-name name="in_hdmi1"/>
     <add-name name="in_component1"/>
     <add-name name="source"/>
-    <add-name name="input"/>
   </names>
 
+  <assign-buttons aliases="yes" unshifted-only="yes"/>
   <!--dump-functions/-->
   <!--dump-buttons/-->
-  <assign-buttons unshifted-only="yes"/>
   <assign-buttons/>
   <assign-buttons/>
 

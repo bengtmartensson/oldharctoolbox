@@ -4,7 +4,7 @@
 <device id="ezcontrol_t10" name="EZControl T10" vendor="Rose + Herleth"
   vendorurl="http://www.ezcontrol.de/" model="T-10" type="ha">
   <jp1data>
-    <setupcode value="2014"/>
+    <setupcode value="1234"/>
   </jp1data>
   <commandset type="web_api" prefix="">
     <command cmdref="cmd_1on"	transmit="preset?switch=1&amp;value=on" response_lines="-1"/>

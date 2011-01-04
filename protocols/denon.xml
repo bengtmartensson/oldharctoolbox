@@ -5,7 +5,7 @@
   <!-- Called Sharp by Denon (the firm) ... -->
   <jp1data>
     <protocol number="00 9C" name="Denon"/>
-    <tohex function="reverse_complement" bits="8"/>
+    <tohex function="reverse-invert" bits="8"/>
   </jp1data>
   <parameters>
     <parameter id="deviceno" bits="5"/>
