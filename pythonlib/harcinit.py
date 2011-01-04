@@ -14,8 +14,8 @@ def cmd(dev, command):
 def version():
    print str(harc.harcutils.version_string)
 
-#def help():
-#    print "Useful commands are, e.g., <TODO>"
+def help():
+    print "Useful commands are, e.g., <TODO>"
 
 def license():
     print str(harc.harcutils.license_string)
@@ -33,14 +33,6 @@ def _harcfuncs_gt2_args():
                  inspect.getmembers(harcmacros, \
                                        lambda o: inspect.isfunction(o) \
                                        and len(inspect.getargspec(o)[0])>2))
-# Only Python <= 2.5
-def _harcfuncs_0_args_ok():
-   """Return all functions which may be called without arguments."""
-   return map(lambda x: x[0], \
-                 inspect.getmembers(harcmacros, \
-                                       lambda o: inspect.isfunction(o) \
-                                       and len(inspect.getargspec(o)[0]) \
-                                        == (0 if inspect.getargspec(o)[3] is None else len(inspect.getargspec(o)[3]))))
 
 def _harcfuncs_device():
    """Return all functions having its first argument called device."""

@@ -40,7 +40,7 @@
     <command cmdref="white" 			cmdno="111"/>
     <command cmdref="menu_off" 			cmdno="83"/>
     <command cmdref="I_II" 				cmdno="35"/>
-    <command cmdref="teletext_toggle" 			cmdno="60"/>
+    <command cmdref="teletext" 			cmdno="60"/>
     <command cmdref="teletext_freeze" 		cmdno="41"/>
     <command cmdref="teletext_reveal" 		cmdno="44"/>
     <command cmdref="teletext_hide" 		cmdno="45"/>

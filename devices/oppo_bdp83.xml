@@ -8,7 +8,7 @@
     <attribute name="rs232_version1"/>
     <attribute name="rs232"/>
     <attribute name="bluraychip_rs232"/>
-    <attribute name="rc_1" defaultvalue="yes"/><!-- RC device 1 -->
+    <attribute name="rc_1" default="yes"/><!-- RC device 1 -->
     <attribute name="rc_2"/><!-- RC device 2 -->
     <attribute name="rc_3"/><!-- RC device 3 -->
   </attributes>

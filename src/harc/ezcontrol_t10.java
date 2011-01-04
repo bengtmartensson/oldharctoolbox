@@ -270,27 +270,9 @@ public class ezcontrol_t10 {
         return use_udp ? udp_send_preset(switch_no, cmd) : get_url(url_preset(switch_no, cmd));
     }
 
-    public boolean send_preset(int switch_no, command_t cmd, int count) throws non_existing_command_exception {
-        boolean result = true;
-        for (int i = 0; i < count; i++) {
-            boolean stat = send_preset(switch_no, cmd);
-            result &= stat;
-        }
-        return result;
-    }
-
     public boolean send_preset(int switch_no, int value) throws IllegalArgumentException {
         // Not possible with udp.
         return get_url(url_preset(switch_no, value));
-    }
-
-    public boolean send_preset(int switch_no, int value, int count) throws non_existing_command_exception {
-        boolean result = true;
-        for (int i = 0; i < count; i++) {
-            boolean stat = send_preset(switch_no, value);
-            result &= stat;
-        }
-        return result;
     }
 
     private boolean udp_send_preset(int switch_no, command_t cmd) {

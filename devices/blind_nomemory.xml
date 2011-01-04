@@ -4,7 +4,7 @@
 <devices>
   <device id="blind_nomemory" name="Generic blind or screen that moves up (by power_reverse_on) or down (by power_on), stops when power removed" model="generic" type="dumb">
     <attributes>
-      <attribute name="memory" defaultvalue="no"/>
+      <attribute name="memory" value="no"/>
     </attributes>
     <aliases>
       <alias name="down" command="power_on"/>

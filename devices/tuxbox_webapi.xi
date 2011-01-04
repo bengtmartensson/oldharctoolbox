@@ -1,7 +1,7 @@
 <!DOCTYPE commandset PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
     <commandset type="web_api" prefix="control/" name="Tuxbox Web API commands"
-      delay_between_reps="100" charset="iso-8859-1">
+      delay_between_reps="100">
       <!-- 1. Channellist -->
       <command cmdref="get_channellist" transmit="channellist" response_lines="-1">
 	<returnvalues>

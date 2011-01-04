@@ -17,4 +17,4 @@ if [ -w /var/run ] ; then
     echo $$ > /var/run/harc.pid
 fi
 
-exec ${JAVA} -Djava.library.path=${READLINE_LIB} -jar ${HARC_HOME}/dist/harc.jar -p ${HARC_HOME}/harc.properties.xml "$@"
+exec ${JAVA} -Djava.library.path=${READLINE_LIB} -jar ${HARC_HOME}/harc.jar -p ${HARC_HOME}/harcprops.xml "$@"

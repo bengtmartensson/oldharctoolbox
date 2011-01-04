@@ -26,32 +26,14 @@
 	<sunrise latitude="48.13" longitude="11.5" degrees="-3"/>
       </last-of>
     </time>
-    <!--commandline>sunrise</commandline-->
-    <commandline>large_blind up</commandline>
-    <commandline>small_blind up</commandline>
-    <commandline>balcony_blind up</commandline>
-    <commandline>kitchen_blind up</commandline>
-    <commandline>large_blind up</commandline>
-    <commandline>small_blind up</commandline>
-    <commandline>balcony_blind up</commandline>
-    <commandline>kitchen_blind up</commandline>
+    <commandline>sunrise</commandline>
   </task>
 
   <task name="sunset-blinds-down">
     <time>
       <sunset latitude="48.13" longitude="11.5" degrees="-3"/>
     </time>
-    <!--commandline>sunset</commandline-->
-    <commandline>large_blind down</commandline>
-    <commandline>small_blind down</commandline>
-    <commandline>balcony_blind down</commandline>
-    <commandline>kitchen_blind down</commandline>
-    <commandline>bedroom_blind down</commandline>
-    <commandline>large_blind down</commandline>
-    <commandline>small_blind down</commandline>
-    <commandline>balcony_blind down</commandline>
-    <commandline>kitchen_blind down</commandline>
-    <commandline>bedroom_blind down</commandline>
+    <commandline>sunset</commandline>
   </task>
 
   <task name="bedroom-blind-up">

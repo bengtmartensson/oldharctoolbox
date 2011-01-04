@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009, 2010 Bengt Martensson.
+Copyright (C) 2009 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package harc;
 import com.neuron.app.tonto.ProntoModel;
 import java.awt.Dimension;
 import javax.swing.*;
+//import java.lang.*;
 import java.io.*;
 import java.net.*;
 import org.xml.sax.*;
@@ -39,7 +40,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class gui_main extends javax.swing.JFrame {
 
     private home hm = null;
-    private jython_engine engine = null;
+    private macro_engine engine = null;
     private String last_rmdu_export = null;
     private int debug = 0;
     private boolean verbose = false;
@@ -106,9 +107,9 @@ public class gui_main extends javax.swing.JFrame {
     }
 
     /** Creates new form gui_main */
-    public gui_main(String homefilename/*, String macrofilename, boolean verbose, int debug, String browser*/) {
+    public gui_main(String homefilename, String macrofilename, boolean verbose, int debug, String browser) {
         try {
-            hm = new home(homefilename);
+            hm = new home(homefilename, verbose, debug, browser);
         } catch (IOException e) {
             System.err.println("Cannot open home file");
             System.exit(harcutils.exit_config_read_error);
@@ -119,24 +120,40 @@ public class gui_main extends javax.swing.JFrame {
             System.err.println("home file parse error" + e.getMessage());
             System.exit(harcutils.exit_xml_error);
         }
-
-        engine = new jython_engine(hm, false);
-        String[] macs = engine.get_argumentless_macros();
+       try {
+            engine = new macro_engine(macrofilename, hm, debug);
+        } catch (IOException e) {
+            System.err.println("Cannot open macro file");
+            //System.exit(harcutils.exit_config_read_error);
+            engine = null;
+        } catch (SAXParseException e) {
+            System.err.println(e.getMessage());
+            //System.exit(harcutils.exit_xml_error);
+            engine = null;
+        } catch (SAXException e) {
+            System.err.println(e.getMessage());
+            //System.exit(harcutils.exit_xml_error);
+            engine = null;
+        }
+        this.verbose = verbose;
+        this.debug = debug;
+        //macros = engine.listmacros(false);
+       
+        String[] macs = engine != null ? engine.get_macros(false) : null;
         if (macs != null) {
             macros_dcbm = new DefaultComboBoxModel(macs);
-            //String[] toplevel_macrofolders = engine.get_folders();
-            //toplevel_macrofolders_dcbm = new DefaultComboBoxModel(toplevel_macrofolders);
-            //secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(
-            //        (toplevel_macrofolders != null && toplevel_macrofolders.length > 0)
-            //        ? engine.get_folders(toplevel_macrofolders[0], 1)
-            //        : (new String[]{dummy_no_selection}));
+            String[] toplevel_macrofolders = engine.get_folders();
+            toplevel_macrofolders_dcbm = new DefaultComboBoxModel(toplevel_macrofolders);
+            secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(
+                    (toplevel_macrofolders != null && toplevel_macrofolders.length > 0)
+                    ? engine.get_folders(toplevel_macrofolders[0], 1)
+                    : (new String[]{dummy_no_selection}));
         } else {
             engine = null;
             macros_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
+            toplevel_macrofolders_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
+            secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
         }
-        // FIXME
-        toplevel_macrofolders_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
-        secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
 
         devices_dcbm = new DefaultComboBoxModel(hm.get_devices());
         devicegroups_dcbm = new DefaultComboBoxModel(hm.get_devicegroups());
@@ -186,7 +203,7 @@ public class gui_main extends javax.swing.JFrame {
             }
         });
 
-        //update_macro_menu();
+        update_macro_menu();
         update_device_menu();
         //update_command_menu();
         update_src_device_menu();
@@ -202,7 +219,7 @@ public class gui_main extends javax.swing.JFrame {
         irt = new irtrans("irtrans", verbose);
 
         homeconf_TextField.setText(homefilename);
-        //macro_TextField.setText(macrofilename);
+        macro_TextField.setText(macrofilename);
         aliases_TextField.setText(harcprops.get_instance().get_aliasfilename());
         browser_TextField.setText(harcprops.get_instance().get_browser());
         exportdir_TextField.setText(harcprops.get_instance().get_exportdir());
@@ -215,7 +232,9 @@ public class gui_main extends javax.swing.JFrame {
     }
 
     public gui_main() {
-        this(harcprops.get_instance().get_homefilename());
+        this(harcprops.get_instance().get_homefilename(),
+                harcprops.get_instance().get_macrofilename(), false, 0,
+                harcprops.get_instance().get_browser());
     }
 
     // From Real Gagnon        
@@ -252,6 +271,10 @@ public class gui_main extends javax.swing.JFrame {
     //TODO: boolean logFile;
     private void warning(String message) {
         System.err.println("Warning: " + message);
+    }
+
+    private void not_yet_implemented(String functionname) {
+        System.err.println(functionname + " is not yet implemented, sorry.");
     }
 
     /** This method is called from within the constructor to
@@ -320,7 +343,6 @@ public class gui_main extends javax.swing.JFrame {
         gc_module_ComboBox = new javax.swing.JComboBox();
         gc_connector_ComboBox = new javax.swing.JComboBox();
         gc_browse_Button = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         irtrans_Panel = new javax.swing.JPanel();
         irtrans_address_TextField = new javax.swing.JTextField();
         irtrans_led_ComboBox = new javax.swing.JComboBox();
@@ -490,6 +512,7 @@ public class gui_main extends javax.swing.JFrame {
 
         macroComboBox.setMaximumRowCount(20);
         macroComboBox.setModel(macros_dcbm);
+        macroComboBox.setToolTipText(engine != null ? engine.describe_macro((String)macros_dcbm.getSelectedItem()) : null);
         macroComboBox.setMaximumSize(new java.awt.Dimension(170, 25));
         macroComboBox.setMinimumSize(new java.awt.Dimension(170, 25));
         macroComboBox.setPreferredSize(new java.awt.Dimension(150, 25));
@@ -510,7 +533,6 @@ public class gui_main extends javax.swing.JFrame {
 
         toplevel_macrofolders_ComboBox.setModel(toplevel_macrofolders_dcbm);
         toplevel_macrofolders_ComboBox.setToolTipText("Top level folder");
-        toplevel_macrofolders_ComboBox.setEnabled(false);
         toplevel_macrofolders_ComboBox.setMaximumSize(new java.awt.Dimension(120, 25));
         toplevel_macrofolders_ComboBox.setMinimumSize(new java.awt.Dimension(120, 25));
         toplevel_macrofolders_ComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -522,7 +544,6 @@ public class gui_main extends javax.swing.JFrame {
         secondlevel_macrofolders_ComboBox.setMaximumRowCount(20);
         secondlevel_macrofolders_ComboBox.setModel(secondlevel_macrofolders_dcbm);
         secondlevel_macrofolders_ComboBox.setToolTipText("Second level folder");
-        secondlevel_macrofolders_ComboBox.setEnabled(false);
         secondlevel_macrofolders_ComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 secondlevel_macrofolders_ComboBoxActionPerformed(evt);
@@ -629,6 +650,7 @@ public class gui_main extends javax.swing.JFrame {
 
         stop_macro_Button.setText("Stop");
         stop_macro_Button.setToolTipText("Stop executing macro");
+        stop_macro_Button.setEnabled(false);
         stop_macro_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stop_macro_ButtonActionPerformed(evt);
@@ -717,10 +739,10 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(macroComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(stop_macro_Button)
                     .addComponent(macroButton))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
-        output_hw_TabbedPane.addTab("Home", mainPanel);
+        output_hw_TabbedPane.addTab("Home/Macros", mainPanel);
 
         deviceclass_ComboBox.setMaximumRowCount(20);
         deviceclass_ComboBox.setModel(deviceclasses_dcbm);
@@ -808,7 +830,7 @@ public class gui_main extends javax.swing.JFrame {
         deviceclassesPanelLayout.setVerticalGroup(
             deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, deviceclassesPanelLayout.createSequentialGroup()
-                .addContainerGap(35, Short.MAX_VALUE)
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deviceclass_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(device_remote_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -971,8 +993,8 @@ public class gui_main extends javax.swing.JFrame {
                             .addComponent(icf_import_Button))
                         .addGap(31, 31, 31)
                         .addGroup(protocolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
-                            .addComponent(protocol_cooked_TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+                            .addComponent(protocol_cooked_TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)))
                     .addGroup(protocolsPanelLayout.createSequentialGroup()
                         .addComponent(protocol_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1064,13 +1086,6 @@ public class gui_main extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Stop IR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                gc_stop_ir_ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout globalcache_PanelLayout = new javax.swing.GroupLayout(globalcache_Panel);
         globalcache_Panel.setLayout(globalcache_PanelLayout);
         globalcache_PanelLayout.setHorizontalGroup(
@@ -1084,9 +1099,7 @@ public class gui_main extends javax.swing.JFrame {
                 .addComponent(gc_connector_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(gc_browse_Button)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap(274, Short.MAX_VALUE))
+                .addContainerGap(328, Short.MAX_VALUE))
         );
         globalcache_PanelLayout.setVerticalGroup(
             globalcache_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1096,9 +1109,8 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(gc_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(gc_module_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(gc_connector_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gc_browse_Button)
-                    .addComponent(jButton1))
-                .addContainerGap(73, Short.MAX_VALUE))
+                    .addComponent(gc_browse_Button))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         outputHWTabbedPane.addTab("GlobalCache", globalcache_Panel);
@@ -1135,7 +1147,7 @@ public class gui_main extends javax.swing.JFrame {
                 .addComponent(irtrans_led_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addComponent(irtrans_browse_Button)
-                .addContainerGap(337, Short.MAX_VALUE))
+                .addContainerGap(329, Short.MAX_VALUE))
         );
         irtrans_PanelLayout.setVerticalGroup(
             irtrans_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1145,7 +1157,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(irtrans_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(irtrans_led_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(irtrans_browse_Button))
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         outputHWTabbedPane.addTab("IRTrans", irtrans_Panel);
@@ -1286,7 +1298,7 @@ public class gui_main extends javax.swing.JFrame {
                         .addComponent(ezcontrol_onButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ezcontrol_off_Button)
-                        .addContainerGap(173, Short.MAX_VALUE))
+                        .addContainerGap(165, Short.MAX_VALUE))
                     .addGroup(ezcontrolPanelLayout.createSequentialGroup()
                         .addComponent(ezcontrol_preset_no_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1299,7 +1311,7 @@ public class gui_main extends javax.swing.JFrame {
                         .addComponent(ezcontrol_preset_off_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(t10_update_Button)
-                        .addContainerGap(209, Short.MAX_VALUE))))
+                        .addContainerGap(202, Short.MAX_VALUE))))
         );
         ezcontrolPanelLayout.setVerticalGroup(
             ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1320,7 +1332,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(ezcontrol_preset_on_Button)
                     .addComponent(ezcontrol_preset_off_Button)
                     .addComponent(t10_update_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(t10_get_timers_Button)
                     .addComponent(t10_get_status_Button)
@@ -1527,7 +1539,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(jLabel23)
                     .addComponent(jLabel24)
                     .addComponent(time_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
         hexcalcPanelLayout.setVerticalGroup(
             hexcalcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1619,9 +1631,7 @@ public class gui_main extends javax.swing.JFrame {
         });
 
         jLabel17.setText("Macro");
-        jLabel17.setEnabled(false);
 
-        macro_TextField.setEnabled(false);
         macro_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
         macro_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
         macro_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
@@ -1669,7 +1679,6 @@ public class gui_main extends javax.swing.JFrame {
         jLabel18.setText("Browser");
 
         macro_select_Button.setText("...");
-        macro_select_Button.setEnabled(false);
         macro_select_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 macro_select_ButtonActionPerformed(evt);
@@ -1691,7 +1700,6 @@ public class gui_main extends javax.swing.JFrame {
         });
 
         macro_browse_Button.setText("Browse");
-        macro_browse_Button.setEnabled(false);
         macro_browse_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 macro_browse_ButtonActionPerformed(evt);
@@ -1706,7 +1714,6 @@ public class gui_main extends javax.swing.JFrame {
         });
 
         macro_load_Button.setText("Load");
-        macro_load_Button.setEnabled(false);
         macro_load_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 macro_load_ButtonActionPerformed(evt);
@@ -1756,7 +1763,7 @@ public class gui_main extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(alias_browse_Button))
                             .addComponent(browser_select_Button))))
-                .addContainerGap(133, Short.MAX_VALUE))
+                .addContainerGap(125, Short.MAX_VALUE))
         );
         general_PanelLayout.setVerticalGroup(
             general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1824,7 +1831,7 @@ public class gui_main extends javax.swing.JFrame {
                 .addComponent(exportdir_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(exportdir_browse_Button)
-                .addContainerGap(233, Short.MAX_VALUE))
+                .addContainerGap(221, Short.MAX_VALUE))
         );
         general_export_opts_PanelLayout.setVerticalGroup(
             general_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1834,7 +1841,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(jLabel19)
                     .addComponent(exportdir_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exportdir_browse_Button))
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         exportopts_TabbedPane.addTab("General", general_export_opts_Panel);
@@ -1904,7 +1911,7 @@ public class gui_main extends javax.swing.JFrame {
                 .addComponent(ccf_export_buttonheight_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(ccf_export_raw_CheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
                 .addComponent(ccf_export_export_Button)
                 .addContainerGap())
         );
@@ -1920,7 +1927,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(ccf_export_buttonheight_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ccf_export_raw_CheckBox)
                     .addComponent(ccf_export_export_Button))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         exportopts_TabbedPane.addTab("CCF", ccf_export_opts_Panel);
@@ -1982,7 +1989,7 @@ public class gui_main extends javax.swing.JFrame {
                 .addGroup(rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(keymap_rules_browse_Button)
                     .addComponent(remotemaster_home_browse_Button))
-                .addContainerGap(194, Short.MAX_VALUE))
+                .addContainerGap(182, Short.MAX_VALUE))
         );
         rmdu_export_opts_PanelLayout.setVerticalGroup(
             rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2045,7 +2052,7 @@ public class gui_main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(debug_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(verbose_CheckBox))
-                .addContainerGap(502, Short.MAX_VALUE))
+                .addContainerGap(494, Short.MAX_VALUE))
         );
         debug_PanelLayout.setVerticalGroup(
             debug_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2056,7 +2063,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(debug_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(verbose_CheckBox)
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         optsTabbedPane.addTab("Debug", debug_Panel);
@@ -2384,15 +2391,14 @@ public class gui_main extends javax.swing.JFrame {
         public void run() {
             String result = null;
             //String cmd = (String) macros_dcbm.getSelectedItem();
-            System.err.println(cmd_formatter.format("harcmacros." + macroname + "()"));
-            //try {
-                result = engine.eval("harcmacros." + macroname + "()");
-            //} catch (non_existing_command_exception e) {
-                // This should not happen
-            //    System.err.println("*** Non existing macro " + e.getMessage());
-            //} catch (InterruptedException e) {
-            //    System.err.println("*** Interrupted ***" + e.getMessage());
-            //}
+            System.err.println(cmd_formatter.format(macroname));
+            try {
+                result = engine.eval_macro(macroname, null, 0, false);
+            } catch (non_existing_command_exception e) {
+                System.err.println("*** Non existing macro " + e.getMessage());
+            } catch (InterruptedException e) {
+                System.err.println("*** Interrupted ***" + e.getMessage());
+            }
             if (result == null)
                 System.err.println("** Failed **");
             else if (!result.equals(""))
@@ -2415,6 +2421,10 @@ public class gui_main extends javax.swing.JFrame {
             this.cmd = cmd;
             this.args = args;
         }
+
+        //public String get_name() {
+        //    return macroname;
+        //}
 
         @Override
         public void run() {
@@ -2568,15 +2578,15 @@ public class gui_main extends javax.swing.JFrame {
     }//GEN-LAST:event_saveAsMenuItemActionPerformed
 
     private void macroComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macroComboBoxActionPerformed
-        //macroComboBox.setToolTipText(engine.describe_macro((String) macros_dcbm.getSelectedItem()));
+        macroComboBox.setToolTipText(engine.describe_macro((String) macros_dcbm.getSelectedItem()));
         if (immediate_execution_macros_CheckBoxMenuItem.isSelected())
             macroButtonActionPerformed(null);
 }//GEN-LAST:event_macroComboBoxActionPerformed
 
     private void macroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macroButtonActionPerformed
-        if (the_macro_thread != null)
+        if (the_macro_thread != null) {
             System.err.println("Internal error: the_macro_thread != null");
-        
+        }
         the_macro_thread = new macro_thread((String) macros_dcbm.getSelectedItem());
         macroButton.setEnabled(false);
         stop_macro_Button.setEnabled(true);
@@ -2641,7 +2651,7 @@ public class gui_main extends javax.swing.JFrame {
         update_command_menu();
     }
 
-    /*private void update_macro_menu() {
+    private void update_macro_menu() {
         if (engine != null) {
             String[] macros = null;
             if (enable_macro_folders_CheckBoxMenuItem.isSelected())
@@ -2675,13 +2685,13 @@ public class gui_main extends javax.swing.JFrame {
             secondlevel_macrofolders_ComboBox.setEnabled(false);
         }
     }
-*/
+
     private void sort_macros_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sort_macros_CheckBoxMenuItemActionPerformed
-        //update_macro_menu();
+        update_macro_menu();
     }//GEN-LAST:event_sort_macros_CheckBoxMenuItemActionPerformed
 
     private void update_verbosity() {
-        userprefs.get_instance().set_verbose(verbose);
+        hm.set_verbosity(verbose);
         gc.set_verbosity(verbose);
         irt.set_verbosity(verbose);
         verbose_CheckBoxMenuItem.setSelected(verbose);
@@ -2694,7 +2704,7 @@ public class gui_main extends javax.swing.JFrame {
     }//GEN-LAST:event_verbose_CheckBoxMenuItemActionPerformed
 
     private void toplevel_macrofolders_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toplevel_macrofolders_ComboBoxActionPerformed
- /*       toplevel_macrofolders_ComboBox.setToolTipText(engine.describe_folder((String) toplevel_macrofolders_dcbm.getSelectedItem()));
+        toplevel_macrofolders_ComboBox.setToolTipText(engine.describe_folder((String) toplevel_macrofolders_dcbm.getSelectedItem()));
         String[] secondlevel_macrofolders = engine.get_folders((String) toplevel_macrofolders_ComboBox.getSelectedItem(), 1);
         if (secondlevel_macrofolders != null && secondlevel_macrofolders.length > 0) {
             secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(secondlevel_macrofolders);
@@ -2708,16 +2718,15 @@ public class gui_main extends javax.swing.JFrame {
             secondlevel_macrofolders_ComboBox.setToolTipText(null);
         }
         update_macro_menu();
-  */
 }//GEN-LAST:event_toplevel_macrofolders_ComboBoxActionPerformed
 
     private void secondlevel_macrofolders_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_secondlevel_macrofolders_ComboBoxActionPerformed
-        //secondlevel_macrofolders_ComboBox.setToolTipText(engine.describe_folder((String) secondlevel_macrofolders_dcbm.getSelectedItem()));
-        //update_macro_menu();
+        secondlevel_macrofolders_ComboBox.setToolTipText(engine.describe_folder((String) secondlevel_macrofolders_dcbm.getSelectedItem()));
+        update_macro_menu();
 }//GEN-LAST:event_secondlevel_macrofolders_ComboBoxActionPerformed
 
     private void enable_macro_folders_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enable_macro_folders_CheckBoxMenuItemActionPerformed
-        //update_macro_menu();
+        update_macro_menu();
 }//GEN-LAST:event_enable_macro_folders_CheckBoxMenuItemActionPerformed
 
     private void enable_devicegroups_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enable_devicegroups_CheckBoxMenuItemActionPerformed
@@ -2786,7 +2795,7 @@ public class gui_main extends javax.swing.JFrame {
     }
 
     private void update_connection_types_menu() {
-        connectiontype[] con_types = hm.get_connection_types((String) selecting_devices_dcbm.getSelectedItem(),
+        String[] con_types = hm.get_connection_types((String) selecting_devices_dcbm.getSelectedItem(),
                 (String) src_devices_dcbm.getSelectedItem());
         connection_types_dcbm =new DefaultComboBoxModel((con_types != null && con_types.length > 0)
                 ? con_types : new String[]{ "    "});
@@ -2856,18 +2865,18 @@ public class gui_main extends javax.swing.JFrame {
     private void select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_select_ButtonActionPerformed
         String device = (String) selecting_devices_dcbm.getSelectedItem();
         String src_device = (String) src_devices_dcbm.getSelectedItem();
-        String zone = ((String) zones_dcbm.getSelectedItem()).trim();
-        if (zone.startsWith("-") || zone.isEmpty())
+        String zone = (String) zones_dcbm.getSelectedItem();
+        if (zone.startsWith("-"))
             zone = null;
         mediatype mt = (mediatype) audio_video_ComboBox.getSelectedItem();
         System.err.println(cmd_formatter.format("--select " + device + " " + src_device
-                + (zone != null ? (" (zone = " + zone + ")") : "")
+                + (zone != null && ! zone.trim().equals("") ? (" (zone = " + zone + ")") : "")
                 + (audio_video_ComboBox.isEnabled() ? (" (" + mt + ")") : "")
-                + (connection_type_ComboBox.isEnabled() ? (" (" + (connectiontype) connection_types_dcbm.getSelectedItem() +")") : "")));
+                + (connection_type_ComboBox.isEnabled() ? (" (" + (String) connection_types_dcbm.getSelectedItem() +")") : "")));
         boolean success = false;
         try {
             success = hm.select(device, src_device, commandtype_t.any, zone, mt,
-                    connection_types_dcbm.getSize() > 1 ? (connectiontype) connection_types_dcbm.getSelectedItem() : connectiontype.any);
+                    connection_types_dcbm.getSize() > 1 ? (String) connection_types_dcbm.getSelectedItem() : null);
         } catch (InterruptedException e) {
             System.err.println("Interrupted");
         }
@@ -3398,15 +3407,13 @@ public class gui_main extends javax.swing.JFrame {
 
     private void debug_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debug_TextFieldActionPerformed
         debug = Integer.parseInt(debug_TextField.getText());
-        userprefs.get_instance().set_debug(debug);
-        //hm.set_debug(debug);
-        //engine.set_debug(debug);
+        hm.set_debug(debug);
+        engine.set_debug(debug);
     }//GEN-LAST:event_debug_TextFieldActionPerformed
 
     private void home_load_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_home_load_ButtonActionPerformed
         try {
-            //hm.load(homeconf_TextField.getText());
-            hm = new home(homeconf_TextField.getText());
+            hm.load(homeconf_TextField.getText());
             // TODO: update GUI state
             System.err.println("Warning: This operation should update the GUI state; this is not yet implemented");
         } catch (IOException ex) {
@@ -3419,12 +3426,12 @@ public class gui_main extends javax.swing.JFrame {
 }//GEN-LAST:event_home_load_ButtonActionPerformed
 
     private void macro_select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_select_ButtonActionPerformed
-        /*String filename = select_file("Select macro file", "xml", "XML Files", false,
+        String filename = select_file("Select macro file", "xml", "XML Files", false,
                 (new File(harcprops.get_instance().get_macrofilename())).getAbsoluteFile().getParent()).getAbsolutePath();
         if (filename != null) {
             macro_TextField.setText(filename);
             harcprops.get_instance().set_macrofilename(filename);
-        }*/
+        }
 }//GEN-LAST:event_macro_select_ButtonActionPerformed
 
     private void aliases_select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aliases_select_ButtonActionPerformed
@@ -3453,7 +3460,7 @@ public class gui_main extends javax.swing.JFrame {
 }//GEN-LAST:event_alias_browse_ButtonActionPerformed
 
     private void macro_load_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_load_ButtonActionPerformed
- /*       try {
+        try {
             engine.load(this.macro_TextField.getText());
             // TODO:...
             System.err.println("Warning: this does not updaste the state of the GUI (not yet implemented).");
@@ -3465,7 +3472,6 @@ public class gui_main extends javax.swing.JFrame {
             System.err.println(e);
         }
         // TODO: ...
-  * */
 }//GEN-LAST:event_macro_load_ButtonActionPerformed
 
     private void homeconf_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeconf_TextFieldActionPerformed
@@ -3485,11 +3491,11 @@ public class gui_main extends javax.swing.JFrame {
     }//GEN-LAST:event_homeconf_TextFieldFocusLost
 
     private void macro_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_TextFieldActionPerformed
-        //harcprops.get_instance().set_macrofilename(macro_TextField.getText());
+        harcprops.get_instance().set_macrofilename(macro_TextField.getText());
     }//GEN-LAST:event_macro_TextFieldActionPerformed
 
     private void macro_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_macro_TextFieldFocusLost
-        //harcprops.get_instance().set_macrofilename(macro_TextField.getText());
+        harcprops.get_instance().set_macrofilename(macro_TextField.getText());
     }//GEN-LAST:event_macro_TextFieldFocusLost
 
     private void aliases_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aliases_TextFieldActionPerformed
@@ -3676,18 +3682,6 @@ public class gui_main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_icf_import_ButtonActionPerformed
 
-    private void gc_stop_ir_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_stop_ir_ActionPerformed
-        try {
-            gc.stop_ir(get_gc_module(), get_gc_connector());
-        } catch (UnknownHostException ex) {
-            System.err.println(ex.getMessage());
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } catch (InterruptedException ex) {
-            System.err.println(ex.getMessage());
-        }
-    }//GEN-LAST:event_gc_stop_ir_ActionPerformed
-
     private void browse(String address) {
         String[] cmd = new String[2];
         cmd[0] = harcprops.get_instance().get_browser();
@@ -3833,7 +3827,6 @@ public class gui_main extends javax.swing.JFrame {
     private javax.swing.JTextField irtrans_address_TextField;
     private javax.swing.JButton irtrans_browse_Button;
     private javax.swing.JComboBox irtrans_led_ComboBox;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

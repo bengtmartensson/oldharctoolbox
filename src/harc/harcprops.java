@@ -26,12 +26,8 @@ package harc;
 // instead of a sensible default, or a warning.
 // Rewrite the get* set* function to call a helper function, possibly with default value.
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Properties;
+import java.io.*;
 
 public class harcprops {
 
@@ -39,7 +35,6 @@ public class harcprops {
     private String filename;
     private final static boolean use_xml = true;
     private boolean need_save;
-    public static final String default_propsfilename = "harc.properties.xml";
 
     private String appendable(String env) {
         String str = System.getenv(env);
@@ -64,7 +59,7 @@ public class harcprops {
         update("buttons_remotesdir", harc_home + "button_remotes");
         update("exportdir",	harc_home + "exports");
         update("aliasfilename",	harc_home + "src/harc/commandnames.xml");
-        //update("macrofilename",	harc_home + "config/macros.xml");
+        update("macrofilename",	harc_home + "config/macros.xml");
         update("browser",	"firefox");
         update("rl_historyfile", home + ".harc.rl");
         update("appname",	"harc");
@@ -168,9 +163,9 @@ public class harcprops {
         need_save = true;
     }
 
-    //public String get_macrofilename() {
-    //    return props.getProperty("macrofilename");
-    //}
+    public String get_macrofilename() {
+        return props.getProperty("macrofilename");
+    }
 
     public String get_aliasfilename() {
         return props.getProperty("aliasfilename");
@@ -190,10 +185,10 @@ public class harcprops {
         need_save = true;
     }
 
-    //public void set_macrofilename(String s) {
-    //    props.setProperty("macrofilename", s);
-    //    need_save = true;
-    //}
+    public void set_macrofilename(String s) {
+        props.setProperty("macrofilename", s);
+        need_save = true;
+    }
 
     public String get_browser() {
         return props.getProperty("browser");
@@ -267,14 +262,12 @@ public class harcprops {
     private static harcprops instance = null;
 
     public static void initialize(String filename) {
-        if (filename == null)
-            filename = default_propsfilename;
         if (instance == null)
             instance = new harcprops(filename);
     }
 
     public static void initialize() {
-        initialize(null);
+        initialize("harc.properties.xml");
     }
 
     public static void finish() throws IOException {
@@ -287,7 +280,7 @@ public class harcprops {
     }
 
     public static void main(String[] args) {
-        String filename = args.length > 0 ? args[0] : null;
+        String filename = args.length > 0 ? args[0] : "harcprops.xml";
         harcprops p = new harcprops(filename);
         p.list();
         try {

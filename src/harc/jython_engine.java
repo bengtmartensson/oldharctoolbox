@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import org.python.core.PyException;
 //import org.python.core.PyInteger;
-//import org.python.core.PyNone;
 import org.python.core.PyObject;
 //import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
@@ -18,6 +17,7 @@ import org.xml.sax.SAXParseException;
  */
 public class jython_engine {
 
+    private String jython_helpstring = "Useful commands are, e.g., <TODO>";
     private PythonInterpreter python;
     private int debug;
     private home hm;
@@ -79,7 +79,7 @@ public class jython_engine {
             try {
                 python.exec(macro);
             } catch (Exception e) {
-                System.err.println("Exception from Python " + e.getMessage());
+                System.err.println("fffffffffff " + e.getMessage());
                 e.printStackTrace();
             }
             return true;
@@ -87,8 +87,6 @@ public class jython_engine {
             return false;
     }
 
-    // The correctness of the return value is unclear to me.
-    // At least it takes True to "true", False to "false", None to null.
     public String eval(String macro) {
         PyObject po = null;
         try {
@@ -101,12 +99,14 @@ public class jython_engine {
         String s;
         try {
             s = po.asStringOrNull();
-            //s = po.asString();
         } catch (Exception e) {
+            // FIXME
             //System.err.println("Buggers");
-            s = Boolean.toString(po.__nonzero__());
+            //e.printStackTrace();
+            s = po.__not__().asInt() == 0 ? "" : null; //??!!
         }
-        return s;
+
+        return s;//po.asString();
     }
 
     public void set(String name, int value) {
@@ -124,18 +124,13 @@ public class jython_engine {
             System.err.println("Not interactive, returning...");
     }
 
-    // TODO: should probably be more general
-    public String[] get_argumentless_macros() {
-        return getstuff("_harcfuncs_0_args_ok()", null);
-    }
-
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         home hm = null;
         try {
-            hm = new home(harcprops.get_instance().get_homefilename());
+            hm = new home();
         } catch (SAXParseException ex) {
             System.err.println("XML problem in home file");
         } catch (SAXException ex) {
@@ -155,13 +150,10 @@ public class jython_engine {
         }
 
         if (args.length > 0)
-            if (args[0].equals("-a"))
-                harcutils.printtable("Macros with no or all defaulted arguments are:", jython.get_argumentless_macros());
-            else
-                for (int i = 0; i < args.length; i++) {
-                    jython.exec(args[i]);
-                }
+            for (int i = 0; i < args.length; i++) {
+                jython.exec(args[i]);
+            }
         else
-           jython.interact();
+            jython.interact();
     }
 }

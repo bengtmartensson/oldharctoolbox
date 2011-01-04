@@ -31,8 +31,6 @@ public class protocol_parser extends raw_ir {
     private final static short no_device = -1;
     private final static short no_command = -1;
 
-    private static boolean debug = false;
-
     private static class digested_protocol {
 
         public String name = null;
@@ -439,7 +437,7 @@ public class protocol_parser extends raw_ir {
             System.out.println(repeat[i][0] + "\t" + repeat[i][1]);
         }
     }
-    
+
     public protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno) {
         this(protocol_name, deviceno, subdevice, cmdno, 0);
     }
@@ -472,7 +470,7 @@ public class protocol_parser extends raw_ir {
     }
 
     private static int evaluate_mask(int x, int mask, int shifts) {
-        return shifts > 0 ? ((x & mask) << shifts) : ((x & mask) >> -shifts);
+        return shifts > 0 ? ((x & mask) << shifts) : ((x >> -shifts) & mask);
     }
 
     private int evaluate_xor(NodeList nl) {
@@ -489,15 +487,12 @@ public class protocol_parser extends raw_ir {
         if (e == null)
             return 0;
         String type = e.getTagName();
-        int result = type.equals("parameterref") ? parameters.get(e.getAttribute("parameter"))
+        return type.equals("parameterref") ? parameters.get(e.getAttribute("parameter"))
                 : type.equals("complement") ? complement(Integer.parseInt(e.getAttribute("bits")), evaluate_number(get_first_child_element(e)))
                 : type.equals("constant") ? Integer.parseInt(e.getAttribute("value"))
                 : type.equals("mask") ? evaluate_mask(evaluate_number(get_first_child_element(e)), Integer.parseInt(e.getAttribute("mask")), Integer.parseInt(e.getAttribute("shift")))
                 : type.equals("xor") ? evaluate_xor(e.getChildNodes())
                 : evaluate_number(get_first_child_element(e));
-        if (debug)
-            System.err.println("evaluate_number from " + type + " = " + result);
-        return result;
     }
 
     @Override
@@ -521,7 +516,7 @@ public class protocol_parser extends raw_ir {
 
     private static void usage() {
         System.err.println("Usage:");
-        System.err.println("protocol_parser [-d] [-t toggle] protocol_name deviceno [subdevice] commandno");
+        System.err.println("protocol_parser [-t toggle] protocol_name deviceno [subdevice] commandno");
         System.exit(harcutils.exit_usage_error);
     }
 
@@ -533,12 +528,7 @@ public class protocol_parser extends raw_ir {
         int itoggle = 0;
         int args_i = 0;
         try {
-            if (args[args_i].equals("-d")) {
-                debug = true;
-                args_i++;
-
-            }
-            if (args[args_i].equals("-t")) {
+            if (args[0].equals("-t")) {
                 itoggle = Integer.parseInt(args[1]);
                 args_i += 2;
             }

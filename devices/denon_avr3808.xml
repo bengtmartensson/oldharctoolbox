@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
-<!-- pingable_standby depends on setting "Network standby" -->
-<device id="denon_avr3808" name="Denon AVR-3808 Receiver" vendor="Denon" model="AVR-3808" type="receiver" pingable_on="yes" pingable_standby="no">
+<device id="denon_avr3808" name="Denon AVR-3808 Receiver" vendor="Denon" model="AVR-3808" type="receiver" pingable_on="yes" pingable_standby="yes">
   <attributes>
     <attribute name="north-america"/>
     <attribute name="japan"/>
@@ -142,9 +141,9 @@
     <command cmdno="168" cmdref="cmd_7ch_stereo"/>
     <command cmdno="171" cmdref="tuner_shift_f"/>
     <command cmdno="174" cmdref="tuner_shift_g"/>
-    <!--command cmdno="175" cmdref="ch_select"/--><!-- ??? -->
-    <!--command cmdno="176" cmdref="ch_volume_up"/--><!-- ??? -->
-    <!--command cmdno="177" cmdref="ch_volume_down"/--><!-- ??? -->
+    <command cmdno="175" cmdref="ch_select"/><!-- ??? -->
+    <command cmdno="176" cmdref="ch_volume_up"/><!-- ??? -->
+    <command cmdno="177" cmdref="ch_volume_down"/><!-- ??? -->
     <command cmdno="181" cmdref="input_mode_ext_in"/>
     <command cmdno="182" cmdref="input_mode"/>
     <command cmdno="183" cmdref="treble_up" name="all treble up"/>
@@ -225,7 +224,7 @@
       <command cmdref="favorite_direct_play" name="main zone favorite direct play" cmdno="959"/>
       <command cmdref="channel_up" name="main zone preset ch up" cmdno="972"/>
       <command cmdref="channel_down" name="main zone preset ch down" cmdno="973"/>
-      <!--command cmdref="channel_shift" name="main zone preset ch shift" cmdno="974"/--><!-- ??? -->
+      <command cmdref="channel_shift" name="main zone preset ch shift" cmdno="974"/><!-- ??? -->
       <command cmdref="search" name="main zone search (rds)" cmdno="983"/><!-- ??? -->
       <command cmdref="play_pause" name="main zone play/pause" cmdno="992"/><!-- ??? -->
       <command cmdref="stop" name="main zone stop" cmdno="993"/><!-- ??? -->
@@ -961,16 +960,16 @@
       <command cmdref="cmd_0x9c" name="Stop Control" transmit="NS9C"/>
       <command cmdref="cmd_0x9d" name="Skip Plus Control" transmit="NS9D"/>
       <command cmdref="cmd_0x9e" name="Skip Minus Control" transmit="NS9E"/>
-      <!--command cmdref="cmd_0x9H" name="Repeat One (USB Only)" transmit="NS9H"/>
+      <command cmdref="cmd_0x9H" name="Repeat One (USB Only)" transmit="NS9H"/>
       <command cmdref="cmd_0x9I" name="Repeat All (USB Only)" transmit="NS9I"/>
       <command cmdref="cmd_0x9J" name="Repeat Off (USB Only)" transmit="NS9J"/>
       <command cmdref="cmd_0x9K" name="Random On/Repeat ALL (USB Only)" transmit="NS9K"/>
       <command cmdref="cmd_0x9L" name="Random Off (USB Only)" transmit="NS9L"/>
       <command cmdref="cmd_0x9X" name="Page Up Control" transmit="NS9X"/>
       <command cmdref="cmd_0x9Y" name="Page Down Control" transmit="NS9Y"/>
-      <command cmdref="NSA" name="Return Onscreen Display Information List" transmit="NSA"/-->
+      <command cmdref="NSA" name="Return Onscreen Display Information List" transmit="NSA"/>
       <!--command cmdref="(ASCII CODE Character) (Return NSA0-NSA8,Refer to Page 38）"-->
-      <!--command cmdref="NSE" name="Request Onscreen Display Information List" transmit="NSE"/-->
+      <command cmdref="NSE" name="Request Onscreen Display Information List" transmit="NSE"/>
       <!--command cmdref="(UTF-8 CODE Character) (Return NSE0-NSE8,Refer to Page 39）"/-->
       <!--command cmdref="NSB **" name="Direct Preset CH Play NSB00"/-->
       <!--command cmdref="(**:00-55,00=A1,01=A2,B1=08,G8=55)"/-->
@@ -1005,7 +1004,7 @@
       <command cmdref="page_down" name="Page Down Control" transmit="IP9Y"/>
       <command cmdref="get_status" name="Return Onscreen Display Information List" transmit="IPA" response_lines="9"/>
       <!--Return IPA0-IPA9 (ASCII), Refer to Page 40-41"/-->
-      <!--command cmdref="IPE" name="Request Onscreen Display Information List(iPOD)" transmit="IPE"/-->
+      <command cmdref="IPE" name="Request Onscreen Display Information List(iPOD)" transmit="IPE"/>
       <!--Return IPE0-IPE9 (UTF-8), Refer to Page 42-43"/-->
 
       <!-- Cursol/Enter/Menu(Setup); page 25 -->

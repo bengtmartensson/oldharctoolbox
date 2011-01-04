@@ -17,26 +17,14 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package harc;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Vector;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-
+import java.io.*;
+import java.util.*;
+import org.w3c.dom.*;
+import org.xml.sax.*;
+//import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
 
 // NOTE: "attributes" are properties that distinguish different instances of the
 // device from one another, for example a regional code. It is not implemented
@@ -54,43 +42,14 @@ public class device {
     private Document doc = null;
     private Element device_el = null;
     private commandset[] commandsets;
-    private HashMap<String, String> attributes;
+    private String[][] attributes;
+    private int no_attributes = 0;
     private String[][] aliases;
     private int no_aliases = 0;
     private static int debug = 0;
     private int jp1_setupcode = -1;
     private boolean pingable_on;
     private boolean pingable_standby;
-
-    private static class device_with_attributes {
-        String device_classname;
-        HashMap<String, String> attributes;
-        public device_with_attributes(String device_classname, HashMap<String, String>attributes) {
-            this.device_classname = device_classname;
-            this.attributes = attributes;
-        }
-        @Override
-        public String toString() {
-            return device_classname + attributes.toString(); // May not be portable, i.e. work with all implementations
-        }
-    }
-
-    private static HashMap<String, device> device_storage = new HashMap<String, device>();
-
-    public static device new_device(String devicename, HashMap<String, String>attributes)
-            throws IOException, SAXParseException, SAXException {
-        String dwa = (new device_with_attributes(devicename, attributes)).toString();
-        device d = device_storage.get(dwa);
-        if (d == null) {
-            d = new device(devicename, attributes);
-            device_storage.put(dwa, d);
-        }
-        return d;
-    }
-
-    public static void flush_storage() {
-        device_storage.clear();
-    }
 
     public command_t[] get_commands(commandtype_t type) {
         return get_commands(type, null);
@@ -198,15 +157,6 @@ public class device {
                 work[i] = commandsets[i].get_protocol();
 
         return harcutils.sort_unique(harcutils.nonnulls(work));
-    }
-
-    public Vector<commandtype_t> get_commandtypes(command_t cmd) {
-        Vector <commandtype_t> v = new Vector <commandtype_t>();
-        for (commandtype_t t : commandtype_t.values())
-            if (t != commandtype_t.any && get_command(cmd, t) != null)
-                v.add(t);
-
-        return v;
     }
 
     public command get_command(command_t cmd) {
@@ -366,7 +316,12 @@ public class device {
     }
 
     public String get_attribute(String attribute_name) {
-        return attributes.get(attribute_name);
+        String result = null;
+        for (int i = 0; i < no_attributes && result == null; i++) {
+            if (attributes[i][0].equals(attribute_name))
+                result = attributes[i][1];
+        }
+        return result;
     }
 
     public String get_alias(String alias_name) {
@@ -398,8 +353,8 @@ public class device {
                 "model = " + model + "\n" +
                 "type = " + type + "\n";
 
-        for (String s : attributes.keySet())
-            infostr = infostr + "@" + s + "=" + attributes.get(s) + "\n";
+        for (int i = 0; i < no_attributes; i++)
+            infostr = infostr + "@" + attributes[i][0] + "=" + attributes[i][1] + "\n";
 
         for (int i = 0; i < no_aliases; i++)
             infostr = infostr + "alias: " + aliases[i][0] + "->" + aliases[i][1] + "\n";
@@ -450,27 +405,6 @@ public class device {
         return find_thing_el(doc, "commandgroup", id);
     }
 
-    // TODO: Implement conjunctions, disjunctions, equalitytest.
-    private boolean evaluate_ifattribute(String expr) {
-        String s = expr.trim();
-        if (s.isEmpty())
-            return true;
-
-        boolean positive = true;
-        if (s.startsWith("!")) {
-            positive = false;
-            s = s.substring(1).trim();
-        }
-
-        //System.err.println(expr);
-        boolean hit = attributes.containsKey(s) && attributes.get(s).equalsIgnoreCase("yes");
-        return positive ? hit : ! hit;
-    }
-
-    private boolean evaluate_ifattribute(Element e) {
-        return evaluate_ifattribute(e.getAttribute("ifattribute"));
-    }
-
     /**
      * Returns the names of the devices available to us. For this, just look at the file names
      * in the device directory. This is not absolutely fool proof, in particular
@@ -482,26 +416,24 @@ public class device {
         return harcutils.get_basenames(harcprops.get_instance().get_devicesdir(), harcutils.devicefile_extension);
     }
 
-    private device(String filename, HashMap<String, String>attributes, boolean barf_for_invalid)
-            throws IOException, SAXParseException, SAXException {
+    public device(String filename, boolean barf_for_invalid) throws IOException, SAXParseException, SAXException {
          this( (filename.contains(File.separator) ? "" : harcprops.get_instance().get_devicesdir() + File.separator)
                  + filename
                  + ((filename.endsWith(harcutils.devicefile_extension)) ? "" : harcutils.devicefile_extension),
-                 null, attributes, barf_for_invalid);
+                 null, barf_for_invalid);
     }
 
-    private device(String filename, String devicename, HashMap<String, String> attributes, boolean barf_for_invalid)
-            throws IOException, SAXParseException, SAXException {
-        this(harcutils.open_xmlfile(filename), devicename, attributes, barf_for_invalid);
+    public device(String filename, String devicename, boolean barf_for_invalid) throws IOException, SAXParseException, SAXException {
+        this(harcutils.open_xmlfile(filename), devicename, barf_for_invalid);
     }
 
-    private device(Document doc, HashMap<String, String>attributes, boolean barf_for_invalid) {
-        this(doc, (String) null, attributes, barf_for_invalid);
+    public device(Document doc, boolean barf_for_invalid) {
+        this(doc, (String) null, barf_for_invalid);
     }
 
-    //public device(Document doc, String dev_name, boolean barf_for_invalid) {
-    //    this(doc, find_device_el(doc, dev_name), barf_for_invalid);
-    //}
+    public device(Document doc, String dev_name, boolean barf_for_invalid) {
+        this(doc, find_device_el(doc, dev_name), barf_for_invalid);
+    }
 
     /**
      *
@@ -509,19 +441,15 @@ public class device {
      * @throws java.io.IOException
      * @throws org.xml.sax.SAXParseException
      */
-    public device(String name, HashMap<String, String>attributes) throws IOException, SAXParseException, SAXException {
-        this(name, attributes, true);
-    }
-    
     public device(String name) throws IOException, SAXParseException, SAXException {
-        this(name, null);
+        this(name, true);
     }
-    private device(Document doc, String dev_name, HashMap<String, String>instance_attributes, boolean barf_for_invalid) {
-        this.doc = doc;
-        if (doc == null)
-            return;
 
-        Element device_el = find_device_el(doc, dev_name);
+    public device(Document doc, Element device_el, boolean barf_for_invalid) {
+        if (doc == null) {
+            return;
+        }
+        this.doc = doc;
         this.device_el = device_el;
         device_name = device_el.getAttribute("name");
         vendor = device_el.getAttribute("vendor");
@@ -537,26 +465,14 @@ public class device {
             jp1_setupcode = Integer.parseInt(((Element)nl.item(0)).getAttribute("value"));
         }
 
-        // First read the attributes of the device file, considered as defaults...
         NodeList attributes_nodes = device_el.getElementsByTagName("attribute");
-        int no_attributes = attributes_nodes.getLength();
-        attributes = new HashMap<String, String>(no_attributes);
+        no_attributes = attributes_nodes.getLength();
+        attributes = new String[no_attributes][2];
         for (int i = 0; i < no_attributes; i++) {
             Element attr = (Element) attributes_nodes.item(i);
-            String val =
-            attributes.put(
-                    attr.getAttribute("name"),
-                    attr.getAttribute("defaultvalue").isEmpty() ? "no" : attr.getAttribute("defaultvalue"));
+            attributes[i][0] = attr.getAttribute("name");
+            attributes[i][1] = attr.getAttribute("value");
         }
-        // ... then, to the extent applicable, overwrite with actual instance values
-        if (instance_attributes != null)
-            for (String s : instance_attributes.keySet()) {
-                if (attributes.containsKey(s))
-                    attributes.put(s, instance_attributes.get(s));
-                else
-                    System.err.println("WARNING: Attribute named `" + s + "' does not exist in device `" + device_name + "', ignored.");
-            }
-
 
         NodeList aliases_nodes = device_el.getElementsByTagName("alias");
         no_aliases = aliases_nodes.getLength();
@@ -570,7 +486,6 @@ public class device {
         NodeList commandsets_nodes = device_el.getElementsByTagName("commandset");
         int no_commandsets = commandsets_nodes.getLength();
         commandsets = new commandset[no_commandsets];
-        // TODO: evaluate ifattribute for commandsets
         for (int i = 0; i < no_commandsets; i++) {
             Element cs = (Element) commandsets_nodes.item(i);
             //if (cs.getAttribute("toggle") != null && cs.getAttribute("toggle").equals("yes"))
@@ -588,9 +503,7 @@ public class device {
             NodeList cmd_nodes = cs.getElementsByTagName("command");
             int no_valids = 0;
             for (int j = 0; j < cmd_nodes.getLength(); j++) {
-                Element e = (Element) cmd_nodes.item(j);
-               if (command_t.is_valid(e.getAttribute("cmdref"))
-                       && evaluate_ifattribute(e))
+               if (command_t.is_valid(((Element)cmd_nodes.item(j)).getAttribute("cmdref")))
                    no_valids++;
             }
             commandset_entry[] cmds = new commandset_entry[no_valids];
@@ -598,11 +511,10 @@ public class device {
             for (int j = 0; j < cmd_nodes.getLength(); j++) {
                 Element cmd_el = (Element) cmd_nodes.item(j);
                 String commandname = cmd_el.getAttribute("cmdref");
-                //String ifattr = cmd_el.getAttribute("ifattribute");
                 if (!command_t.is_valid(commandname)) {
                     if (barf_for_invalid)
                         System.err.println("Warning: Command " + commandname + " is invalid.");
-                } else if (evaluate_ifattribute(cmd_el)) {
+                } else {
                     NodeList al = cmd_el.getElementsByTagName("argument");
                     String[] arguments = new String[al.getLength()];
                     for (int a = 0; a < arguments.length; a++) {
@@ -654,8 +566,7 @@ public class device {
                     cs.getAttribute("delay_between_reps"),
                     cs.getAttribute("open"),
                     cs.getAttribute("close"),
-                    cs.getAttribute("portnumber"),
-                    cs.getAttribute("charset"));
+                    cs.getAttribute("portnumber"));
         }
     }
 
@@ -759,7 +670,7 @@ public class device {
         System.err.println("Exporting " + devname + " to " + out_filename + ".");
         device dev = null;
         try {
-            dev = new device(devname, null, true);
+            dev = new device(devname, true);
         } catch (IOException e) {
             System.err.println("IOException with " + devname);
             return false;
@@ -894,7 +805,7 @@ public class device {
 
         device dev = null;
         try {
-            dev = new device(in_filename, null, true);
+            dev = new device(in_filename, true);
         } catch (IOException e) {
             System.err.println("IOException with " + in_filename);
             System.exit(harcutils.exit_config_read_error);

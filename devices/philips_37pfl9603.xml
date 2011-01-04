@@ -51,7 +51,7 @@
     <command cmdref="white" 				cmdno="111"/>
     <command cmdref="menu_off" 				cmdno="83"/>
     <command cmdref="I_II" 				cmdno="35"/>
-    <command cmdref="teletext_toggle"			cmdno="60"/>
+    <command cmdref="teletext" 				cmdno="60"/>
     <command cmdref="teletext_freeze" 			cmdno="41"/>
     <command cmdref="teletext_reveal" 			cmdno="44"/>
     <command cmdref="teletext_hide" 			cmdno="45"/>
@@ -83,45 +83,35 @@ Notes=Dummy device to support RC-5 commands on Philips TV discrete input selecti
 -->
 
     <command cmdref="in_ext1"				cmdno="4"/>
-    <command cmdref="in_side"				cmdno="5"/>
-    <command cmdref="in_hdmi3"				cmdno="6"/>
-    <command cmdref="in_hdmi4"				cmdno="7"/>
-    <command cmdref="mute_toggle"			cmdno="13"/>
-    <command cmdref="in_usb"				cmdno="19"/>
-    <command cmdref="ambilight_on"			cmdno="40"/>
-    <command cmdref="ambilight_off"			cmdno="41"/>
-    <command cmdref="epg"				cmdno="44"/>
-    <command cmdref="in_ext3"				cmdno="56"/>
-    <command cmdref="in_hdmi1"				cmdno="57"/>
-    <command cmdref="aspectratio_automatic"		cmdno="61"/>
-    <command cmdref="aspectratio_zoom" name="movie expand 16:9" cmdno="62"/>
-    <command cmdref="tv_mode"				cmdno="72"/>
-    <command cmdref="aspectratio_14_9" name="movie expand 14:9" cmdno="80"/>
-    <command cmdref="in_hdmi2"				cmdno="123"/>
-    <command cmdref="aspectratio_16_9" name="wide screen" cmdno="116"/>
-    <command cmdref="aspectratio_4_3"			cmdno="117"/>
-    <command cmdref="aspectratio_nat_wide1" name="super zoom" cmdno="126"/>
-
-    <!-- works, but are duplicats -->
-    <!--command cmdref="in_side"				cmdno="58"/-->
-
-    <!-- not working -->
     <!--command cmdref="in_ext1"			cmdno="68"/-->
+    <command cmdref="in_side"				cmdno="5"/>
     <!--command cmdref="in_side"				cmdno="122"/-->
     <!--command cmdref="in_side"			cmdno="69"/-->
+    <command cmdref="in_ext3"				cmdno="56"/>
     <!--command cmdref="in_ext3"			cmdno="120"/-->
+    <command cmdref="in_hdmi1"				cmdno="57"/>
     <!--command cmdref="in_hdmi1"				cmdno="121"/-->
+    <!--command cmdref="in_hdmi2"				cmdno="123"/-->
+    <command cmdref="in_hdmi3"				cmdno="6"/>
     <!--command cmdref="in_hdmi3"			cmdno="70"/-->
+    <command cmdref="in_hdmi4"				cmdno="7"/>
     <!--command cmdref="in_hdmi4"			cmdno="71"/-->
+    <!--command cmdref="tv_mode"				cmdno="72"/--><!--no -->
+    <!--command cmdref="in_side"				cmdno="58"/-->
+    <command cmdref="ambilight_on"			cmdno="40"/>
+    <command cmdref="ambilight_off"			cmdno="41"/>
+    <command cmdref="mute_toggle"			cmdno="13"/>
     <!--command cmdref="mute_toggle"			cmdno="77"/-->
+    <command cmdref="in_usb"				cmdno="19"/>
     <!--command cmdref="in_usb"				cmdno="83"/-->
-
+    <command cmdref="epg"				cmdno="44"/>
+    <!--command cmdref="aspectratio_automatic"		cmdno="61"/-->
   </commandset>
 
   <commandset remotename="philips_37pfl9603_rc6" type="ir" protocol="rc6" toggle="yes" deviceno="0">
     <command cmdref="power_toggle" 	cmdno="12"/>
     <command cmdref="input" 		cmdno="56"/>
-    <command cmdref="teletext_toggle"	cmdno="60"/>
+    <command cmdref="teletext" 		cmdno="60"/>
     <command cmdref="teletext_pip" 	cmdno="93"/>
     <command cmdref="subtitle" 		cmdno="75"/>
     <command cmdref="aspectratio" 	cmdno="245"/>

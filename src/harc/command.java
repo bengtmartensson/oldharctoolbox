@@ -17,8 +17,6 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package harc;
 
-
-// TODO: use a reference to the commandset instead of copying most of its content.
 public class command {
 
     private command_t cmd;
@@ -41,7 +39,6 @@ public class command {
     private String[] arguments;
     private String ccf_toggle_0;
     private String ccf_toggle_1;
-    private String charset;
 
     @Override
     public String toString() {
@@ -108,10 +105,6 @@ public class command {
         return remark;
     }
 
-    public commandtype_t get_commandtype() {
-        return type;
-    }
-
 //    public ir_code get_ir_code() {
 //        return get_ir_code(false);
 //    }
@@ -143,10 +136,6 @@ public class command {
 
     public String get_remotename() {
         return remotename;
-    }
-
-    public String get_charset() {
-        return charset;
     }
 
     public String get_transmitstring(boolean expand_escapes) {
@@ -182,6 +171,5 @@ public class command {
         this.prefix = cmdset.get_prefix();
         this.suffix = cmdset.get_suffix();
         this.delay_between_reps = cmdset.get_delay_between_reps();
-        this.charset = cmdset.get_charset();
     }
 }

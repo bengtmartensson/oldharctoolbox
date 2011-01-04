@@ -52,7 +52,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="get_rawtime"/>
         <command id="get_info"/>
         <command id="get_version"/>
-        <command id="get_devicetype"/>
         <command id="get_settings"/>
         <command id="get_bouquets"/>
         <command id="get_bouquetsender"/>
@@ -295,14 +294,12 @@ command (see "ok" with the synonyms "enter" and "select").
     <group id="mode_selection">
         <command id="vcr_tv" type="toggle"/>
         <command id="disc_tv" type="toggle"/>
-        <command id="tv_radio" type="toggle"/>
         <command id="scartmode_on"/>
         <command id="scartmode_off"/>
         <command id="tv_mode"/>
         <command id="radio_mode"/>
         <command id="file_mode"/>
         <command id="ipod_mode"/>
-        <command id="games_mode"/>
     </group>
 
     <group id="input_commands">
@@ -315,9 +312,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="in_vcr1"/>
         <command id="in_vcr2"/>
         <command id="in_dvd"/>
-        <command id="in_dock"/>
         <command id="in_sat"/>
-        <command id="in_sat_cbl"/>
         <command id="in_dvb_t"/>
         <command id="in_tv_cbl"/>
         <command id="in_aux"/>
@@ -325,7 +320,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="in_ext2"/>
         <command id="in_ext3"/>
         <command id="in_hdp"/>
-        <command id="in_bluray"/>
         <command id="in_tape"/><!-- Discrete, do not confuse with following -->
         <command id="in_tape_mon" type="toggle"/>
         <command id="in_tape1"/>
@@ -341,7 +335,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="in_tuner">
             <synonym name="in_radio"/>
         </command>
-        <command id="in_hd_radio"/> <!-- North America? -->
         <command id="in_cable"/>
         <command id="in_dvr"/>
         <command id="in_ipod"/>
@@ -350,7 +343,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="in_dvd_hdp"/>
         <command id="in_vcr_dvr"/>
         <command id="in_net"/>
-        <command id="in_game"/>
         <command id="in_av" remark="typically a SCART input on a TV"/>
         <command id="in_av1" remark="typically a SCART input on a TV"/>
         <command id="in_av2" remark="typically a SCART input on a TV"/>
@@ -358,8 +350,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="lock_input"/>
 
         <command id="video_select"/>
-
-        <command id="satellites" type="cyclic"/>
 
         <command id="in_video" remark="cvbs"/>
         <command id="in_component1">
@@ -414,9 +404,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="recordsrc_ipod"/>
         <command id="recordsrc_usb"/>
         <command id="recordsrc_net_usb"/>
-        <command id="recordsrc_game"/>
-        <command id="recordsrc_sat_cbl"/>
-        <command id="recordsrc_bluray"/>
         <command id="recordsrc_source"/>
 
         <command id="videoinput_tv"/>
@@ -447,9 +434,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="videoinput_ipod"/>
         <command id="videoinput_usb"/>
         <command id="videoinput_net_usb"/>
-        <command id="videoinput_bluray"/>
-        <command id="videoinput_sat_cbl"/>
-        <command id="videoinput_game"/>
         <command id="videoinput_source"/>
         <command id="get_videoinput"/>
 
@@ -460,9 +444,8 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="zone2_cd_r" zone="2"/>
         <command id="zone2_dvd" zone="2"/>
         <command id="zone2_hdp" zone="2"/>
-        <command id="zone2_bluray" zone="2"/>
         <command id="zone2_d_tv" zone="2"/>
-        <command id="zone2_sat_cbl" zone="2"/>
+        <command id="zone2_cbl_sat" zone="2"/>
         <command id="zone2_tv_cbl" zone="2"/>
         <command id="zone2_sat" zone="2"/>
         <command id="zone2_md_tape" zone="2"/>
@@ -478,8 +461,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="zone2_ipod" zone="2"/>
         <command id="zone2_dvd_hdp" zone="2"/>
         <command id="zone2_vcr_dvr" zone="2"/>
-        <command id="zone2_game" zone="2"/>
-        <command id="zone2_tv" zone="2"/>
         <command id="get_zone2_input" zone="2"/>
 
         <command id="zone3_source" zone="3"/>
@@ -489,10 +470,9 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="zone3_cd_r" zone="3"/>
         <command id="zone3_dvd" zone="3"/>
         <command id="zone3_hdp" zone="3"/>
-        <command id="zone3_bluray" zone="3"/>
         <command id="zone3_tv_cbl" zone="3"/>
         <command id="zone3_d_tv" zone="3"/>
-        <command id="zone3_sat_cbl" zone="3"/>
+        <command id="zone3_cbl_sat" zone="3"/>
         <command id="zone3_sat" zone="3"/>
         <command id="zone3_md_tape" zone="3"/>
         <command id="zone3_dvr" zone="3"/>
@@ -507,8 +487,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="zone3_ipod" zone="3"/>
         <command id="zone3_dvd_hdp" zone="3"/>
         <command id="zone3_vcr_dvr" zone="3"/>
-        <command id="zone3_game" zone="3"/>
-        <command id="zone3_tv" zone="3"/>
         <command id="get_zone3_input" zone="3"/>
     </group>
     <group id="input_flavor">
@@ -567,10 +545,8 @@ command (see "ok" with the synonyms "enter" and "select").
     <group id="speaker_control">
         <command id="spk_a_on"/>
         <command id="spk_a_off"/>
-        <command id="spk_a_toggle"/>
         <command id="spk_b_on"/>
         <command id="spk_b_off"/>
-        <command id="spk_b_toggle"/>
         <command id="main_spk_toggle" 	zone="1"/>
         <command id="zone2_spk_toggle"	zone="2"/>
         <command id="zone2_spk_on" 	zone="2"/>
@@ -974,7 +950,6 @@ command (see "ok" with the synonyms "enter" and "select").
 
         <command id="usb_direct_play"/>
         <command id="favorite_direct_play"/>
-        <command id="timeshift"/>
     </group>
 
     <group id="transport_programming">
@@ -1202,7 +1177,6 @@ command (see "ok" with the synonyms "enter" and "select").
         <group id="aspect-ratio">
         <!-- To what extent are "zoom" and "aspectratio" synonyms? -->
             <command id="aspectratio" type="cyclic"/>
-            <command id="aspectratio_for_4_3" type="cyclic"/>
             <command id="aspectratio_automatic"/>
             <command id="aspectratio_4_3_LB"/>
             <command id="aspectratio_4_3_PS"/>
@@ -1212,7 +1186,6 @@ command (see "ok" with the synonyms "enter" and "select").
             <command id="aspectratio_16_9">
                 <synonym name="aspectratio_full"/>
             </command>
-            <command id="aspectratio_14_9"/>
             <command id="aspectratio_zoom"/>
             <command id="aspectratio_nat_wide1"/>
             <command id="aspectratio_nat_wide2"/>
@@ -1382,9 +1355,7 @@ command (see "ok" with the synonyms "enter" and "select").
     </group>
 
     <group id="teletext_control">
-        <command id="teletext_toggle"/>
-        <command id="teletext_on"/>
-        <command id="teletext_off"/>
+        <command id="teletext"/>
         <command id="teletext_freeze"/>
         <command id="teletext_reveal"/>
         <command id="teletext_hide"/>

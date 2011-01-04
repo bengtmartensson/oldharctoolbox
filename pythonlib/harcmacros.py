@@ -1,9 +1,8 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: iso-8859-1 --*-
 import sys
 import time
 import subprocess
 import string
-import socket
 import harc.protocol
 import harc.home
 import harc.command_t
@@ -21,8 +20,9 @@ bedroom_srcdevice = ""
 hometheatre_outputdevice = ""
 dbox_channel_list = {}
 dbox_current_programs = {}
-default_max_trys = 40
-default_tuxbox='coolstream'
+
+#_jython_trace = False
+_jython_trace = True
 
 def get_trace():
     return _jython_trace
@@ -37,14 +37,9 @@ def _trace(function, arg, message):
     if _jython_trace:
         print '[' + function + '(' + arg + ')] ' + message;
 
-# Issue a hint to a remote panel that it is to jump to a particular page,
-# if possible and wanted
-def paneljump(panelname):
-    print "paneljump to " + panelname + " not yet implemented."
-
-def devices_command(devices, command, count = 1):
+def devices_command(devices, command):
     """To all entries in DEVICES (a list of strings), the command COMMAND is sent."""
-    return map(lambda d: hm.do_command(d, command, count), devices)
+    return map(lambda d: hm.do_command(d, command), devices)
 
 def devices_command_delay(devices, command, delay):
     """To all entries in DEVICES (a list of strings), the command COMMAND is sent."""
@@ -52,13 +47,13 @@ def devices_command_delay(devices, command, delay):
         hm.do_command(d, command)
         time.sleep(delay/1000.0)
 
-def devicegroup_command(devicegroup, command, count = 1):
+def devicegroup_command(devicegroup, command):
     devs=get_device_group(devicegroup)
     if devs==None:
         print "\adevicegroup \"" + devicegroup + "\" has no members"
         return False
     else:
-        return devices_command(devs, command, count)
+        return devices_command(devs, command)
 
 def devicegroup_command_delay(devicegroup, command, delay):
     devs=get_device_group(devicegroup)
@@ -137,12 +132,12 @@ def wait_delay(device, deltype, default):
     _trace('wait_delay', deltype + '=' + str(default), "Waiting for " + str(del_ms) + " ms")
     time.sleep(del_ms/1000.0)
 
-def assure_on(device, wait=False, max_trys=default_max_trys):
+def assure_on(device, wait=False):
     """Assure that the device is turned on; if second argument true, waits for it to become ready."""
 
     # make it safe to call with null arg
     if not device:
-        return False
+        return
     assure_on(hm.get_powered_through(device), wait)
     stat=is_on(device)
     if stat and stat != "unknown":
@@ -162,17 +157,10 @@ def assure_on(device, wait=False, max_trys=default_max_trys):
             device_command(device, harc.command_t.power_toggle)
 
         if wait:
-            i = 0;
-            while i < max_trys and not is_on(device):
-                i = i + 1
-                _trace('assure_on', device, "waiting for device to come on [" + str(i) + "]")
+            while not is_on(device):
+                _trace('assure_on', device, "waiting for device to come on")
                 device_command(device, harc.command_t.wol) or device_command(device, harc.command_t.power_on)
                 time.sleep(1)
-
-            success = is_on(device)
-            _trace('assure_on', device, ('succeded' if success else
-                                         'giving up after ' + str(max_trys) + ' attempts'))
-            return success
 
         return True
 
@@ -258,21 +246,19 @@ def device_command_n(device, command, arg1, arg2=None):
     return res == "" or res
 
 def set_verbose(true_false=True):
-    harc.userprefs.get_instance().set_verbose(true_false)
+    hm.set_verbosity(true_false)
     return True
 
 def set_verbose_on():
-    return set_verbose(True)
+    hm.set_verbosity(True)
+    return True
 
 def set_verbose_off():
-    return set_verbose(False)
+    hm.set_verbosity(False)
+    return True
 
 def set_debug(arg):
-    harc.userprefs.get_instance().set_debug(arg)
-
-# Turn on tracing and verboseness on my development machine, not for deployment
-_jython_trace = socket.gethostname() == 'delta'
-#set_verbose(_jython_trace)
+    hm.set_debug(arg)
 
 def louder():
     """Turn up the volume slightly."""
@@ -295,7 +281,7 @@ def set_volume_zone(db, zone):
 def denon_get_volume():
     response=str(hm.do_command("amp", "get_volume"))[2:]
     x=int(response)
-    return "--" if x == 99 else str((x if len(response) == 2 else x/10.0) - 80.0)
+    return str((x if len(response) == 2 else x/10.0) - 80.0)
 
 def get_volume():
     return denon_get_volume()
@@ -361,22 +347,19 @@ def get_mute():
 #   <macros name="Complex-AV-macros">
 #    """Actions involving several components"""
 
-def assure_tuxbox_ready(device, max_trys=default_max_trys):
-    i = 0
-    while i < max_trys and not device_command(device, 'get_time'):
-        i = i + 1
-        _trace('assure_tuxbox_ready', device, 'Waiting for a tuxbox ' + device + ' to get ready [' + str(i) + ']')
+def assure_tuxbox_ready(device):
+    while not device_command(device, 'get_time'):
+        _trace('assure_tuxbox_ready', device, 'Waiting for a tuxbox dbox to get ready')
         device_command(device, 'power_on')
-    _trace('assure_tuxbox_ready', device, 'succeded' if i < max_trys else ('failed after ' + str(max_trys) + ' attempts'))
-    return "" if i <= max_trys else False
+    return ""
 
-def start_dbox_tv(dev=default_tuxbox):
+def start_dbox_tv():
     assure_on('amp')
-    assure_on(dev, True)
+    assure_on('dbox', True)
     assure_on('tv', True)
-    assure_tuxbox_ready(dev)
+    assure_tuxbox_ready('dbox')
     assure_on('tv', True)
-    watch_dbox(dev)
+    watch_dbox()
 
 def pause_dvd_watch_dbox(player='dvd'):
     if player == 'dvd':
@@ -393,27 +376,12 @@ def start():
     """Start up the system"""
     assure_on('amp')
 
-def shutdown_main():
+def shutdown():
     """Shuts down the system"""
-    assure_off_devices(["projector", "dvd", "dbox", "coolstream", "hddvd", "oplay", "tv"])
+    assure_off_devices(["projector", "dvd", "dbox", "hddvd", "oplay"])
     poweroff_popcorn()
-    # TODO: shutdown ferb (eventghost)
     time.sleep(10) # Give the disk players a chance
     assure_off("amp")
-
-def shutdown_desk():
-    assure_off('desk_amp')
-
-def shutdown_bedroom():
-    assure_off('bedroom_amp')
-
-def shutdown(zone='all'):
-    if zone in ['1', 'zone1', 'main', 'all']:
-        shutdown_main()
-    if zone in ['2', 'zone2', 'bedroom', 'all']:
-        shutdown_bedroom()
-    if zone in ['3', 'zone3', 'desk', 'all']:
-        shutdown_desk()
 
 def denon_restart():
     assure_off_devices(["dvd", "hddvd", "oplay"])
@@ -559,7 +527,7 @@ def other_commands(device):
     return netremote_string(hm.get_commands(device, harc.commandtype_t.ir))
 
 def netremote_string(cmds):
-    return '\n'.join(cmds)
+    return '\n'.join(cmds)+'\nEND'
 
 ######################################## "mode-change-macros"
 
@@ -567,7 +535,7 @@ def projector_mode():
     """Turn on projector, and use it"""
     device_command("screen", "power_on")
     device_command("projector", "power_on")
-    setup_dbox_projector() # FIXME
+    setup_dbox_projector()
     assure_off("tv")
 
 def tv_mode(raise_screen=False):
@@ -577,7 +545,7 @@ def tv_mode(raise_screen=False):
         device_command("screen", "power_off")
     assure_on("tv", False)
     assure_off("projector")
-    setup_dbox_tv() # FIXME
+    setup_dbox_tv()
     assure_on("tv", True)
     set_srcdevice()
     hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, video_connection_type(srcdevice))
@@ -627,7 +595,6 @@ def listen_tuner():
     device_command("amp", "in_tuner")# toggles fm/am, grrr
     device_command("amp", "fm")
     srcdevice="tuner"
-    paneljump("tuner")
     return ""
 
 def watch_tuner():
@@ -638,27 +605,10 @@ def listen_net_usb():
     """Listen to net/usb"""
     device_command("amp", "in_net_usb")
     srcdevice="net_usb"
-    paneljump("net_usb")
     return ""
 
 def watch_net_usb():
     return listen_net_usb()
-
-def listen_htpc():
-    return listen_device('htpc')
-
-def look_htpc():
-    global srcdevice
-    assure_on("tv")
-    assure_on("htpc", True)
-    #hm.select('tv', 'htpc', harc.commandtype_t.any, None, harc.mediatype.audio_video, harc.connectiontype.hdmi)
-    hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, harc.connectiontype.hdmi)
-    srcdevice = hm.get_canonical_name("htpc")
-    paneljump("htpc")
-
-def watch_htpc():
-    listen_htpc()
-    return look_htpc()
 
 def listen_device(device):
     """Listen to DEV."""
@@ -672,7 +622,6 @@ def listen_device(device):
     assure_on(device, True)
     hm.select('amp', device, harc.commandtype_t.any, None, harc.mediatype.audio_only, None) or hm.select('amp', device, harc.commandtype_t.any, None, harc.mediatype.audio_video, None)
     srcdevice = hm.get_canonical_name(device)
-    paneljump(device)
     return ""
 
 def watch_device(device):
@@ -682,8 +631,8 @@ def watch_device(device):
         return watch_tuner()
     elif device in ["net_usb"]:
         watch_net_usb()
-    elif device in ["sat", "dbox", "coolstream"]:
-        return watch_dbox(device)
+    elif device in ["sat", "dbox"]:
+        return watch_dbox()
     elif device in ["tv"]:
         watch_tv()
     elif not hm.has_device(device):
@@ -695,9 +644,8 @@ def watch_device(device):
     assure_on(device, True)
     hm.select('amp', device, harc.commandtype_t.any, None, harc.mediatype.audio_video, None)
     tv_unless_projector(True)
-    hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, harc.connectiontype.hdmi)
+    hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, "hdmi")
     srcdevice = hm.get_canonical_name(device)
-    paneljump(device)
     return ""
 
 def look_device(device):
@@ -707,7 +655,7 @@ def look_device(device):
     assure_on("amp", True)
     assure_on(device, True)
     hm.select('amp', device, harc.commandtype_t.any, None, harc.mediatype.video_only, None)
-    hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, harc.connectiontype.hdmi)
+    hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, "hdmi")
     srcdevice = hm.get_canonical_name(device)
 
 def look_dvd(device):
@@ -759,7 +707,7 @@ def assure_oppo_closed(device):
         time.sleep(5)
         device_command(device, "open_close")
 
-def switch_dvd(device, max_trys = default_max_trys):
+def switch_dvd(device):
     assure_on(device, True)
     time.sleep(1)
     device_command(device, "stop")
@@ -771,9 +719,7 @@ def switch_dvd(device, max_trys = default_max_trys):
         harc.globalcache.set_serial_timeout(100000)
         device_command_n(device, 'set_verbosity', '2')
         ok=False
-        i = 0
-        while i < max_trys and not ok:
-            i = i + 1
+        while not ok:
             answ=device_command(device, 'listen1') # None if timeout
             if answ is None:
                 ok=True
@@ -790,7 +736,7 @@ def switch_dvd(device, max_trys = default_max_trys):
         time.sleep(60)
         device_command(device, "open_close")
 
-def remove_dvd(device = 'dvd'):
+def remove_dvd(device):
     switch_dvd(device)
     assure_off(device)
 
@@ -857,58 +803,55 @@ def hb(device):
     wait_delay(device, "intra-command", 2000)
     device_command(device, "ok")
 
-def setup_dbox_tv_or_projector(dev=default_tuxbox):
+def setup_dbox_tv_or_projector():
     """Setup the dbox depending upon projector or TV is used"""
-    return setup_dbox_projector(dev) if projector_ison() else setup_dbox_tv(dev)
+    return setup_dbox_projector() if projector_ison() else setup_dbox_tv()
 
-def setup_dbox_tv(dev=default_tuxbox):
+def setup_dbox_tv():
     """Use to encapsulate"""
-    return # device_command(dev, "aspectratio_automatic")
+    return device_command("dbox", "aspectratio_automatic")
 
-def setup_dbox_projector(dev=default_tuxbox):
+def setup_dbox_projector():
     """Use to encapsulate"""
-    return # device_command(dev, "aspectratio_16_9")
+    return device_command("dbox", "aspectratio_16_9")
 
 
-def listen_dbox(dev=default_tuxbox):
+def listen_dbox():
     global srcdevice
     """Sets up the system for dBox viewing on TV (just sound)."""
-    assure_on(dev, False)
+    assure_on('dbox', False)
     assure_on('amp', True)
-    hm.select('amp', dev, harc.commandtype_t.any, None, harc.mediatype.audio_only, None)
-    assure_on(dev, True)
+    hm.select('amp', 'dbox', harc.commandtype_t.any, None, harc.mediatype.audio_only, None)
+    assure_on('dbox', True)
     srcdevice = "sat"
-    paneljump("sat")
 
-def look_dbox(dev=default_tuxbox):
+def look_dbox():
     """Sets up the system for dBox viewing on TV, without sound."""
     global srcdevice
-    assure_on(dev, False)
+    assure_on('dbox', False)
     assure_on('amp', True)
     tv_unless_projector(True)
-    hm.select('amp', dev, harc.commandtype_t.any, None, harc.mediatype.video_only, None)
-    hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, "hdmi")
-    assure_on(dev, True)
-    device_command(dev, "standby_off")
-    setup_dbox_tv_or_projector(dev)
+    hm.select('amp', 'dbox', harc.commandtype_t.any, None, harc.mediatype.video_only, None)
+    hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, "yuv")
+    assure_on('dbox', True)
+    device_command("dbox", "standby_off")
+    setup_dbox_tv_or_projector()
     srcdevice = "sat"
-    paneljump("sat")
 
 
-def watch_dbox(dev=default_tuxbox):
+def watch_dbox():
     """Sets up the system for dBox viewing on TV or projector."""
     global srcdevice
-    assure_on(dev, False)
+    assure_on('dbox', False)
     assure_on('amp', True)
     tv_unless_projector(True)
-    hm.select('amp', dev, harc.commandtype_t.any, None, harc.mediatype.audio_video, None)
-    hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, harc.connectiontype.any)
-    assure_on(dev, True)
-    assure_tuxbox_ready(dev)
-    device_command(dev, "standby_off")
-    setup_dbox_tv_or_projector(dev)
+    hm.select('amp', 'dbox', harc.commandtype_t.any, None, harc.mediatype.audio_video, None)
+    hm.select('tv', 'amp', harc.commandtype_t.any, None, harc.mediatype.audio_video, "yuv")
+    assure_on('dbox', True)
+    assure_tuxbox_ready('dbox')
+    device_command("dbox", "standby_off")
+    setup_dbox_tv_or_projector()
     srcdevice = "sat"
-    paneljump("sat")
     return ""
 
 def watch_cable():
@@ -923,43 +866,41 @@ def listen_cable():
     """Sets up the system for cable viewing on TV or projector."""
     listen_device('cable')
 
-#def set_cable_prog(seq):
-#    """Turn cable receiver to PROGNAME"""
-#    watch_cable()
-#    send_numsequence('cable', seq, True)
+def set_cable_prog(seq):
+    """Turn cable receiver to PROGNAME"""
+    watch_cable()
+    send_numsequence('cable', seq, True)
 
-#def ard_hd():
-#    set_cable_prog(395)
+def ard_hd():
+    set_cable_prog("401")
 
-#def zdf_hd():
-#    set_cable_prog(396)
+def zdf_hd():
+    set_cable_prog("402")
 
-#def arte_hd():
-#    set_cable_prog(397)
+def arte_hd():
+    set_cable_prog("403")
 
-def set_prog(progname, dev=default_tuxbox):
+def set_prog(progname):
     """Turn dBox to PROGNAME"""
     ## If listening to something else, and looking to dbox, do not issue commands
     #set_srcdevice()
     #if ~ ((srcdevice != 'sat') and (str(device_command('amp', 'get_videoinput'))=='SVSAT')):
     #    watch_dbox()
-    return str(hm.do_command(dev, "set_program_by_name", progname))=="ok"
+    return str(hm.do_command("dbox", "set_program_by_name", progname))=="ok"
 
 def watch_tv():
     """Turn on TV (not using projector)"""
     global srcdevice
     hm.select("amp", "tv", harc.commandtype_t.any, None, harc.mediatype.audio_only, None)
     srcdevice="tv"
-    device_command("tv", "tv_mode")
-    paneljump("tv")
+    #device_command("tv", "tv_mode") # not existing :-\
 
 
 def look_tv():
     global srcdevice
-    """Turn on TV, leaving audio alone"""
-    device_command("tv", "tv_mode")
+    """Turn on TV, leavin audio alone"""
+    #device_command("tv", "tv_mode")# <!-- not existing :-\ -->
     srcdevice="tv"
-    paneljump("tv")
 
 def listen_tv():
     watch_tv()
@@ -986,20 +927,18 @@ def rtl_f1():
     device_command("tv", "ok")
     wait_delay("tv", "input_switch", 1234)
     wait_delay("tv", "channel_switch", 1234)
-    device_command("tv", "teletext_toggle")
+    device_command("tv", "teletext")
     wait_delay("tv", "enter_teletext", 1234)
     device_command("tv", "cmd_2")
     wait_delay("tv", "intra_command", 500)
     device_command("tv", "cmd_5")
     wait_delay("tv", "intra_command", 500)
     device_command("tv", "cmd_0")
-    paneljump("tv")
     
 def enter_pin(device='humax'):
-    send_numsequence(device, hm.get_pin(device))
+    send_numsequence(device, hm.get_attribute(device, 'pin'))
 
-def send_numsequence(device, num, append_ok=False):
-    seq = str(num)
+def send_numsequence(device, seq, append_ok=False):
     for i in range(len(seq)):
         device_command(device, 'cmd_' + seq[i])
         #if i < len(seq) - 1:
@@ -1011,23 +950,21 @@ def watch_vcr():
     """Watch VCR"""
     global srcdevice
     hm.select("amp", "vcr", harc.commandtype_t.any, None, harc.mediatype.audio_video, None)
-    hm.select("tv", "amp", harc.commandtype_t.any, None, harc.mediatype.audio_video, harc.connectiontype.yuv)
+    hm.select("tv", "amp", harc.commandtype_t.any, None, harc.mediatype.audio_video, "yuv")
     srcdevice="vcr"
 
 def look_vcr():
     """Watch VCR"""
     global srcdevice
     hm.select("amp", "vcr", harc.commandtype_t.any, None, harc.mediatype.video_only, None)
-    hm.select("tv", "amp", harc.commandtype_t.any, None, harc.mediatype.audio_video, harc.connectiontype.yuv)
+    hm.select("tv", "amp", harc.commandtype_t.any, None, harc.mediatype.audio_video, "yuv")
     srcdevice="vcr"
-    paneljump("vcr")
 
 def listen_vcr():
     """Watch VCR"""
     global srcdevice
     hm.select("amp", "vcr", harc.commandtype_t.any, None, harc.mediatype.audio_video, None)
     srcdevice="vcr"
-    paneljump("vcr")
 
 
 #def vcr_off():
@@ -1048,7 +985,6 @@ def listen_phono():
     global srcdevice
     hm.select("amp", "phono", harc.commandtype_t.any, None, harc.mediatype.audio_only, None)
     srcdevice="phono"
-    paneljump("phono")
 
 #         <macros name="Popcorn-hour-macros():
 def poweroff_popcorn():
@@ -1067,12 +1003,12 @@ def power(device):
 
 def sunrise():
     """Macro called at sunrise."""
-    #devicegroup_command("blinds", "power_off")
+    devicegroup_command("blinds", "power_off")
     return devicegroup_command("blinds", "power_off")
 
 def sunset():
     """Macro called at sunset."""
-    #devicegroup_command("blinds", "power_on")
+    devicegroup_command("blinds", "power_on")
     return devicegroup_command("blinds", "power_on")
 
 #     <macros name="Powermacros():
@@ -1128,11 +1064,7 @@ def all_up_smart():
     all_up()
     return all_up()
 
-def bedroom_slowly_dark(level=50, dimtime=120):
-    """Set light level to specified value, then dim down in specified time."""
-    device_command_n('bedroom_light', 'set_power', str(level))
-    time.sleep(1)
-    return device_command_n('bedroom_light', 'dim_off_time', str(dimtime))
+#         <macros name="decoration():
 
 def column_on():
     """Turn on column (light and air)"""
@@ -1236,38 +1168,11 @@ def dbox_movie(darkening):
 
 def bedtime():
     """Turns everything off, lights for going to bed"""
-    devices_command(set(get_device_group('lights'))- set(['bathroom_light', 'bedroom_light']), 'power_off')
-    #lights_off()
-    device_command("bathroom_light", "power_on")
-    bedroom_slowly_dark(40, 180)
-    shutdown('all')
-    decoration_off()
-    fans_off()
-
-def leaving_home():
-    """Turns everything off, lights in hallway"""
     lights_off()
-    device_command("hall_light", "power_on")
-    shutdown('all')
+    device_command("bathroom_light", "power_on")
+    shutdown()
     decoration_off()
     fans_off()
-    if door_is_open():
-        door_close()
-        print "The balcony door needs to be shut properly" # Not too clever really...
-    
-def kitchen_mediabridge():
-    listen_htpc()
-    kitchen_main_zone()
-
-def zone2_on_mainzone():
-    assure_on('bedroom_amp', True)
-    assure_on('amp', True)
-    bedroom_select_device('amp')
-    device_command('amp', 'zone2_on')
-
-def kitchen_main_zone():
-    zone2_on_mainzone()
-    bedroom_speakers_b()
 
 def oppo_ispaused():
     return str(device_command("oppo", "get_status")).find("PAUSE") > 0
@@ -1297,37 +1202,34 @@ def get_srcdevice(update=False):
         set_srcdevice()
     return srcdevice
 
-# ugly, rewrite with a table
 def set_srcdevice():
     global srcdevice
     ans = str(device_command('amp', 'get_input'))
     print ans
-    if ans == "SIBD":
-        srcdevice="dvd"
+    if ans == "SISAT":
+        srcdevice="sat"
+    elif ans == "SITV/CBL":
+        srcdevice="ipod_dock"
+    elif ans == "SIV.AUX":
+        srcdevice="cable"
+    elif ans == "SINET/USB":
+        srcdevice="net_usb"
     elif ans == "SIDVD":
-        srcdevice="hddvd"
+        srcdevice="dvd"
     elif ans == "SICD":
         srcdevice="tv"
     elif ans == "SIPHONO":
         srcdevice="phono"
-    elif ans == "SIDOCK":
-        srcdevice="ipod_dock"
-    elif ans == "SISAT/CBL":
-        srcdevice="sat"
-    elif ans == "SITV":
-        srcdevice="player"
-    elif ans == "SIGAME":
-        srcdevice="htpc"
-    elif ans == "SIDVR":
-        srcdevice="vcr"
-    elif ans == "SIV.AUX":
-        srcdevice="v.aux"
-    elif ans == "SINET/USB":
-        srcdevice="net_usb"
+    elif ans == "SIHDP":
+        srcdevice="hddvd"
     elif ans == "SITUNER":
         srcdevice="tuner"
+    elif ans == "SIVCR":
+        srcdevice="vcr"
+    elif ans == "SIDVR":
+        srcdevice="player"
     else:
-        srcdevice="unknown"
+        srcdevice=""
 
 def break_on():
     """Break, some guidance light"""
@@ -1346,7 +1248,7 @@ def break_toggle():
     if break_state:
         break_off()
     else:
-        break_on()
+        break_on();
     break_state = not break_state
 
 def daylight():
@@ -1360,7 +1262,7 @@ def good_morning():
     all_up_smart()
     lights_off()
     device_command("bathroom_light", "power_on")
-    shutdown('all')
+    shutdown()
 
 def early_evening():
     """Turn on decent lights"""
@@ -1398,37 +1300,33 @@ def execute(device, av, moviemode, blinds, playmode):
     if playmode:
         device_command(device, "play")
 
-def setup_dbox_channel_list(dev=default_tuxbox):
+def setup_dbox_channel_list():
     global dbox_channel_list
-    cl=device_command(dev, 'get_channellist')
-    if cl is None:
-        return False
+    cl=device_command('dbox', 'get_channellist')
     p = string.split(cl, '\n')
     for ent in p:
         [key, prog] = string.split(ent, " ", 1)
         ind = int(key, 16)
         dbox_channel_list[ind] = prog.encode('latin_1', 'replace') # FIXME
 
+    #print dbox_channel_list[int('44d00016dd0',16)]
+    #print unicode("Süd", "latin_1", errors='ignore')
+    #print dbox_channel_list[int('43100016e46',16)]
     return True
 
-def get_dbox_channelname(dev=default_tuxbox):
+def get_dbox_channelname():
     global dbox_channel_list
     if len(dbox_channel_list) == 0:
         setup_dbox_channel_list()
-    response = device_command(dev, 'get_program')
-    if response is None:
-        return False
-    id=int(response,16)
+    id=int(device_command('dbox', 'get_program'),16)
     return dbox_channel_list[id]
 
-def get_dbox_current_programs(dev=default_tuxbox):
+def get_dbox_current_programs():
     global dbox_channel_list
     global dbox_current_programs
     if len(dbox_channel_list) == 0:
         setup_dbox_channel_list()
-    str=device_command(dev, 'get_current_programs')
-    if str is None:
-        return False
+    str=device_command('dbox', 'get_current_programs')
     lst=string.split(str,'\n')
     for ent in lst:
         [progid, eventid, text] = string.split(ent, " ", 2)
@@ -1437,11 +1335,9 @@ def get_dbox_current_programs(dev=default_tuxbox):
 
     return dbox_current_programs
 
-def get_dbox_current_program(dev=default_tuxbox):
-    id=int(device_command(dev, 'get_program'),16)
-    str=device_command(dev, 'get_current_programs')
-    if str is None:
-        return False
+def get_dbox_current_program():
+    id=int(device_command('dbox', 'get_program'),16)
+    str=device_command('dbox', 'get_current_programs')
     lst=string.split(str,'\n')
     for ent in lst:
         [progid, eventid, text] = string.split(ent, " ", 2)
@@ -1449,9 +1345,9 @@ def get_dbox_current_program(dev=default_tuxbox):
         if index==id:
             return text#,eventid
     
-def get_dbox_current_program_epg(dev=default_tuxbox):
-    id=int(device_command(dev, 'get_program'),16)
-    str=device_command(dev, 'get_current_programs')
+def get_dbox_current_program_epg():
+    id=int(device_command('dbox', 'get_program'),16)
+    str=device_command('dbox', 'get_current_programs')
     lst=string.split(str,'\n')
     for ent in lst:
         [progid, eventid, text] = string.split(ent, " ", 2)
@@ -1459,34 +1355,9 @@ def get_dbox_current_program_epg(dev=default_tuxbox):
         if index==id:
             break;
 
-    text = device_command_n(dev, 'get_programs_eventid', eventid)
+    text = device_command_n('dbox', 'get_programs_eventid', eventid)
     epg = text.encode('latin_1', 'replace')
-    ##print "eventid=" + eventid
-    ##print "epf=" + epg
+    print "eventid=" + eventid
+    print "epf=" + epg
     #print "txt=" + text
     return epg
-
-def oplay_show_version():
-    assure_on('oplay')
-    device_command('oplay', 'home')
-    device_command('oplay', 'stop')
-    device_command('oplay', 'play_pause')
-
-def test_none():
-    return None
-
-def test_false():
-    return False
-
-def test_true():
-    return True
-
-def test_emptystring():
-    return ""
-
-def test_foobar():
-    return "foobar"
-
-def test_wait(duration=10):
-    time.sleep(duration)
-    return "wait is over!"

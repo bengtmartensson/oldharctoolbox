@@ -18,8 +18,6 @@ this program. If not, see http://www.gnu.org/licenses/.
 package harc;
 
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 import javax.xml.parsers.*;
@@ -54,7 +52,6 @@ public class harcutils {
     public final static int exit_xml_error = 12;
     public final static int exit_dynamic_link_error = 13;
     public final static int exit_this_cannot_happen = 14;
-    public final static int exit_restart = 99; // An invoking script is supposed to restart the program
 
     public final static int main_version = 0;
     public final static int sub_version = 5;
@@ -80,8 +77,6 @@ public class harcutils {
 
     public static Document open_xmlfile(File file) throws IOException, SAXParseException, SAXException {
         final String fname = file.getCanonicalPath();
-        if (debugargs.dbg_open_files())
-            System.err.println("Opening XML-File " + fname);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setNamespaceAware(true);
@@ -256,25 +251,5 @@ public class harcutils {
         for (int i =0; i < files.length; i++)
             result[i] = files[i].substring(0, files[i].lastIndexOf(extension));
         return result;//String[] {"sjkdfld"};
-    }
-
-    @SuppressWarnings("empty-statement")
-    public static int no_lines(String s) {
-        LineNumberReader lnr = new LineNumberReader(new StringReader(s.trim()));
-        try {
-            while (lnr.readLine() != null)
-                ;
-        } catch (IOException ex) {
-            ;
-        }
-        return lnr.getLineNumber();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(no_lines("foobar"));
-        System.out.println(no_lines("\n foobar\n"));
-        System.out.println(no_lines("foo\r\nbar"));
-        System.out.println(no_lines("foo\nbar"));
-        System.out.println(no_lines("foo\rbar"));
     }
 }
