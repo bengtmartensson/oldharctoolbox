@@ -19,6 +19,8 @@ package harc;
 
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class globalcache {
 
@@ -26,10 +28,7 @@ public class globalcache {
     private final static int gc_port = 4998;
     private final static int gc_first_serial_port = 4999;
     public final static String default_gc_host = "192.168.1.70";
-    // Having this static is both illogical and slightly unflexible, but
-    // MUCH simpler to implement.
-    // TODO: fix
-    private static int socket_timeout = 2000;
+    private final static int socket_timeout = 2000;
 
     /** GlobalCache models */
     public enum gc_model {
@@ -79,10 +78,6 @@ public class globalcache {
 
     private boolean valid_connector(int c) {
         return (c > 0) && (c <= 3);
-    }
-
-    public static void set_serial_timeout(int timeout) {
-        socket_timeout = timeout;
     }
 
     /**
@@ -177,28 +172,25 @@ public class globalcache {
         String result = "";
 
         sock = socket_storage.getsocket(gc_host, gc_first_serial_port + serial_no - 1);
-        if (sock == null)
-            throw new IOException("got a null socket");
         sock.setSoTimeout(socket_timeout);
         outToServer = new PrintStream(sock.getOutputStream());
         inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
         try {
-            if (cmd != null)
-                for (int c = 0; c < count; c++) {
-                    if (delay > 0 && c > 0)
-                        Thread.sleep(delay);
+            for (int c = 0; c < count; c++) {
+                if (delay > 0 && c > 0)
+                    Thread.sleep(delay);
 
-                    outToServer.print(cmd);
-                    Thread.sleep(10);
-                }
+                outToServer.print(cmd);
+                Thread.sleep(10);
+            }
 
             for (int i = 0; i < return_lines; i++) {
                 result = result + ((i > 0) ? "\n" : "") + inFromServer.readLine();
             }
 
         } catch (SocketTimeoutException e) {
-            System.err.println("Sockettimeout Globalcache: " + e.getMessage());
+            System.err.println(e.getMessage());
             result = null;
         } finally {
             outToServer.close();
@@ -511,14 +503,10 @@ public class globalcache {
         return true;
     }
 
-    public static amx_beacon.result listen_beacon() {
-        return amx_beacon.listen_for("-Make", "GlobalCache");
-    }
-
     public static void usage() {
         System.err.println("Usage:");
         System.err.println("globalcache [options] <command> [<argument>]");
-        System.err.println("where options=-# <count>,-h <hostname>,-c <connector>,-m <module>,-b <baudrate>,-v,-B");
+        System.err.println("where options=-# <count>,-h <hostname>,-c <connector>,-m <module>,-b <baudrate>,-v");
         System.err.println("and command=send_ir,send_serial,listen_serial,set_relay,get_devices,get_version,set_blink,[set|get]_serial,[set|get]_ir,[set|get]_net,[get|set]_state");
         System.exit(1);
     }
@@ -529,7 +517,6 @@ public class globalcache {
         int module = 2;
         int count = 1;
         boolean verbose = false;
-        boolean beacon = false;
         int baudrate = 0; // invalid value
         globalcache gc = null;
         String cmd = null;
@@ -557,18 +544,13 @@ public class globalcache {
                 } else if (args[arg_i].equals("-v")) {
                     verbose = true;
                     arg_i++;
-                } else if (args[arg_i].equals("-B")) {
-                    beacon = true;
-                    arg_i++;
                 } else {
                     usage();
                 }
             }
-            if (!beacon) {
-                gc = new globalcache(hostname, verbose);
-                cmd = args[arg_i];
-                arg = (args.length > arg_i + 1) ? args[arg_i + 1] : "";
-            }
+            gc = new globalcache(hostname, verbose);
+            cmd = args[arg_i];
+            arg = (args.length > arg_i + 1) ? args[arg_i + 1] : "";
 
         } catch (ArrayIndexOutOfBoundsException e) {
             usage();
@@ -578,80 +560,73 @@ public class globalcache {
 
         String output = "";
 
-        if (beacon) {
-            amx_beacon.result r = listen_beacon();
-            System.err.println(r);
-        } else {
-            try {
-
-                if (cmd.equals("set_blink")) {
-                    if (arg.equals("0")) {
-                        gc.set_blink(0);
-                    } else {
-                        gc.set_blink(1);
-                    }
-                } else if (cmd.equals("get_devices")) {
-                    output = gc.getdevices();
-                } else if (cmd.equals("get_version")) {
-                    output = gc.getversion(module);
-                } else if (cmd.equals("get_net")) { // Only v3
-                    output = gc.getnet();
-                } else if (cmd.equals("set_net")) { // Only v3
-                    // Syntax: see API-document
-                    output = gc.setnet(arg);
-                } else if (cmd.equals("get_ir")) { //Only v3
-                    output = gc.getir(module, connector);
-                } else if (cmd.equals("set_ir")) {
-                    output = gc.setir(module, connector, arg);
-                } else if (cmd.equals("get_serial")) {
-                    output = gc.getserial(module);
-                } else if (cmd.equals("set_serial")) {
-                    if (baudrate > 0) {
-                        output = gc.setserial(module, baudrate);
-                    } else {
-                        output = gc.setserial(module, arg);
-                    }
-                } else if (cmd.equals("get_state")) {
-                    output = gc.getstate(module, connector) == 1 ? "on" : "off";
-                } else if (cmd.equals("toggle_state")) {
-                    output = gc.togglestate(connector) ? "ok" : "not ok";
-                } else if (cmd.equals("set_state")) {
-                    output = gc.setstate(connector, (arg.equals("0") ? 0 : 1)) ? "on" : "off";
-                } else if (cmd.equals("set_relay")) {
-                    // Just a convenience version of the above
-                    output = gc.setstate(connector, (arg.equals("0") ? 0 : 1)) ? "on" : "off";
-                } else if (cmd.equals("send_ir")) {
-                    String ccf = "";
-                    for (int i = arg_i + 1; i < args.length; i++) {
-                        ccf = ccf + " " + args[i];
-                    }
-
-                    gc.send_ir(ccf, module, connector, count);
-                } else if (cmd.equals("send_serial")) {
-                    String transmit = "";
-                    for (int i = arg_i + 1; i < args.length; i++) {
-                        transmit = transmit + " " + args[i];
-                    }
-
-                    output = gc.send_serial(transmit, module, 0);
-                } else if (cmd.equals("stop_ir")) {
-                    gc.stop_ir(module, connector);
-                } else if (cmd.equals("listen_serial")) {
-                    System.err.println("Press Ctrl-C to interrupt.");
-                    // Never returns
-                    gc.listen_serial(module);
+        try {
+            if (cmd.equals("set_blink")) {
+                if (arg.equals("0")) {
+                    gc.set_blink(0);
                 } else {
-                    usage();
+                    gc.set_blink(1);
                 }
-            } catch (UnknownHostException e) {
-                System.err.println("Host " + gc.gc_host + " does not resolve.");
-                System.exit(1);
-            } catch (IOException e) {
-                System.err.println("IOException occured.");
-                System.exit(1);
-            } catch (InterruptedException e) {
+            } else if (cmd.equals("get_devices")) {
+                output = gc.getdevices();
+            } else if (cmd.equals("get_version")) {
+                output = gc.getversion(module);
+            } else if (cmd.equals("get_net")) { // Only v3
+                output = gc.getnet();
+            } else if (cmd.equals("set_net")) { // Only v3
+                // Syntax: see API-document
+                output = gc.setnet(arg);
+            } else if (cmd.equals("get_ir")) { //Only v3
+                output = gc.getir(module, connector);
+            } else if (cmd.equals("set_ir")) {
+                output = gc.setir(module, connector, arg);
+            } else if (cmd.equals("get_serial")) {
+                output = gc.getserial(module);
+            } else if (cmd.equals("set_serial")) {
+                if (baudrate > 0) {
+                    output = gc.setserial(module, baudrate);
+                } else {
+                    output = gc.setserial(module, arg);
+                }
+            } else if (cmd.equals("get_state")) {
+                output = gc.getstate(module, connector) == 1 ? "on" : "off";
+            } else if (cmd.equals("toggle_state")) {
+                output = gc.togglestate(connector) ? "ok" : "not ok";
+            } else if (cmd.equals("set_state")) {
+                output = gc.setstate(connector, (arg.equals("0") ? 0 : 1)) ? "on" : "off";
+            } else if (cmd.equals("set_relay")) {
+                // Just a convenience version of the above
+                output = gc.setstate(connector, (arg.equals("0") ? 0 : 1)) ? "on" : "off";
+            } else if (cmd.equals("send_ir")) {
+                String ccf = "";
+                for (int i = arg_i + 1; i < args.length; i++) {
+                    ccf = ccf + " " + args[i];
+                }
+
+                gc.send_ir(ccf, module, connector, count);
+            } else if (cmd.equals("send_serial")) {
+                String transmit = "";
+                for (int i = arg_i + 1; i < args.length; i++) {
+                    transmit = transmit + " " + args[i];
+                }
+
+                output = gc.send_serial(transmit, module, 0);
+            } else if (cmd.equals("listen_serial")) {
+                System.err.println("Press Ctrl-C to interrupt.");
+                // Never returns
+                gc.listen_serial(module);
+            } else {
+                usage();
             }
-            System.err.println(output);
+        } catch (UnknownHostException e) {
+            System.err.println("Host " + gc.gc_host + " does not resolve.");
+            System.exit(1);
+        } catch (IOException e) {
+            System.err.println("IOException occured.");
+            System.exit(1);
+        } catch (InterruptedException e) {
         }
+        System.err.println(output);
+
     }
 }

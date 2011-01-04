@@ -67,9 +67,6 @@ public class ccf_export {
             } catch (SAXParseException e) {
                 System.err.println(e.getMessage());
                 continue;
-            } catch (SAXException e) {
-                System.err.println(e.getMessage());
-                continue;
             }
 
             String[] remotes = dvc.get_remotenames();

@@ -32,7 +32,7 @@
       <command cmdref="volume_down" 		cmdno="0x1b"/>
       <command cmdref="power_on" 			cmdno="0x1d"/>
       <command cmdref="power_off" 			cmdno="0x1e"/>
-      <!--command cmdref="power_toggle" 		cmdno="0x1f"/--> <!-- not implemented -->
+      <command cmdref="power_toggle" 		cmdno="0x1f"/> <!-- not implemented -->
       <command cmdref="mute_toggle" 		cmdno="0x1c"/>
       <command cmdref="ext_input_toggle"		cmdno="0x87"/>
       <command cmdref="osd" 			cmdno="0xc2"/>

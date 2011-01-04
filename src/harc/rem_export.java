@@ -345,8 +345,6 @@ public class rem_export {
                 System.err.println("Could not instantiate device: " + e.getMessage());
             } catch (SAXParseException e) {
                 System.err.println("Could not parse device: " + e.getMessage());
-            } catch (SAXException e) {
-                System.err.println("Could not parse device: " + e.getMessage());
             }
             if (dev != null && dev.is_valid())
                 (new rem_export(dev)).export(harcprops.get_instance().get_exportdir());

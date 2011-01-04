@@ -23,7 +23,6 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -175,11 +174,11 @@ public class button_remote {
         valid = true;
     }
 
-    public button_remote(File f) throws IOException, SAXParseException, SAXException {
+    public button_remote(File f) throws IOException, SAXParseException {
         this(harcutils.open_xmlfile(f));
     }
 
-    public button_remote(String name) throws IOException, SAXParseException, SAXException {
+    public button_remote(String name) throws IOException, SAXParseException {
         this((new File(name)).exists() ? (new File(name)) : new File(harcprops.get_instance().get_buttons_remotesdir() + File.separator + name + "." + extension));
     }
 

@@ -23,17 +23,22 @@ import org.w3c.dom.*;
 
 public class ezcontrol_t10 {
 
-    // UDP control presently not implemented for manual selection.
+    // UDP control presently not implemented.
 
     private String ezcontrol_host;
     public final static String default_ezcontrol_host = "192.168.1.42";
-    public boolean use_udp = true;
-    public int so_timeout = 1000;
-    private final static int ezcontrol_portno = 7042;
-    private final static int ezcontrol_query_portno = 7044;
     private boolean verbose = true;
 
-    private final static int buf_size = 352;
+    public static String make_url(String ez_hostname, String system, String house, int device, String command_name)
+            throws non_existing_command_exception {
+        System.err.println(ez_hostname);
+        System.err.println(system);
+        System.err.println(house);
+        System.err.println(device);
+        System.err.println(command_name);
+        ezcontrol_t10 ez = new ezcontrol_t10(ez_hostname);
+        return ez.make_url_manual(system, "" + house, device, command_name, 1);
+    }
 
     private class status {
 
@@ -52,7 +57,6 @@ public class ezcontrol_t10 {
             return state == on ? "on" : state == off ? "off" : "?";
         }
 
-        @Override
         public String toString() {
             return name + ": " + state_str();
         }
@@ -62,7 +66,7 @@ public class ezcontrol_t10 {
     //starts with 0, T10 starts with 1
     public static String[] system_names = {
         "FS10", // 1
-        "FS20", // 2
+        "FS20",
         "RS200",
         "AB400",
         "AB601",
@@ -74,18 +78,7 @@ public class ezcontrol_t10 {
         "KO-FC",
         "RS862"
     };
-    private final static int fs20_sysno = 2;
-    private final static int rs200_sysno = 3;
-    private final static int intertechno_sysno = 6;
-    private final static int x10_sysno = 9;
-
     private final static String[] daynames = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-
-    public static boolean is_preset_command(command_t cmd) {
-        return cmd == command_t.get_status || cmd == command_t.set_power // Requires FW 2.26
-                || cmd == command_t.power_toggle || cmd == command_t.power_on
-                || cmd == command_t.power_off;
-    };
 
     private class timer {
 
@@ -103,7 +96,6 @@ public class ezcontrol_t10 {
                 minute = m;
             }
 
-            @Override
             public String toString() {
                 return "" + (hour >= 0
                         ? (hour < 10 ? "0" : "") + (hour + ":" + (minute < 10 ? "0" : "") + minute)
@@ -121,7 +113,6 @@ public class ezcontrol_t10 {
             off_time = new clock(off_h, off_m);
         }
 
-        @Override
         public String toString() {
             String result = on_time.toString() + "-" + off_time.toString() + " ";
 
@@ -159,11 +150,11 @@ public class ezcontrol_t10 {
 
     private static int system_no(String system_name) {
         if (system_name.equalsIgnoreCase("intertechno")) {
-            return intertechno_sysno;
+            return 6;
         } else if (system_name.equalsIgnoreCase("conrad")) {
-            return rs200_sysno;
+            return 3;
         } else if (system_name.equalsIgnoreCase("x10")) {
-            return x10_sysno;
+            return 9;
         }
 
         for (int i = 0; i < system_names.length; i++) {
@@ -172,7 +163,13 @@ public class ezcontrol_t10 {
             }
         }
 
+
         return invalid_system;
+    }
+
+    private static String cmd2string(command_t cmd) {
+        return cmd == command_t.power_on
+                ? "on" : cmd == command_t.power_off ? "off" : "?";
     }
 
     public ezcontrol_t10(String hostname, boolean verbose) {
@@ -197,45 +194,20 @@ public class ezcontrol_t10 {
     }
 
     public boolean send_manual(String system_name, String house, int device,
-            int value, int arg, int n)
+            String cmd_name, int n)
             throws non_existing_command_exception {
-        return get_url(url_manual(system_name, house, device, value, arg, n));
-    }
-
-    private static int fs20_time(double secs) {
-        int quartersecs = (new Double(4*secs)).intValue();
-        int q_min = (int)(java.lang.Math.log(quartersecs/15)/java.lang.Math.log(2))+1;
-        if (q_min < 0)
-            q_min = 0;
-
-        int mult = (((q_min & 1) == 1) ? 2 : 1)
-                * (((q_min & 2) == 2) ? 4 : 1)
-                * (((q_min & 4) == 4) ? 16 : 1)
-                * (((q_min & 8) == 8) ? 256 : 1);
-   
-        int m = (int)(quartersecs/mult);
-        int res = (q_min << 4) + m;
-        return res;
-    }
-    
-    public boolean send_manual(String system_name, String house, int device,
-            command_t cmd, int power, int arg, int n)
-            throws non_existing_command_exception {
-        return cmd == command_t.set_power ? send_manual(system_name, house, device, power*16/100, -1, n)
-                : cmd == command_t.dim_max_time ? send_manual(system_name, house, device, 48, fs20_time(arg), n)
-                : cmd == command_t.dim_off_time ? send_manual(system_name, house, device, 32, fs20_time(arg), n)
-                : cmd == command_t.dim_value_time ? send_manual(system_name, house, device, 32+power*16/100, fs20_time(arg), n)
-                : send_manual(system_name, house, device, encode_command(cmd), arg, n);
+        return get_url(make_url_manual(system_name, house, device,
+                cmd_name, n));
     }
 
     public boolean send_manual(String system_name, String house, int device,
-            command_t cmd, int arg, int n)
+            command_t cmd, int n)
             throws non_existing_command_exception {
-        return send_manual(system_name, house, device, encode_command(cmd), arg, n);
+        return send_manual(system_name, house, device, cmd2string(cmd), n);
     }
 
-    public String url_manual(String system_name, String house, int device,
-            int value, int arg, int n)
+    public String make_url_manual(String system_name, String house, int device,
+            String cmd_name, int n)
             throws non_existing_command_exception {
         int system = system_no(system_name);
         if (system == invalid_system) {
@@ -244,17 +216,14 @@ public class ezcontrol_t10 {
         String url = null;
         boolean success = true;
         switch (system) {
-            case fs20_sysno:
-                url = fs20_url(house, device, value, arg, n);
+            case 3:		// rs200
+                url = rs200_url(house, device, cmd_name, n);
                 break;
-            case rs200_sysno:
-                url = rs200_url(house, device, value, n);
+            case 6:		// intertechno
+                url = intertechno_url(house.charAt(0), device, cmd_name, n);
                 break;
-            case intertechno_sysno:
-                url = intertechno_url(house.charAt(0), device, value, n);
-                break;
-            case x10_sysno:
-                url = x10_url(house.charAt(0), device, value, n);
+            case 9:		// Marmitek/x10
+                url = x10_url(house.charAt(0), device, cmd_name, n);
                 break;
             default:
                 System.err.println("Sorry, system " + system_name + " is not yet implemented.");
@@ -264,217 +233,73 @@ public class ezcontrol_t10 {
     }
 
     public boolean send_preset(int switch_no, command_t cmd) throws non_existing_command_exception {
-        if (cmd == command_t.power_toggle)
-            cmd = this.get_status(switch_no) == 0 ? command_t.power_on : command_t.power_off;
-
-        return use_udp ? udp_send_preset(switch_no, cmd) : get_url(url_preset(switch_no, cmd));
+        return get_url(make_url_preset(switch_no, cmd));
     }
 
-    public boolean send_preset(int switch_no, command_t cmd, int count) throws non_existing_command_exception {
-        boolean result = true;
-        for (int i = 0; i < count; i++) {
-            boolean stat = send_preset(switch_no, cmd);
-            result &= stat;
-        }
-        return result;
-    }
-
-    public boolean send_preset(int switch_no, int value) throws IllegalArgumentException {
-        // Not possible with udp.
-        return get_url(url_preset(switch_no, value));
-    }
-
-    public boolean send_preset(int switch_no, int value, int count) throws non_existing_command_exception {
-        boolean result = true;
-        for (int i = 0; i < count; i++) {
-            boolean stat = send_preset(switch_no, value);
-            result &= stat;
-        }
-        return result;
-    }
-
-    private boolean udp_send_preset(int switch_no, command_t cmd) {
-        if (verbose)
-            System.err.println("Sending command `" + cmd + "' to preprogrammed " + switch_no + " to T10 `" + ezcontrol_host + "' over UDP.");
-
-        InetAddress addr;
-        try {
-            addr = InetAddress.getByName(ezcontrol_host);
-        } catch (UnknownHostException ex) {
-            System.err.println("Unknown host: " + ezcontrol_host);
-            return false;
-        }
-        byte[] buf = new byte[8];
-        buf[2] = 1;
-        buf[3] = (byte) 171;
-        buf[4] = (byte) (switch_no - 1);
-        buf[5] = 0;
-        buf[6] = (byte) (cmd == command_t.power_off ? 0 : 255);
-        buf[7] = 0;
-        int sum = checksum(buf);
-        buf[0] = (byte) (sum & 0xff);
-        buf[1] = (byte) (sum >> 8);
-        DatagramPacket dp = new DatagramPacket(buf, buf.length, addr, ezcontrol_portno);
-        return udp_send_check(dp);
-    }
-
-
-    private boolean udp_send_check(DatagramPacket dp) {
-        boolean success = false;
-        DatagramSocket sock = null;
-        try {
-            sock = new DatagramSocket();
-            sock.setSoTimeout(so_timeout);
-            sock.send(dp);
-            byte[] error = new byte[6];
-            DatagramPacket error_packet = new DatagramPacket(error, error.length);
-            sock.receive(error_packet);
-            int sum = checksum(error);
-            if (!(((sum & 0xff) == error[0]) && ((sum >> 8) == error[1]) && (error[4] == 0) && (error[5] == 0))) {
-                System.err.println("Erroneous response from T10");
-            } else
-                success = true;
-        } catch (IOException e) {
-            if (e.getClass() == SocketTimeoutException.class)
-                System.err.println("UDP socket timeout from " + ezcontrol_host);
-            else
-                e.printStackTrace();
-        } finally {
-            sock.close();
-        }
-        return success;
-    }
-
-    private int checksum(byte[] buf) {
-        int sum = 0;
-        for (int i = 2; i < buf.length; i += 2)
-            sum += ubyte(buf[i]) + 256 * ubyte(buf[i + 1]);
-
-        return sum;
-    }
-
-    private int ubyte(byte b) {
-        return b < 0 ? b + 256 : b;
-    }
-    
-    private boolean udp_extract_state(byte[] buf) {
-        return buf != null ? (buf[66] != 0) : false;
-    }
-    
-    private String udp_extract_name(byte[] buf) {
-        return buf != null ? new String(buf, 6, 32) : null;
-    }
-
-    private byte[] udp_status_inquiry(int n) {
-        if (verbose)
-            System.err.println("Inquiring state from T10 `" + ezcontrol_host + "' on preset " + n + " using UDP.");
-        byte[] buf = new byte[buf_size];
-
-        buf[0] = 0x11;
-        buf[1] = 0x67;
-        buf[2] = 2;
-        buf[3] = 0;
-        buf[4] = (byte) (n - 1);
-        buf[5] = 0;
-        buf[buf_size - 4] = (byte) 0xff;
-        buf[buf_size - 3] = (byte) 0xff;
-
-        InetAddress addr;
-        try {
-            addr = InetAddress.getByName(ezcontrol_host);
-        } catch (UnknownHostException ex) {
-            System.err.println("Unknown host: " + ezcontrol_host);
-            return null;
+    public String intertechno_url(char house, int device, String cmd_name, int n)
+            throws non_existing_command_exception {
+        command_t cmd = command_t.parse(cmd_name);
+        if (cmd == command_t.invalid) {
+            if (cmd_name.equals("on")) {
+                cmd = command_t.power_on;
+            }
+            if (cmd_name.equals("off")) {
+                cmd = command_t.power_off;
+            }
         }
 
-        DatagramPacket dp = new DatagramPacket(buf, buf.length, addr, ezcontrol_query_portno);
-        DatagramSocket sock = null;
-        try {
-            sock = new DatagramSocket();
-            sock.setSoTimeout(so_timeout);
-            sock.send(dp);
-            sock.receive(dp);
-        } catch (IOException e) {
-            if (e.getClass() == SocketTimeoutException.class)
-                System.err.println("UDP socket timeout from " + ezcontrol_host);
-            else
-                e.printStackTrace();
-            buf = null;
-        } finally {
-            sock.close();
+        if (cmd != command_t.power_on && cmd != command_t.power_off) {
+            throw new non_existing_command_exception(cmd_name);
         }
-        return buf;
-    }
-
-    public String fs20_url(String house, int device, int value, int arg, int n) {
-        int hc1 = Integer.parseInt(house.substring(0, 4));
-        int hc2 = Integer.parseInt(house.substring(4));
-        return url_manual(fs20_sysno, hc1, hc2, device, value, arg, n);
-    }
-
-    public String intertechno_url(char house, int device, int value, int n) {
         return intertechno_url(Character.toUpperCase(house) - 'A' + 1,
                 (device - 1) / 4 + 1,
                 (device - 1) % 4 + 1,
-                value, n);
+                cmd, n);
     }
 
-    public String intertechno_url(int hc1, int hc2, int addr, int value, int n) {
-        return url_manual(intertechno_sysno, hc1, hc2, addr, value, -1, n);
-    }
-
-    public String x10_url(char house, int device, int value, int n) {
-        return x10_url(Character.toUpperCase(house) - 'A' + 1, device, value, n);
-    }
-
-    public String x10_url(int hc1, int addr, int value, int n) {
-        return url_manual(x10_sysno, hc1, 0, addr, value, -1, n);
-    }
-
-    public String rs200_url(String house, int device, int value, int n)
+    public String intertechno_url(int hc1, int hc2, int addr, command_t cmd, int n)
             throws non_existing_command_exception {
-        return url_manual(rs200_sysno, Integer.parseInt(house), 0, device, value, -1, n);
+        return "http://" + ezcontrol_host + "/send?system=6&hc1=" + hc1 + "&hc2=" + hc2 + "&addr=" + addr + "&value=" + (cmd == command_t.power_on ? "255" : "0") + "&n=" + n;
     }
 
-    private String url_manual(int system_no, int hc1, int hc2, int device, int value, int arg, int n) {
-        return "http://" + ezcontrol_host + "/send?system=" + system_no
-                + "&hc1=" + hc1
-                + (hc2 != 0 ? "&hc2=" + hc2 : "")
-                + "&addr=" + device + "&value=" + value
-                + (arg >= 0 ? "&arg=" + arg : "")
-                + (n > 1 ? "&n=" + n : "");
+    public String x10_url(char house, int device, String cmd_name, int n)
+            throws non_existing_command_exception {
+        command_t cmd = command_t.parse(cmd_name);
+        if (cmd == command_t.invalid) {
+            if (cmd_name.equals("on")) {
+                cmd = command_t.power_on;
+            }
+            if (cmd_name.equals("off")) {
+                cmd = command_t.power_off;
+            }
+        }
+
+        if (cmd != command_t.power_on && cmd != command_t.power_off) {
+            throw new non_existing_command_exception(cmd_name);
+        }
+        return x10_url(Character.toUpperCase(house) - 'A' + 1, device, cmd, n);
     }
 
-    public String url_preset(int switch_no, command_t cmd)
+    public String x10_url(int hc1, int addr, command_t cmd, int n)
+            throws non_existing_command_exception {
+        return "http://" + ezcontrol_host + "/send?system=9&hc1=" + hc1 + "&addr=" + addr + "&value=" + (cmd == command_t.power_on ? "255" : "0") + "&n=" + n;
+    }
+
+    public String rs200_url(String house, int device, String cmd_name, int n)
+            throws non_existing_command_exception {
+        command_t cmd = command_t.parse(cmd_name);
+        if (cmd != command_t.power_on && cmd != command_t.power_off) {
+            throw new non_existing_command_exception(cmd_name);
+        }
+        return "http://" + ezcontrol_host + "/send?system=3&hc1=" + house + "&addr=" + device + "&value=" + (cmd == command_t.power_on ? "255" : "0") + "&n=" + n;
+    }
+
+    public String make_url_preset(int switch_no, command_t cmd)
             throws non_existing_command_exception {
         if (cmd != command_t.power_on && cmd != command_t.power_off) {
             throw new non_existing_command_exception(cmd);
         }
-        return url_preset(switch_no, cmd == command_t.power_on ? "on" : "off");
-    }
-
-    public String url_preset(int switch_no, int value) throws IllegalArgumentException {
-        if (value < 0 || value > 100)
-            throw new IllegalArgumentException("value out of range");
-        return url_preset(switch_no, Integer.toString(value));
-    }
-
-    private String url_preset(int switch_no, String val) {
-        return "http://" + ezcontrol_host + "/preset?switch=" + switch_no + "&value=" + val;
-    }
-
-    private static int parse_command(String cmd) {
-        command_t c = command_t.parse(cmd);
-        return c == command_t.invalid ? Integer.parseInt(cmd) : encode_command(c);
-    }
-
-    private static int encode_command(command_t cmd) {
-        return cmd == command_t.power_on ? 255
-                : cmd == command_t.power_off ? 0
-                : cmd == command_t.power_toggle ? 18
-                : cmd == command_t.dim_up ? 19
-                : cmd == command_t.dim_down ? 20
-                : -1;
+        return "http://" + ezcontrol_host + "/preset?switch=" + switch_no + "&value=" + (cmd == command_t.power_on ? "on" : "off");
     }
 
     public boolean get_url(String url) {
@@ -511,40 +336,23 @@ public class ezcontrol_t10 {
     }
 
     public int get_status(int n) {
-        if (use_udp)
-            return udp_extract_state(udp_status_inquiry(n)) ? 1 : 0;
-        else {
-            setup_status();
-            return state[n].state;
-        }
+        setup_status();
+        return state[n].state;
     }
 
     public String get_preset_status(int n) {
-        if (use_udp)
-            return udp_extract_state(udp_status_inquiry(n)) ? "on" : "off";
-        else {
-            setup_status();
-            return state[n] != null ? state[n].state_str() : "n/a";
-        }
+        setup_status();
+        return state[n] != null ? state[n].state_str() : "n/a";
     }
 
     public String get_preset_name(int n) {
-        if (use_udp) {
-            return udp_extract_name(udp_status_inquiry(n));
-        } else {
-            setup_status();
-            return state[n] != null ? state[n].name : "**not assigned**";
-        }
+        setup_status();
+        return state[n] != null ? state[n].name : "**not assigned**";
     }
 
     public String get_preset_str(int n) {
-        if (use_udp) {
-            byte[] buf = udp_status_inquiry(n);
-            return buf != null ? (udp_extract_name(buf) + (udp_extract_state(buf) ? ": on" : ": off")) : "**error**";
-        } else {
-            setup_status();
-            return state[n] != null ? state[n].toString() : "Preset " + n + " not assigned.";
-        }
+        setup_status();
+        return state[n] != null ? state[n].toString() : "Preset " + n + " not assigned.";
     }
 
     private boolean setup_status() {
@@ -831,14 +639,7 @@ public class ezcontrol_t10 {
     }
 
     private static void usage() {
-        System.err.println("Usage:\n" + "ezcontrol [<options>] get_status [<preset_no>]\n"
-                + "or\n" + "ezcontrol [<options>] get_timer [<timername>]\n"
-                + "or\n" + "ezcontrol [<options>] <preset_no> <command>\n"
-                + "or\n" + "ezcontrol [<options>] <preset_no> <value_in_percent>\n"
-                + "or\n" + "ezcontrol [<options>] <system_name> <housecode> <device_no> <command> [<arg>]\n"
-                + "or\n" + "ezcontrol [<options>] xml\n"
-                + "\nwhere options=-h <hostname>,-d <debugcode>,-# <count>,-v, -u\n"
-                + "and command=power_on,power_off,power_toggle,get_status,...");
+        System.err.println("Usage:\n" + "ezcontrol [<options>] get_status [<preset_no>]\n" + "or\n" + "ezcontrol [<options>] get_timer [<timername>]\n" + "or\n" + "ezcontrol [<options>] <preset_no> <command>\n" + "or\n" + "ezcontrol [<options>] <system_name> <housecode> <device_no> <command>\n" + "\nwhere options=-h <hostname>,-d <debugcode>,-# <count>,-v");
         System.exit(1);
     }
 
@@ -859,10 +660,6 @@ public class ezcontrol_t10 {
         String housecode = null;
         int device_no = -1;
         int num_arg = -1;
-        int percent_value = -1;
-        int value = -1;
-        int arg = -1;
-        boolean udp = false;
 
         try {
             while (arg_i < args.length && (args[arg_i].length() > 0) && args[arg_i].charAt(0) == '-') {
@@ -870,9 +667,6 @@ public class ezcontrol_t10 {
                 if (args[arg_i].equals("-v")) {
                     verbose = true;
                     arg_i++;
-                } else if (args[arg_i].equals("-u")) {
-                    arg_i++;
-                    udp = true;
                 } else if (args[arg_i].equals("-h")) {
                     arg_i++;
                     ezcontrol_host = args[arg_i++];
@@ -903,16 +697,11 @@ public class ezcontrol_t10 {
                 preset_mode = true;
                 num_arg = Integer.parseInt(args[arg_i]);
                 cmd = command_t.parse(args[arg_i + 1]);
-                if (cmd == command_t.invalid)
-                    percent_value = Integer.parseInt(args[arg_i + 1]);
             } else {
                 system_name = args[arg_i];
                 housecode = args[arg_i + 1];
                 device_no = Integer.parseInt(args[arg_i + 2]);
-                //cmd = command_t.parse(args[arg_i + 3]);
-
-                value = parse_command(args[arg_i + 3]);
-                arg = args.length > arg_i + 4 ? Integer.parseInt(args[arg_i + 4]) : -1;
+                cmd = command_t.parse(args[arg_i + 3]);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             usage();
@@ -920,17 +709,11 @@ public class ezcontrol_t10 {
             usage();
         }
 
-       
+        ezcontrol_t10 ez = new ezcontrol_t10(ezcontrol_host, verbose);
         if (num_arg != -1 && (num_arg < 1 || num_arg > t10_no_presets)) {
             System.err.println("Numerical argument not valid.");
             System.exit(45);
         }
-        if (device_no != -1 && value == -1) {
-            System.err.println("Only commands power_on and power_off allowed.");
-            System.exit(46);
-        }
-        ezcontrol_t10 ez = new ezcontrol_t10(ezcontrol_host, verbose);
-        ez.use_udp = udp;
 
         try {
             if (do_get_status) {
@@ -948,12 +731,10 @@ public class ezcontrol_t10 {
             } else if (do_xml) {
                 ez.generate_xml();
             } else if (preset_mode) {
-                if (cmd == command_t.invalid)
-                    ez.send_preset(num_arg, percent_value);
-                else
-                    ez.send_preset(num_arg, cmd);
+                ez.send_preset(num_arg, cmd);
             } else {
-                ez.send_manual(system_name, housecode, device_no, value, arg, count);
+                ez.send_manual(system_name, housecode, device_no,
+                        cmd, count);
             }
         } catch (non_existing_command_exception e) {
             System.err.println("Only commands power_on and power_off allowed.");

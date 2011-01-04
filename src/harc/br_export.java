@@ -127,7 +127,7 @@ public class br_export {
         }
     }
 
-    public static final String doctype = harcprops.get_instance().get_dtddir() + File.separator + "br_export.dtd";//FIXME
+    public static final String doctype = ".." + File.separator + harcprops.get_instance().get_dtddir() + File.separator + "br_export.dtd";//FIXME
     private static int debug = 0;
     private button_remote remote = null;
     private device dev;
@@ -169,12 +169,12 @@ public class br_export {
     }
 
     public br_export(String jp1remotename, String device_or_filename, String rulesfile, String remotename)
-            throws IOException, SAXParseException, SAXException {
+            throws IOException, SAXParseException {
         this(jp1remotename, device_or_filename, rulesfile, remotename, null);
     }
 
     public br_export(String button_remotename, String device_or_filename, String rulesfile, String remotename, device_type devtype)
-            throws IOException, SAXParseException, SAXException {
+            throws IOException, SAXParseException {
         remote = new button_remote(button_remotename);
         if (!remote.is_valid()) {
             System.err.println("Error: cannot find button_remote " + button_remotename);
@@ -576,8 +576,6 @@ public class br_export {
         } catch (IOException e) {
             System.err.println("IO error " + e.getMessage());
         } catch (SAXParseException e) {
-            System.err.println("SAXParse " + e.getMessage());
-        } catch (SAXException e) {
             System.err.println("SAX " + e.getMessage());
         }
     }

@@ -5,8 +5,8 @@
   <device id="door_toggle_memory" vendor="generic" name="open/close door with
     only one command, and memory, as well as a sensor" model="generic" type="dumb">
     <attributes>
-      <attribute name="memory" defaultvalue="yes"/>
-      <attribute name="forget" defaultvalue="no"/>
+      <has-attribute name="memory"/>
+      <has-attribute name="forget" value="no"/>
     </attributes>
     <aliases>
       <alias name="open_close" command="power_pulse"/>
@@ -16,8 +16,6 @@
       <command cmdref="power_off"/>
       <command cmdref="power_toggle"/>
       <command cmdref="power_pulse"/>
-    </commandset>
-    <commandset type="sensor">
       <command cmdref="get_state">
 	<returnvalues>
 	  <semantics>

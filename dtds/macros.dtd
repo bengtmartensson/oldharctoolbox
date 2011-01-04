@@ -9,7 +9,7 @@
 	name	ID	#REQUIRED
         visibility (public|private) "public" >
 
-<!ELEMENT macro (description?,prerequisites?,(true|false|match|command|select-src|delay|message|macrocall|cond|set-variable|get-variable)+,jump?) >
+<!ELEMENT macro (description?,prerequisites?,(true|false|match|command|select-src|delay|message|macrocall|cond|set-variable)+,jump?) >
 <!ATTLIST       macro
         name    ID #REQUIRED
         visibility (public|private) "public" >
@@ -63,7 +63,7 @@
 
 <!ELEMENT clause ((true|false|match|message|command|select|macrocall|delay|code|cond)+) >
 
-<!ELEMENT match ((command|get-variable)+) >
+<!ELEMENT match ((match|message|command|select|macrocall|delay|code|cond)+) >
 <!ATTLIST match
         regexp CDATA #REQUIRED >
 
@@ -86,11 +86,7 @@
 <!ATTLIST code
         wait (true|false) "true" >
 
-<!ELEMENT set-variable EMPTY >
+<!--ELEMENT set-variable EMPTY >
 <!ATTLIST set-variable
         name    CDATA   #REQUIRED
-        value   CDATA   #REQUIRED >
-
-<!ELEMENT get-variable EMPTY >
-<!ATTLIST get-variable
-        name CDATA #REQUIRED >
+        value   CDATA   #REQUIRED -->

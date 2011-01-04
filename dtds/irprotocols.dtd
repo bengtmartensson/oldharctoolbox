@@ -63,7 +63,7 @@
 
 <!ELEMENT mask (mask|minus|plus|complement|parameterref|constant) >
 <!ATTLIST mask
-          mask CDATA #REQUIRED
+          mask CDATA "255"
           shift CDATA "0" >
 
 <!ELEMENT intro ((one|zero|coded_number)+,(zero|zeropadding))? >

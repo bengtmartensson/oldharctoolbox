@@ -105,5 +105,7 @@ Here's how to get the above screen with the Tosh remote:
 Display - 1 -9 - 5 - Display
     -->
   </commandset>
-  <xi:include href="ping.xi"/>
+  <commandset type="ip">
+    <command cmdref="ping"/>
+  </commandset>
 </device>

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
-<!-- pingable_standby depends on setting "Network standby" -->
-<device id="denon_avr3808" name="Denon AVR-3808 Receiver" vendor="Denon" model="AVR-3808" type="receiver" pingable_on="yes" pingable_standby="no">
+<device id="denon_avr3808" name="Denon AVR-3808 Receiver" vendor="Denon" model="AVR-3808" type="receiver" pingable_on="yes" pingable_standby="yes">
   <attributes>
     <attribute name="north-america"/>
     <attribute name="japan"/>
     <attribute name="ipod"/>
     <attribute name="bidirectional-rc"/>
-    <attribute name="audyssey"/>
   </attributes>
   <jp1data>
     <setupcode value="1383"/>
@@ -142,9 +140,9 @@
     <command cmdno="168" cmdref="cmd_7ch_stereo"/>
     <command cmdno="171" cmdref="tuner_shift_f"/>
     <command cmdno="174" cmdref="tuner_shift_g"/>
-    <!--command cmdno="175" cmdref="ch_select"/--><!-- ??? -->
-    <!--command cmdno="176" cmdref="ch_volume_up"/--><!-- ??? -->
-    <!--command cmdno="177" cmdref="ch_volume_down"/--><!-- ??? -->
+    <command cmdno="175" cmdref="ch_select"/><!-- ??? -->
+    <command cmdno="176" cmdref="ch_volume_up"/><!-- ??? -->
+    <command cmdno="177" cmdref="ch_volume_down"/><!-- ??? -->
     <command cmdno="181" cmdref="input_mode_ext_in"/>
     <command cmdno="182" cmdref="input_mode"/>
     <command cmdno="183" cmdref="treble_up" name="all treble up"/>
@@ -171,7 +169,7 @@
     <command cmdno="212" cmdref="tuner_pty"/>
     <command cmdno="213" cmdref="channel_down" name="tuner preset down"/>
     <command cmdno="214" cmdref="channel_up" name="tuner_preset_up"/>
-    <command cmdno="215" cmdref="tuner_band"/><!-- AM/FM -->
+    <command cmdno="215" cmdref="tuner_band"/>
     <command cmdno="216" cmdref="tuner_tuning_mode"/>
     <command cmdno="217" cmdref="frequency_up" name="tuner_tuning_up"/>
     <command cmdno="218" cmdref="frequency_down" name="tuner_tuning_down"/>
@@ -188,7 +186,7 @@
       <command cmdref="quick3" cmdno="294"/>
       <command cmdref="stereo_direct" cmdno="305" type="toggle"/>
       <command cmdref="neural" ifattribute="north-america" cmdno="347"/>
-      <command cmdref="input_mode_hdmi" cmdno="357"/><!-- non funct? is!-->
+      <command cmdref="input_mode_hdmi" cmdno="357"/><!-- non funct? -->
       <command cmdref="input_mode_digital" cmdno="359"/>
       <command cmdref="decode_mode" cmdno="364"/>
       <command cmdref="restorer" cmdno="548"/>
@@ -211,21 +209,13 @@
       <!--command cmdref="0xff" name="cmd_hdmi_monitor_select" remark="no function" cmdno="753"/-->
       <!--command cmdref="resolution" remark="no function" cmdno="754"/-->
 
-      <!-- http://www.remotecentral.com/cgi-bin/mboard/rc-discrete/thread.cgi?5875 -->
-      <command cmdref="audyssey_dyn_vol_eq_on" ifattribute="audyssey" cmdno="745"/>
-      <command cmdref="audyssey_dyn_eq_on" ifattribute="audyssey" cmdno="746"/>
-      <command cmdref="audyssey_dyn_vol_eq_off" ifattribute="audyssey" cmdno="747"/>
-      <command cmdref="audyssey_dyn_volume_midnight" ifattribute="audyssey" cmdno="748"/>
-      <command cmdref="audyssey_dyn_volume_evening" ifattribute="audyssey" cmdno="749"/>
-      <command cmdref="audyssey_dyn_volume_day" ifattribute="audyssey" cmdno="750"/>
-
       <command cmdref="repeat" name="main zone repeat" cmdno="956"/>
       <command cmdref="shuffle" name="main zone random/shuffle" cmdno="957"/>
       <command cmdref="usb_direct_play" name="main zone usb direct play" cmdno="958"/>
       <command cmdref="favorite_direct_play" name="main zone favorite direct play" cmdno="959"/>
       <command cmdref="channel_up" name="main zone preset ch up" cmdno="972"/>
       <command cmdref="channel_down" name="main zone preset ch down" cmdno="973"/>
-      <!--command cmdref="channel_shift" name="main zone preset ch shift" cmdno="974"/--><!-- ??? -->
+      <command cmdref="channel_shift" name="main zone preset ch shift" cmdno="974"/><!-- ??? -->
       <command cmdref="search" name="main zone search (rds)" cmdno="983"/><!-- ??? -->
       <command cmdref="play_pause" name="main zone play/pause" cmdno="992"/><!-- ??? -->
       <command cmdref="stop" name="main zone stop" cmdno="993"/><!-- ??? -->
@@ -483,7 +473,7 @@
 
       <command cmdref="zone1_on" transmit="ZMON"/>
       <command cmdref="zone1_off" transmit="ZMOFF"/>
-      <command cmdref="get_zone1" transmit="ZM?" response_lines="1">
+      <command cmdref="get_zone1" transmit="ZM?">
 	<returnvalues>
 	</returnvalues>
       </command>
@@ -579,7 +569,7 @@
       <!--command cmdref="MONI? Return VSMONITOR Status (Japan model only) VSMONI?"/-->
       <command cmdref="aspectratio_4_3" transmit="VSASPNRM"/>
       <command cmdref="aspectratio_16_9" transmit="VSASPFUL"/>
-      <command cmdref="get_aspectratio" transmit="VSASP?" response_lines="1"/>
+      <command cmdref="get_aspectratio" transmit="VSASP?"/>
       <command cmdref="resolution_480p" transmit="VSSC48P" name="Resolution to 480p/576p"/>
       <command cmdref="resolution_1080i" transmit="VSSC10I"/>
       <command cmdref="resolution_720p" transmit="VSSC72P"/>
@@ -746,7 +736,7 @@
       </command>
       <command cmdref="zone2_on" transmit="Z2ON"/>
       <command cmdref="zone2_off" transmit="Z2OFF"/>
-      <command cmdref="get_zone2" transmit="Z2?" response_lines="2">
+      <command cmdref="get_zone2" transmit="Z2?" response_lines="1">
 	<returnvalues>
 	</returnvalues>
       </command>
@@ -826,7 +816,7 @@
       </command>
       <command cmdref="zone3_on" transmit="Z3ON"/>
       <command cmdref="zone3_off" transmit="Z3OFF"/>
-      <command cmdref="get_zone3" transmit="Z3?" response_lines="2">
+      <command cmdref="get_zone3" transmit="Z3?" response_lines="1">
 	<returnvalues>
 	</returnvalues>
       </command>
@@ -961,16 +951,16 @@
       <command cmdref="cmd_0x9c" name="Stop Control" transmit="NS9C"/>
       <command cmdref="cmd_0x9d" name="Skip Plus Control" transmit="NS9D"/>
       <command cmdref="cmd_0x9e" name="Skip Minus Control" transmit="NS9E"/>
-      <!--command cmdref="cmd_0x9H" name="Repeat One (USB Only)" transmit="NS9H"/>
+      <command cmdref="cmd_0x9H" name="Repeat One (USB Only)" transmit="NS9H"/>
       <command cmdref="cmd_0x9I" name="Repeat All (USB Only)" transmit="NS9I"/>
       <command cmdref="cmd_0x9J" name="Repeat Off (USB Only)" transmit="NS9J"/>
       <command cmdref="cmd_0x9K" name="Random On/Repeat ALL (USB Only)" transmit="NS9K"/>
       <command cmdref="cmd_0x9L" name="Random Off (USB Only)" transmit="NS9L"/>
       <command cmdref="cmd_0x9X" name="Page Up Control" transmit="NS9X"/>
       <command cmdref="cmd_0x9Y" name="Page Down Control" transmit="NS9Y"/>
-      <command cmdref="NSA" name="Return Onscreen Display Information List" transmit="NSA"/-->
+      <command cmdref="NSA" name="Return Onscreen Display Information List" transmit="NSA"/>
       <!--command cmdref="(ASCII CODE Character) (Return NSA0-NSA8,Refer to Page 38）"-->
-      <!--command cmdref="NSE" name="Request Onscreen Display Information List" transmit="NSE"/-->
+      <command cmdref="NSE" name="Request Onscreen Display Information List" transmit="NSE"/>
       <!--command cmdref="(UTF-8 CODE Character) (Return NSE0-NSE8,Refer to Page 39）"/-->
       <!--command cmdref="NSB **" name="Direct Preset CH Play NSB00"/-->
       <!--command cmdref="(**:00-55,00=A1,01=A2,B1=08,G8=55)"/-->
@@ -1005,7 +995,7 @@
       <command cmdref="page_down" name="Page Down Control" transmit="IP9Y"/>
       <command cmdref="get_status" name="Return Onscreen Display Information List" transmit="IPA" response_lines="9"/>
       <!--Return IPA0-IPA9 (ASCII), Refer to Page 40-41"/-->
-      <!--command cmdref="IPE" name="Request Onscreen Display Information List(iPOD)" transmit="IPE"/-->
+      <command cmdref="IPE" name="Request Onscreen Display Information List(iPOD)" transmit="IPE"/>
       <!--Return IPE0-IPE9 (UTF-8), Refer to Page 42-43"/-->
 
       <!-- Cursol/Enter/Menu(Setup); page 25 -->

@@ -8,5 +8,5 @@
     <command cmdref="frequency_down"		cmdno="8"/>
     <command cmdref="frequency_up"        	cmdno="4"/>
   </commandset>
-  <xi:include href="on_off_toggle.xi"/>
+  <xi:include href="on_off.xi"/>
 </device>

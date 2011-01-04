@@ -195,11 +195,11 @@ public class lirc_export {
         return success;
     }
 
-    public static void export(String exportdir, String devicename) throws IOException, SAXParseException, SAXException {
+    public static void export(String exportdir, String devicename) throws IOException, SAXParseException {
         (new lirc_export(new device(devicename))).export(exportdir);
     }
 
-    public static void export(String filename, String[] devices) throws FileNotFoundException, IOException, SAXParseException, SAXException {
+    public static void export(String filename, String[] devices) throws FileNotFoundException, IOException, SAXParseException {
         PrintStream str = new PrintStream(new FileOutputStream(filename));
         for (int i = 0; i < devices.length; i++) {
             (new lirc_export(new device(devices[i]))).export(str);
@@ -221,8 +221,6 @@ public class lirc_export {
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             } catch (SAXParseException e) {
-                System.err.println(e.getMessage());
-            } catch (SAXException e) {
                 System.err.println(e.getMessage());
             }
             (new lirc_export(dev)).export(exportdir);
@@ -259,8 +257,6 @@ public class lirc_export {
             } catch (IOException e) {
                 System.err.println("Could not instantiate device: " + e.getMessage());
             } catch (SAXParseException e) {
-                System.err.println("Could not parse device: " + e.getMessage());
-            } catch (SAXException e) {
                 System.err.println("Could not parse device: " + e.getMessage());
             }
             if (dev != null && dev.is_valid())

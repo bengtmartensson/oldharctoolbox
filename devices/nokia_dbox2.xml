@@ -3,9 +3,9 @@
  "../dtds/devices.dtd">
 <device xmlns:xi="http://www.w3.org/2001/XInclude" id="nokia_dbox2" name="dbox2" vendor="Nokia" model="dbox2" type="sat"
     alt_type="cable" pingable_on="yes" pingable_standby="no">
-  <!--jp1data>
+  <jp1data>
     <setupcode value="1127"/>
-  </jp1data-->
+  </jp1data>
   <xi:include href="tuxbox_webapi.xi">
     <xi:fallback/>
   </xi:include>

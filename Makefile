@@ -1,4 +1,4 @@
-VERSION=0.5.1
+VERSION=0.5.0
 INSTALLDIR=/usr/local/harc
 INSTALLBIN=/usr/local/bin
 

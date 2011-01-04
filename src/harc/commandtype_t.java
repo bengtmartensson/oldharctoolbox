@@ -25,8 +25,11 @@ public enum commandtype_t {
     /** Infrared command */
     ir,
 
-    /** RF command */
-    rf,
+    /** RF command with 433 MHz frequency (or US equivalents, 315?) */
+    rf433,
+
+    /** RF command with 868 MHz frequency (or US equivalents, 315?) */
+    rf868,
 
     /** Invoking the browser */
     www,
@@ -39,9 +42,7 @@ public enum commandtype_t {
 
     /** Commands talking to UDP sockets */
     udp,
-
     serial,
-
     bluetooth,
 
     /** Just on or off */
@@ -52,12 +53,6 @@ public enum commandtype_t {
 
     /** Special commands, requiring some software support */
     special,
-
-    /** Telnet */
-    telnet,
-
-    /** Sensoric input */
-    sensor,
 
     /** Any of the types, exept for invalid */
     any,
@@ -74,10 +69,6 @@ public enum commandtype_t {
         }
     }
 
-    public boolean is_compatible(commandtype_t required) {
-        return required == any || this == required;
-    }
-
     /**
      * Returns nicely formatted string describing supported command types.
      *
@@ -92,10 +83,4 @@ public enum commandtype_t {
         }
         return res;
     }
-    
-    /*public static void main(String[] argv) {
-        System.out.println(telnet.is_compatible(commandtype_t.ir));
-        System.out.println(telnet.is_compatible(commandtype_t.any));
-        System.out.println(telnet.is_compatible(commandtype_t.telnet));
-    }*/
 }
