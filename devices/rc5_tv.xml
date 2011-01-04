@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<devices>
+  <device id="rc5_tv" name="Canonical RC5 TV" vendor="" model="" type="tv">
+    <commandset type="ir" protocol="rc5" deviceno="0" remotename="rc5_tv" toggle="yes">
+      <command cmdref="cmd_0" 				cmdno="0"/>
+      <command cmdref="cmd_1" 				cmdno="1"/>
+      <command cmdref="cmd_2" 				cmdno="2"/>
+      <command cmdref="cmd_3" 				cmdno="3"/>
+      <command cmdref="cmd_4" 				cmdno="4"/>
+      <command cmdref="cmd_5" 				cmdno="5"/>
+      <command cmdref="cmd_6" 				cmdno="6"/>
+      <command cmdref="cmd_7" 				cmdno="7"/>
+      <command cmdref="cmd_8" 				cmdno="8"/>
+      <command cmdref="cmd_9" 				cmdno="9"/>
+      <command cmdref="power_toggle" 		cmdno="12"/>
+      <command cmdref="in_tv"			cmdno="63"/>
+      <command cmdref="channel_up" 			cmdno="32"/>
+      <command cmdref="channel_down" 		cmdno="33"/>
+      <command cmdref="mute_toggle" 		cmdno="13"/>
+      <command cmdref="last_channel" 		cmdno="34"/>
+      <command cmdref="volume_up" 			cmdno="16"/>
+      <command cmdref="volume_down" 		cmdno="17"/>
+      <command cmdref="PP" 				cmdno="14"/>
+      <command cmdref="info" 			cmdno="15"/>
+      <command cmdref="brightness_down" 		cmdno="19"/>
+      <command cmdref="brightness_up" 		cmdno="18"/>
+    </commandset>
+  </device>
+</devices>
