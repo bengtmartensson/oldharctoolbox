@@ -27,6 +27,9 @@ used names.
 Ideally, there should be no semantic redundancy, i.e. no two names for the same
 command (see "ok" with the synonyms "enter" and "select").
 -->
+
+<!-- Process this file with mk_command_t.xsl to produce command_t.java -->
+
 <commandnames>
     <group id="getting_commands" description="Command for getting some information by bidirectional communication">
         <command id="get_recordsrc" />
