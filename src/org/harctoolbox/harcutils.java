@@ -31,7 +31,7 @@ import javax.xml.transform.stream.*;
 public class harcutils {
 
     public final static String license_string
-            = "Copyright (C) 2009, 2010 Bengt Martensson.\n\n"
+            = "Copyright (C) 2009, 2010, 2011 Bengt Martensson.\n\n"
             + "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\n"
             + "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\n"
             + "You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.";
@@ -55,9 +55,9 @@ public class harcutils {
     public final static int exit_restart = 99; // An invoking script is supposed to restart the program
 
     public final static int main_version = 0;
-    public final static int sub_version = 5;
-    public final static int subminor_version = 1;
-    public final static String version_string = "Harc version " + main_version
+    public final static int sub_version = 6;
+    public final static int subminor_version = 0;
+    public final static String version_string = "Harctoolbox version " + main_version
             + "." + sub_version + "." + subminor_version;
 
     public final static String devicefile_extension = ".xml";
