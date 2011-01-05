@@ -118,6 +118,8 @@ public class openremote_simple_client {
     public static void main(String[] args) {
         openremote_simple_client client = new openremote_simple_client();
         System.out.println("Discovered " + client.get_baseurl());
+        if (args.length == 0)
+            System.exit(harcutils.exit_success);
         int but = Integer.parseInt(args[0]);
         String cmd = args.length >= 2 ? args[1] : "click";
         client.control_command(but, cmd);
