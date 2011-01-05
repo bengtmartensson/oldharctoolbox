@@ -39,7 +39,7 @@ public class harcprops {
     private String filename;
     private final static boolean use_xml = true;
     private boolean need_save;
-    public static final String default_propsfilename = "harc.properties.xml";
+    public static final String default_propsfilename = "harctoolbox.properties.xml";
 
     private String appendable(String env) {
         String str = System.getenv(env);
