@@ -63,7 +63,7 @@ public class harcprops {
         update("protocolsdir",	harc_home + "protocols");
         update("buttons_remotesdir", harc_home + "button_remotes");
         update("exportdir",	harc_home + "exports");
-        update("aliasfilename",	harc_home + "src/harc/commandnames.xml");
+        update("aliasfilename",	harc_home + "src/org/harctoolbox/commandnames.xml");
         //update("macrofilename",	harc_home + "config/macros.xml");
         update("browser",	"firefox");
         update("rl_historyfile", home + ".harc.rl");
