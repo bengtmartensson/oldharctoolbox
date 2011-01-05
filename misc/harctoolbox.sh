@@ -9,12 +9,12 @@ else
 fi
 
 export JAVA
-HARC_HOME=/home/bengt/harc/harc
-export HARC_HOME
+HARCTOOLBOX_HOME=/home/bengt/harc/harc
+export HARCTOOLBOX_HOME
 READLINE_LIB=/usr/local/lib
 if [ -w /var/run ] ; then
-    rm -f /var/run/harc.pid
-    echo $$ > /var/run/harc.pid
+    rm -f /var/run/harctoolbox.pid
+    echo $$ > /var/run/harctoolbox.pid
 fi
 
-exec ${JAVA} -Djava.library.path=${READLINE_LIB} -jar ${HARC_HOME}/dist/harc.jar -p ${HARC_HOME}/harc.properties.xml "$@"
+exec ${JAVA} -Djava.library.path=${READLINE_LIB} -jar ${HARCTOOLBOX_HOME}/dist/harctoolbox.jar -p ${HARCTOOLBOX_HOME}/harctoolbox.properties.xml "$@"
