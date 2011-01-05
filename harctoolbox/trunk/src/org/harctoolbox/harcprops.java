@@ -54,7 +54,7 @@ public class harcprops {
     }
 
     private void setup_defaults() {
-        String harc_home = appendable("HARC_HOME");
+        String harc_home = appendable("HARCTOOLBOX_HOME");
         String home = appendable("HOME");
 
         update("home_conf",	harc_home + "config/home.xml");
