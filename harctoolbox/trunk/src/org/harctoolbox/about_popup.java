@@ -58,18 +58,18 @@ public class about_popup extends javax.swing.JDialog {
         });
 
         jTextField1.setEditable(false);
-        jTextField1.setFont(new java.awt.Font("Lucida Bright", 1, 18));
+        jTextField1.setFont(new java.awt.Font("Lucida Bright", 1, 18)); // NOI18N
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("HARC: Home Automation and Remote Control");
+        jTextField1.setText("HARCtoolbox: Home Automation and Remote Control");
 
         version_label.setText(harcutils.version_string);
 
-        author_label.setFont(new java.awt.Font("Lucida Bright", 2, 14)); // NOI18N
+        author_label.setFont(new java.awt.Font("Lucida Bright", 2, 14));
         author_label.setText("Author: Bengt Martensson");
 
         license_text.setColumns(20);
         license_text.setEditable(false);
-        license_text.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
+        license_text.setFont(new java.awt.Font("Lucida Bright", 0, 14));
         license_text.setLineWrap(true);
         license_text.setRows(4);
         license_text.setText(harcutils.license_string);
