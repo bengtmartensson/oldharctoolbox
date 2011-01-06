@@ -455,7 +455,7 @@ public class gui_main extends javax.swing.JFrame {
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("HARC: Home Automation and Remote Control"); // NOI18N
+        setTitle("HARCToolbox: Home Automation and Remote Control Toolbox"); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);

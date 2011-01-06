@@ -69,7 +69,7 @@ public class harcprops {
         update("rl_historyfile", home + ".harc.rl");
         update("appname",	"harc");
         update("rl_prompt",	"harc> ");
-        update("helpfilename" , harc_home + "docs/harchelp.html");
+        update("helpfilename" , harc_home + "docs/harctoolboxhelp.html");
         update("resultformat",	"[%2$tY-%2$tm-%2$td %2$tk:%2$tM:%2$tS] >%1$s<");
         update("commandformat", "harc>%1$s");
         update("remotemaster_home", "/home/bengt/harc/jp1/remotemaster-1.89");

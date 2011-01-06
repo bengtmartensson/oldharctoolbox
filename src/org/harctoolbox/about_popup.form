@@ -80,7 +80,7 @@
           <Font name="Lucida Bright" size="18" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="HARC: Home Automation and Remote Control"/>
+        <Property name="text" type="java.lang.String" value="HARCtoolbox: Home Automation and Remote Control"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="version_label">

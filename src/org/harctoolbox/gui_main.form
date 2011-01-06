@@ -319,7 +319,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="HARC: Home Automation and Remote Control" noResource="true"/>
+    <Property name="title" type="java.lang.String" value="HARCToolbox: Home Automation and Remote Control Toolbox" noResource="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="menuBar"/>
