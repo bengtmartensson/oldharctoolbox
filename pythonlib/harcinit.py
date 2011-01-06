@@ -1,7 +1,7 @@
 import sys
 import inspect
 import harcmacros
-import harc.harcutils
+import org.harctoolbox.harcutils
 
 sys.ps1 = '[[>>> '
 sys.ps2 = '..... '
@@ -12,13 +12,13 @@ def cmd(dev, command):
    harcmacros.device_command(dev, command)
 
 def version():
-   print str(harc.harcutils.version_string)
+   print str(org.harctoolbox.harcutils.version_string)
 
 #def help():
 #    print "Useful commands are, e.g., <TODO>"
 
 def license():
-    print str(harc.harcutils.license_string)
+    print str(org.harctoolbox.harcutils.license_string)
 
 def _harcfuncs_n_args(n):
    """Return all functions taking exactly n arguments."""
