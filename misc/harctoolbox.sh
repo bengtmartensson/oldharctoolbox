@@ -1,6 +1,10 @@
 #!/bin/sh
 
-# Wrapper around main harc class
+# Wrapper around main harctoolbox class
+
+# Change the following lines to fit your needs
+HARCTOOLBOX_HOME=/home/bengt/harc/harctoolbox
+READLINE_LIB=/usr/local/lib
 
 if [ -n $JAVA_HOME ] ; then
     JAVA=$JAVA_HOME/bin/java
@@ -9,9 +13,7 @@ else
 fi
 
 export JAVA
-HARCTOOLBOX_HOME=/home/bengt/harc/harc
 export HARCTOOLBOX_HOME
-READLINE_LIB=/usr/local/lib
 if [ -w /var/run ] ; then
     rm -f /var/run/harctoolbox.pid
     echo $$ > /var/run/harctoolbox.pid
