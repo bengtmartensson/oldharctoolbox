@@ -9,7 +9,8 @@ BINDIR=/usr/local/bin
 SVNURL=svn://localhost/harctoolbox/trunk
 WWW_ROOT=../www.harctoolbox.org/src/content/xdocs
 
-SRCDISTFILE=harctoolbox-$(VERSION).tar.gz
+SRCDISTFILE=harctoolbox-$(VERSION)_src.tar.gz
+BINDISTFILE=harctoolbox-$(VERSION)_bin.tar.gz
 
 /tmp/harctoolbox-$(VERSION):
 	rm -rf $@
@@ -18,7 +19,10 @@ SRCDISTFILE=harctoolbox-$(VERSION).tar.gz
 $(SRCDISTFILE): /tmp/harctoolbox-$(VERSION)
 	tar zcf $@ --exclude=.svn -C /tmp $(notdir $<)
 
-dist: $(SRCDISTFILE)
+$(BINDISTFILE):
+	tar zcf $@ --exclude=.svn --exclude=javadoc --exclude=*class --exclude=*~ COPYING NEWS config devices dist docs dtds protocols pythonlib src/org/harctoolbox/commandnames.xml
+
+dist: $(SRCDISTFILE) $(BINDISTFILE)
 
 # harctoolbox runs fine "inplace" (just for example execute
 # misc/harctoolbox.sh). This target installs a minimal version in
@@ -55,6 +59,8 @@ install: dist/harctoolbox.jar
 	fi
 	-mkdir -p $(INSTALLDIR)/src/org/harctoolbox
 	install -m 444 src/org/harctoolbox/commandnames.xml $(INSTALLDIR)/src/org/harctoolbox/commandnames.xml
+	-mkdir $(INSTALLDIR)/docs
+	install -m 444 docs/harctoolboxhelp.html $(INSTALLDIR)/docs
 
 uninstall:
 	rm -rf $(INSTALLDIR)
@@ -63,7 +69,7 @@ uninstall:
 dist/javadoc:
 	ant javadoc
 
-install_www: dist/javadoc $(SRCDISTFILE)
+install_www: dist/javadoc $(SRCDISTFILE) $(BINDISTFILE)
 	install -m 444 dtds/*.dtd $(WWW_ROOT)/dtds
 	cp -r $< $(WWW_ROOT)
 	rm -rf $(WWW_ROOT)/devices
@@ -73,3 +79,4 @@ install_www: dist/javadoc $(SRCDISTFILE)
 	install -m 444 dist/harctoolbox.jar $(WWW_ROOT)/downloads
 	cp -a dist/lib $(WWW_ROOT)/downloads
 	install -m 444 $(SRCDISTFILE) $(WWW_ROOT)/downloads
+	install -m 444 $(BINDISTFILE) $(WWW_ROOT)/downloads
