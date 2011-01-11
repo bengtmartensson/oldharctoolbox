@@ -103,7 +103,7 @@ public class Main {
         usage(harcutils.exit_usage_error);
     }
     private static final String helptext =
-            "\tharc --version|--help\n" + "\tharc [OPTIONS] [-g|-r|-l [<portnumber>]]\n" + "\tharc [OPTIONS] -P <pythoncommand>\n" + "\tharc [OPTIONS] <device_instance> <command> [<argument(s)>]\n" + "\tharc [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-P,-C <charset>,-h <filename>,-t " + commandtype_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -b <browserpath>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
+            "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + commandtype_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -b <browserpath>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
     private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<macro>\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
 
     private static String formatdate(Calendar c) {
@@ -1395,7 +1395,7 @@ public class Main {
                 System.err.println(e.getMessage());
             }
         } else {
-            System.err.println("`" + first_arg + "' is neither macro nor device");
+            System.err.println("`" + first_arg + "' is not a device");
             return harcutils.exit_nonexisting_device;
         }
         try {
