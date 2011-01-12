@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device xmlns:xi="http://www.w3.org/2001/XInclude" id="nokia_dbox2" name="dbox2" vendor="Nokia" model="dbox2" type="sat"
+    alt_type="cable" pingable_on="yes" pingable_standby="no">
+  <!--jp1data>
+    <setupcode value="1127"/>
+  </jp1data-->
+  <xi:include href="tuxbox_webapi.xi">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="dbox2_old.xi">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="dbox2_new.xi">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="dbox2_keyboard.xi">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="ping.xi">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="www.xi"/>
+</device>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="netcat" name="Pseudo device" model="-">
+  <commandset type="tcp" suffix="\r">
+    <command cmdref="talk" transmit="$1" response_lines="0">
+      <argument name="transmit"/>
+    </command>
+    <command cmdref="talk_listen" transmit="$1" response_lines="-1">
+      <argument name="transmit"/>
+    </command>
+    <command cmdref="talk_listen1" transmit="$1" response_lines="1">
+      <argument name="transmit"/>
+    </command>
+    <command cmdref="talk_listen2" transmit="$1" response_lines="2">
+      <argument name="transmit"/>
+    </command>
+    <command cmdref="talk_listen3" transmit="$1" response_lines="3">
+      <argument name="transmit"/>
+    </command>
+  </commandset>
+  <commandset type="tcp" suffix="">
+    <command cmdref="listen" transmit="" response_lines="-1"/>
+    <command cmdref="listen1" transmit="" response_lines="1"/>
+    <command cmdref="listen2" transmit="" response_lines="2"/>
+    <command cmdref="listen3" transmit="" response_lines="3"/>
+  </commandset>
+</device>

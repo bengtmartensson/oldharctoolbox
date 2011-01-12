@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<!-- 
+Reference: http://www.sbprojects.com/knowledge/ir/nrc17.htm,
+ see also http://www.hifi-remote.com/forums/viewtopic.php?t=1044
+ -->
+<irprotocol name="nrc17" id="nrc17">
+  <jp1data>
+    <protocol number="00 bd" name="NRC17"/>
+    <tohex function="reverse" bits="8"/>
+  </jp1data>
+  <parameters>
+    <parameter id="deviceno" bits="4"/>
+    <parameter id="subdevice" bits="4"/>
+    <parameter id="cmdno" bits="8"/>
+  </parameters>
+  <frequency value="38000"/>
+  <body>
+    <timings>
+      <timing id="t1" cycles="19"/>
+      <timing id="t5" cycles="95"/>
+      <timing id="t_end_intro" cycles="760"/>
+      <timing id="t_end_repeat" cycles="3000"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <zero timing="t1"/>
+        <one timing="t1"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t1"/>
+        <zero timing="t1"/>
+      </pair>
+    </pairs>
+    <intro>
+      <one timing="t1"/>
+      <zero timing="t5"/>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="1">
+	<constant value="1"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<constant value="254"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<constant value="255"/>
+      </coded_number>
+      <zero timing="t_end_intro"/>
+    </intro>
+    <repeat>
+      <one timing="t1"/>
+      <zero timing="t5"/>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="1">
+	<constant value="1"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="4">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="4">
+	<parameterref parameter="subdevice"/>
+      </coded_number>
+      <zero timing="t_end_repeat"/>
+    </repeat>
+  </body>
+</irprotocol>

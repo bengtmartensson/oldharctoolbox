@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="globalcache" name="Globalcache GC-100" model="GC-100" pingable_on="no">
+  <commandset type="tcp" suffix="\r">
+    <command cmdref="get_devices" transmit="getdevices" response_lines="-1" response_ending="endlistdevices"/>
+    <command cmdref="get_version" transmit="getversion,$1" response_lines="1">
+      <argument name="modulenumber">
+      </argument>
+    </command>
+    <command cmdref="blink_on" ifattribute="firmware_3" transmit="blink,1"
+      response_lines="0"/>
+    <command cmdref="blink_off" ifattribute="firmware_3" transmit="blink,0" response_lines="0"/>
+    <command cmdref="set_net" ifattribute="firmware_3" transmit="set_NET,0:1,$1,$2" response_lines="0">
+      <argument name="configlock"/>
+      <argument name="ip_settings"/>
+    </command>
+    <command cmdref="get_net" ifattribute="firmware_3" transmit="get_NET,0:1" response_lines="1"/>
+    <command cmdref="set_ir" ifattribute="firmware_3" transmit="set_IR,$1:$2,$3" response_lines="1">
+      <argument name="module"/>
+      <argument name="connector"/>
+      <argument name="mode">
+	<description>IR|SENSOR|SENSOR_NOTIFY|IR_NOCARRIER</description>
+      </argument>
+    </command>
+    <command cmdref="get_ir" ifattribute="firmware_3" transmit="get_IR,$1:$2" response_lines="1">
+      <argument name="module"/>
+      <argument name="connector"/>
+    </command>
+    <command cmdref="set_serial" ifattribute="firmware_3" transmit="set_SERIAL,$1:1,$2,$3,$4" response_lines="1">
+      <argument name="module"/>
+      <argument name="baudrate"/>
+      <argument name="flowcontrol"/>
+      <argument name="parity"/>
+    </command>
+    <command cmdref="get_serial" ifattribute="firmware_3" transmit="get_SERIAL,$1:1" response_lines="1">
+      <argument name="module"/>
+    </command>
+
+    <command cmdref="send_ir" transmit="sendir,$1:$2,$3,$4,$5,$6,$7" response_lines="1">
+      <argument name="module"/>
+      <argument name="connector"/>
+      <argument name="id"/>
+      <argument name="frequency"/>
+      <argument name="count"/>
+      <argument name="offset"/>
+      <argument name="timings"/>
+    </command>
+    <command cmdref="stop_ir" transmit="stopir,$1:$2" response_lines="0">
+      <argument name="module"/>
+      <argument name="connector"/>
+    </command>
+    <command cmdref="get_state" transmit="getstate,$1:$2" response_lines="1">
+      <argument name="module"/>
+      <argument name="connector"/>
+    </command>
+    <command cmdref="set_state" transmit="setstate,$1:$2,$3" response_lines="0">
+      <argument name="module"/>
+      <argument name="connector"/>
+      <argument name="mode"/>
+    </command>
+  </commandset>
+  <!-- For some reason, Globalcache ignores ping requests -->
+  <!--xi:include href="ping.xi"/-->
+  <xi:include href="www.xi"/>
+
+</device>

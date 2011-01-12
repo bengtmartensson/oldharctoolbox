@@ -1,0 +1,14 @@
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="apple_mac_mini" name="Apple Macintosh mini" vendor="Apple"
+  model="mac mini" type="misc_audio">
+  <xi:include href="ping.xi">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="wol.xi">
+    <xi:fallback/>
+  </xi:include>
+  <xi:include href="apple_remote.xi">
+    <xi:fallback/>
+  </xi:include>
+</device>
