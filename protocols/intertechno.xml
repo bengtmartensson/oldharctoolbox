@@ -2,7 +2,6 @@
 <!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
  "../dtds/irprotocols.dtd">
 <irprotocol name="intertechno" id="intertechno">
-<!--  http://www.sbprojects.com/knowledge/ir/recs80.htm -->
 <jp1data>
     <protocol number="xx" name=""/>
     <tohex function="reverse_complement" bits="8"/>
