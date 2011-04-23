@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
+<device id="humax-prhd1000c" name="Humax PR-HD1000C" vendor="Humax" model="prhd1000c" type="cable">
+  <delays>
+    <delay type="intra_command" delay="200"/>
+  </delays>
+  <jp1data>
+    <setupcode value="1916"/>
+  </jp1data>
+  <commandset type="ir" protocol="mcd" toggle="yes" deviceno="38" subdevice="72"
+    pseudo_power_on="cmd_0">
+    <command cmdref="cmd_0"		 cmdno="0"/>
+    <command cmdref="cmd_1"		 cmdno="1"/>
+    <command cmdref="cmd_2"		 cmdno="2"/>
+    <command cmdref="cmd_3"		 cmdno="3"/>
+    <command cmdref="cmd_4"		 cmdno="4"/>
+    <command cmdref="cmd_5"		 cmdno="5"/>
+    <command cmdref="cmd_6"		 cmdno="6"/>
+    <command cmdref="cmd_7"		 cmdno="7"/>
+    <command cmdref="cmd_8"		 cmdno="8"/>
+    <command cmdref="cmd_9"		 cmdno="9"/>
+    <command cmdref="tv_mode"		 cmdno="166"/>
+    <command cmdref="key_esc" name="sky" cmdno="131"/>
+    <command cmdref="power_toggle"	 cmdno="12"/>
+    <command cmdref="search"		 cmdno="64"/>
+    <command cmdref="key_backspace"	 cmdno="58"/>
+    <command cmdref="epg"		 cmdno="204"/>
+    <command cmdref="menu"		 cmdno="84"/>
+    <command cmdref="select"		 cmdno="240"/>
+    <command cmdref="info"		 cmdno="15"/>
+    <command cmdref="up"		 cmdno="88"/>
+    <command cmdref="left"		 cmdno="90"/>
+    <command cmdref="ok"		 cmdno="92"/>
+    <command cmdref="left"		 cmdno="91"/>
+    <command cmdref="down"		 cmdno="89"/>
+    <command cmdref="volume_up"		 cmdno="16"/>
+    <command cmdref="cmd_return"	 cmdno="85"/>
+    <command cmdref="channel_up"	 cmdno="30"/>
+    <command cmdref="volume_down"	 cmdno="17"/>
+    <command cmdref="mute_toggle"	 cmdno="13"/>
+    <command cmdref="channel_down"	 cmdno="31"/>
+    <command cmdref="record_toggle"	 cmdno="55"/>
+    <command cmdref="archive"		 cmdno="213"/>
+    <command cmdref="stop"		 cmdno="49"/>
+    <command cmdref="rewind"		 cmdno="33"/>
+    <command cmdref="play"		 cmdno="56"/>
+    <command cmdref="fast_forward"	 cmdno="32"/>
+    <command cmdref="setup"		 cmdno="70"/>
+    <command cmdref="zoom"		 cmdno="216"/>
+    <command cmdref="help"		 cmdno="129"/>
+    <command cmdref="teletext_on"	 cmdno="60"/>
+    <command cmdref="red"		 cmdno="109"/>
+    <command cmdref="green"		 cmdno="110"/>
+    <command cmdref="yellow"		 cmdno="111"/>
+    <command cmdref="blue"		 cmdno="112"/>
+  </commandset>
+</device>
