@@ -306,6 +306,9 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="file_mode"/>
         <command id="ipod_mode"/>
         <command id="games_mode"/>
+        <command id="picture_mode"/>
+        <command id="internet_mode"/>
+        <command id="nas_mode"/>
     </group>
 
     <group id="input_commands">
@@ -1017,8 +1020,8 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="down_right"/>
         <command id="ok">
             <synonym name="enter"/>
-            <synonym name="select"/>
         </command>
+        <command id="select" remark="Secondary select. Only use if OK is already taken."/>
         <command id="reset"/>
         <command id="cmd_return">
             <synonym name="back"/>
@@ -1035,9 +1038,8 @@ command (see "ok" with the synonyms "enter" and "select").
             <synonym name="top"/>
         </command>
         <command id="group" remark="for DVD Audio"/>
-        <command id="info" name="?">
-            <synonym name="help"/>
-        </command>
+        <command id="info" name="?"/>
+        <command id="help" remark="Calls static help pages, not dynamic information."/>
         <command id="home">
             <synonym name="exit"/>
         </command>
@@ -1408,6 +1410,7 @@ command (see "ok" with the synonyms "enter" and "select").
     </group>
 
     <group id="misc">
+        <command id="archive"/>
         <command id="pal_secam"/>
         <command id="pal_ntsc"/>
         <command id="go"/><!-- hauppauge -->
