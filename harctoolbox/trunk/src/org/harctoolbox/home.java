@@ -868,17 +868,21 @@ public final class home {
                                 System.err.println(e.getMessage());
                             }
                         } else if (cmd == command_t.wol) {
-                            if (userprefs.get_instance().get_verbose()) {
-                                System.err.println("Sending a WOL package to " + fgw.get_hostname() + ".");
+                            String mac = fgw.get_mac();
+                            if ((mac == null) || mac.isEmpty()) {
+                                System.err.println("WOL to host " + fgw.get_hostname() + " requested, but MAC unknown.");
+                            } else {
+                                if (userprefs.get_instance().get_verbose()) {
+                                    System.err.println("Sending a WOL package to " + fgw.get_hostname() + " (" +  mac + ").");
                             }
                             try {
-
-                                WakeUpUtil.wakeup(new EthernetAddress(fgw.get_mac()));
-                                success = true;
-                            } catch (IllegalEthernetAddressException e) {
-                                System.err.println(e.getMessage());
-                            } catch (IOException e) {
-                                System.err.println(e.getMessage());
+                                    WakeUpUtil.wakeup(new EthernetAddress(fgw.get_mac()));
+                                    success = true;
+                                } catch (IllegalEthernetAddressException e) {
+                                    System.err.println(e.getMessage());
+                                } catch (IOException e) {
+                                    System.err.println(e.getMessage());
+                                }
                             }
                         } else {
                             System.err.println("Command " + cmd + " of type ip not implemented.");

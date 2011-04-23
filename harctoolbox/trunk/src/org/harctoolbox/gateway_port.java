@@ -24,7 +24,7 @@ public class gateway_port {
        this.connectortype = connectortype;
        this.hostname = hostname;
        this.portnumber = portnumber;
-       this.mac = mac;
+       this.mac = ((mac == null) || mac.isEmpty()) ? ethers.get_mac(hostname) : mac;
        this.wol = wol;
        this.timeout = timeout;
    }
