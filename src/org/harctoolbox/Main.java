@@ -151,6 +151,7 @@ public class Main {
                     usage(harcutils.exit_success);
                 }
                 if (args[arg_i].equals("--version")) {
+                    //System.out.println("JVM: "+ System.getProperty("java.vendor") + " " + System.getProperty("java.version"));
                     System.out.println(harcutils.version_string);
                     System.out.println(harcutils.license_string);
                     System.exit(harcutils.exit_success);
