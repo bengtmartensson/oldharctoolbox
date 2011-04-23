@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
  "../dtds/devices.dtd">
-<device id="oppo_bdp83" name="Oppo BDP-83" vendor="Oppo" model="bdp-83"
+<device id="oppo_bdp93" name="Oppo BDP-93" vendor="Oppo" model="bdp-93"
   type="dvd" pingable_on="yes" pingable_standby="no">
 
   <attributes>
-    <!--attribute name="rs232_version1"/-->
-    <attribute name="rs232"/>
-    <attribute name="bluraychip_rs232"/>
+    <attribute name="rs232"/> <!-- Is default, but not everyone connects it -->
+    <!--attribute name="bluraychip_rs232_pro"/-->
     <attribute name="rc_1" defaultvalue="yes"/><!-- RC device 1 -->
     <attribute name="rc_2"/><!-- RC device 2 -->
     <attribute name="rc_3"/><!-- RC device 3 -->
