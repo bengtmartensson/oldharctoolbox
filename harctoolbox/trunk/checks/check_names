@@ -7,7 +7,7 @@ mkdir $OUTPUT 2>/dev/null || true
 
 for f in `ls ../devices/*.xml` ; do
     dev=`basename $f .xml`
-    ${MMX} -M ../transformations/check_command_names.mm -F xml -S ../devices/${dev}.xml -F xml -S ../src/harc/commandnames.xml -F xml -T ${OUTPUT}/${dev}.missing.xml
+    ${MMX} -M ../transformations/check_command_names.mm -F xml -S ../devices/${dev}.xml -F xml -S ../src/org/harctoolbox/commandnames.xml -F xml -T ${OUTPUT}/${dev}.missing.xml
 done
 
 for f in `ls ${OUTPUT}/*` ; do
