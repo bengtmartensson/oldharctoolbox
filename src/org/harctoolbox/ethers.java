@@ -6,6 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import wol.WakeUpUtil;
+import wol.configuration.EthernetAddress;
+import wol.configuration.IllegalEthernetAddressException;
 
 /**
  *
@@ -51,6 +54,19 @@ public class ethers {
     }
 
     public static void main(String[] args) {
-        System.out.println(get_mac(args[0]));
+        if (args.length == 1) {
+            System.out.println(get_mac(args[0]));
+        } else if (args.length == 2) {
+            String mac = get_mac(args[1]);
+            System.out.println("Sending a WOL to " + mac);
+            try {
+                WakeUpUtil.wakeup(new EthernetAddress(mac));
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            } catch (IllegalEthernetAddressException ex) {
+                System.err.println(ex.getMessage());
+            }
+        } else
+            System.err.println("Usage:\n\tethers [-w] host");
     }
 }
