@@ -214,7 +214,7 @@
 
   <names button="rew">
     <add-name name="rewind"/>
-    <add-name name="teletext"/>
+    <add-name name="teletext_toggle"/>
   </names>
   <names button="stop">
     <add-name name="teletext_freeze"/>
