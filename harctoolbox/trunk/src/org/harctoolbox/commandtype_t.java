@@ -47,7 +47,7 @@ public enum commandtype_t {
     /** Just on or off */
     on_off,
 
-    /** "IP" commands, for now ping and WOL (wake-up-on-lan) */
+    /** "IP" commands, for now ping and WOL (wakeup-on-lan) */
     ip,
 
     /** Special commands, requiring some software support */
@@ -56,10 +56,10 @@ public enum commandtype_t {
     /** Telnet */
     telnet,
 
-    /** Sensoric input */
+    /** Sensor input */
     sensor,
 
-    /** Any of the types, exept for invalid */
+    /** Any of the types, except for invalid */
     any,
 
     /** Denotes invalid selection */
