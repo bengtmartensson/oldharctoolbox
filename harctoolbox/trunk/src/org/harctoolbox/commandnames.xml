@@ -308,6 +308,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="games_mode"/>
         <command id="picture_mode"/>
         <command id="internet_mode"/>
+        <command id="movie_mode"/>
         <command id="nas_mode"/>
     </group>
 
@@ -948,6 +949,7 @@ command (see "ok" with the synonyms "enter" and "select").
 
         <command id="open"/>
         <command id="close"/>
+        <command id="eject"/>
         <command id="open_close" type="toggle"/>
         <command id="tray_lock_toggle" type="toggle"/>
 
