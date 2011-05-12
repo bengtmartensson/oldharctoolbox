@@ -2,11 +2,9 @@
 
 !begin []
 <|missing-commands|>node{
-  source.child[?commandset]
+  source.descendant[?commandset]
   }
 ;
-
-
 
 command [source[?commandnames].descendant[?command].@id == self.@cmdref]
 !replace
