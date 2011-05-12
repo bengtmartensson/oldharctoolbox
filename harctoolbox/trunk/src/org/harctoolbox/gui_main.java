@@ -165,8 +165,8 @@ public class gui_main extends javax.swing.JFrame {
 
         button_remotenames = button_remote.get_button_remotes();
         
-        if (button_remotenames == null)
-            button_remotenames = new String[]{""};
+        if (button_remotenames == null || button_remotenames.length == 0)
+            button_remotenames = new String[]{"*** Error ***"}; // FIXME
         java.util.Arrays.sort(button_remotenames);
 
         initComponents();
