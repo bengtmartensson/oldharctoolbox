@@ -111,7 +111,7 @@
         cmdno CDATA #IMPLIED
         name CDATA #IMPLIED
 	zone (1|2|3|record) #IMPLIED
-        type (discrete|toggle|cyclic) #IMPLIED
+        type (discrete|toggle|cyclic|menu) #IMPLIED
 	remark CDATA #IMPLIED
         ifattribute CDATA #IMPLIED
         wakeup (yes|no) #IMPLIED
