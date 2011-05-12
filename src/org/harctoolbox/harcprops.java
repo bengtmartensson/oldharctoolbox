@@ -66,9 +66,9 @@ public class harcprops {
         update("aliasfilename",	harc_home + "src/org/harctoolbox/commandnames.xml");
         //update("macrofilename",	harc_home + "config/macros.xml");
         update("browser",	"firefox");
-        update("rl_historyfile", home + ".harc.rl");
-        update("appname",	"harc");
-        update("rl_prompt",	"harc> ");
+        update("rl_historyfile", home + ".harctoolbox.rl");
+        update("appname",	"harctoolbox");
+        update("rl_prompt",	"harctoolbox> ");
         update("helpfilename" , harc_home + "docs/harctoolboxhelp.html");
         update("resultformat",	"[%2$tY-%2$tm-%2$td %2$tk:%2$tM:%2$tS] >%1$s<");
         update("commandformat", "harc>%1$s");

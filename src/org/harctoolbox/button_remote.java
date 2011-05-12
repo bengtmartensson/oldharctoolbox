@@ -110,7 +110,7 @@ public class button_remote {
             buttons_el.appendChild(button);
         }
         
-        harcutils.printDOM(brfilename, doc, ".." + File.separator + "dtds" + File.separator + "button_remote.dtd");
+        harcutils.printDOM(brfilename, doc, harcprops.get_instance().get_dtddir() + File.separator + "button_remote.dtd");
     }
 
     public boolean is_valid() {
