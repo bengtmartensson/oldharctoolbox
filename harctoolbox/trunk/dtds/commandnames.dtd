@@ -18,7 +18,7 @@
         displayname CDATA #IMPLIED
         zone (1|2|3) #IMPLIED
         remark CDATA #IMPLIED
-	type (discrete|toggle|cyclic) "discrete"
+	type (discrete|toggle|cyclic|menu) "discrete"
         description CDATA #IMPLIED >
 
 <!ELEMENT comment (#PCDATA) >
