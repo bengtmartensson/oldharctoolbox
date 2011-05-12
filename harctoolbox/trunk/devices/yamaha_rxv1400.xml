@@ -96,7 +96,7 @@
       <command cmdref="zone2_cd_r"	ifattribute="zone2" 			cmdno="0xd4"/>
       <command cmdref="zone2_dvd"		ifattribute="zone2"	cmdno="0xcd"/>
       <command cmdref="zone2_d_tv"	ifattribute="zone2"	cmdno="0xd9"/>
-      <command cmdref="zone2_cbl_sat"	ifattribute="zone2"	cmdno="0xcc"/>
+      <command cmdref="zone2_sat_cbl"	ifattribute="zone2"	cmdno="0xcc"/>
       <command cmdref="zone2_vcr1"	ifattribute="zone2"	cmdno="0xd6"/>
       <command cmdref="zone2_vcr2"	ifattribute="zone2"	cmdno="0xd7"/>
       <command cmdref="zone2_video_aux"	ifattribute="zone2"	cmdno="0xd8"/>
@@ -112,7 +112,7 @@
       <command cmdref="zone3_cd_r"	ifattribute="zone3"	cmdno="0xf5"/>
       <command cmdref="zone3_dvd"		ifattribute="zone3"	cmdno="0xfc"/>
       <command cmdref="zone3_d_tv"	ifattribute="zone3"	cmdno="0xf6"/>
-      <command cmdref="zone3_cbl_sat"	ifattribute="zone3"	cmdno="0xf7"/>
+      <command cmdref="zone3_sat_cbl"	ifattribute="zone3"	cmdno="0xf7"/>
       <command cmdref="zone3_vcr1"	ifattribute="zone3"	cmdno="0xf9"/>
       <command cmdref="zone3_vcr2"	ifattribute="zone3"	cmdno="0xfa"/>
       <command cmdref="zone3_video_aux"	ifattribute="zone3"	cmdno="0xf0"/>

@@ -54,7 +54,7 @@
     <command cmdref="fast_forward"			cmdno="69"/>
     <command cmdref="stop"				cmdno="71"/>
     <command cmdref="record_toggle"			cmdno="89"/>
-    <command cmdref="pause_on"				cmdno="65"/>
+    <command cmdref="pause_toggle"			cmdno="65"/>
     <command cmdref="games_mode"			cmdno="12"/> <!-- m/s -->
     <command cmdref="timeshift"				cmdno="94"/>
   </commandset>

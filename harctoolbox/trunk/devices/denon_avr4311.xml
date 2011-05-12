@@ -973,7 +973,7 @@
 
       <!-- iRadio/mServer/USB Extended Control, page 23 -->
       <command cmdref="in_usb" remark="Select INPUT source NET/USB and start USB Playback" transmit="SIUSB"/>
-  <command cmdref="zone2_usb" zone="2" remark="Select MULTI ZONE-2 source NET/USB and start USB Playback" transmit="Z2USB"/>
+      <command cmdref="zone2_usb" zone="2" remark="Select MULTI ZONE-2 source NET/USB and start USB Playback" transmit="Z2USB"/>
       <command cmdref="zone3_usb" zone="3" remark="Select MULTI ZONE-3 source NET/USB and start USB Playback" transmit="Z3USB"/>
 
       <command cmdref="cmd_0x90" name="Cursor Up Control" transmit="NS90"/>
