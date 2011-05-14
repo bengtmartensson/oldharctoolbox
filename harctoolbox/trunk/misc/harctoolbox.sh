@@ -3,6 +3,7 @@
 # Wrapper around main harctoolbox class
 
 # Change the following lines to fit your needs
+#JAVA_HOME=/opt/jdk1.6.0_25
 HARCTOOLBOX_HOME=/home/bengt/harc/harctoolbox
 READLINE_LIB=/usr/local/lib
 
