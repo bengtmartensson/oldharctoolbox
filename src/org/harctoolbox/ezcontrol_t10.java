@@ -176,7 +176,7 @@ public class ezcontrol_t10 {
     }
 
     public ezcontrol_t10(String hostname, boolean verbose) {
-        ezcontrol_host = hostname != null ? hostname : default_ezcontrol_host;
+        ezcontrol_host = (hostname != null && ! hostname.isEmpty()) ? hostname : default_ezcontrol_host;
         this.verbose = verbose;
     }
 
@@ -263,6 +263,16 @@ public class ezcontrol_t10 {
         return url;
     }
 
+    // Callable as special command
+    public String power_toggle(String preset) {
+        try {
+            return send_preset(Integer.parseInt(preset), command_t.power_toggle) ? "" : null;
+        } catch (non_existing_command_exception ex) {
+            /* Empty; this cannot happen */
+            return null;
+        }
+    }
+    
     public boolean send_preset(int switch_no, command_t cmd) throws non_existing_command_exception {
         if (cmd == command_t.power_toggle)
             cmd = this.get_status(switch_no) == 0 ? command_t.power_on : command_t.power_off;
@@ -685,8 +695,10 @@ public class ezcontrol_t10 {
 
     public String get_timers() {
         boolean ok = setup_status() && setup_timers();
-        if (!ok)
+        if (!ok) {
+            System.err.println("Could not get timers");
             return null;
+        }
         String result = "";
         for (int i = 0; i < t10_no_timers; i++) {
             if (timers[i].enabled) {
