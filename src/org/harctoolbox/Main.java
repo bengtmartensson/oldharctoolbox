@@ -1060,7 +1060,8 @@ public class Main {
                         String line = Readline.readline(harcprops.get_instance().get_rl_prompt(), false);
                         if (line != null && !line.isEmpty()) {
                             line = line.trim();
-                            if (!Readline.getHistoryLine(Readline.getHistorySize()-1).equals(line))
+                            int history_size = Readline.getHistorySize();
+                            if (history_size < 1 || !Readline.getHistoryLine(Readline.getHistorySize()-1).equals(line))
                                 Readline.addToHistory(line);
                             process_line(line, true);
                         }
