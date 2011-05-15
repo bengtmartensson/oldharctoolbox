@@ -314,7 +314,7 @@ public final class home {
                             System.err.println("Command is: " + the_command.toString());
                         }
                         if (the_command.get_arguments().length > arguments_length) {
-                            System.err.println("This command requires " + the_command.get_arguments().length + " arguments, however only " + arguments_length + " were given.");
+                            System.err.println("This command requires " + the_command.get_arguments().length + " argument(s), however only " + arguments_length + " were given.");
                             failure = true;
                         }
                     }
@@ -763,7 +763,7 @@ public final class home {
                     if (arguments_length > 0) {
                         System.err.println("Warning: arguments to command igored.");
                     }
-                    String url = "http://" + gw.get_hostname() + ":" + portnumber + "/";
+                    String url = "http://" + fgw.get_hostname() + ":" + portnumber + "/";
                     if (debugargs.dbg_transmit()) {
                         System.err.println("Starting " + harcprops.get_instance().get_browser() + " " + url);
                     }
@@ -893,10 +893,10 @@ public final class home {
                 case special:
                     try {
                         if (debugargs.dbg_transmit() || userprefs.get_instance().get_verbose())
-                            System.err.println("Trying special with class = " + dev_class + ", method = " + cmd);
+                            System.err.println("Trying special with class = " + dev_class + ", method = " + cmd + ", hostname = " + fgw.get_hostname());
 
                         Class cl = Class.forName(ir_code.class.getPackage().getName() + "." + dev_class);
-                        Object d = cl.getConstructor(new Class[]{String.class}).newInstance(new Object[]{gw.get_hostname()});
+                        Object d = cl.getConstructor(new Class[]{String.class}).newInstance(new Object[]{fgw.get_hostname()});
                         Class[] args_class = new Class[arguments.length];
 
                         for (int i = 0; i < arguments.length; i++)
