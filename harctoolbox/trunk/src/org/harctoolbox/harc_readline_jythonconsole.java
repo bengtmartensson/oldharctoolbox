@@ -15,7 +15,6 @@ import org.gnu.readline.ReadlineLibrary;
 import org.python.core.Py;
 import org.python.core.PyException;
 import org.python.core.PyObject;
-//import org.python.core.PyString;
 import org.python.core.PySystemState;
 
 /**
@@ -172,7 +171,8 @@ public class harc_readline_jythonconsole extends org.python.util.InteractiveCons
             String line = Readline.readline(prompt == null ? "" : prompt.toString(), false);
             if (line != null && !line.isEmpty()) {
                 line = line.replaceFirst("[ \t]+$", "");
-                if (!Readline.getHistoryLine(Readline.getHistorySize()-1).equals(line))
+                int history_size = Readline.getHistorySize();
+                if (history_size < 1 || !Readline.getHistoryLine(Readline.getHistorySize()-1).equals(line))
                     Readline.addToHistory(line);
                 
                 //  There must be a cleaner way of doing this...
