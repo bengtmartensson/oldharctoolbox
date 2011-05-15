@@ -92,6 +92,11 @@
     <command cmdref="get_configuration">
       <argument name="filename"/>
     </command>
+
+    <command cmdref="power_toggle">
+      <argument name="switch"/>
+    </command>
+
   </commandset>
 
   <commandset type="ir" protocol="rc5" toggle="no" deviceno="31"
