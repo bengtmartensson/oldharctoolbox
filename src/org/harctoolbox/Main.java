@@ -18,7 +18,7 @@ package org.harctoolbox;
 
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;
-import com.luckycatlabs.sunrisesunset.SunriseSunset;
+import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
@@ -70,7 +70,7 @@ public class Main {
     //boolean verbose = false;
     home hm = null;
     //macro_engine engine = null;
-    Hashtable< String, GregorianCalendar> timertable = new Hashtable<String, GregorianCalendar>();
+    Hashtable< String, Calendar> timertable = new Hashtable<String, Calendar>();
     //jython_engine jython = null;
     command_alias alias_expander = null;
     commandtype_t type = commandtype_t.any;
@@ -574,12 +574,12 @@ public class Main {
             this.cmds = cmds;
         }
 
-        private void fix_cal(GregorianCalendar cal) {
+        private void fix_cal(Calendar cal) {
             if (cal != null) {
-                GregorianCalendar now = new GregorianCalendar();
+                Calendar now = new GregorianCalendar();
                 //System.out.println(cal.getTime() + "*****" + now.getTime() + now.before(cal) + now.after(cal));
                 if (now.after(cal)) {
-                    cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
                     //System.out.println("Fixing: " + cal.getTime() + "*****" + now.getTime() + now.before(cal) + now.after(cal));
                     }
             }
@@ -594,30 +594,30 @@ public class Main {
             return null;
         }
 
-        private GregorianCalendar evaluate_time_weekday(Element e, GregorianCalendar calendar) {
+        private Calendar evaluate_time_weekday(Element e, Calendar calendar) {
             if (e == null)
                 return null;
-            GregorianCalendar cal = (GregorianCalendar) calendar.clone();
+            Calendar cal = (Calendar) calendar.clone();
             NodeList nl = e.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
                 if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                    GregorianCalendar c = evaluate_time((Element) nl.item(i));
-                    cal.set(GregorianCalendar.HOUR_OF_DAY, c.get(GregorianCalendar.HOUR_OF_DAY));
-                    cal.set(GregorianCalendar.MINUTE, c.get(GregorianCalendar.MINUTE));
-                    cal.set(GregorianCalendar.SECOND, c.get(GregorianCalendar.SECOND));
+                    Calendar c = evaluate_time((Element) nl.item(i));
+                    cal.set(Calendar.HOUR_OF_DAY, c.get(GregorianCalendar.HOUR_OF_DAY));
+                    cal.set(Calendar.MINUTE, c.get(GregorianCalendar.MINUTE));
+                    cal.set(Calendar.SECOND, c.get(GregorianCalendar.SECOND));
                     return cal;
                 }
             }
             return null;
         }
 
-        private GregorianCalendar evaluate_time(Element e) {
-            GregorianCalendar cal = new GregorianCalendar();
+        private Calendar evaluate_time(Element e) {
+            Calendar cal = new GregorianCalendar();
             if (e.getTagName().equals("absolute-time")) {
                 try {
-                    cal.set(GregorianCalendar.HOUR_OF_DAY, Integer.parseInt(e.getAttribute("hour")));
-                    cal.set(GregorianCalendar.MINUTE, Integer.parseInt(e.getAttribute("minute")));
-                    cal.set(GregorianCalendar.SECOND, Integer.parseInt(e.getAttribute("second")));
+                    cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(e.getAttribute("hour")));
+                    cal.set(Calendar.MINUTE, Integer.parseInt(e.getAttribute("minute")));
+                    cal.set(Calendar.SECOND, Integer.parseInt(e.getAttribute("second")));
                 } catch (NumberFormatException expt) {
                     expt.printStackTrace();
                 }
@@ -631,18 +631,18 @@ public class Main {
                     double degrees = Double.parseDouble(e.getAttribute("degrees"));
                     String timezone = e.getAttribute("tz");
                     TimeZone tz = timezone.isEmpty() ? TimeZone.getDefault() : TimeZone.getTimeZone(timezone);
-                    GregorianCalendar c;
+                    Calendar c;
                     if (e.getTagName().equals("sunrise")) {
-                        c = SunriseSunset.sunrise(latitude, longitude, tz, cal, degrees);
+                        c = SunriseSunsetCalculator.getSunrise(latitude, longitude, tz, cal, degrees);
                         if (cal.after(c)) {
                             cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
-                            c = SunriseSunset.sunrise(latitude, longitude, tz, cal, degrees);
+                            c = SunriseSunsetCalculator.getSunrise(latitude, longitude, tz, cal, degrees);
                         }
                     } else {
-                        c = SunriseSunset.sunset(latitude, longitude, tz, cal, degrees);
+                        c = SunriseSunsetCalculator.getSunset(latitude, longitude, tz, cal, degrees);
                         if (cal.after(c)) {
                             cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
-                            c = SunriseSunset.sunset(latitude, longitude, tz, cal, degrees);
+                            c = SunriseSunsetCalculator.getSunset(latitude, longitude, tz, cal, degrees);
                         }
                     }
                     cal = c;
@@ -651,16 +651,16 @@ public class Main {
                 }
             } else if (e.getTagName().equals("sunrise")) {
                 // FIXME
-                cal.set(GregorianCalendar.HOUR_OF_DAY, 6);
-                cal.set(GregorianCalendar.MINUTE, 42);
-                cal.set(GregorianCalendar.SECOND, 0);
+                cal.set(Calendar.HOUR_OF_DAY, 6);
+                cal.set(Calendar.MINUTE, 42);
+                cal.set(Calendar.SECOND, 0);
                 fix_cal(cal);
             } else if (e.getTagName().equals("last-of")) {
                 cal.set(2000, 1, 1);
                 NodeList nl = e.getChildNodes();
                 for (int i = 0; i < nl.getLength(); i++) {
                     if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                        GregorianCalendar c = evaluate_time((Element) nl.item(i));
+                        Calendar c = evaluate_time((Element) nl.item(i));
                         if (cal.before(c))
                             cal = c;
                     }
@@ -670,24 +670,24 @@ public class Main {
                 NodeList nl = e.getChildNodes();
                 for (int i = 0; i < nl.getLength(); i++) {
                     if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                        GregorianCalendar c = evaluate_time((Element) nl.item(i));
+                        Calendar c = evaluate_time((Element) nl.item(i));
                         if (cal.after(c))
                             cal = c;
                     }
                 }
             } else if (e.getTagName().equals("weekdays")) {
                NodeList nl = e.getElementsByTagName("weekday");
-                Element today = get_weekday(cal.getDisplayName(GregorianCalendar.DAY_OF_WEEK, GregorianCalendar.SHORT, Locale.US), nl);
+                Element today = get_weekday(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US), nl);
                 //System.err.println(cal.getTime());
-                GregorianCalendar todays_candidate = evaluate_time_weekday(today, cal);
+                Calendar todays_candidate = evaluate_time_weekday(today, cal);
                 //System.err.println(cal.getTime() + " " + todays_candidate.getTime() + "  " + cal.before(todays_candidate));
                 if (todays_candidate != null && cal.before(todays_candidate)) {
                     cal = evaluate_time_weekday(today, cal);
                 } else {
                     Element next_day = null;
                     for (int i = 1; next_day == null && i < 7; i++) {
-                        cal.add(GregorianCalendar.DAY_OF_WEEK, 1);
-                        next_day = get_weekday(cal.getDisplayName(GregorianCalendar.DAY_OF_WEEK, GregorianCalendar.SHORT, Locale.US), nl);
+                        cal.add(Calendar.DAY_OF_WEEK, 1);
+                        next_day = get_weekday(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US), nl);
                     }
                     cal = next_day != null ? evaluate_time_weekday(next_day, cal) : null;
                 }
@@ -702,7 +702,7 @@ public class Main {
         public void run() {
             while (true) {
                 //System.out.println("\"" + name + "\" ");
-                GregorianCalendar next = evaluate_time(ele);
+                Calendar next = evaluate_time(ele);
                 Main.get_instance().timertable.put(name, next); // FIXME?
                 long towait = next.getTimeInMillis() - System.currentTimeMillis();
                 if (towait > 10) {
@@ -931,7 +931,7 @@ public class Main {
         }
     }
 
-    public GregorianCalendar get_timer_next(String name) {
+    public Calendar get_timer_next(String name) {
         return timertable != null ? timertable.get(name) : null;
     }
     
