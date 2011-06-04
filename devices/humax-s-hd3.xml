@@ -31,7 +31,7 @@
     <command cmdref="up"		 cmdno="88"/>
     <command cmdref="left"		 cmdno="90"/>
     <command cmdref="ok"		 cmdno="92"/>
-    <command cmdref="left"		 cmdno="91"/>
+    <command cmdref="right"		 cmdno="91"/>
     <command cmdref="down"		 cmdno="89"/>
     <command cmdref="volume_up"		 cmdno="16"/>
     <command cmdref="cmd_return"	 cmdno="85"/>
