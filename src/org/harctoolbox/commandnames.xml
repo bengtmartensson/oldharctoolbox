@@ -237,6 +237,8 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="cmd_9" name="9"/>
         <command id="two_digit" displayname="./.."/>
         <command id="plus10" displayname="+10"/>
+        <command id="star" displayname="*"/>
+        <command id="hash" displayname="#"/>
     </group>
 
     <group id="power">
@@ -296,6 +298,8 @@ command (see "ok" with the synonyms "enter" and "select").
     </group>
 
     <group id="mode_selection">
+        <command id="start"/>
+        <command id="mce" type="toggle"/>
         <command id="vcr_tv" type="toggle"/>
         <command id="disc_tv" type="toggle"/>
         <command id="tv_radio" type="toggle"/>
@@ -1356,7 +1360,7 @@ command (see "ok" with the synonyms "enter" and "select").
 
     <group id="ipod_deck">
         <command id="favorites"/>
-        <command id="browse_remote"/>
+        <command id="browse_remote" type="toggle"/>
         <command id="browse_mode"/>
         <command id="remote_mode"/>
         <command id="sort"/>
@@ -1366,11 +1370,13 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="sort_song"/>
         <command id="sort_audiobook"/>
         <command id="sort_podcast"/>
+        <command id="sort_composer"/>
+        <command id="sort_genres"/>
         <command id="get_sort"/>
-        <command id="album_up"/>
-        <command id="album_down"/>
-        <command id="playlist_up"/>
-        <command id="playlist_down"/>
+        <command id="previous_album"/>
+        <command id="next_album"/>
+        <command id="previous_playlist"/>
+        <command id="next_playlist"/>
         <command id="ipod_menu"/>
         <command id="ipod_play_pause"/>
         <command id="ipod_stop"/>
