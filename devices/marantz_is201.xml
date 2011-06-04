@@ -47,9 +47,9 @@
     <command cmdno="03" cmdref="previous_playlist" remark="Select Previous Playlist"/>
   </commandset>
   <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="36" remotename="marantz_is201">
-    <command cmdno="01" cmdref="operation_mode" remark="Operation mode (Display OSD > Display LCD on iPod) toggle"/>
-    <command cmdno="02" cmdref="mode_osd_sidplay" remark="OSD Display mode (2way control)"/>
-    <command cmdno="03" cmdref="mode_ipod_lcd_display" remark="iPod LCD Display mode (Standard mode)"/>
+    <command cmdno="01" cmdref="browse_remote" remark="Operation mode (Display OSD > Display LCD on iPod) toggle"/>
+    <command cmdno="02" cmdref="browse_mode" remark="OSD Display mode (2way control)"/>
+    <command cmdno="03" cmdref="remote_mode" remark="iPod LCD Display mode (Standard mode)"/>
   </commandset>
   <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="41" remotename="marantz_is201">
     <command cmdno="01" cmdref="sort" remark="Sort mode (Artist/Album/Song/Genre/Composer/Play list/Podcasting/Audiobook) toggle"/>
@@ -57,9 +57,9 @@
     <command cmdno="03" cmdref="sort_album" remark="Sort by Album"/>
     <command cmdno="04" cmdref="sort_song" remark="Sort by Song"/>
     <command cmdno="05" cmdref="sort_genres" remark="Sort by Genres"/>
-    <command cmdno="06" cmdref="sort_composer" remark="Sort byComposer"/>
+    <command cmdno="06" cmdref="sort_composer" remark="Sort by Composer"/>
     <command cmdno="07" cmdref="sort_playlist" remark="Sort by Play-List"/>
-    <command cmdno="08" cmdref="sort_podcasting" remark="Sort by Podcasting"/>
+    <command cmdno="08" cmdref="sort_podcast" remark="Sort by Podcasting"/>
     <command cmdno="09" cmdref="sort_audiobook" remark="Sort by Audio Books"/>
   </commandset>
   <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="48" remotename="marantz_is201">
@@ -96,8 +96,8 @@
     <command cmdref="play_pause" 			cmdno=""/>
     <command cmdref="repeat" 				cmdno=""/>
     <command cmdref="shuffle" 				cmdno=""/>
-    <command cmdref="album_up" 				cmdno=""/>
-    <command cmdref="album_down" 			cmdno=""/>
+    <command cmdref="previous_album"			cmdno=""/>
+    <command cmdref="next_album" 			cmdno=""/>
     <command cmdref="playlist_up" 			cmdno=""/>
     <command cmdref="playlist_down" 			cmdno=""/>
   </commandset-->
@@ -138,10 +138,10 @@
     <command cmdref="repeat_all" transmit="REP:4" response_lines="1"/>
     <command cmdref="get_repeat" transmit="REP:?" response_lines="1"/>
 
-    <command cmdref="playlist_up" transmit="PLL:1" response_lines="1"/>
-    <command cmdref="playlist_down" transmit="PLL:2" response_lines="1"/>
-    <command cmdref="album_up" transmit="ABL:1" response_lines="1"/>
-    <command cmdref="album_down" transmit="ABL:2" response_lines="1"/>
+    <command cmdref="previous_playlist" transmit="PLL:1" response_lines="1"/>
+    <command cmdref="next_playlist" transmit="PLL:2" response_lines="1"/>
+    <command cmdref="previous_album" transmit="ABL:1" response_lines="1"/>
+    <command cmdref="next_album" transmit="ABL:2" response_lines="1"/>
 
     <command cmdref="sort" transmit="SOS:0" response_lines="1"/>
     <command cmdref="sort_playlist" transmit="SOS:1" response_lines="1"/>
