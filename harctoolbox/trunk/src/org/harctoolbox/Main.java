@@ -1333,7 +1333,7 @@ public class Main {
         }/* else if (first_arg.equals("?")) {
             // List macros
             harcutils.printtable("Available macros: ", engine.get_macros(true));
-        }*/ else if (first_arg.equals("??")) {
+        }*/ else if (first_arg.equals("?")) {
             // List devices
             harcutils.printtable("Available devices:", hm.get_devices());
         }/* else if (engine != null && engine.has_macro(first_arg)) {
@@ -1374,7 +1374,7 @@ public class Main {
                     command_t cmd = alias_expander.canonicalize(cmd_name);
                     String output = null;
                     if (cmd == command_t.invalid) {
-                        System.err.println("Command `" + cmd_name + "' does not exist.");
+                        System.err.println("Command `" + cmd_name + "' is invalid.");
                     } else {
                         int no_args = noninteractive_args.length - 2;
                         String[] aux_args = new String[no_args];
@@ -1397,7 +1397,7 @@ public class Main {
                 System.err.println(e.getMessage());
             }
         } else {
-            System.err.println("`" + first_arg + "' is not a device");
+            System.err.println("No device `" + first_arg + "' known, issue `harctoolbox ?' for a list of known devices.");
             return harcutils.exit_nonexisting_device;
         }
         try {
