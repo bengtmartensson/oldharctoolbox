@@ -2923,7 +2923,7 @@ public class gui_main extends javax.swing.JFrame {
         try {
             com.hifiremote.decodeir.DecodeIR.DecodedSignal[] result = com.hifiremote.decodeir.DecodeIR.decode(code);
             if (result == null || result.length == 0) {
-                System.err.println("DecodeIR failed.");
+                System.err.println("DecodeIR failed (but was found).");
                 return;
             }
             for (int i = 0; i < result.length; i++) {
