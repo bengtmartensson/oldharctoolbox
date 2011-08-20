@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="oppo_bdp83" name="Oppo BDP-83" vendor="Oppo" model="bdp-83"
+  type="dvd" pingable_on="yes" pingable_standby="no">
+
+  <attributes>
+    <!--attribute name="rs232_version1"/-->
+    <attribute name="rs232"/>
+    <attribute name="bluraychip_rs232"/>
+    <attribute name="rc_1" defaultvalue="yes"/><!-- RC device 1 -->
+    <attribute name="rc_2"/><!-- RC device 2 -->
+    <attribute name="rc_3"/><!-- RC device 3 -->
+  </attributes>
+  <delays>
+    <delay type="intra-command" delay="1500"/>
+  </delays>
+  <jp1data>
+    <setupcode value="1525"/>
+  </jp1data>
+  <xi:include href="oppo_bdp_ir_commands_1.xi"/>
+  <xi:include href="oppo_bdp_ir_commands_2.xi"/>
+  <xi:include href="oppo_bdp_ir_commands_3.xi"/>
+  <xi:include href="oppo_bdp_serial_commands.xi"/>
+  <xi:include href="ping.xi"/>
+</device>

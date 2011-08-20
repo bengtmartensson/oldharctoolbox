@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<irprotocol name="denon_k" id="denon_k">
+  <jp1data>
+    <protocol number="00 xx" name="Denon-K"/>
+    <tohex function="reverse_complement" bits="8"/>
+  </jp1data>
+  <parameters>
+    <parameter id="deviceno" bits="4"/>
+    <parameter id="subdevice" bits="4"/>
+    <parameter id="cmdno" bits="12"/>
+  </parameters>
+  <frequency value="37000"/>
+  <irpnotation-new>
+protocol={37k,432}&lt;1,-1|1,-3>(8,-4,84:8,50:8,0:4,D:4,S:4,F:12,((D*16)^S^(F*16)^((F::4)%8)):8,1,-173)+
+user=d,Device
+user=s,Subdevice
+user=f,Function
+  </irpnotation-new>
+<!--
+        super(0x0070, new pulse_pair(0x0010, 0x0010),
+                new pulse_pair(0x0010, 0x0030), "");
+        repeat_sequence.setleadin(new pulse_pair(0x0080, 0x0040));
+        repeat_sequence.setdata(array_lsb(84, 8));
+        repeat_sequence.appenddata(array_lsb(50, 8));
+        repeat_sequence.appenddata(array_lsb(0, 4));
+        repeat_sequence.appenddata(array_lsb(device, 4));
+        repeat_sequence.appenddata(array_lsb(subdevice, 4));
+        repeat_sequence.appenddata(array_lsb(command, 12));
+        //System.err.println(device*16);
+        //System.err.println(subdevice + 16*(command%16));
+        //System.err.println(command/16);
+        // See page 6.
+        int chksum = (device * 16) ^ (subdevice + 16 * (command % 16)) ^ (command / 16);
+
+        repeat_sequence.appenddata(array_lsb(chksum, 8));
+        repeat_sequence.setleadout(new pulse_pair(0x0010, 0x0acd));
+ -->
+  <body>
+    <timings>
+      <timing id="t1" cycles="16"/>
+      <timing id="t3" cycles="48"/>
+      <timing id="t8" cycles="128"/>
+      <timing id="t4" cycles="64"/>
+      <timing id="t173" cycles="2768"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <one timing="t1"/>
+        <zero timing="t1"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t1"/>
+        <zero timing="t3"/>
+      </pair>
+    </pairs>
+    <intro/>
+    <repeat>
+      <!-- 8, -->
+      <one timing="t8"/>
+      <!-- //-4, -->
+      <zero timing="t4"/>
+      <!-- 84:8, -->
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<constant value="84"/>
+      </coded_number>
+      <!--50:8, -->
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<constant value="50"/>
+      </coded_number>
+      <!-- 0:4, -->
+      <coded_number direction="lsb" zero="p0" one="p1" bits="4">
+	<constant value="0"/>
+      </coded_number>
+      <!-- D:4, -->
+      <coded_number direction="lsb" zero="p0" one="p1" bits="4">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <!-- S:4, -->
+      <coded_number direction="lsb" zero="p0" one="p1" bits="4">
+	<parameterref parameter="subdevice"/>
+      </coded_number>
+      <!-- F:12, -->
+      <coded_number direction="lsb" zero="p0" one="p1" bits="12">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <!--((D*16)^S^(F*16)^((F::4)%8)):8 -->
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<xor>
+	  <!--  (device * 16) -->
+	  <mask mask="15" shift="4">
+	    <parameterref parameter="deviceno"/>
+	  </mask>
+	  <!-- ^ (subdevice -->
+	  <parameterref parameter="subdevice"/>
+	  <!-- + 16 * (command % 16)) ^ --> 
+	  <mask mask="15" shift="4">
+	    <parameterref parameter="cmdno"/>
+	  </mask>
+	  <!-- (command / 16); -->
+	  <mask mask="4095" shift="-4">
+	    <parameterref parameter="cmdno"/>
+	  </mask>
+       </xor>
+      </coded_number>
+      <!-- 1,-->
+      <one timing="t1"/>
+      <!-- -173 -->
+      <zero timing="t173"/>
+    </repeat>
+  </body>
+</irprotocol>
+

@@ -1,0 +1,168 @@
+<!-- Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
+-->
+
+<!-- Presently, id's for devices are not supported -->
+
+<!ELEMENT devices (device)+ >
+
+<!ELEMENT device (description?,comment?,attributes?,aliases?,delays?,jp1data?,(commandset|xi:include)*) >
+<!ATTLIST device
+        xmlns:xi CDATA #IMPLIED
+        id ID #REQUIRED
+        name CDATA #REQUIRED
+        vendor CDATA #IMPLIED
+        vendorurl CDATA #IMPLIED
+        model CDATA #REQUIRED
+        pingable_on (yes|no) #IMPLIED
+        pingable_standby (yes|no) #IMPLIED
+        type     (amplifier|receiver|projector|tv|vcr|cd|dvd|ha|sat|cable|ld|tape|misc_audio|camera|other|dumb|undefined) "undefined"
+        alt_type (amplifier|receiver|projector|tv|vcr|cd|dvd|ha|sat|cable|ld|tape|misc_audio|camera|other|dumb|undefined) "undefined" >
+
+<!ELEMENT xi:include (xi:fallback?)>
+<!ATTLIST xi:include
+    xmlns:xi        CDATA       #FIXED    "http://www.w3.org/2001/XInclude"
+    href            CDATA       #IMPLIED
+    parse           (xml|text)  "xml"
+    xpointer        CDATA       #IMPLIED
+    encoding        CDATA       #IMPLIED
+    accept          CDATA       #IMPLIED
+    accept-language CDATA       #IMPLIED
+>
+
+<!ELEMENT xi:fallback ANY>
+<!ATTLIST xi:fallback
+    xmlns:xi   CDATA   #FIXED   "http://www.w3.org/2001/XInclude"
+>
+
+<!ELEMENT delays (delay)* >
+
+<!ELEMENT delay EMPTY >
+<!ATTLIST delay
+        type NMTOKEN #REQUIRED
+        delay NMTOKEN #REQUIRED >
+
+<!ELEMENT attributes (attribute)+ >
+
+<!ELEMENT attribute EMPTY >
+<!ATTLIST attribute
+	name NMTOKEN #REQUIRED
+	defaultvalue CDATA #IMPLIED >
+
+<!ELEMENT aliases (alias+) >
+
+<!ELEMENT alias EMPTY >
+<!ATTLIST alias
+	name NMTOKEN #REQUIRED
+        command NMTOKEN #REQUIRED >
+
+<!ELEMENT jp1data (setupcode|fixed_data)+ >
+
+<!ELEMENT setupcode EMPTY >
+<!ATTLIST setupcode
+	value CDATA #REQUIRED >
+
+<!ELEMENT fixed_data EMPTY >
+<!ATTLIST fixed_data
+	data CDATA #REQUIRED >
+
+<!ELEMENT commandset (commandgroup|commandgroupref|command|xi:include)* >
+<!ATTLIST commandset
+        type (ir|rf433|rf868|www|web_api|tcp|udp|serial|bluetooth|on_off|ip|special|telnet|sensor) "ir"
+        ifattribute CDATA #IMPLIED
+        protocol NMTOKEN #IMPLIED
+        prefix CDATA ""
+        suffix CDATA ""
+        open CDATA #IMPLIED
+        close CDATA #IMPLIED
+        portnumber CDATA #IMPLIED
+        deviceno CDATA #IMPLIED
+        subdevice CDATA #IMPLIED
+        fixed_data CDATA #IMPLIED
+        user CDATA #IMPLIED
+        password CDATA #IMPLIED
+        toggle (yes|no) "no"
+        name CDATA #IMPLIED
+        original_remote CDATA #IMPLIED
+        remotename NMTOKEN #IMPLIED
+        delay_between_chars CDATA "0"
+ 	pseudo_power_on NMTOKEN #IMPLIED
+ 	delay_between_reps CDATA "0"
+ 	remark CDATA #IMPLIED
+        charset CDATA "utf-8" >
+
+<!ELEMENT commandgroup (commandgroup|command)+ >
+<!ATTLIST commandgroup
+        id ID #IMPLIED
+        name CDATA #IMPLIED
+        deviceno CDATA #IMPLIED
+        description CDATA #IMPLIED >
+
+<!ELEMENT commandgroupref EMPTY >
+<!ATTLIST commandgroupref
+        commandgroup IDREF #REQUIRED >
+
+<!-- For now, there are no more than one argument accepted -->
+<!ELEMENT command (ccf_cooked?,(toggle_pair|ccf)?,remark?,argument*,returnvalues?) >
+<!ATTLIST command
+        cmdref NMTOKEN #REQUIRED
+        cmdno CDATA #IMPLIED
+        name CDATA #IMPLIED
+	zone (1|2|3|record) #IMPLIED
+        type (discrete|toggle|cyclic|menu) #IMPLIED
+	remark CDATA #IMPLIED
+        ifattribute CDATA #IMPLIED
+        wakeup (yes|no) #IMPLIED
+        transmit CDATA #IMPLIED
+        expected_response CDATA #IMPLIED
+        response_ending CDATA #IMPLIED
+        returntype CDATA #IMPLIED
+        returnwidth CDATA #IMPLIED
+        returncontent CDATA #IMPLIED
+        response_lines CDATA #IMPLIED >
+
+<!ELEMENT returnvalues (syntax?,semantics?,description?) >
+
+<!ELEMENT syntax (returntype*) >
+<!ATTLIST syntax
+	parse CDATA #IMPLIED >
+
+<!ELEMENT semantics (table) >
+<!ELEMENT returntype EMPTY >
+<!ATTLIST returntype
+	type (string|texttable|decimal_integer|hexadecimal_integer|hh:mm:ss|dd.mm.yyyy|tv_radio|0_1|on_off|percent|4:3_16:9|dbox_videoformat|dbox_videooutput) #REQUIRED
+	length CDATA #IMPLIED >
+
+<!ELEMENT table (entry+,default?) >
+<!ATTLIST table
+	index (string|number|hexnumber) "string" >
+
+<!ELEMENT entry EMPTY >
+<!ATTLIST entry
+	value CDATA #REQUIRED
+	desc CDATA "" >
+
+<!ELEMENT default EMPTY >
+<!ATTLIST default
+	desc CDATA "" >
+
+<!ELEMENT remark (#PCDATA) >
+
+<!ELEMENT argument (description)? >
+<!ATTLIST argument
+        name CDATA #REQUIRED
+        semantic CDATA #IMPLIED >
+
+<!ELEMENT description (#PCDATA) >
+
+<!ELEMENT comment (#PCDATA) >
+
+<!ELEMENT ccf (#PCDATA) >
+<!ATTLIST ccf
+	toggle (0|1) #IMPLIED >
+
+<!ELEMENT toggle_pair (ccf, ccf) >
+
+<!ELEMENT ccf_cooked (#PCDATA) >

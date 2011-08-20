@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="sony_tv" name="Sony TV" vendor="Sony" model="Generic" type="tv">
+  <commandset type="ir" protocol="sony12" deviceno="1" remotename="sony_tv">
+    <command cmdref="volume_up"			cmdno="0x12"/>
+    <command cmdref="volume_down"		cmdno="0x13"/>
+    <command cmdref="channel_up"		cmdno="0x10"/>
+    <command cmdref="channel_down"		cmdno="0x11"/>
+    <command cmdref="in_av"			cmdno="0x25"/>
+    <command cmdref="mute_toggle"		cmdno="0x14"/>
+    <command cmdref="power_toggle"		cmdno="0x15"/>
+    <command cmdref="power_on"			cmdno="0x2e"/>
+    <command cmdref="power_off"			cmdno="0x2f"/>
+    <command cmdref="contrast_up"		cmdno="0x18"/>
+    <command cmdref="contrast_down" 		cmdno="0x19"/>
+    <command cmdref="color_up"			cmdno="0x1a"/>
+    <command cmdref="color_down"		cmdno="0x1b"/>
+    <command cmdref="color_up"			cmdno="0x1e"/>
+    <command cmdref="color_down"		cmdno="0x1f"/>
+    <command cmdref="info"			cmdno="0x3a"/>
+    <command cmdref="cmd_1"			cmdno="0x00"/>
+    <command cmdref="cmd_2"			cmdno="0x01"/>
+    <command cmdref="cmd_3"			cmdno="0x02"/>
+    <command cmdref="cmd_4"			cmdno="0x03"/>
+    <command cmdref="cmd_5"			cmdno="0x04"/>
+    <command cmdref="cmd_6"			cmdno="0x05"/>
+    <command cmdref="cmd_7"			cmdno="0x06"/>
+    <command cmdref="cmd_8"			cmdno="0x07"/>
+    <command cmdref="cmd_9"			cmdno="0x08"/>
+    <command cmdref="cmd_0"			cmdno="0x09"/>
+    <command cmdref="two_digit"			cmdno="0x39"/>
+  </commandset>
+</device>

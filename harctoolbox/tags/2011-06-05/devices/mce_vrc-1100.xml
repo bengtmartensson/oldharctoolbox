@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
+<!-- experimental -->
+<device id="mce_vrc-1100" name="MCE" vendor="Microsoft" model="" type="other">
+  <commandset type="ir" protocol="OrtekMCE" deviceno="21">
+    <command cmdref="browse_mode"	cmdno="5"/>
+    <command cmdref="power_toggle"	cmdno="3"/>
+    <command cmdref="yellow"		cmdno="6"/>
+    <command cmdref="blue"		cmdno="7"/>
+    <command cmdref="green"		cmdno="4"/>
+    <command cmdref="red"		cmdno="2"/>
+    <command cmdref="tv_mode"		cmdno="14"/>
+    <command cmdref="picture_mode"	cmdno="15"/>
+    <command cmdref="movie_mode"	cmdno="12"/>
+    <command cmdref="music_mode"	cmdno="10"/>
+    <command cmdref="rewind"		cmdno="13"/>
+    <command cmdref="play"		cmdno="11"/>
+    <command cmdref="fast_forward"	cmdno="9"/>
+    <command cmdref="previous"		cmdno="8"/>
+    <command cmdref="next"		cmdno="17"/>
+    <command cmdref="stop"		cmdno="16"/>
+    <command cmdref="pause_toggle"	cmdno="20"/>
+    <command cmdref="record_toggle"	cmdno="19"/>
+    <command cmdref="cmd_return"	cmdno="22"/>
+    <command cmdref="info"		cmdno="18"/>
+    <command cmdref="up"		cmdno="21"/>
+    <command cmdref="left"		cmdno="23"/>
+    <command cmdref="ok"		cmdno="34"/>
+    <command cmdref="right"		cmdno="33"/>
+    <command cmdref="down"		cmdno="32"/>
+    <command cmdref="volume_up"		cmdno="50"/>
+    <command cmdref="mute_toggle"	cmdno="48"/>
+    <command cmdref="channel_up"	cmdno="47"/>
+    <command cmdref="volume_down"	cmdno="51"/>
+    <command cmdref="start"		cmdno="46"/>
+    <command cmdref="channel_down"	cmdno="49"/>
+    <command cmdref="cmd_1"		cmdno="52"/>
+    <command cmdref="cmd_2"		cmdno="36"/>
+    <command cmdref="cmd_3"		cmdno="31"/>
+    <command cmdref="cmd_4"		cmdno="53"/>
+    <command cmdref="cmd_5"		cmdno="35"/>
+    <command cmdref="cmd_6"		cmdno="30"/>
+    <command cmdref="cmd_7"		cmdno="45"/>
+    <command cmdref="cmd_8"		cmdno="37"/>
+    <command cmdref="cmd_9"		cmdno="38"/>
+    <command cmdref="star"		cmdno="43"/>
+    <command cmdref="cmd_0"		cmdno="42"/>
+    <command cmdref="hash"		cmdno="40"/>
+    <command cmdref="close"		cmdno="44"/>
+    <command cmdref="clear"		cmdno="41"/>
+    <command cmdref="select"		cmdno="39"/>
+  </commandset>
+</device>

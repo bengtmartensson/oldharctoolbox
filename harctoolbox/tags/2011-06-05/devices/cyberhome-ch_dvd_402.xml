@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
+<device id="cyberhome-ch_dvd_402" name="Cyberhome DVD 402" vendor="Cyberhome" model="402" type="dvd">
+  <commandset type="ir" protocol="nec1" toggle="no" deviceno="114" subdevice="205" remotename="cyberhome_dvd_402">
+    <command cmdref="power_toggle" 	cmdno="14"/>
+    <command cmdref="open_close" 	cmdno="26"/>
+    <command cmdref="title" 	cmdno="64"/>
+    <command cmdref="menu" 		cmdno="2"/>
+    <command cmdref="setup" 	cmdno="65"/>
+    <command cmdref="display" 	cmdno="80"/>
+    <command cmdref="audio" 	cmdno="22"/>
+    <command cmdref="angle" 	cmdno="84"/>
+    <command cmdref="mute_toggle" 	cmdno="7"/>
+    <command cmdref="cmd_goto"	 	cmdno="18"/>
+    <command cmdref="subtitle" 	cmdno="88"/>
+
+    <command cmdref="up" 		cmdno="68"/>
+    <command cmdref="down" 		cmdno="29"/>
+    <command cmdref="left" 		cmdno="28"/>
+    <command cmdref="right" 	cmdno="72"/>
+    <command cmdref="ok" 		cmdno="92"/>
+
+    <command cmdref="rewind" 	cmdno="31"/>
+    <command cmdref="fast_forward" 	cmdno="93"/>
+    <command cmdref="play" 		cmdno="6"/>
+    <command cmdref="previous" 	cmdno="24"/>
+    <command cmdref="next" 		cmdno="25"/>
+    <command cmdref="pause_toggle"	cmdno="89"/>
+    <command cmdref="still_advance" cmdno="27"/>
+    <command cmdref="stop" 		cmdno="30"/>
+
+    <command cmdref="cmd_0" 		cmdno="73"/>
+    <command cmdref="cmd_1" 		cmdno="19"/>
+    <command cmdref="cmd_2" 		cmdno="16"/>
+    <command cmdref="cmd_3" 		cmdno="17"/>
+    <command cmdref="cmd_4" 		cmdno="15"/>
+    <command cmdref="cmd_5" 		cmdno="12"/>
+    <command cmdref="cmd_6" 		cmdno="13"/>
+    <command cmdref="cmd_7" 		cmdno="11"/>
+    <command cmdref="cmd_8" 		cmdno="8"/>
+    <command cmdref="cmd_9" 		cmdno="9"/>
+    <command cmdref="plus10"	cmdno="77"/>
+    <command cmdref="clear" 	cmdno="81"/>
+
+    <command cmdref="program"	cmdno="21"/>
+    <command cmdref="repeat" 	cmdno="3"/>
+    <command cmdref="a_b" 		cmdno="4"/>
+    <command cmdref="intro"		cmdno="69"/>
+    <command cmdref="zoom" 		cmdno="23"/>
+    <command cmdref="effect_toggle"	cmdno="5"/>
+    <command cmdref="marker" 	cmdno="85"/>
+    <command cmdref="cmd_return" 	cmdno="10"/>
+  </commandset>
+</device>

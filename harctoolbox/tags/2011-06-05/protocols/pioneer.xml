@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<irprotocol name="pioneer" id="pioneer">
+  <jp1data>
+    <protocol number="00 E2" name="Pioneer"/>
+    <tohex function="reverse_complement" bits="8"/>
+  </jp1data>
+  <parameters>
+    <parameter id="deviceno" bits="8"/>
+    <parameter id="subdevice" bits="8">
+      <default>
+        <complement bits="8">
+	  <parameterref parameter="deviceno"/>
+        </complement>
+      </default>
+    </parameter>
+    <parameter id="cmdno" bits="8"/>
+  </parameters>
+  <frequency value="40000"/>
+  <irpnotation-new>
+Protocol={40k,564}&lt;1,-1|1,-3>(16,-8,D:8,S:8,F:8,~F:8,1,-78)+
+user=d,Device
+user=s,Subdevice
+user=f,Function
+  </irpnotation-new>
+  <body>
+    <timings>
+      <timing id="t1" cycles="23"/>
+      <timing id="t3" cycles="68"/>
+      <timing id="t16" cycles="360"/>
+      <timing id="t8" cycles="180"/>
+      <timing id="t78" cycles="1730"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <one timing="t1"/>
+        <zero timing="t1"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t1"/>
+        <zero timing="t3"/>
+      </pair>
+    </pairs>
+    <intro/>
+    <repeat>
+      <one timing="t16"/>
+      <zero timing="t8"/>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="subdevice"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <coded_number direction="lsb" zero="p0" one="p1" bits="8">
+        <complement bits="8">
+	  <parameterref parameter="cmdno"/>
+        </complement>
+      </coded_number>
+      <one timing="t1"/>
+      <zero timing="t78"/>
+    </repeat>
+  </body>
+<!--
+	super(0x0068, new pulse_pair(0x0017, 0x0017),
+	      new pulse_pair(0x0017, 0x0044), "command_name");
+	repeat_sequence.setleadin(new pulse_pair(0x0169, 0x00b4));
+	repeat_sequence.setdata(array_lsb(device, 8));
+	repeat_sequence.appenddata(array_lsb(subdevice, 8));
+	repeat_sequence.appenddata(array_lsb(command, 8));
+	repeat_sequence.appenddata(invert_bitarray(array_lsb(command, 8)));
+	repeat_sequence.setleadout(new pulse_pair(0x0017, 0x06e0));
+-->
+</irprotocol>
