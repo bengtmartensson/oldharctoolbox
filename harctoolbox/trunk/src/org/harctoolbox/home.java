@@ -36,6 +36,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -53,8 +54,8 @@ public final class home {
 
     private final HashMap<String, String> alias_table;
     // The get method of device_table should not be used, use get_dev(String) instead.
-    private final HashMap<String, dev> device_table;
-    private final HashMap<String, device_group> device_groups_table; // indexed by name, not id
+    private final LinkedHashMap<String, dev> device_table;
+    private final LinkedHashMap<String, device_group> device_groups_table; // indexed by name, not id
     private final HashMap<String, gateway> gateway_table;
 
     public home(String home_filename/*, boolean verbose, int debug*/) throws IOException, SAXParseException, SAXException {

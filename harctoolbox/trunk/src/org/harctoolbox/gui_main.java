@@ -26,17 +26,26 @@ import IrpMaster.Pronto;
 import IrpMaster.UnassignedException;
 import java.awt.Dimension;
 import javax.swing.*;
-import java.io.*;
-import java.net.*;
 import org.antlr.runtime.RecognitionException;
-import org.xml.sax.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * This class implements a GUI for most functionality in Harc.

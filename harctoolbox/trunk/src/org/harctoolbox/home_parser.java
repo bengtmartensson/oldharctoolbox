@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,9 +30,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class home_parser {
-    private HashMap<String, dev> device_table = new HashMap<String, dev>();
+    private LinkedHashMap<String, dev> device_table = new LinkedHashMap<String, dev>();
     private HashMap<String, String> alias_table = new HashMap<String, String>();
-    private HashMap<String, device_group> device_groups_table = new HashMap<String, device_group>();
+    private LinkedHashMap<String, device_group> device_groups_table = new LinkedHashMap<String, device_group>();
     private HashMap<String, gateway> gateway_table = new HashMap<String, gateway>();
 
     private HashMap<String, gateway_port> gateway_port_by_id = new HashMap<String, gateway_port>();
@@ -74,7 +75,7 @@ public class home_parser {
         }
     }
 
-    public HashMap<String, dev> get_device_table() {
+    public LinkedHashMap<String, dev> get_device_table() {
         return device_table;
     }
 
@@ -220,7 +221,7 @@ public class home_parser {
         }
     }
 
-    public HashMap<String, device_group> get_device_groups_table() {
+    public LinkedHashMap<String, device_group> get_device_groups_table() {
         return device_groups_table;
     }
 
