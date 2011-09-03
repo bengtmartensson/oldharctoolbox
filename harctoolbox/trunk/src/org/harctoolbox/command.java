@@ -128,7 +128,7 @@ public class command {
     public IrSignal get_ir_code(toggletype toggle, boolean verbose, short devno, short subdev) {
         IrSignal ir = null;
         try {
-            ir = protocol.encode(protocol_name, devno, subdev, cmdno, toggle, verbose);
+            ir = protocol.encode(protocol_name, devno, subdev, cmdno, toggle, null, verbose);
             // Fallback
             if (ir == null || protocol_name.equals("raw_ccf")) {
                 String ccf = toggle == toggletype.toggle_1 ? ccf_toggle_1 : ccf_toggle_0;

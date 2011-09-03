@@ -26,6 +26,7 @@ import IrpMaster.IncompatibleArgumentException;
 import IrpMaster.IrSignal;
 import IrpMaster.IrpMaster;
 import IrpMaster.IrpMasterException;
+import IrpMaster.IrpUtils;
 import IrpMaster.Protocol;
 import IrpMaster.UnassignedException;
 import java.io.FileNotFoundException;
@@ -62,7 +63,7 @@ public class protocol {
     }
     
     public static IrSignal encode(String protocol_name, short deviceno,
-            short subdevice, short cmdno, toggletype toggle, boolean verbose) throws IrpMasterException, RecognitionException {
+            short subdevice, short cmdno, toggletype toggle, String params, boolean verbose) throws IrpMasterException, RecognitionException {
         //int itoggle = 0;
         //if (toggle == toggletype.do_toggle) {
         //    itoggle = toggle_state.containsKey(protocol_name) ? 1 - toggle_state.get(protocol_name) : 0;
@@ -70,7 +71,7 @@ public class protocol {
         //}
         IrSignal ir =
             protocol_name.equals("raw_ccf") ? null // new raw_ir()
-            : /*new*/ protocol_parser(protocol_name, deviceno, subdevice, cmdno, /*i*/toggle);
+            : /*new*/ protocol_parser(protocol_name, deviceno, subdevice, cmdno, /*i*/toggle, params);
         
         /*if (!ir.is_valid()) {
             if (verbose)
@@ -82,7 +83,7 @@ public class protocol {
         return ir;
     }
     
-    private static HashMap<String, Long>parameters(short deviceno, short subdevice, short cmdno, toggletype toggle) {
+    private static HashMap<String, Long>parameters(short deviceno, short subdevice, short cmdno, toggletype toggle, String extra_params) {
         HashMap<String, Long>params = new HashMap<String, Long>();
         if (deviceno != invalid_parameter)
             params.put("D", (long) deviceno);
@@ -92,13 +93,20 @@ public class protocol {
             params.put("F", (long) cmdno);
         if (toggle != toggletype.dont_care)
             params.put("T", (long) toggletype.toInt(toggle));
-        
+        if (extra_params != null && !extra_params.trim().isEmpty()) {
+            String[] str = extra_params.trim().split("[ \t]+");
+            for (String s : str) {
+                String[] q = s.split("=");
+                if (q.length == 2)
+                    params.put(q[0], IrpUtils.parseLong(q[1]));
+            }
+        }
         return params;
     }
     
-    private static IrSignal protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno, toggletype /*i*/toggle) throws IrpMasterException, RecognitionException {
+    private static IrSignal protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno, toggletype /*i*/toggle, String extra_params) throws IrpMasterException, RecognitionException {
         Protocol protocol = get_protocol(protocol_name);
-        HashMap<String, Long> params = parameters(deviceno, subdevice, cmdno, toggle);
+        HashMap<String, Long> params = parameters(deviceno, subdevice, cmdno, toggle, extra_params);
         IrSignal irSignal = protocol.renderIrSignal(params);
         return irSignal;
         
@@ -123,6 +131,10 @@ public class protocol {
     public static boolean subdevice_optional(String protocol_name) throws UnassignedException, RecognitionException {
         Protocol protocol = get_protocol(protocol_name);
         return protocol.hasParameterDefault("S");
+    }
+    
+    public static String get_IRP(String protocol_name) {
+        return irpMaster.getIrp(protocol_name);
     }
 
     /**
@@ -231,7 +243,7 @@ public class protocol {
                 IrSignal ir = null;
                 try {
                     ir = encode(protocol_name, device, subdevice,
-                   (short) command, toggle, verbose);
+                   (short) command, toggle, null, verbose);
                 } catch (IrpMasterException ex) {
                     System.err.println(ex.getMessage());
                 } catch (RecognitionException ex) {
