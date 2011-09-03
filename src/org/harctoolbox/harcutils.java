@@ -50,6 +50,8 @@ public class harcutils {
             + "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\n"
             + "You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.";
 
+    public final static String homepage_url = "http://www.harctoolbox.org";
+    
     public final static int exit_success = 0;
     public final static int exit_usage_error = 1;
     public final static int exit_semantic_usage_error = 2;
@@ -283,6 +285,21 @@ public class harcutils {
             ;
         }
         return lnr.getLineNumber();
+    }
+    
+    public static void browse(String address) {
+        String[] cmd = new String[2];
+        cmd[0] = harcprops.get_instance().get_browser();
+        if (cmd[0] == null || cmd[0].isEmpty()) {
+            System.err.println("No browser.");
+            return;
+        }
+        cmd[1] = /*"http://" +*/ address;
+        try {
+            Process proc = Runtime.getRuntime().exec(cmd);
+        } catch (IOException ex) {
+            System.err.println("Could not start browser command `" + cmd[0] + " " + cmd[1]);
+        }
     }
 
     public static void main(String[] args) {

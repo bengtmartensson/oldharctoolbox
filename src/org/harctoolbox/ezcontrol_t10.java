@@ -22,12 +22,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -382,7 +385,12 @@ public class ezcontrol_t10 {
     }
     
     private String udp_extract_name(byte[] buf) {
-        return buf != null ? new String(buf, 6, 32) : null;
+        try {
+            return buf != null ? (new String(buf, 6, 32, "US-ASCII")).replaceAll("\u0000", "") : null;
+        } catch (UnsupportedEncodingException ex) {
+            assert false;
+            return null;
+        }
     }
 
     private byte[] udp_status_inquiry(int n) {
@@ -550,7 +558,8 @@ public class ezcontrol_t10 {
 
     public String get_preset_name(int n) {
         if (use_udp) {
-            return udp_extract_name(udp_status_inquiry(n));
+            byte[] buf = udp_status_inquiry(n);
+            return udp_extract_name(buf);
         } else {
             setup_status();
             return state[n] != null ? state[n].name : "**not assigned**";
@@ -958,6 +967,7 @@ public class ezcontrol_t10 {
             if (do_get_status) {
                 if (num_arg > 0) {
                     System.out.println(ez.get_preset_str(num_arg));
+                    System.out.println(ez.get_preset_name(num_arg));
                 } else {
                     System.out.println(ez.get_status());
                 }
