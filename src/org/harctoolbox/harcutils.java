@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,13 +17,27 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import java.io.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.StringReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * This class consists of a collection of useful static constants and functions.
@@ -55,13 +69,12 @@ public class harcutils {
     public final static int exit_restart = 99; // An invoking script is supposed to restart the program
 
     public final static int main_version = 0;
-    public final static int sub_version = 6;
+    public final static int sub_version = 7;
     public final static int subminor_version = 0;
     public final static String version_string = "Harctoolbox version " + main_version
             + "." + sub_version + "." + subminor_version;
 
     public final static String devicefile_extension = ".xml";
-    public final static String protocolfile_extension = ".xml";
 
     public final static int portnumber_invalid = -1;
 
@@ -223,6 +236,10 @@ public class harcutils {
                 result[m++] = array[i];
 
         return result;
+    }
+
+    public static short parse_shortnumber(String s) throws NumberFormatException {
+        return s.startsWith("0x") ? Short.parseShort(s.substring(2), 16) : Short.parseShort(s);
     }
 
     public static String join(String[] stuff, char separator, int start_index) {

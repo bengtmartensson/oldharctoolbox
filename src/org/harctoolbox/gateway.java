@@ -1,7 +1,25 @@
+/*
+Copyright (C) 2009-2011 Bengt Martensson.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+*/
+
 package org.harctoolbox;
 
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
 
 /**
  *
@@ -10,9 +28,9 @@ import java.util.Vector;
 public class gateway {
 
     private String hostname;
-    private Vector<gateway_port> gateway_ports;
-    private Hashtable<commandtype_t, Hashtable<Integer, port>> ports_table;
-    private Hashtable<command_t, commandmapping> commandmappings;
+    private ArrayList<gateway_port> gateway_ports;
+    private EnumMap<commandtype_t, HashMap<Integer, port>> ports_table;
+    private HashMap<command_t, commandmapping> commandmappings;
     private String clazz;
     private String model;
     private String interfaze;
@@ -26,9 +44,9 @@ public class gateway {
     private int timeout;
 
     public gateway(String hostname,
-            Vector<gateway_port> gateway_ports,
-            Hashtable<commandtype_t, Hashtable<Integer, port>> ports_table,
-            Hashtable<command_t, commandmapping> commandmappings,
+            ArrayList<gateway_port> gateway_ports,
+            EnumMap<commandtype_t, HashMap<Integer, port>> ports_table,
+            HashMap<command_t, commandmapping> commandmappings,
             String clazz,
             String model,
             String interfaze,
@@ -77,11 +95,11 @@ public class gateway {
         return id;
     }
 
-    public Hashtable<commandtype_t, Hashtable<Integer, port>> get_ports_table() {
+    public EnumMap<commandtype_t, HashMap<Integer, port>> get_ports_table() {
         return ports_table;
     }
 
-    public Vector<gateway_port> get_gateway_ports() {
+    public ArrayList<gateway_port> get_gateway_ports() {
         return gateway_ports;
     }
 
@@ -94,7 +112,7 @@ public class gateway {
     }
 
     public port get_port(commandtype_t type, int n) {
-        Hashtable<Integer, port> table = ports_table.get(type);
+        HashMap<Integer, port> table = ports_table.get(type);
         return table != null ? table.get(n) : null;
     }
 }

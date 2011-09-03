@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,8 +21,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  *
@@ -80,7 +79,7 @@ public class socket_storage {
         }
     }
 
-    private static Hashtable<String, socket_stat> sockettable = new Hashtable<String, socket_stat>();
+    private static HashMap<String, socket_stat> sockettable = new HashMap<String, socket_stat>();
 
     private static String canonicalize(String host) throws UnknownHostException {
         return InetAddress.getByName(host).getHostAddress();
@@ -169,8 +168,9 @@ public class socket_storage {
 
     public static void dispose_sockets(boolean brutal) throws IOException {
         debug("dispose_socket called");
-        for (Enumeration e = sockettable.keys(); e.hasMoreElements();) {
-            String addr = (String) e.nextElement();
+        //for (Enumeration e = sockettable.keys(); e.hasMoreElements();) {
+        //    String addr = (String) e.nextElement();
+        for (String addr : sockettable.keySet()) {
             Socket skt = sockettable.get(addr).sock;
             if (brutal || !sockettable.get(addr).checked_out) {
                 if (!skt.isClosed())

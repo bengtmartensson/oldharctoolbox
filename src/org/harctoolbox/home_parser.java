@@ -1,11 +1,27 @@
+/*
+Copyright (C) 2009-2011 Bengt Martensson.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+*/
+
 package org.harctoolbox;
 
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Vector;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -13,12 +29,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class home_parser {
-    private Hashtable <String, dev> device_table = new Hashtable<String, dev>();
-    private Hashtable <String, String> alias_table = new Hashtable <String, String>();
-    private Hashtable <String, device_group> device_groups_table = new Hashtable <String, device_group>();
-    private Hashtable <String, gateway> gateway_table = new Hashtable<String, gateway>();
+    private HashMap<String, dev> device_table = new HashMap<String, dev>();
+    private HashMap<String, String> alias_table = new HashMap<String, String>();
+    private HashMap<String, device_group> device_groups_table = new HashMap<String, device_group>();
+    private HashMap<String, gateway> gateway_table = new HashMap<String, gateway>();
 
-    private Hashtable <String, gateway_port> gateway_port_by_id = new Hashtable<String, gateway_port>();
+    private HashMap<String, gateway_port> gateway_port_by_id = new HashMap<String, gateway_port>();
 
     private org.w3c.dom.Document document;
 
@@ -58,7 +74,7 @@ public class home_parser {
         }
     }
 
-    public Hashtable <String, dev> get_device_table() {
+    public HashMap<String, dev> get_device_table() {
         return device_table;
     }
 
@@ -68,8 +84,8 @@ public class home_parser {
         String powered_through = "";
         String defaultzone = "";
         HashMap <String, String> attributes = new HashMap <String, String>();
-        Vector<gateway_port> gateway_ports = new Vector<gateway_port>();
-        Hashtable<String, input> inputs = new Hashtable<String, input>();
+        ArrayList<gateway_port> gateway_ports = new ArrayList<gateway_port>();
+        HashMap<String, input> inputs = new HashMap<String, input>();
 
         org.w3c.dom.NodeList nodes = element.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -139,18 +155,19 @@ public class home_parser {
     }
 
     private void print_gateway_port_by_id() {
-        for (Enumeration e = gateway_port_by_id.keys(); e.hasMoreElements(); ) {
-            String k = (String)e.nextElement();
+        //for (Enumeration e = gateway_port_by_id.keys(); e.hasMoreElements(); ) {
+        //    String k = (String)e.nextElement();
+        for (String k : gateway_port_by_id.keySet()) {
             gateway_port gwp = gateway_port_by_id.get(k);
             System.out.println(k + "\t" + gwp.get_gateway() + "\t" + gwp.get_connectortype() + gwp.get_connectorno());
         }
     }
 
-    public Hashtable<String, gateway_port> get_gateway_port_by_id() {
+    public HashMap<String, gateway_port> get_gateway_port_by_id() {
         return gateway_port_by_id;
     }
 
-    public Hashtable <String, String> get_alias_table() {
+    public HashMap<String, String> get_alias_table() {
         return alias_table;
     }
 
@@ -164,8 +181,9 @@ public class home_parser {
     }
 
     private void print_aliases() {
-        for (Enumeration e = alias_table.keys(); e.hasMoreElements(); ) {
-            String k = (String)e.nextElement();
+        //for (Enumeration e = alias_table.keys(); e.hasMoreElements(); ) {
+        //    String k = (String)e.nextElement();
+        for (String k : alias_table.keySet()) {
             System.out.println(k + "\t" + alias_table.get(k));
         }
     }
@@ -176,7 +194,7 @@ public class home_parser {
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             NodeList dnl = el.getElementsByTagName("deviceref");
-            Vector<String> devs = new Vector<String>();
+            ArrayList<String> devs = new ArrayList<String>();
             for (int j = 0; j < dnl.getLength(); j++) {
                 Element dev = (Element) dnl.item(j);
                 devs.add(dev.getAttribute("device"));
@@ -189,18 +207,20 @@ public class home_parser {
     }
 
     private void print_device_groups() {
-        for (Enumeration e = device_groups_table.keys(); e.hasMoreElements();) {
-            String id = (String) e.nextElement();
+        //for (Enumeration e = device_groups_table.keys(); e.hasMoreElements();) {
+        //    String id = (String) e.nextElement();
+        for (String id : device_groups_table.keySet()) {
             System.out.println(id);
             device_group dg = device_groups_table.get(id);
-            for (Enumeration f = dg.get_devices().elements(); f.hasMoreElements();) {
-                String dev = (String) f.nextElement();
+            //for (Enumeration f = dg.get_devices().elements(); f.hasMoreElements();) {
+            //    String dev = (String) f.nextElement();
+            for (String dev : dg.get_devices()) {
                 System.out.println("\t" + dev);
             }
         }
     }
 
-    public Hashtable <String, device_group> get_device_groups_table() {
+    public HashMap<String, device_group> get_device_groups_table() {
         return device_groups_table;
     }
 
@@ -209,9 +229,9 @@ public class home_parser {
         NodeList nl = document.getElementsByTagName("gateway");
         for (int i = 0; i < nl.getLength(); i++) {
             //String hostname = "";
-            Hashtable<command_t, commandmapping> commandmappings = new Hashtable<command_t, commandmapping>();
-            Hashtable<commandtype_t, Hashtable<Integer, port>> ports_table = new Hashtable<commandtype_t, Hashtable<Integer, port>>();
-            Vector<gateway_port> gateway_ports = new Vector<gateway_port>();
+            HashMap<command_t, commandmapping> commandmappings = new HashMap<command_t, commandmapping>();
+            EnumMap<commandtype_t, HashMap<Integer, port>> ports_table = new EnumMap<commandtype_t, HashMap<Integer, port>>(commandtype_t.class);
+            ArrayList<gateway_port> gateway_ports = new ArrayList<gateway_port>();
             Element gw_el = (Element) nl.item(i);
             NodeList nodes = gw_el.getChildNodes();
             for (int j = 0; j < nodes.getLength(); j++) {
@@ -236,11 +256,11 @@ public class home_parser {
                     if (nodeElement.getTagName().equals("ports")) {
                         //Vector<port> ports = parse_ports(nodeElement);
                         commandtype_t type = commandtype_t.valueOf(nodeElement.getAttribute("type"));
-                        Hashtable<Integer, port> port_table = new Hashtable<Integer, port>();
+                        HashMap<Integer, port> port_table = new HashMap<Integer, port>();
                         NodeList portlist = nodeElement.getElementsByTagName("port");
                         for (int k = 0; k < portlist.getLength(); k++) {
                             Element el = (Element) portlist.item(k);
-                            Hashtable<command_t, commandmapping> cmdmaps = new Hashtable<command_t, commandmapping>();
+                            HashMap<command_t, commandmapping> cmdmaps = new HashMap<command_t, commandmapping>();
                             //commandmappings cm = null;
                             NodeList cmdmapsnodes = el.getElementsByTagName("commandmappings");
                             if (cmdmapsnodes.getLength() > 0)
@@ -287,12 +307,12 @@ public class home_parser {
         }
     }*/
     
-    public Hashtable <String, gateway> get_gateway_table() {
+    public HashMap<String, gateway> get_gateway_table() {
         return gateway_table;
     }
 
-    Hashtable<String, input> parse_inputs(Element element) {
-        Hashtable<String, input> inputs = new Hashtable<String, input>();
+    HashMap<String, input> parse_inputs(Element element) {
+        HashMap<String, input> inputs = new HashMap<String, input>();
         NodeList nl = element.getElementsByTagName("input");
         for (int i = 0; i < nl.getLength(); i++) {
             input inp = parse_input((Element)nl.item(i));
@@ -302,14 +322,14 @@ public class home_parser {
     }
 
     input parse_input(Element element) {
-        Vector<String> devicerefs = new Vector<String>();
+        ArrayList<String> devicerefs = new ArrayList<String>();
         //HashSet<String> connectiontypes = new HashSet<String>();
         HashSet<String> internalsrc = new HashSet<String>();
         HashSet<String> externalsrc = new HashSet<String>();
-        Hashtable<mediatype, command_t> selectcommands = new Hashtable<mediatype, command_t>();
-        Hashtable<mediatype, input.querycommand> querycommands = new Hashtable<mediatype, input.querycommand>();
-        Hashtable<String, input.zone> zones = new Hashtable<String, input.zone>();
-        Vector<input.connector> connectors = new Vector<input.connector>();
+        EnumMap<mediatype, command_t> selectcommands = new EnumMap<mediatype, command_t>(mediatype.class);
+        EnumMap<mediatype, input.querycommand> querycommands = new EnumMap<mediatype, input.querycommand>(mediatype.class);
+        HashMap<String, input.zone> zones = new HashMap<String, input.zone>();
+        ArrayList<input.connector> connectors = new ArrayList<input.connector>();
 
         org.w3c.dom.NodeList nodes = element.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -366,8 +386,8 @@ public class home_parser {
         return inp;
     }
     
-    Hashtable<mediatype, command_t> parse_selectcommand(Element el) {
-        Hashtable<mediatype, command_t> cmd = new Hashtable<mediatype, command_t>(3);
+    EnumMap<mediatype, command_t> parse_selectcommand(Element el) {
+        EnumMap<mediatype, command_t> cmd = new EnumMap<mediatype, command_t>(mediatype.class);
         String av = el.getAttribute("audio_video");
             cmd.put(mediatype.audio_video, command_t.parse(av));
         String a = el.getAttribute("audio_only");
@@ -400,8 +420,8 @@ public class home_parser {
     }
 
     input.zone parse_zone(Element element) {
-        Hashtable<mediatype, command_t> selectcommands = new Hashtable<mediatype, command_t>(3);
-        Hashtable<mediatype, input.querycommand> querycommands = new Hashtable<mediatype, input.querycommand>(3);
+        EnumMap<mediatype, command_t> selectcommands = new EnumMap<mediatype, command_t>(mediatype.class);
+        EnumMap<mediatype, input.querycommand> querycommands = new EnumMap<mediatype, input.querycommand>(mediatype.class);
         org.w3c.dom.NodeList nodes = element.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node node = nodes.item(i);
@@ -433,8 +453,8 @@ public class home_parser {
                                 element.getAttribute("val"), type);
     }
 
-    Hashtable<command_t, commandmapping> parse_commandmappings(org.w3c.dom.Element element) {
-        Hashtable<command_t, commandmapping> cmdmappings = new Hashtable<command_t, commandmapping>();
+    HashMap<command_t, commandmapping> parse_commandmappings(org.w3c.dom.Element element) {
+        HashMap<command_t, commandmapping> cmdmappings = new HashMap<command_t, commandmapping>();
         org.w3c.dom.NodeList nodes = element.getElementsByTagName("commandmapping");
         for (int i = 0; i < nodes.getLength(); i++) {
             Element el = (Element) nodes.item(i);

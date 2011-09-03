@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009, 2010 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,10 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
+import IrpMaster.IrSignal;
+import IrpMaster.IrpMasterException;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,11 +33,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Vector;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -52,11 +51,11 @@ public final class home {
 
     private int max_hops = 10;
 
-    private final Hashtable<String, String> alias_table;
+    private final HashMap<String, String> alias_table;
     // The get method of device_table should not be used, use get_dev(String) instead.
-    private final Hashtable <String, dev> device_table;
-    private final Hashtable <String, device_group> device_groups_table; // indexed by name, not id
-    private final Hashtable <String, gateway> gateway_table;
+    private final HashMap<String, dev> device_table;
+    private final HashMap<String, device_group> device_groups_table; // indexed by name, not id
+    private final HashMap<String, gateway> gateway_table;
 
     public home(String home_filename/*, boolean verbose, int debug*/) throws IOException, SAXParseException, SAXException {
         Document doc = harcutils.open_xmlfile(home_filename);
@@ -109,9 +108,10 @@ public final class home {
      */
     public String[] get_devices() {
         int n = device_table.size();
-        Vector<String> v = new Vector<String>(n);
-        for (Enumeration<String> e = device_table.keys(); e.hasMoreElements();) {
-            String id = e.nextElement();
+        ArrayList<String> v = new ArrayList<String>(n);
+        //for (Enumeration<String> e = device_table.keys(); e.hasMoreElements();) {
+        //    String id = e.nextElement();
+        for (String id : device_table.keySet()) {
             if (!device_table.get(id).get_class().equals("null"))
                 v.add(id);
         }
@@ -119,7 +119,7 @@ public final class home {
     }
 
     public String[] get_selecting_devices() {
-        Vector<String> v = new Vector<String>();
+        ArrayList<String> v = new ArrayList<String>();
         for (dev d : device_table.values())
             if (!d.get_inputs().isEmpty())
                 v.add(d.get_id());
@@ -337,14 +337,14 @@ public final class home {
                             if (debugargs.dbg_transmit()) {
                                 System.err.println("Trying Globalcache (" + gw.get_hostname() + ")...");
                             }
-                            ir_code code = dev.get_code(cmd, commandtype_t.ir, toggle, debugargs.dbg_ir_protocols(), house, (short)(deviceno-1));
+                            IrSignal code = dev.get_code(cmd, commandtype_t.ir, toggle, debugargs.dbg_ir_protocols(), house, (short) (deviceno - 1));
                             if (code == null) {
                                 if (userprefs.get_instance().get_verbose())
                                     System.err.println("Command " + cmd + " exists, but has no ir code.");
-                     
+
                                 failure = true;
                             } else {
-                                String raw_ccf = code.raw_ccf_string();
+                                String raw_ccf = code.ccfString();
                                 globalcache gc = new globalcache(gw.get_hostname(), gw.get_model(), userprefs.get_instance().get_verbose());
                                 if (gc != null) {
                                     //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
@@ -378,7 +378,7 @@ public final class home {
 
                                     success = (new URL(url)).getContent() != null;
                                 } else if (gw.get_interface().equals("udp")) {
-                                    ir_code code = dev.get_code(cmd, commandtype_t.ir, toggle, debugargs.dbg_ir_protocols());
+                                    IrSignal code = dev.get_code(cmd, commandtype_t.ir, toggle, debugargs.dbg_ir_protocols());
                                     success = irt.send_ir(code, fgw.get_connectorno(), count);
                                 } else {
                                     System.err.println("Interface `" + gw.get_interface() + "' for IRTrans not implemented.");
@@ -402,6 +402,8 @@ public final class home {
                                     success = lirc_client.send_ir(the_command.get_remotename(), c.get_cmd(), count);
                             }
                         }
+                    } catch (IrpMasterException ex) {
+                        System.err.println(ex.getMessage());
                     } catch (java.net.NoRouteToHostException e) {
                         System.err.println("No route to " + gw.get_hostname());
                     } catch (IOException e) {
@@ -895,7 +897,8 @@ public final class home {
                         if (debugargs.dbg_transmit() || userprefs.get_instance().get_verbose())
                             System.err.println("Trying special with class = " + dev_class + ", method = " + cmd + ", hostname = " + fgw.get_hostname());
 
-                        Class cl = Class.forName(ir_code.class.getPackage().getName() + "." + dev_class);
+                        // ???????????????????????
+                        Class cl = Class.forName(/*ir_code*/IrSignal.class.getPackage().getName() + "." + dev_class);
                         Object d = cl.getConstructor(new Class[]{String.class}).newInstance(new Object[]{fgw.get_hostname()});
                         Class[] args_class = new Class[arguments.length];
 
@@ -981,7 +984,7 @@ public final class home {
             return dv.has_commandtype(type) && d.get_command(command, type) != null;
         else {
 
-            Vector<commandtype_t> types = d.get_commandtypes(command);
+            ArrayList<commandtype_t> types = d.get_commandtypes(command);
             for (commandtype_t t : types)
                 if (dv.has_commandtype(t))
                     return true;
@@ -1064,7 +1067,7 @@ public final class home {
         String[] args = new String[1];
         args[0] = arg;
         return do_command(devname, command_t.parse(command), args, commandtype_t.any,
-                1, toggletype.no_toggle, false);
+                1, toggletype.dont_care, false);
     }
 
     public String do_command(String devname, String command, String arg1, String arg2) throws InterruptedException {
@@ -1072,12 +1075,12 @@ public final class home {
         args[0] = arg1;
         args[1] = arg2;
         return do_command(devname, command_t.parse(command), args, commandtype_t.any,
-                1, toggletype.no_toggle, false);
+                1, toggletype.dont_care, false);
     }
 
   public String do_command(String devname, command_t cmd, int count) throws InterruptedException {
         return do_command(devname, cmd, new String[0],
-                commandtype_t.any, count, toggletype.no_toggle, false);
+                commandtype_t.any, count, toggletype.dont_care, false);
     }
 
     // Returns null by failure, otherwise output from command (possibly "").
@@ -1114,10 +1117,14 @@ public final class home {
         boolean has_memory = (mem != null) && mem.equals("yes");
         if (debugargs.dbg_dispatch())
             System.err.println("do_command: device " + devname + ", device_class " + dev_class + ", command " + cmd + ", type " + type + ", memory " + has_memory + ", toggle " + toggle);
-        Vector<gateway_port> gateway_ports = the_dev.get_gateway_ports();
+        ArrayList<gateway_port> gateway_ports = the_dev.get_gateway_ports();
         boolean success = false;
-        for (Enumeration<gateway_port> e = gateway_ports.elements(); e.hasMoreElements() && !success;) {
-            gateway_port gwp = e.nextElement();
+        //for (Enumeration<gateway_port> e = gateway_ports.elements(); e.hasMoreElements() && !success;) {
+        //    gateway_port gwp = e.nextElement();
+        for (gateway_port gwp : gateway_ports) {
+            if (success)
+                break;
+            
             if (gwp == null) {
                 System.out.println("Configuration error: gateway port is null.");
                 return null;
@@ -1208,11 +1215,14 @@ public final class home {
         } else {
             // None of the above, hope that the gateway is reachable from other
             // gateways.
-            Vector<gateway_port> in_ports = gw.get_gateway_ports();
+            ArrayList<gateway_port> in_ports = gw.get_gateway_ports();
             
             boolean success = false;
-            for (Enumeration<gateway_port> p = in_ports.elements(); p.hasMoreElements() && !success;) {
-                gateway_port gwp = p.nextElement();
+            //for (Enumeration<gateway_port> p = in_ports.elements(); p.hasMoreElements() && !success;) {
+            //    gateway_port gwp = p.nextElement();
+            for (gateway_port gwp : in_ports) {
+                if (success)
+                    break;
                 port outport = gw.get_port(act_type, fgw.get_connectorno());
                 //commandtype_t output_type = gwp.get_connectortype();
                 if (gwp.get_connectortype().is_compatible(type)) {/*output.getAttribute("connector").equals(fgw_connector) &&*/
@@ -1264,7 +1274,7 @@ public final class home {
     }
 
     public String[] gateway_instances(String gateway_class) {
-        Vector<String> v = new Vector<String>();
+        ArrayList<String> v = new ArrayList<String>();
         for (gateway gw : gateway_table.values()) {
             if (gw.get_class().equals(gateway_class))
                 v.add(gw.get_id());
@@ -1279,7 +1289,7 @@ public final class home {
             String filename = harcprops.get_instance().get_exportdir() + File.separatorChar + lircservers[i] + ".lirc.conf";
             //String[] devs = this.gateway_client_classes(lircservers[i]);
             String[] devs = device_table.keySet().toArray(new String[0]);// FIXME
-            try {
+            /*try {
                 lirc_export.export(filename, devs);
                 if (userprefs.get_instance().get_verbose())
                     System.err.println("LIRC Export: " + filename + " was successfully created.");
@@ -1295,7 +1305,7 @@ public final class home {
             } catch (SAXException ex) {
                 System.err.println(ex);
                 success = false;
-            }
+            }*/
         }
         return success;
     }
@@ -1330,7 +1340,7 @@ public final class home {
         String zone = null;
         connectiontype connection_type = connectiontype.any;
         command_t cmd = command_t.invalid;
-        toggletype toggle = toggletype.no_toggle;
+        toggletype toggle = toggletype.dont_care;
         String browser = null;
         String[] arguments = null;
         String propsfilename = null;

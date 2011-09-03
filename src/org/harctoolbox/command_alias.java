@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 package org.harctoolbox;
 
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -31,14 +31,14 @@ import org.xml.sax.SAXParseException;
 
 public class command_alias {
 
-    private Hashtable<String, command_t> aliastable = null;
+    private HashMap<String, command_t> aliastable = null;
     private boolean is_valid = false;
 
     public command_alias(String filename) {
         if (filename == null)
             return;
 
-        aliastable = new Hashtable<String, command_t>();
+        aliastable = new HashMap<String, command_t>();
         Document doc = null;
         try {
             doc = harcutils.open_xmlfile(filename);

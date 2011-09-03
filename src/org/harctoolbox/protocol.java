@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,46 +21,108 @@ this program. If not, see http://www.gnu.org/licenses/.
 // Take care of toggling state here
 package org.harctoolbox;
 
-import java.util.*;
-//import java.io.*;
+import IrpMaster.DecodeIR;
+import IrpMaster.IncompatibleArgumentException;
+import IrpMaster.IrSignal;
+import IrpMaster.IrpMaster;
+import IrpMaster.IrpMasterException;
+import IrpMaster.Protocol;
+import IrpMaster.UnassignedException;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.antlr.runtime.RecognitionException;
 
 public class protocol {
 
+    private static IrpMaster irpMaster = null;
+    private static HashMap<String, Protocol> protocols = null;
+    
+    private final static short invalid_parameter = -1;
+    
+    public static void initialize(String irp_database) throws FileNotFoundException, IncompatibleArgumentException {
+        irpMaster = new IrpMaster(irp_database);
+        protocols = new HashMap<String, Protocol>();
+    }
+    
+    public static void initialize() throws FileNotFoundException, IncompatibleArgumentException {
+        initialize(harcprops.get_instance().get_irpmaster_configfile());
+    }
+    
     // States for toggles, one per protocol
-    private static Hashtable<String, Integer> toggle_state = new Hashtable<String, Integer>();
-
-    public static ir_code encode(String protocol_name, short deviceno,
-            short subdevice, short cmdno, toggletype toggle, boolean verbose) {
-        int itoggle = 0;
-        if (toggle == toggletype.do_toggle) {
-            itoggle = toggle_state.containsKey(protocol_name) ? 1 - toggle_state.get(protocol_name) : 0;
-            toggle_state.put(protocol_name, new Integer(itoggle));
+    //private static Hashtable<String, Integer> toggle_state = new Hashtable<String, Integer>();
+    
+    private static Protocol get_protocol(String name) throws UnassignedException, RecognitionException {
+        if (!protocols.containsKey(name)) {
+            Protocol protocol = irpMaster.newProtocol(name);
+            protocols.put(name, protocol);
         }
-        ir_code ir =
-            protocol_name.equals("raw_ccf") ? new raw_ir()
-            : new protocol_parser(protocol_name, deviceno, subdevice, cmdno, itoggle);
+        return protocols.get(name);            
+    }
+    
+    public static IrSignal encode(String protocol_name, short deviceno,
+            short subdevice, short cmdno, toggletype toggle, boolean verbose) throws IrpMasterException, RecognitionException {
+        //int itoggle = 0;
+        //if (toggle == toggletype.do_toggle) {
+        //    itoggle = toggle_state.containsKey(protocol_name) ? 1 - toggle_state.get(protocol_name) : 0;
+        //    toggle_state.put(protocol_name, new Integer(itoggle));
+        //}
+        IrSignal ir =
+            protocol_name.equals("raw_ccf") ? null // new raw_ir()
+            : /*new*/ protocol_parser(protocol_name, deviceno, subdevice, cmdno, /*i*/toggle);
         
-        if (!ir.is_valid()) {
+        /*if (!ir.is_valid()) {
             if (verbose)
                 System.err.println(protocol_name.equals("")
                         ? "No protocol."
                         : ("Protocol " + protocol_name + " not implemented."));
             ir = null;
-        }
+        }*/
         return ir;
     }
+    
+    private static HashMap<String, Long>parameters(short deviceno, short subdevice, short cmdno, toggletype toggle) {
+        HashMap<String, Long>params = new HashMap<String, Long>();
+        if (deviceno != invalid_parameter)
+            params.put("D", (long) deviceno);
+        if (subdevice != invalid_parameter)
+            params.put("S", (long) subdevice);
+        if (cmdno != invalid_parameter)
+            params.put("F", (long) cmdno);
+        if (toggle != toggletype.dont_care)
+            params.put("T", (long) toggletype.toInt(toggle));
+        
+        return params;
+    }
+    
+    private static IrSignal protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno, toggletype /*i*/toggle) throws IrpMasterException, RecognitionException {
+        Protocol protocol = get_protocol(protocol_name);
+        HashMap<String, Long> params = parameters(deviceno, subdevice, cmdno, toggle);
+        IrSignal irSignal = protocol.renderIrSignal(params);
+        return irSignal;
+        
+    }
+    
+    /*private static raw_ir irSignal2ir_code(IrSignal irSignal) throws IncompatibleArgumentException {
+        //IrpMaster.Pronto.getProntoCode(irSignal.getFrequency());
+        Pronto pronto = new Pronto(irSignal);
+        return new raw_ir((int)pronto.getFrequency(), pronto.initArray(), pronto.repeatArray(), null);
+    }*/
 
-    // FIXME: throw exception (?) if protocol name not found
-    public static boolean has_toggle(String protocol_name) {
-        return protocol_parser.has_toggle(protocol_name);
+    public static boolean has_toggle(String protocol_name) throws UnassignedException, RecognitionException {
+        Protocol protocol = get_protocol(protocol_name);
+        return protocol.hasParameter("T");
     }
 
-    public static boolean has_subdevice(String protocol_name) {
-        return protocol_parser.has_subdevice(protocol_name);
+    public static boolean has_subdevice(String protocol_name) throws UnassignedException, RecognitionException {
+        Protocol protocol = get_protocol(protocol_name);
+        return protocol.hasParameter("S");
     }
 
-    public static boolean subdevice_optional(String protocol_name) {
-        return protocol_parser.subdevice_optional(protocol_name);
+    public static boolean subdevice_optional(String protocol_name) throws UnassignedException, RecognitionException {
+        Protocol protocol = get_protocol(protocol_name);
+        return protocol.hasParameterDefault("S");
     }
 
     /**
@@ -68,7 +130,8 @@ public class protocol {
      * @return Array of strings describing names of implemented protocols.
      */
     public static String[] get_protocols() {
-        return harcutils.get_basenames(harcprops.get_instance().get_protocolsdir(), harcutils.protocolfile_extension);
+        //return harcutils.get_basenames(harcprops.get_instance().get_protocolsdir(), harcutils.protocolfile_extension);
+        return irpMaster.getNames().toArray(new String[0]);
     }
 
     private static void usage(int returncode) {
@@ -129,6 +192,13 @@ public class protocol {
                     usage();
                 }
             }
+            try {
+                initialize();
+            } catch (FileNotFoundException ex) {
+                System.err.println(ex.getMessage());
+            } catch (IncompatibleArgumentException ex) {
+                System.err.println(ex.getMessage());
+            }
 
             if (list) {
                 harcutils.printtable("Available IR protocols:", get_protocols());
@@ -158,19 +228,33 @@ public class protocol {
                     ? new globalcache(gc_hostname, verbose) : null;
 
             for (int command = min_command; command <= max_command; command++) {
-                ir_code ir = encode(protocol_name, device, subdevice,
-                        (short) command, toggle, verbose);
+                IrSignal ir = null;
+                try {
+                    ir = encode(protocol_name, device, subdevice,
+                   (short) command, toggle, verbose);
+                } catch (IrpMasterException ex) {
+                    System.err.println(ex.getMessage());
+                } catch (RecognitionException ex) {
+                    System.err.println(ex.getMessage());
+                }
                 if (ir == null) {
                     System.exit(1); // FIXME
                 }
                 //if (verbose)
                 //    System.out.println(command);
 
+                // FIXME
                 if (decodeir) {
                     try {
-                        com.hifiremote.decodeir.DecodeIR dec = new com.hifiremote.decodeir.DecodeIR(ir.raw_ccf_array());
-                        com.hifiremote.decodeir.DecodeIR.DecodedSignal[] out = dec.getDecodedSignals();
-                        if (out.length == 0)
+                        //com.hifiremote.decodeir.DecodeIR dec = new com.hifiremote.decodeir.DecodeIR(ir.raw_ccf_array());
+                        //com.hifiremote.decodeir.DecodeIR.DecodedSignal[] out = dec.getDecodedSignals();
+                        DecodeIR.DecodedSignal[] out = null;
+
+
+                        DecodeIR.loadLibrary();
+                        //System.err.println("++++++++++++++++" + DecodeIR.getVersion());
+                        out = DecodeIR.decodePronto(ir.ccfString());
+                        if (out == null || out.length == 0)
                             System.out.println("No decodings from DecodeIR.");
                         for (int i = 0; i < out.length; i++) {
                             System.out.println(out[i]);
@@ -178,6 +262,8 @@ public class protocol {
                     } catch (UnsatisfiedLinkError e) {
                         System.err.println("Did not find DecodeIR");
                         System.exit(harcutils.exit_dynamic_link_error);
+                    } catch (IncompatibleArgumentException ex) {
+                        System.err.println(ex.getMessage());
                     }
                 }
 
@@ -195,7 +281,11 @@ public class protocol {
                         System.exit(8);
                     }
                 } else
-                    System.out.println(ir.raw_ccf_string());
+                    try {
+                    System.out.println(ir.ccfString());
+                } catch (IncompatibleArgumentException ex) {
+                    System.err.println(ex.getMessage());
+                }
 
                 if (command < max_command && wait_ms > 0) {
                     try {

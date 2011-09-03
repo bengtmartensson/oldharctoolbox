@@ -1,11 +1,25 @@
+/*
+Copyright (C) 2009-2011 Bengt Martensson.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+*/
+
 package org.harctoolbox;
 
-import java.util.Collection;
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Vector;
 
 /**
  *
@@ -28,8 +42,8 @@ public class dev {
     private String defaultzone;
     private HashMap<String, String> attributes;
     private String powered_through;
-    private Vector<gateway_port> gateway_ports;
-    private Hashtable<String, input> inputs;
+    private ArrayList<gateway_port> gateway_ports;
+    private HashMap<String, input> inputs;
 
     public dev(String name,
             String id,
@@ -43,8 +57,8 @@ public class dev {
             String notes,
             HashMap<String, String> attributes,
             String powered_through,
-            Vector<gateway_port> gateway_ports,
-            Hashtable<String, input> inputs) {
+            ArrayList<gateway_port> gateway_ports,
+            HashMap<String, input> inputs) {
         this.name = name;
         this.id = id;
         this.canonical = canonical;
@@ -72,7 +86,7 @@ public class dev {
     public HashSet<String> get_zone_names() {
         HashSet<String> hs = new HashSet<String>();
         for (input inp : inputs.values()) {
-            Vector<String> v = inp.get_zone_names();
+            ArrayList<String> v = inp.get_zone_names();
             for (String s : v)
                 hs.add(s);
         }
@@ -126,7 +140,7 @@ public class dev {
         return powered_through;
     }
 
-    public Vector<gateway_port> get_gateway_ports() {
+    public ArrayList<gateway_port> get_gateway_ports() {
         return gateway_ports;
     }
 
@@ -141,7 +155,7 @@ public class dev {
         return false;
     }
 
-    public Hashtable<String, input> get_inputs() {
+    public HashMap<String, input> get_inputs() {
         return inputs;
     }
 

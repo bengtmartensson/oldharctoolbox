@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,6 +16,11 @@ this program. If not, see http://www.gnu.org/licenses/.
 */
 
 package org.harctoolbox;
+
+import IrpMaster.IrSignal;
+import IrpMaster.IrpMasterException;
+import IrpMaster.Pronto;
+import org.antlr.runtime.RecognitionException;
 
 
 // TODO: use a reference to the commandset instead of copying most of its content.
@@ -120,24 +125,32 @@ public class command {
 //        return get_ir_code(toggletype.toggle_0, verbose);
 //    }
 
-    public ir_code get_ir_code(toggletype toggle, boolean verbose, short devno, short subdev) {
-        ir_code ir = protocol.encode(protocol_name, devno, subdev, cmdno, toggle, verbose);
-        // Fallback
-        if (ir == null || protocol_name.equals("raw_ccf")) {
-            String ccf = toggle == toggletype.toggle_1 ? ccf_toggle_1 : ccf_toggle_0;
-            if (ccf == null) {
-                System.err.println("Neither protocol code nor raw CCF available");
-                return null;
-            }
-            if (verbose)
-                System.err.println("No protocol code available, falling back to raw CCF code");
-            ir = new ccf_parse(ccf);
-        }
+    public IrSignal get_ir_code(toggletype toggle, boolean verbose, short devno, short subdev) {
+        IrSignal ir = null;
+        try {
+            ir = protocol.encode(protocol_name, devno, subdev, cmdno, toggle, verbose);
+            // Fallback
+            if (ir == null || protocol_name.equals("raw_ccf")) {
+                String ccf = toggle == toggletype.toggle_1 ? ccf_toggle_1 : ccf_toggle_0;
+                if (ccf == null) {
+                    System.err.println("Neither protocol code nor raw CCF available");
+                    return null;
+                }
+                if (verbose)
+                    System.err.println("No protocol code available, falling back to raw CCF code");
 
-        return ir;
+                //ir = new ccf_parse(ccf);
+                ir = Pronto.ccfSignal(ccf);
+            }
+        } catch (RecognitionException ex) {
+            System.out.println(ex.getMessage());
+        } catch (IrpMasterException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return ir ;
     }
 
-     public ir_code get_ir_code(toggletype toggle, boolean verbose) {
+     public IrSignal get_ir_code(toggletype toggle, boolean verbose) {
         return get_ir_code(toggle, verbose, deviceno, subdevice);
     }
 

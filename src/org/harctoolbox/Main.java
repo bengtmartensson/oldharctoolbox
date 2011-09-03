@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@ this program. If not, see http://www.gnu.org/licenses/.
  */
 package org.harctoolbox;
 
+import IrpMaster.IrpMasterException;
+import java.io.FileNotFoundException;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
@@ -35,9 +37,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.GregorianCalendar;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import org.w3c.dom.Document;
@@ -70,7 +71,7 @@ public class Main {
     //boolean verbose = false;
     home hm = null;
     //macro_engine engine = null;
-    Hashtable< String, Calendar> timertable = new Hashtable<String, Calendar>();
+    HashMap< String, Calendar> timertable = new HashMap<String, Calendar>();
     //jython_engine jython = null;
     command_alias alias_expander = null;
     commandtype_t type = commandtype_t.any;
@@ -79,7 +80,7 @@ public class Main {
     String charset = null;
     String zone = null;
     int count = 1;
-    toggletype toggle = toggletype.no_toggle;
+    toggletype toggle = toggletype.dont_care;
     boolean smart_memory = false;
     private static volatile boolean spawn_new_socketthreads = false;
     private static boolean readline_go_on = true; // FIXME
@@ -136,7 +137,7 @@ public class Main {
         boolean verbose = false;
         int socketno = -1;
         commandtype_t type = commandtype_t.any;
-        toggletype toggle = toggletype.no_toggle;
+        toggletype toggle = toggletype.dont_care;
         mediatype the_mediatype = mediatype.audio_video;
         String charset = "iso-8859-1";
         String zone = null;
@@ -266,6 +267,16 @@ public class Main {
         userprefs.get_instance().set_debug(debug);
         userprefs.get_instance().set_verbose(verbose);
 
+        try {
+            protocol.initialize();
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(1);
+        } catch (IrpMasterException ex) {
+            System.err.println(ex.getMessage());
+            System.exit(1);
+        }
+        
         if (gui_mode) {
             gui_execute(homefilename);
         } else {
@@ -943,13 +954,13 @@ public class Main {
     //    return timertable.keys();
     //}
     
-    public String[] get_timer_names() {
+    /*public String[] get_timer_names() {
         Enumeration<String> e = timertable.keys();
         String[] arr = new String[timertable.size()];
         for (int i = 0; e.hasMoreElements(); i++)
             arr[i++] = e.nextElement();
         return arr;
-    }
+    }*/
 
     private int interactive_jython_execute() /*throws InterruptedException*/ {
         jython_engine interactive_jython = new jython_engine(hm, true);
