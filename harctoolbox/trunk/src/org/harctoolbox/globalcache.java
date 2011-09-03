@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,8 +17,17 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import java.io.*;
-import java.net.*;
+import IrpMaster.IrSignal;
+import IrpMaster.IrpMasterException;
+import IrpMaster.Pronto;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.NoRouteToHostException;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 public class globalcache {
 
@@ -88,7 +97,7 @@ public class globalcache {
     /**
      * Turns a CCF string to a GC string.
      */
-    public static String ccf_string2gc_string(String ccf_string, int count) {
+    /*public static String ccf_string2gc_string(String ccf_string, int count) {
         String gc_string = "";
         try {
             String sa[] = ccf_string.trim().split(" +");
@@ -110,7 +119,8 @@ public class globalcache {
             gc_string = "???";
         }
         return gc_string;
-    }
+    }*/
+    
     private boolean verbose = true;
     private gc_model gc_type = gc_model.gc_100_06;
     private java.lang.Process gc_process;
@@ -123,10 +133,10 @@ public class globalcache {
         return result;
     }
 
-    private String gc_string(ir_code code, int count) {
-        int[] intro = code.get_intro_array();
-        int[] repeat = code.get_repeat_array();
-        return code.get_frequency() + "," + count + "," + (1 + intro.length) + gc_joiner(intro) + gc_joiner(repeat);
+    private String gc_string(IrSignal code, int count) {
+        int[] intro = code.getIntroPulses();
+        int[] repeat = code.getRepeatPulses();
+        return ((int)code.getFrequency()) + "," + count + "," + (1 + intro.length) + gc_joiner(intro) + gc_joiner(repeat);
     }
     ;
 
@@ -341,7 +351,7 @@ public class globalcache {
         stop_ir(gc_default_connector);
     }
 
-    public boolean send_ir(ir_code code, int module, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(IrSignal code, int module, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
         if (!valid_connector(connector))
             connector = gc_default_connector;
 
@@ -351,33 +361,34 @@ public class globalcache {
         return result.startsWith("completeir");
     }
 
-    public boolean send_ir(ir_code code, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(IrSignal code, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
         return send_ir(code, default_ir_module + ((connector - 1) / 3), (connector - 1) % 3 + 1, count);
     }
 
-    public boolean send_ir(ir_code code, int connector) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(IrSignal code, int connector) throws UnknownHostException, IOException, InterruptedException {
         return send_ir(code, connector, gc_default_connector);
     }
 
-    public boolean send_ir(ir_code code) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(IrSignal code) throws UnknownHostException, IOException, InterruptedException {
         return send_ir(code, gc_default_connector);
     }
 
-    public boolean send_ir(String ccf_string, int module, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
-        if (!valid_connector(connector))
+    public boolean send_ir(String ccf_string, int module, int connector, int count) throws UnknownHostException, IOException, InterruptedException, IrpMasterException {
+        return send_ir(Pronto.ccfSignal(ccf_string), module, connector, count);
+        /*        if (!valid_connector(connector))
             connector = gc_default_connector;
 
         String cmd = "sendir," + connector_address(module, connector) + "," + gc_index + "," + ccf_string2gc_string(ccf_string, count);
         gc_index = (gc_index + 1) % 65536;
         String result = send_command(cmd);
-        return result.startsWith("completeir");
+        return result.startsWith("completeir");*/
     }
 
-    public boolean send_ir(String ccf_string, int connector) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(String ccf_string, int connector) throws UnknownHostException, IOException, InterruptedException, IrpMasterException {
         return send_ir(ccf_string, default_ir_module, connector, gc_default_connector);
     }
 
-    public boolean send_ir(String ccf_string, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
+    public boolean send_ir(String ccf_string, int connector, int count) throws UnknownHostException, IOException, InterruptedException, IrpMasterException {
         return send_ir(ccf_string, default_ir_module + (connector - 1) / 3, (connector - 1) % 3 + 1, count);
     }
 
@@ -648,6 +659,9 @@ public class globalcache {
                 System.exit(1);
             } catch (IOException e) {
                 System.err.println("IOException occured.");
+                System.exit(1);
+            } catch (IrpMasterException e) {
+                System.err.println(e.getMessage());
                 System.exit(1);
             } catch (InterruptedException e) {
             }

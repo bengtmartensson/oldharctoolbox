@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,12 +17,15 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
+import IrpMaster.IrSignal;
+import IrpMaster.IrpMasterException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Vector;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -160,7 +163,7 @@ public class device {
     }*/
 
     public commandset[] get_commandsets(String remotename, commandtype_t type) {
-        Vector<commandset> vect = new Vector<commandset>();
+        ArrayList<commandset> vect = new ArrayList<commandset>();
         //int len = 0;
         //for (int i = 0; i < commandsets.length; i++) {
         //    if (commandsets[i].get_remotename().equals(remotename))
@@ -200,8 +203,8 @@ public class device {
         return harcutils.sort_unique(harcutils.nonnulls(work));
     }
 
-    public Vector<commandtype_t> get_commandtypes(command_t cmd) {
-        Vector <commandtype_t> v = new Vector <commandtype_t>();
+    public ArrayList<commandtype_t> get_commandtypes(command_t cmd) {
+        ArrayList<commandtype_t> v = new ArrayList<commandtype_t>();
         for (commandtype_t t : commandtype_t.values())
             if (t != commandtype_t.any && get_command(cmd, t) != null)
                 v.add(t);
@@ -263,7 +266,7 @@ public class device {
     }
 
     // This is not very smart... here for LIRC compatibility
-    public int get_gap() {
+    /*public int get_gap() {
         int max = 0;
         for (int cs = 0; cs < commandsets.length; cs++) {
             if (commandsets[cs].is_type_ir()) {
@@ -276,15 +279,15 @@ public class device {
             }
         }
         return max;
-    }
+    }*/
     
     public int get_frequency() {
         for (int cs = 0; cs < commandsets.length; cs++) {
             if (commandsets[cs].is_type_ir()) {
                 //for (int i = 0; i < commandsets[cs].get_no_commands(); i++) {
-                    ir_code irc = get_command_by_index(cs, 0).get_ir_code(toggletype.toggle_0, false);
+                    IrSignal irc = get_command_by_index(cs, 0).get_ir_code(toggletype.toggle_0, false);
                     //System.out.println(irc.);
-                    return irc == null ? 0 : irc.get_frequency();
+                    return irc == null ? 0 : (int) irc.getFrequency();
                     //if (gap > max)
                       //  max = gap;
                 //}
@@ -297,12 +300,12 @@ public class device {
         return new command(commandsets[commandset], commandindex);
     }
 
-    public ir_code get_code(command_t cmd, commandtype_t type, toggletype toggle, boolean verbose) {
+    public IrSignal get_code(command_t cmd, commandtype_t type, toggletype toggle, boolean verbose) {
         command c = get_command(cmd, type);
         return (c != null) ? c.get_ir_code(toggle, verbose) : null;
     }
 
-    public ir_code get_code(command_t cmd, commandtype_t type, toggletype toggle, boolean verbose, String house, short deviceno) {
+    public IrSignal get_code(command_t cmd, commandtype_t type, toggletype toggle, boolean verbose, String house, short deviceno) {
         command c = get_command(cmd, type);
         if (c == null)
             return null;
@@ -312,7 +315,7 @@ public class device {
         : c.get_ir_code(toggle, verbose);
     }
 
-    public ir_code get_ir_code(command_t cmd, toggletype toggle, boolean verbose) {
+    public IrSignal get_ir_code(command_t cmd, toggletype toggle, boolean verbose) {
         return get_code(cmd, commandtype_t.ir, toggle, verbose);
     }
 
@@ -339,11 +342,10 @@ public class device {
     }
 
     public static String[] devices2remotes(String[] devices) throws IOException, SAXParseException, SAXException {
-        Vector v = new Vector();
+        ArrayList<String> v = new ArrayList<String>();
         for (int i = 0; i < devices.length; i++) {
             String[] remotes = (new device(devices[i])).get_remotenames();
-            for (int j = 0; j < remotes.length; j++)
-                v.add(remotes[j]);
+            v.addAll(Arrays.asList(remotes));
         }
         return (String[]) v.toArray(new String[v.size()]);
     }
@@ -689,7 +691,7 @@ public class device {
                 NodeList cmd_nodes = cs.getElementsByTagName("command");
                 boolean has_toggle = cs.getAttribute("toggle").equals("yes");
                 String protocol = cs.getAttribute("protocol");
-                jp1protocoldata jp1data = protocol_parser.get_jp1data(protocol);
+                //jp1protocoldata jp1data = protocol_parser.get_jp1data(protocol);
                 // This weird stuff (using cmd_index instead of j)
                 // counteracts for the fact that commands with invalid names.
                 // (such not in command_t) are not sorted in.
@@ -708,20 +710,22 @@ public class device {
                     }
                     
                     short obc = get_command_by_index(i, cmd_index).get_commandno();
-                    ir_code ir = get_command_by_index(i, cmd_index++/*j*/).get_ir_code(toggletype.no_toggle, verbose);
+                    IrSignal ir = get_command_by_index(i, cmd_index++/*j*/).get_ir_code(toggletype.dont_care, verbose);
                     if (ir == null) {
                         //if (verbose)
                             System.err.println("No IR-code for command " + get_command_by_index(i, j).get_cmd());
                         return false;
                     }
-                    String cooked_ccf = ir.cooked_ccf_string();
-                    if (cooked_ccf != null) {
-                        Element cooked = doc.createElement("ccf_cooked");
-                        cooked.appendChild(doc.createTextNode(cooked_ccf));
-                        cmd_el.appendChild(cooked);
-                    }
+                    //String cooked_ccf = ir.cooked_ccf_string();
+                    //if (cooked_ccf != null) {
+                    //    Element cooked = doc.createElement("ccf_cooked");
+                    //    cooked.appendChild(doc.createTextNode(cooked_ccf));
+                    //    cmd_el.appendChild(cooked);
+                    //}
 
-                    Element code = null;
+                    try {
+                        Element code = null;
+                    
                     if (has_toggle) {
                         code = doc.createElement("toggle_pair");
 
@@ -729,25 +733,28 @@ public class device {
                         c.setAttribute("toggle", "0");
                         code.appendChild(c);
                         ir = get_command_by_index(i, j).get_ir_code(toggletype.toggle_0, verbose);
-                        c.appendChild(doc.createTextNode(ir.raw_ccf_string()));
+                        c.appendChild(doc.createTextNode(ir.ccfString()));
 
                         c = doc.createElement("ccf");
                         c.setAttribute("toggle", "1");
                         code.appendChild(c);
                         ir = get_command_by_index(i, j).get_ir_code(toggletype.toggle_1, verbose);
-                        c.appendChild(doc.createTextNode(ir.raw_ccf_string()));
+                        c.appendChild(doc.createTextNode(ir.ccfString()));
                     } else {
                         code = doc.createElement("ccf");
                         //ir_code ir = get_command_by_index(i, j).get_ir_code(toggletype.no_toggle, verbose);
                         //code.appendChild(doc.createTextNode(ir.ccf_string()));
-                        code.appendChild(doc.createTextNode(ir.raw_ccf_string()));
+                        code.appendChild(doc.createTextNode(ir.ccfString()));
                     }
                     cmd_el.appendChild(code);
-                    if (jp1data != null) {
-                        short hex = jp1data.obc2hex(obc);
-                        cmd_el.setAttribute("hex", String.format("%02x", hex));
-                        cmd_el.setAttribute("efc", String.format("%03d", jp1protocoldata.hex2efc(hex)));
+                    } catch (IrpMasterException e) {
+                        System.err.println(e.getMessage());
                     }
+                    //if (jp1data != null) {
+                    //    short hex = jp1data.obc2hex(obc);
+                    //    cmd_el.setAttribute("hex", String.format("%02x", hex));
+                    //    cmd_el.setAttribute("efc", String.format("%03d", jp1protocoldata.hex2efc(hex)));
+                    //}
                 }
             }
         }
@@ -937,15 +944,15 @@ public class device {
             else {
                 System.out.println(c.toString());
                 if (get_code) {
-                    ir_code ircode = (deviceno == -1) ? c.get_ir_code(toggletype.toggle_0, true)
+                    IrSignal ircode = (deviceno == -1) ? c.get_ir_code(toggletype.toggle_0, true)
                             : c.get_ir_code(toggletype.toggle_0, true, deviceno, subdevice);
                     if (ircode == null) {
                         System.err.println("No such IR command: " + cmdname);
                         System.exit(2);
                     } else {
-                        ircode.print();
+                        System.out.println(ircode);
                         if (c.get_toggle())
-                            c.get_ir_code(toggletype.toggle_1, true).print();
+                            System.out.println(c.get_ir_code(toggletype.toggle_1, true));
                     }
                 }
             }

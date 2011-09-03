@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,19 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import java.net.*;
-import java.io.*;
-import org.w3c.dom.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class ezcontrol_t10 {
 

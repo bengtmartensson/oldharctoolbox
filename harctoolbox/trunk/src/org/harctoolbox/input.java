@@ -1,13 +1,29 @@
+/*
+Copyright (C) 2009-2011 Bengt Martensson.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+*/
+
 package org.harctoolbox;
 
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Vector;
 
 /**
  *
- * @author bengt
  */
 public class input {
 
@@ -39,11 +55,11 @@ public class input {
     public static class zone {
 
         private String name;
-        private Hashtable<mediatype, command_t> selectcommands;
-        private Hashtable<mediatype, querycommand> querycommands;
+        private EnumMap<mediatype, command_t> selectcommands;
+        private EnumMap<mediatype, querycommand> querycommands;
 
-        public zone(String name, Hashtable<mediatype, command_t> selectcommands,
-                Hashtable<mediatype, querycommand> querycommands) {
+        public zone(String name, EnumMap<mediatype, command_t> selectcommands,
+                EnumMap<mediatype, querycommand> querycommands) {
             this.name = name;
             this.selectcommands = selectcommands;
             this.querycommands = querycommands;
@@ -64,7 +80,7 @@ public class input {
           int number;
           String version;
           String remark;
-          HashSet <String> deviceref;
+          HashSet<String> deviceref;
 
           public connector(connectiontype type, String hardware, int number, String version, String remark, HashSet<String> deviceref) {
               this.type = type;
@@ -100,10 +116,10 @@ public class input {
     private String myname;
     private boolean audio;
     private boolean video;
-    private Hashtable<mediatype, command_t> selectcommands;
-    private Hashtable<mediatype, querycommand> querycommands;
-    private Hashtable<String, zone> zones;
-    private Vector<connector> connectors;
+    private EnumMap<mediatype, command_t> selectcommands;
+    private EnumMap<mediatype, querycommand> querycommands;
+    private HashMap<String, zone> zones;
+    private ArrayList<connector> connectors;
     private HashSet<String> devicesrc;
     private HashSet<String> internalsrc;
     private HashSet<String> externalsrc;
@@ -112,10 +128,10 @@ public class input {
             String myname,
             boolean audio,
             boolean video,
-            Hashtable<mediatype, command_t> selectcommands,
-            Hashtable<mediatype, querycommand> querycommands,
-            Hashtable<String, zone> zones,
-            Vector<connector> connectors,
+            EnumMap<mediatype, command_t> selectcommands,
+            EnumMap<mediatype, querycommand> querycommands,
+            HashMap<String, zone> zones,
+            ArrayList<connector> connectors,
             HashSet<String> internalsrc,
             HashSet<String> externalsrc) {
 
@@ -135,8 +151,8 @@ public class input {
         return name;
     }
 
-    public Vector<String> get_zone_names() {
-        Vector<String> v = new Vector<String>();
+    public ArrayList<String> get_zone_names() {
+        ArrayList<String> v = new ArrayList<String>();
         for (zone z : zones.values())
             v.add(z.name);
         return v;
@@ -155,7 +171,7 @@ public class input {
     //    return deviceref;
     //}
 
-    public Vector<connector> get_connectors() {
+    public ArrayList<connector> get_connectors() {
         return connectors;
     }
 
@@ -164,9 +180,9 @@ public class input {
         if (zonename != null && zones.get(zonename) == null)
             return null;
 
-        for (Enumeration<connector> el = connectors.elements(); el.hasMoreElements();) {
-            connector c = el.nextElement();
-
+        //for (Enumeration<connector> el = connectors.elements(); el.hasMoreElements();) {
+        //    connector c = el.nextElement();
+        for (connector c : connectors) {
             HashSet<String> s = c.get_deviceref();
             for (String ss : s) {
                 v.add(ss);
@@ -184,12 +200,13 @@ public class input {
     public boolean connects_to(String device, connectiontype type) {
         if (internalsrc.contains(device) || externalsrc.contains(device))
             return true;
-        for (Enumeration<connector> el = connectors.elements(); el.hasMoreElements();) {
-            connector c = el.nextElement();
+        //for (Enumeration<connector> el = connectors.elements(); el.hasMoreElements();) {
+        //    connector c = el.nextElement();
+        for (connector c : connectors) {
             if (c.get_deviceref().contains(device) && c.type.is_ok(type))
                 return true;
         }
-            return false;
+        return false;
     }
 
     public boolean connects_to(String device) {
@@ -197,8 +214,9 @@ public class input {
     }
 
     private boolean is_connected_device(String device) {
-        for (Enumeration<connector> el = connectors.elements(); el.hasMoreElements(); ) {
-            connector c = el.nextElement();
+        //for (Enumeration<connector> el = connectors.elements(); el.hasMoreElements(); ) {
+        //    connector c = el.nextElement();
+        for (connector c : connectors) {
             if (c.deviceref.contains(device))
                 return true;
         }
@@ -229,7 +247,7 @@ public class input {
     }
 
     public querycommand get_query_command(String zonename, mediatype type) {
-        Hashtable<mediatype, querycommand> table;
+        EnumMap<mediatype, querycommand> table;
         if (zonename == null || zonename.isEmpty()) {
             table = querycommands;
         } else {

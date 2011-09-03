@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
+import IrpMaster.IncompatibleArgumentException;
+import IrpMaster.IrSignal;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -569,23 +571,23 @@ public class irtrans {
         return send_command_udp((repeat ? "sndccfr " : "sndccf ") + ccf_string.trim() + "," + led_t.led_char(led));
     }
 
-    public boolean send_ir(ir_code code, led_t led, boolean repeat)
-            throws UnknownHostException, IOException {
-        return send_ir(code.ccf_string(), led, repeat);
+    public boolean send_ir(IrSignal code, led_t led, boolean repeat)
+            throws UnknownHostException, IOException, IncompatibleArgumentException {
+        return send_ir(code.ccfString(), led, repeat);
     }
 
-    public boolean send_ir(ir_code code)
-            throws UnknownHostException, IOException {
+    public boolean send_ir(IrSignal code)
+            throws UnknownHostException, IOException, IncompatibleArgumentException {
         return send_ir(code, led_t.intern, false);
     }
 
-    public boolean send_ir(ir_code code, led_t led)
-            throws UnknownHostException, IOException {
+    public boolean send_ir(IrSignal code, led_t led)
+            throws UnknownHostException, IOException, IncompatibleArgumentException {
         return send_ir(code, led, false);
     }
 
-    public boolean send_ir(ir_code code, led_t led, int count)
-            throws UnknownHostException, IOException {
+    public boolean send_ir(IrSignal code, led_t led, int count)
+            throws UnknownHostException, IOException, IncompatibleArgumentException {
         boolean success = true;
         for (int c = 0; c < count; c++) {
             success = success && send_ir(code, led, c > 0);
@@ -593,13 +595,13 @@ public class irtrans {
         return success;
     }
 
-    public boolean send_ir(ir_code code, String led, int count)
-            throws UnknownHostException, IOException {
+    public boolean send_ir(IrSignal code, String led, int count)
+            throws UnknownHostException, IOException, IncompatibleArgumentException {
         return send_ir(code, led_t.valueOf(led), count);
     }
     
-    public boolean send_ir(ir_code code, int led, int count)
-            throws UnknownHostException, IOException {
+    public boolean send_ir(IrSignal code, int led, int count)
+            throws UnknownHostException, IOException, IncompatibleArgumentException {
         return send_ir(code, led_t.parse(led), count);
     }
 

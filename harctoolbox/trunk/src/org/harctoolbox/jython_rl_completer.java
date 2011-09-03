@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2010 Bengt Martensson.
+Copyright (C) 2010-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import org.gnu.readline.*;
+import org.gnu.readline.ReadlineCompleter;
 
 /**
  *

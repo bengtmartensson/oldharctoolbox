@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +60,8 @@ public class harcprops {
         update("home_conf",	harc_home + "config/home.xml");
         update("dtddir",	harc_home + "dtds");
         update("devicesdir",	harc_home + "devices");
-        update("protocolsdir",	harc_home + "protocols");
+        //update("protocolsdir",	harc_home + "protocols");
+        update("irpmaster_configfile",	harc_home + "config/IrpProtocols.ini");
         update("buttons_remotesdir", harc_home + "button_remotes");
         update("exportdir",	harc_home + "exports");
         update("aliasfilename",	harc_home + "src/org/harctoolbox/commandnames.xml");
@@ -155,8 +156,12 @@ public class harcprops {
         return props.getProperty("devicesdir");
     }
 
-    public String get_protocolsdir() {
-        return props.getProperty("protocolsdir");
+//    public String get_protocolsdir() {
+//        return props.getProperty("protocolsdir");
+//    }
+    
+    public String get_irpmaster_configfile() {
+        return props.getProperty("irpmaster_configfile");
     }
 
     public String get_buttons_remotesdir() {

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 Bengt Martensson.
+Copyright (C) 2009-2011 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package org.harctoolbox;
 /**
  * Type of toggle in an IR signal.
  */
+
 public enum toggletype {
 
     /**
@@ -30,33 +31,35 @@ public enum toggletype {
      * Generate the toggle code with toggle = 1.
      */
     toggle_1,
+    
+    /**
+     * Don't care
+     */
+    dont_care;
+    
     /**
      * Do not generate toggle codes
      */
-    no_toggle,
+    //no_toggle,
     /**
      * Generate toggle codes
      */
-    do_toggle;
+    //do_toggle;
     
     public static toggletype flip(toggletype t) {
         return t == toggle_0 ? toggle_1 : toggle_0;
     }
 
     public static int toInt(toggletype t) {
-        return t == toggle_1 ? 1 : 0;
+        return t.ordinal();// == toggle_1 ? 1 : 0;
     }
 
     public static toggletype decode_toggle(String t) {
-        return t.equals("yes") ? toggletype.do_toggle
-                : t.equals("0") ? toggletype.toggle_0
-                : t.equals("1") ? toggletype.toggle_1
-                : toggletype.no_toggle;
+        return t.equals("0") ? toggletype.toggle_0 : t.equals("1") ? toggletype.toggle_1 : toggletype.dont_care;
     }
 
     public static String format_toggle(toggletype toggle) {
         return toggle == toggletype.toggle_0 ? "0"
-                : toggle == toggletype.toggle_1 ? "1"
-                : toggle == toggletype.do_toggle ? "yes" : "no";
+                : toggle == toggletype.toggle_1 ? "1" : "-";
     }
 }
