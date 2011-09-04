@@ -31,6 +31,11 @@ public class commandset_entry {
     private String ccf_toggle_0;
     private String ccf_toggle_1;
 
+    @Override
+    public String toString() {
+        return "commandset_entry: " + cmd + ", " + cmdno + ", '" + transmit + "'";
+    }
+    
     public String toString(commandset cmdset, boolean verbose) {
         String response = "";
         switch (cmdset.get_type()) {
@@ -73,9 +78,6 @@ public class commandset_entry {
         return response;
     }
 
-    /*public String toString(String type) {
-    return toString(commandset.toInt(type));
-    }*/
     public command_t get_cmd() {
         return cmd;
     }

@@ -6,7 +6,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 3 of the License, or (at
 your option) any later version.
 
-This program is distributed in the hope that it will be useful, but
+This program is distributed in the hope thlat it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 General Public License for more details.
@@ -453,14 +453,9 @@ public class gui_main extends javax.swing.JFrame {
         lirc_export_device_MenuItem = new javax.swing.JMenuItem();
         lirc_export_all_MenuItem = new javax.swing.JMenuItem();
         lirc_export_server_MenuItem = new javax.swing.JMenuItem();
-        rem_export_device_MenuItem = new javax.swing.JMenuItem();
-        rem_export_all_MenuItem = new javax.swing.JMenuItem();
         ccf_export_MenuItem = new javax.swing.JMenuItem();
         rmdu_export_MenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
-        import_ccf_MenuItem = new javax.swing.JMenuItem();
-        import_rmdu_MenuItem = new javax.swing.JMenuItem();
-        jSeparator5 = new javax.swing.JSeparator();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         copy_console_to_clipboard_MenuItem = new javax.swing.JMenuItem();
@@ -473,13 +468,9 @@ public class gui_main extends javax.swing.JFrame {
         sort_devices_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
         sort_commands_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
         verbose_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        miscMenu = new javax.swing.JMenu();
         clear_console_MenuItem = new javax.swing.JMenuItem();
         browse_device_MenuItem = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JSeparator();
-        launch_remotemaster_MenuItem = new javax.swing.JMenuItem();
-        launch_rmir_MenuItem = new javax.swing.JMenuItem();
-        launch_tonto_MenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         contentMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -496,7 +487,7 @@ public class gui_main extends javax.swing.JFrame {
         console_TextArea.setEditable(false);
         console_TextArea.setLineWrap(true);
         console_TextArea.setRows(5);
-        console_TextArea.setToolTipText("This is a popup free zone!");
+        console_TextArea.setToolTipText("This is the console, where errors and messages go, instead of annoying you with popups.");
         console_TextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(console_TextArea);
 
@@ -747,7 +738,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(macroComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(stop_macro_Button)
                     .addComponent(macroButton))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         output_hw_TabbedPane.addTab("Home", mainPanel);
@@ -838,7 +829,7 @@ public class gui_main extends javax.swing.JFrame {
         deviceclassesPanelLayout.setVerticalGroup(
             deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, deviceclassesPanelLayout.createSequentialGroup()
-                .addContainerGap(23, Short.MAX_VALUE)
+                .addContainerGap(25, Short.MAX_VALUE)
                 .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deviceclass_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(device_remote_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -937,7 +928,7 @@ public class gui_main extends javax.swing.JFrame {
         jLabel5.setText("Pronto Code");
 
         protocol_raw_TextArea.setColumns(20);
-        protocol_raw_TextArea.setFont(new java.awt.Font("Lucida Sans Typewriter", 0, 14)); // NOI18N
+        protocol_raw_TextArea.setFont(new java.awt.Font("Lucida Sans Typewriter", 0, 14));
         protocol_raw_TextArea.setLineWrap(true);
         protocol_raw_TextArea.setRows(5);
         protocol_raw_TextArea.setToolTipText("Raw code, edit if desired");
@@ -1035,21 +1026,12 @@ public class gui_main extends javax.swing.JFrame {
                             .addComponent(protocol_params_TextField, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE))))
                 .addGap(17, 17, 17)
                 .addGroup(protocolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(protocolsPanelLayout.createSequentialGroup()
-                        .addComponent(protocol_generate_Button)
-                        .addContainerGap())
-                    .addGroup(protocolsPanelLayout.createSequentialGroup()
-                        .addComponent(protocol_decode_Button)
-                        .addContainerGap())
-                    .addGroup(protocolsPanelLayout.createSequentialGroup()
-                        .addComponent(protocol_send_Button)
-                        .addContainerGap())
-                    .addGroup(protocolsPanelLayout.createSequentialGroup()
-                        .addComponent(protocol_stop_Button)
-                        .addContainerGap())
-                    .addGroup(protocolsPanelLayout.createSequentialGroup()
-                        .addComponent(protocol_clear_Button)
-                        .addContainerGap())))
+                    .addComponent(protocol_generate_Button)
+                    .addComponent(protocol_decode_Button)
+                    .addComponent(protocol_send_Button)
+                    .addComponent(protocol_stop_Button)
+                    .addComponent(protocol_clear_Button))
+                .addContainerGap())
         );
         protocolsPanelLayout.setVerticalGroup(
             protocolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1089,7 +1071,6 @@ public class gui_main extends javax.swing.JFrame {
                                 .addComponent(protocol_clear_Button)
                                 .addContainerGap())
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, protocolsPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(icf_import_Button)
@@ -1191,7 +1172,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(discoverButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(gcDiscoveredTypejTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         outputHWTabbedPane.addTab("GlobalCache", globalcache_Panel);
@@ -1238,7 +1219,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(irtrans_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(irtrans_led_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(irtrans_browse_Button))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         outputHWTabbedPane.addTab("IRTrans", irtrans_Panel);
@@ -1413,7 +1394,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(ezcontrol_preset_on_Button)
                     .addComponent(ezcontrol_preset_off_Button)
                     .addComponent(t10_update_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(t10_get_timers_Button)
                     .addComponent(t10_get_status_Button)
@@ -1927,7 +1908,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(jLabel19)
                     .addComponent(exportdir_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exportdir_browse_Button))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         exportopts_TabbedPane.addTab("General", general_export_opts_Panel);
@@ -2013,10 +1994,12 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(ccf_export_buttonheight_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ccf_export_raw_CheckBox)
                     .addComponent(ccf_export_export_Button))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         exportopts_TabbedPane.addTab("CCF", ccf_export_opts_Panel);
+
+        rmdu_export_opts_Panel.setEnabled(false);
 
         jLabel12.setText("Remote");
 
@@ -2149,7 +2132,7 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(debug_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(verbose_CheckBox)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         optsTabbedPane.addTab("Debug", debug_Panel);
@@ -2229,22 +2212,6 @@ public class gui_main extends javax.swing.JFrame {
         });
         fileMenu.add(lirc_export_server_MenuItem);
 
-        rem_export_device_MenuItem.setText("Export IRTrans (deviceclass)");
-        rem_export_device_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rem_export_device_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(rem_export_device_MenuItem);
-
-        rem_export_all_MenuItem.setText("Export IRTrans (all)");
-        rem_export_all_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rem_export_all_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(rem_export_all_MenuItem);
-
         ccf_export_MenuItem.setText("Export CCF (deviceclass)");
         ccf_export_MenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2254,6 +2221,8 @@ public class gui_main extends javax.swing.JFrame {
         fileMenu.add(ccf_export_MenuItem);
 
         rmdu_export_MenuItem.setText("Export RMDU (deviceclass)");
+        rmdu_export_MenuItem.setToolTipText("Presently disabled");
+        rmdu_export_MenuItem.setEnabled(false);
         rmdu_export_MenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rmdu_export_MenuItemActionPerformed(evt);
@@ -2261,23 +2230,6 @@ public class gui_main extends javax.swing.JFrame {
         });
         fileMenu.add(rmdu_export_MenuItem);
         fileMenu.add(jSeparator2);
-
-        import_ccf_MenuItem.setText("Import CCF...");
-        import_ccf_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                import_ccf_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(import_ccf_MenuItem);
-
-        import_rmdu_MenuItem.setText("Import RMDU...");
-        import_rmdu_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                import_rmdu_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(import_rmdu_MenuItem);
-        fileMenu.add(jSeparator5);
 
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
@@ -2316,6 +2268,8 @@ public class gui_main extends javax.swing.JFrame {
 
         enable_macro_folders_CheckBoxMenuItem.setMnemonic('C');
         enable_macro_folders_CheckBoxMenuItem.setText("Enable Macro Folders");
+        enable_macro_folders_CheckBoxMenuItem.setToolTipText("Presently disabled.");
+        enable_macro_folders_CheckBoxMenuItem.setEnabled(false);
         enable_macro_folders_CheckBoxMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enable_macro_folders_CheckBoxMenuItemActionPerformed(evt);
@@ -2371,8 +2325,8 @@ public class gui_main extends javax.swing.JFrame {
 
         menuBar.add(jMenu1);
 
-        jMenu2.setMnemonic('M');
-        jMenu2.setText("Misc.");
+        miscMenu.setMnemonic('M');
+        miscMenu.setText("Misc.");
 
         clear_console_MenuItem.setText("Clear console");
         clear_console_MenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -2380,7 +2334,7 @@ public class gui_main extends javax.swing.JFrame {
                 clear_console_MenuItemActionPerformed(evt);
             }
         });
-        jMenu2.add(clear_console_MenuItem);
+        miscMenu.add(clear_console_MenuItem);
 
         browse_device_MenuItem.setText("Browse selected device");
         browse_device_MenuItem.setToolTipText("Point the browser to this device");
@@ -2389,41 +2343,16 @@ public class gui_main extends javax.swing.JFrame {
                 browse_device_MenuItemActionPerformed(evt);
             }
         });
-        jMenu2.add(browse_device_MenuItem);
-        jMenu2.add(jSeparator3);
+        miscMenu.add(browse_device_MenuItem);
 
-        launch_remotemaster_MenuItem.setText("Launch RemoteMaster");
-        launch_remotemaster_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                launch_remotemaster_MenuItemActionPerformed(evt);
-            }
-        });
-        jMenu2.add(launch_remotemaster_MenuItem);
-
-        launch_rmir_MenuItem.setText("Launch RMIR");
-        launch_rmir_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                launch_rmir_MenuItemActionPerformed(evt);
-            }
-        });
-        jMenu2.add(launch_rmir_MenuItem);
-
-        launch_tonto_MenuItem.setText("Launch Tonto");
-        launch_tonto_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                launch_tonto_MenuItemActionPerformed(evt);
-            }
-        });
-        jMenu2.add(launch_tonto_MenuItem);
-
-        menuBar.add(jMenu2);
+        menuBar.add(miscMenu);
 
         helpMenu.setMnemonic('H');
         helpMenu.setText("Help");
 
         contentMenuItem.setMnemonic('C');
         contentMenuItem.setText("Content...");
-        contentMenuItem.setToolTipText("Extensive documentation");
+        contentMenuItem.setToolTipText("Brings up documentation.");
         contentMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 contentMenuItemActionPerformed(evt);
@@ -2433,6 +2362,7 @@ public class gui_main extends javax.swing.JFrame {
 
         aboutMenuItem.setMnemonic('A');
         aboutMenuItem.setText("About...");
+        aboutMenuItem.setToolTipText("The mandatory About popup");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aboutMenuItemActionPerformed(evt);
@@ -2454,7 +2384,7 @@ public class gui_main extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(output_hw_TabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 217, Short.MAX_VALUE)
+                .addComponent(output_hw_TabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 219, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -2629,8 +2559,8 @@ public class gui_main extends javax.swing.JFrame {
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         try {
-            harcprops.get_instance().save();
-            System.err.println("Property file written");
+            String result = harcprops.get_instance().save();
+            System.err.println(result == null ? "No need to save properties." : ("Property file written to " + result + "."));
         } catch (Exception e) {
             warning("Problems saving properties: " + e.getMessage());
             return;
@@ -2654,6 +2584,7 @@ public class gui_main extends javax.swing.JFrame {
         try {
             String props = select_file("Select properties save", "xml", "XML Files", true, null).getAbsolutePath();
             harcprops.get_instance().save(props);
+            System.err.println("Property file written to " + props + ".");
         } catch (IOException e) {
             System.err.println(e);
         } catch (NullPointerException e) {
@@ -3116,7 +3047,12 @@ public class gui_main extends javax.swing.JFrame {
             System.err.println(e.getMessage());
         } catch (SAXException e) {
             System.err.println(e.getMessage());
-       }
+        }
+        
+        if (c == null) {
+            System.err.println("No IR command for " + cmd + " found.");
+            return;
+        }
 
         try {
             if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("GlobalCache")) {
@@ -3185,17 +3121,13 @@ public class gui_main extends javax.swing.JFrame {
         // FIXME lirc_export.export_all();
 }//GEN-LAST:event_lirc_export_all_MenuItemActionPerformed
 
-    private void rem_export_all_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rem_export_all_MenuItemActionPerformed
-        // FIXME rem_export.export_all();
-}//GEN-LAST:event_rem_export_all_MenuItemActionPerformed
-
     private void ccf_export_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccf_export_MenuItemActionPerformed
         ccf_export();
     }//GEN-LAST:event_ccf_export_MenuItemActionPerformed
 
     private void ccf_export() {
         //FIXME
-        /*String devname = (String) deviceclasses_dcbm.getSelectedItem();
+        String devname = (String) deviceclasses_dcbm.getSelectedItem();
         com.neuron.app.tonto.ProntoModel prontomodel = com.neuron.app.tonto.ProntoModel.getModelByName((String)ccf_export_prontomodel_ComboBox.getModel().getSelectedItem());
         int buttonwidth = Integer.parseInt(ccf_export_buttonwidth_TextField.getText());
         int buttonheight = Integer.parseInt(ccf_export_buttonheight_TextField.getText());
@@ -3206,7 +3138,7 @@ public class gui_main extends javax.swing.JFrame {
         ccf_export.ccf_exporter(new String[]{devname}, prontomodel,
                 ccf_export_raw_CheckBox.isEnabled(),
                 buttonwidth, buttonheight, screenwidth, screenheight, filename);
-        System.err.println("Exported " + devname + " to " + filename + " for " + prontomodel.toString());*/
+        System.err.println("Exported " + devname + " to " + filename + " for " + prontomodel.toString());
     }
 
     private void update_hexcalc(int in) {
@@ -3249,21 +3181,6 @@ public class gui_main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_hex_TextFieldActionPerformed
 
-    private void import_ccf_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_import_ccf_MenuItemActionPerformed
-        //FIXME
-        /*try {
-            String filename = select_file("Select file for ccf import", "ccf", "Pronto CCF files", false, null).getAbsolutePath();
-            ccf_import ccfi = new ccf_import(filename, ProntoModel.getModelByName((String) ccf_export_prontomodel_ComboBox.getModel().getSelectedItem()));
-            String outfilename = harcprops.get_instance().get_exportdir() + File.separatorChar + "ccf_import.xml";
-            ccfi.dump(outfilename);
-            System.err.println("CCF Import successfully written to " + outfilename);
-        } catch (NullPointerException e) {
-        } catch (FileNotFoundException ex) {
-            System.err.println(ex);
-        }*/
-        
-    }//GEN-LAST:event_import_ccf_MenuItemActionPerformed
-
     private void stop_macro_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_macro_ButtonActionPerformed
         the_macro_thread.interrupt();
         macroButton.setEnabled(true);
@@ -3289,10 +3206,6 @@ public class gui_main extends javax.swing.JFrame {
             System.err.println(ex);
         }*/
     }//GEN-LAST:event_lirc_export_device_MenuItemActionPerformed
-
-    private void rem_export_device_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rem_export_device_MenuItemActionPerformed
-        // FIXME rem_export.export(harcprops.get_instance().get_exportdir(), (String) deviceclasses_dcbm.getSelectedItem());
-    }//GEN-LAST:event_rem_export_device_MenuItemActionPerformed
 
     private void t10_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_address_TextFieldActionPerformed
 
@@ -3644,33 +3557,6 @@ public class gui_main extends javax.swing.JFrame {
         }
 }//GEN-LAST:event_exportdir_browse_ButtonActionPerformed
 
-    private void import_rmdu_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_import_rmdu_MenuItemActionPerformed
-        //FIXME
-        /*try {
-            String filename = select_file("Select file for rmdu import", "rmdu", "RemoteMaster device update files", false, null).getAbsolutePath();
-            String outfilename = harcprops.get_instance().get_exportdir() + File.separatorChar + "rmdu_import.xml";
-            boolean result = rmdu_import.convert(filename, outfilename);
-            System.err.println(result ? ("RMDU Import successfully written to " + outfilename) : "RMDU import failed.");
-        } catch (NullPointerException e) {
-        }*/
-    }//GEN-LAST:event_import_rmdu_MenuItemActionPerformed
-
-    private void launch_tonto_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_launch_tonto_MenuItemActionPerformed
-        try {
-            com.neuron.app.tonto.Tonto.main(new String[]{});
-        } catch (Exception ex) {
-            System.err.println(ex);
-        }
-}//GEN-LAST:event_launch_tonto_MenuItemActionPerformed
-
-    private void launch_remotemaster_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_launch_remotemaster_MenuItemActionPerformed
-        //remotemaster.launch(false, null, last_rmdu_export);
-}//GEN-LAST:event_launch_remotemaster_MenuItemActionPerformed
-
-    private void launch_rmir_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_launch_rmir_MenuItemActionPerformed
-        //remotemaster.launch(true);
-    }//GEN-LAST:event_launch_rmir_MenuItemActionPerformed
-
     private void rmdu_export_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmdu_export_MenuItemActionPerformed
         /*try {
             br_export re = new br_export((String) rdf_ComboBox.getModel().getSelectedItem(),
@@ -3951,8 +3837,6 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JButton icf_import_Button;
     private javax.swing.JCheckBoxMenuItem immediate_execution_commands_CheckBoxMenuItem;
     private javax.swing.JCheckBoxMenuItem immediate_execution_macros_CheckBoxMenuItem;
-    private javax.swing.JMenuItem import_ccf_MenuItem;
-    private javax.swing.JMenuItem import_rmdu_MenuItem;
     private javax.swing.JPanel irtrans_Panel;
     private javax.swing.JTextField irtrans_address_TextField;
     private javax.swing.JButton irtrans_browse_Button;
@@ -3985,19 +3869,13 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JButton keymap_rules_browse_Button;
-    private javax.swing.JMenuItem launch_remotemaster_MenuItem;
-    private javax.swing.JMenuItem launch_rmir_MenuItem;
-    private javax.swing.JMenuItem launch_tonto_MenuItem;
     private javax.swing.JMenuItem lirc_export_all_MenuItem;
     private javax.swing.JMenuItem lirc_export_device_MenuItem;
     private javax.swing.JMenuItem lirc_export_server_MenuItem;
@@ -4009,6 +3887,7 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JButton macro_select_Button;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu miscMenu;
     private javax.swing.JComboBox n_ezcontrol_ComboBox;
     private javax.swing.JTextField no_periods_TextField;
     private javax.swing.JComboBox no_sends_ComboBox;
@@ -4030,8 +3909,6 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JButton protocol_stop_Button;
     private javax.swing.JPanel protocolsPanel;
     private javax.swing.JComboBox rdf_ComboBox;
-    private javax.swing.JMenuItem rem_export_all_MenuItem;
-    private javax.swing.JMenuItem rem_export_device_MenuItem;
     private javax.swing.JTextField remotemaster_home_TextField;
     private javax.swing.JButton remotemaster_home_browse_Button;
     private javax.swing.JTextField reverse_decimal_TextField;

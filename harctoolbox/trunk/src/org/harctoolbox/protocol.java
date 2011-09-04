@@ -106,6 +106,9 @@ public class protocol {
     
     private static IrSignal protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno, toggletype /*i*/toggle, String extra_params) throws IrpMasterException, RecognitionException {
         Protocol protocol = get_protocol(protocol_name);
+        if (protocol == null)
+            return null;
+        
         HashMap<String, Long> params = parameters(deviceno, subdevice, cmdno, toggle, extra_params);
         IrSignal irSignal = protocol.renderIrSignal(params);
         return irSignal;
