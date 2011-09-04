@@ -199,7 +199,7 @@
   </commandset>
 
   <!-- only ID=1, at least for now -->
-  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="1" remotename="denon_avr4311_k">
+  <commandset type="ir" protocol="denon-k" deviceno="4" subdevice="1" remotename="denon_avr4311_k">
     <commandgroup><!-- page 8 -->
       <command cmdref="cmd_return" cmdno="34"/>
       <command cmdref="menu" cmdno="35"/>
@@ -220,7 +220,7 @@
       <command cmdref="delay_time_up" cmdno="621"/>
       <command cmdref="delay_time_down" cmdno="622"/>
       <command cmdref="restorer_off" cmdno="556"/>
-      <command cmdref="get_status" ifattribute="bidirectional" cmdno="645"/>
+      <command cmdref="get_status" cmdno="645"/>
       <command cmdref="in_net_usb" cmdno="711"/>
       <command cmdref="in_xm" ifattribute="north-america" cmdno="714"/>
       <command cmdref="in_net" cmdno="716"/>
@@ -232,12 +232,12 @@
       <!--command cmdref="resolution" remark="no function" cmdno="754"/-->
 
       <!-- http://www.remotecentral.com/cgi-bin/mboard/rc-discrete/thread.cgi?5875 -->
-      <command cmdref="audyssey_dyn_vol_eq_on" ifattribute="audyssey" cmdno="745"/>
-      <command cmdref="audyssey_dyn_eq_on" ifattribute="audyssey" cmdno="746"/>
-      <command cmdref="audyssey_dyn_vol_eq_off" ifattribute="audyssey" cmdno="747"/>
-      <command cmdref="audyssey_dyn_volume_midnight" ifattribute="audyssey" cmdno="748"/>
-      <command cmdref="audyssey_dyn_volume_evening" ifattribute="audyssey" cmdno="749"/>
-      <command cmdref="audyssey_dyn_volume_day" ifattribute="audyssey" cmdno="750"/>
+      <command cmdref="audyssey_dyn_vol_eq_on" cmdno="745"/>
+      <command cmdref="audyssey_dyn_eq_on" cmdno="746"/>
+      <command cmdref="audyssey_dyn_vol_eq_off" cmdno="747"/>
+      <command cmdref="audyssey_dyn_volume_midnight" cmdno="748"/>
+      <command cmdref="audyssey_dyn_volume_evening" cmdno="749"/>
+      <command cmdref="audyssey_dyn_volume_day" cmdno="750"/>
 
       <command cmdref="repeat" name="main zone repeat" cmdno="956"/>
       <command cmdref="shuffle" name="main zone random/shuffle" cmdno="957"/>
@@ -256,9 +256,9 @@
 
   <!-- page 9 -->
   <!-- for id=1,2,3,4 -->
-  <!--commandset type="ir" protocol="denon_k" deviceno="4" subdevice="2" remotename="denon_avr4311_k"/-->
+  <!--commandset type="ir" protocol="denon-k" deviceno="4" subdevice="2" remotename="denon_avr4311_k"/-->
 
-  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="3" remotename="denon_avr4311_k">
+  <commandset type="ir" protocol="denon-k" deviceno="4" subdevice="3" remotename="denon_avr4311_k">
     <command cmdref="zone2_up" zone="2" cmdno="27"/><!-- ??? -->
     <command cmdref="zone2_down" zone="2" cmdno="28"/>
     <command cmdref="zone2_left" zone="2" cmdno="29"/>
@@ -293,7 +293,7 @@
   </commandset>
 
   <!-- page 14 -->
-  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="4" remotename="denon_avr4311_k">
+  <commandset type="ir" protocol="denon-k" deviceno="4" subdevice="4" remotename="denon_avr4311_k">
     <command cmdref="zone2_toggle" zone="2" cmdno="5"/>
     <command cmdref="zone2_on" zone="2" cmdno="6"/>
     <command cmdref="zone2_off" zone="2" cmdno="7"/>
@@ -301,7 +301,7 @@
   </commandset>
 
   <!-- page 15 -->
-  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="5" remotename="denon_avr4311_k">
+  <commandset type="ir" protocol="denon-k" deviceno="4" subdevice="5" remotename="denon_avr4311_k">
     <command cmdref="zone3_toggle" zone="3" cmdno="5"/>
     <command cmdref="zone3_up" zone="3" cmdno="27"/>
     <command cmdref="zone3_down" zone="3" cmdno="28"/>
@@ -337,19 +337,19 @@
   </commandset>
 
   <!-- page 18; analog tuner -->
-  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="1" remotename="denon_avr4311_k">
+  <commandset type="ir" protocol="denon-k" deviceno="4" subdevice="1" remotename="denon_avr4311_k">
     <command cmdref="fm" cmdno="153"/>
     <command cmdref="am" cmdno="154"/>
   </commandset>
 
   <!-- page 19; net audio -->
-  <commandset type="ir" protocol="denon_k" deviceno="4" subdevice="7" remotename="denon_avr4311_k">
+  <commandset type="ir" protocol="denon-k" deviceno="4" subdevice="7" remotename="denon_avr4311_k">
     <command cmdref="cmd_0xff" name="cursor_up" cmdno="27"/>
     <!-- FIXME -->
   </commandset>
 
   <!-- page 20; iPod -->
-  <commandset type="ir" protocol="denon_k" deviceno="2" subdevice="3" ifattribute="ipod">
+  <commandset type="ir" protocol="denon-k" deviceno="2" subdevice="3" ifattribute="ipod">
     <!--command cmdref="browse_remote"cmdno="45" ifattribute="ipod_dock_firstgen"/-->
     <!--command cmdref="power_toggle"cmdno="71" ifattribute="ipod_dock_firstgen"/-->
     <command cmdref="previous"	cmdno="5"/>
@@ -377,7 +377,7 @@
     <!--command cmdref="volume_down"cmdno="3" ifattribute="ipod_dock_firstgen"/-->
     <command cmdref="page_down"	cmdno="73"/><!-- no function -->
     <command cmdref="page_up"	cmdno="74"/> <!-- no function -->
-    <command cmdref="get_status"	cmdno="31" ifattribute="bidirectional-rc"/>
+    <command cmdref="get_status"	cmdno="31"/>
 
     <command cmdref="ipod_stop"	cmdno="8"/>
     <command cmdref="fast_forward" cmdno="21"/>
@@ -396,7 +396,7 @@
     <command cmdref="repeat_off"	cmdno="69"/>
   </commandset>
 
-  <commandset type="ir" protocol="denon_k" deviceno="2" subdevice="3" remotename="denon_asd_3n" ifattribute="north-america">
+  <commandset type="ir" protocol="denon-k" deviceno="2" subdevice="3" remotename="denon_asd_3n" ifattribute="north-america">
     <command cmdref="memory"/>
   </commandset>
 
