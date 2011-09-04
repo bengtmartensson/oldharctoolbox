@@ -320,6 +320,15 @@ public class gui_main extends javax.swing.JFrame {
         output_deviceComboBox = new javax.swing.JComboBox();
         deviceclass_stop_Button = new javax.swing.JButton();
         device_remote_ComboBox = new javax.swing.JComboBox();
+        xmlDeviceExportButton = new javax.swing.JButton();
+        lircDeviceExportButton = new javax.swing.JButton();
+        ccfDeviceExportButton = new javax.swing.JButton();
+        rmduDeviceExportButton = new javax.swing.JButton();
+        jLabel27 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        xmlAllDevicesExportButton = new javax.swing.JButton();
+        lircAllDevicesExportButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
         protocolsPanel = new javax.swing.JPanel();
         protocol_ComboBox = new javax.swing.JComboBox();
         deviceno_TextField = new javax.swing.JTextField();
@@ -800,6 +809,45 @@ public class gui_main extends javax.swing.JFrame {
             }
         });
 
+        xmlDeviceExportButton.setText("XML");
+        xmlDeviceExportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xmlDeviceExportButtonActionPerformed(evt);
+            }
+        });
+
+        lircDeviceExportButton.setText("LIRC");
+        lircDeviceExportButton.setEnabled(false);
+
+        ccfDeviceExportButton.setText("CCF");
+        ccfDeviceExportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ccfDeviceExportButtonActionPerformed(evt);
+            }
+        });
+
+        rmduDeviceExportButton.setText("RMDU");
+        rmduDeviceExportButton.setEnabled(false);
+
+        jLabel27.setText("Export current device class");
+
+        jLabel28.setText("Export all known device classes");
+
+        xmlAllDevicesExportButton.setText("XML");
+        xmlAllDevicesExportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xmlAllDevicesExportButtonActionPerformed(evt);
+            }
+        });
+
+        lircAllDevicesExportButton.setText("LIRC");
+        lircAllDevicesExportButton.setEnabled(false);
+        lircAllDevicesExportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lircAllDevicesExportButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout deviceclassesPanelLayout = new javax.swing.GroupLayout(deviceclassesPanel);
         deviceclassesPanel.setLayout(deviceclassesPanelLayout);
         deviceclassesPanelLayout.setHorizontalGroup(
@@ -814,22 +862,39 @@ public class gui_main extends javax.swing.JFrame {
                     .addGroup(deviceclassesPanelLayout.createSequentialGroup()
                         .addComponent(output_deviceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(no_sends_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(no_sends_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(deviceclassesPanelLayout.createSequentialGroup()
+                        .addComponent(xmlDeviceExportButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lircDeviceExportButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ccfDeviceExportButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rmduDeviceExportButton))
+                    .addComponent(jLabel27))
                 .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(deviceclassesPanelLayout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(deviceclass_stop_Button)
-                        .addGap(18, 18, 18)
-                        .addComponent(deviceclass_send_Button))
-                    .addGroup(deviceclassesPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(device_command_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(139, 139, 139))
+                        .addComponent(device_command_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(deviceclassesPanelLayout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(deviceclassesPanelLayout.createSequentialGroup()
+                                .addComponent(deviceclass_stop_Button)
+                                .addGap(18, 18, 18)
+                                .addComponent(deviceclass_send_Button))
+                            .addGroup(deviceclassesPanelLayout.createSequentialGroup()
+                                .addComponent(xmlAllDevicesExportButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lircAllDevicesExportButton))
+                            .addComponent(jLabel28))))
+                .addContainerGap(59, Short.MAX_VALUE))
+            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE)
         );
         deviceclassesPanelLayout.setVerticalGroup(
             deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, deviceclassesPanelLayout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+            .addGroup(deviceclassesPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deviceclass_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(device_remote_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -840,7 +905,21 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(no_sends_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(deviceclass_stop_Button)
                     .addComponent(deviceclass_send_Button))
-                .addGap(81, 81, 81))
+                .addGap(9, 9, 9)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel28)
+                    .addComponent(jLabel27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(xmlAllDevicesExportButton)
+                    .addComponent(lircAllDevicesExportButton)
+                    .addComponent(rmduDeviceExportButton)
+                    .addComponent(ccfDeviceExportButton)
+                    .addComponent(lircDeviceExportButton)
+                    .addComponent(xmlDeviceExportButton))
+                .addGap(30, 30, 30))
         );
 
         output_hw_TabbedPane.addTab("Device classes", deviceclassesPanel);
@@ -983,7 +1062,10 @@ public class gui_main extends javax.swing.JFrame {
             }
         });
 
+        IRP_TextField.setEditable(false);
         IRP_TextField.setToolTipText("IRP Notation of selected protocol");
+        IRP_TextField.setAutoscrolls(true);
+        IRP_TextField.setDragEnabled(true);
 
         jLabel26.setText("IRP");
 
@@ -2002,16 +2084,20 @@ public class gui_main extends javax.swing.JFrame {
         rmdu_export_opts_Panel.setEnabled(false);
 
         jLabel12.setText("Remote");
+        jLabel12.setEnabled(false);
 
         rmdu_button_rules_TextField.setToolTipText("Path to file with rules mapping commands to buttons.");
+        rmdu_button_rules_TextField.setEnabled(false);
         rmdu_button_rules_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
         rmdu_button_rules_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
         rmdu_button_rules_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
 
         jLabel20.setText("Keymap Rules");
+        jLabel20.setEnabled(false);
 
         keymap_rules_browse_Button.setText("...");
         keymap_rules_browse_Button.setToolTipText("Select rules file");
+        keymap_rules_browse_Button.setEnabled(false);
         keymap_rules_browse_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 keymap_rules_browse_ButtonActionPerformed(evt);
@@ -2021,10 +2107,12 @@ public class gui_main extends javax.swing.JFrame {
         rdf_ComboBox.setModel(new DefaultComboBoxModel(button_remotenames));
         rdf_ComboBox.setSelectedIndex(default_rmdu_export_remoteindex < button_remotenames.length ? default_rmdu_export_remoteindex : 0);
         rdf_ComboBox.setToolTipText("Rdf file for the desired JP1 remote");
+        rdf_ComboBox.setEnabled(false);
         rdf_ComboBox.setMaximumSize(new java.awt.Dimension(300, 32767));
         rdf_ComboBox.setMinimumSize(new java.awt.Dimension(300, 27));
         rdf_ComboBox.setPreferredSize(new java.awt.Dimension(300, 27));
 
+        remotemaster_home_TextField.setEditable(false);
         remotemaster_home_TextField.setToolTipText("Path to RemoteMaster's directory");
         remotemaster_home_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
         remotemaster_home_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
@@ -2032,6 +2120,7 @@ public class gui_main extends javax.swing.JFrame {
 
         remotemaster_home_browse_Button.setText("...");
         remotemaster_home_browse_Button.setToolTipText("Select RemoteMaster directory");
+        remotemaster_home_browse_Button.setEnabled(false);
         remotemaster_home_browse_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 remotemaster_home_browse_ButtonActionPerformed(evt);
@@ -2039,6 +2128,7 @@ public class gui_main extends javax.swing.JFrame {
         });
 
         jLabel21.setText("RM Home");
+        jLabel21.setEnabled(false);
 
         javax.swing.GroupLayout rmdu_export_opts_PanelLayout = new javax.swing.GroupLayout(rmdu_export_opts_Panel);
         rmdu_export_opts_Panel.setLayout(rmdu_export_opts_PanelLayout);
@@ -3709,6 +3799,22 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     gc_address_TextFieldActionPerformed(null);
 }//GEN-LAST:event_discoverButtonActionPerformed
 
+private void ccfDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccfDeviceExportButtonActionPerformed
+    ccf_export();
+}//GEN-LAST:event_ccfDeviceExportButtonActionPerformed
+
+private void lircAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lircAllDevicesExportButtonActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_lircAllDevicesExportButtonActionPerformed
+
+private void xmlDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlDeviceExportButtonActionPerformed
+    device.export_device(harcprops.get_instance().get_exportdir(), (String) deviceclasses_dcbm.getSelectedItem());
+}//GEN-LAST:event_xmlDeviceExportButtonActionPerformed
+
+private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlAllDevicesExportButtonActionPerformed
+    device.export_all_devices(harcprops.get_instance().get_exportdir());
+}//GEN-LAST:event_xmlAllDevicesExportButtonActionPerformed
+
     private void possibly_enable_decode_button() {
         boolean looks_ok = /*!protocol_params_TextField.getText().isEmpty()
                 ||*/ !protocol_raw_TextArea.getText().isEmpty();
@@ -3763,6 +3869,7 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JMenuItem browse_device_MenuItem;
     private javax.swing.JTextField browser_TextField;
     private javax.swing.JButton browser_select_Button;
+    private javax.swing.JButton ccfDeviceExportButton;
     private javax.swing.JMenuItem ccf_export_MenuItem;
     private javax.swing.JTextField ccf_export_buttonheight_TextField;
     private javax.swing.JTextField ccf_export_buttonwidth_TextField;
@@ -3861,6 +3968,8 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -3873,9 +3982,12 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JButton keymap_rules_browse_Button;
+    private javax.swing.JButton lircAllDevicesExportButton;
+    private javax.swing.JButton lircDeviceExportButton;
     private javax.swing.JMenuItem lirc_export_all_MenuItem;
     private javax.swing.JMenuItem lirc_export_device_MenuItem;
     private javax.swing.JMenuItem lirc_export_server_MenuItem;
@@ -3913,6 +4025,7 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JButton remotemaster_home_browse_Button;
     private javax.swing.JTextField reverse_decimal_TextField;
     private javax.swing.JTextField reverse_hex_TextField;
+    private javax.swing.JButton rmduDeviceExportButton;
     private javax.swing.JTextField rmdu_button_rules_TextField;
     private javax.swing.JMenuItem rmdu_export_MenuItem;
     private javax.swing.JPanel rmdu_export_opts_Panel;
@@ -3938,6 +4051,8 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JComboBox toplevel_macrofolders_ComboBox;
     private javax.swing.JCheckBox verbose_CheckBox;
     private javax.swing.JCheckBoxMenuItem verbose_CheckBoxMenuItem;
+    private javax.swing.JButton xmlAllDevicesExportButton;
+    private javax.swing.JButton xmlDeviceExportButton;
     private javax.swing.JComboBox zones_ComboBox;
     // End of variables declaration//GEN-END:variables
     private about_popup aboutBox;
