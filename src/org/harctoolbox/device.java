@@ -465,7 +465,10 @@ public class device {
         }
 
         //System.err.println(expr);
-        boolean hit = attributes.containsKey(s) && attributes.get(s).equalsIgnoreCase("yes");
+        if (!attributes.containsKey(s))
+            return true;
+        
+        boolean hit = attributes.get(s).equalsIgnoreCase("yes");
         return positive ? hit : ! hit;
     }
 
@@ -551,7 +554,12 @@ public class device {
                     attr.getAttribute("defaultvalue").isEmpty() ? "no" : attr.getAttribute("defaultvalue"));
         }
         // ... then, to the extent applicable, overwrite with actual instance values
-        if (instance_attributes != null)
+        // if instance_attributes == null I am exporting, set everything to true.
+        if (instance_attributes == null)
+            attributes.clear();
+            //for (String attributeName : attributes.keySet())
+            //    attributes.put(attributeName, "export");
+        else
             for (String s : instance_attributes.keySet()) {
                 if (attributes.containsKey(s))
                     attributes.put(s, instance_attributes.get(s));
@@ -591,7 +599,7 @@ public class device {
             int no_valids = 0;
             for (int j = 0; j < cmd_nodes.getLength(); j++) {
                 Element e = (Element) cmd_nodes.item(j);
-               if (command_t.is_valid(e.getAttribute("cmdref"))
+                if (command_t.is_valid(e.getAttribute("cmdref"))
                        && evaluate_ifattribute(e))
                    no_valids++;
             }
@@ -600,7 +608,11 @@ public class device {
             for (int j = 0; j < cmd_nodes.getLength(); j++) {
                 Element cmd_el = (Element) cmd_nodes.item(j);
                 String commandname = cmd_el.getAttribute("cmdref");
-                //String ifattr = cmd_el.getAttribute("ifattribute");
+                String ifattr = cmd_el.getAttribute("ifattribute");
+                if (ifattr.startsWith("!"))
+                    ifattr = ifattr.substring(1).trim();
+                if (!ifattr.isEmpty() && !attributes.isEmpty() && !attributes.containsKey(ifattr))
+                    System.err.println("WARNING: command " + commandname + " has undeclared attribute " + ifattr);
                 if (!command_t.is_valid(commandname)) {
                     if (barf_for_invalid)
                         System.err.println("Warning: Command " + commandname + " is invalid.");
@@ -699,6 +711,7 @@ public class device {
                 int cmd_index = 0;
                 for (int j = 0; j < cmd_nodes.getLength(); j++) {
                     Element cmd_el = (Element) cmd_nodes.item(j);
+                    System.err.println(cmd_el.getAttribute("cmdref"));
                     if (!command_t.is_valid(cmd_el.getAttribute("cmdref"))) {
                         System.err.println("Ignoring invalid command " + cmd_el.getAttribute("cmdref"));
                         continue;
@@ -706,10 +719,11 @@ public class device {
 
                     if (cmd_el.getElementsByTagName("ccf").getLength() > 0) {
                         System.err.println("Already ccf information in " + cmd_el.getAttribute("cmdref") + ", ignoring.");
+                        cmd_index++;
                         continue;
                     }
                     
-                    short obc = get_command_by_index(i, cmd_index).get_commandno();
+                    //short obc = get_command_by_index(i, cmd_index).get_commandno();
                     IrSignal ir = get_command_by_index(i, cmd_index++/*j*/).get_ir_code(toggletype.dont_care, verbose);
                     if (ir == null) {
                         //if (verbose)

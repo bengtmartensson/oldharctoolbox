@@ -111,9 +111,9 @@ public class harcprops {
         setup_defaults();
     }
 
-    public void save(String filename) throws IOException,FileNotFoundException {
+    public boolean save(String filename) throws IOException,FileNotFoundException {
         if (!need_save && filename.equals(this.filename))
-            return;
+            return false;
         
         FileOutputStream f = new FileOutputStream(filename);
 
@@ -123,10 +123,12 @@ public class harcprops {
             props.store(f, "Harc Properties, feel free to hand edit if desired");
         }
         need_save = false;
+        return true;
     }
 
-    public void save() throws IOException {
-        save(filename);
+    public String save() throws IOException {
+        boolean result = save(filename);
+        return result ? filename : null;
     }
 
     // For debugging
