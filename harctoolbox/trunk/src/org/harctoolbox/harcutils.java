@@ -25,6 +25,8 @@ import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -104,16 +106,19 @@ public class harcutils {
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(new org.xml.sax.ErrorHandler() {
 
+                @Override
                 public void error(SAXParseException exception) throws SAXParseException {
                     //System.err.println("Parse Error in file " + fname + ", line " + exception.getLineNumber() + ": " + exception.getMessage());
                     throw new SAXParseException("Parse Error in file " + fname + ", line " + exception.getLineNumber() + ": " + exception.getMessage(), "", fname, exception.getLineNumber(), 0);
                 }
 
+                @Override
                 public void fatalError(SAXParseException exception) throws SAXParseException {
                     //System.err.println("Parse Fatal Error: " + exception.getMessage() + exception.getLineNumber());
                     throw new SAXParseException("Parse Error in file " + fname + ", line " + exception.getLineNumber() + ": " + exception.getMessage(), "", fname, exception.getLineNumber(), 0);
                 }
 
+                @Override
                 public void warning(SAXParseException exception) {
                     System.err.println("Parse Warning: " + exception.getMessage() + exception.getLineNumber());
                 }
@@ -301,8 +306,14 @@ public class harcutils {
             System.err.println("Could not start browser command `" + cmd[0] + " " + cmd[1]);
         }
     }
+    
+    public static File create_export_file(String dir, String base, String extension) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        return new File(dir, base + "_" + dateFormat.format(new Date()) + "." + extension);
+    }
 
     public static void main(String[] args) {
+        System.out.println(create_export_file(".", "sliss", "klarf").toString());
         System.out.println(no_lines("foobar"));
         System.out.println(no_lines("\n foobar\n"));
         System.out.println(no_lines("foo\r\nbar"));
