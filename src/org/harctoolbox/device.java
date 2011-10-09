@@ -660,6 +660,7 @@ public class device {
                     cs.getAttribute("deviceno"),
                     cs.getAttribute("subdevice"),
                     cs.getAttribute("toggle"),
+                    cs.getAttribute("additional_parameters"),
                     cs.getAttribute("name"),
                     cs.getAttribute("remotename"),
                     cs.getAttribute("pseudo_power_on"),
