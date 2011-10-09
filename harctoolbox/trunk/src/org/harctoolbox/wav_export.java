@@ -86,7 +86,7 @@ public class wav_export {
 
     public static boolean export(String protocolname, short deviceno,
             short subdevice, short command_no, toggletype toggle, boolean repeat, String filename) throws IrpMasterException, RecognitionException {
-        return export(protocol.encode(protocolname, deviceno, subdevice, command_no, toggle, null, false), repeat, filename);
+        return export(protocol.encode(protocolname, deviceno, subdevice, command_no, toggle, null/*additinal_parameters*/, false), repeat, filename);
     }
 
     private static void usage() {

@@ -39,6 +39,7 @@ public class command {
     private short deviceno;
     private short subdevice;
     private boolean toggle;
+    private String additional_parameters;
     private String remotename;
     private String remark;
     private String expected_response;
@@ -53,7 +54,7 @@ public class command {
         String response = "";
         switch (type) {
             case ir:
-                response = "type = ir, name = " + cmd + ", remotename = " + remotename + ", protocol_name = " + protocol_name + ", deviceno = " + deviceno + ", subdevice = " + subdevice + ", cmdno = " + cmdno + ", " + (toggle ? "toggle" : "no toggle");
+                response = "type = ir, name = " + cmd + ", remotename = " + remotename + ", protocol_name = " + protocol_name + ", deviceno = " + deviceno + ", subdevice = " + subdevice + ", cmdno = " + cmdno + ", " + (toggle ? "toggle" : "no toggle") + (additional_parameters.isEmpty() ? "" : (", " + additional_parameters));
                 ;
                 break;
             case tcp:
@@ -92,6 +93,10 @@ public class command {
     public boolean get_toggle() {
         return toggle;
     }
+    
+    public String get_additional_parameters() {
+        return additional_parameters;
+    }
 
     public int get_response_lines() {
         return response_lines;
@@ -128,7 +133,7 @@ public class command {
     public IrSignal get_ir_code(toggletype toggle, boolean verbose, short devno, short subdev) {
         IrSignal ir = null;
         try {
-            ir = protocol.encode(protocol_name, devno, subdev, cmdno, toggle, null, verbose);
+            ir = protocol.encode(protocol_name, devno, subdev, cmdno, toggle, additional_parameters, verbose);
             // Fallback
             if (ir == null || protocol_name.equals("raw_ccf")) {
                 String ccf = toggle == toggletype.toggle_1 ? ccf_toggle_1 : ccf_toggle_0;
@@ -192,6 +197,7 @@ public class command {
         this.deviceno = cmdset.get_deviceno();
         this.subdevice = cmdset.get_subdevice();
         this.toggle = cmdset.get_toggle();
+        this.additional_parameters = cmdset.get_additional_parameters();
         this.prefix = cmdset.get_prefix();
         this.suffix = cmdset.get_suffix();
         this.delay_between_reps = cmdset.get_delay_between_reps();

@@ -31,8 +31,6 @@ import IrpMaster.Protocol;
 import IrpMaster.UnassignedException;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.antlr.runtime.RecognitionException;
 
 public class protocol {
@@ -246,7 +244,7 @@ public class protocol {
                 IrSignal ir = null;
                 try {
                     ir = encode(protocol_name, device, subdevice,
-                   (short) command, toggle, null, verbose);
+                   (short) command, toggle, null/* additional_parameters */, verbose);
                 } catch (IrpMasterException ex) {
                     System.err.println(ex.getMessage());
                 } catch (RecognitionException ex) {

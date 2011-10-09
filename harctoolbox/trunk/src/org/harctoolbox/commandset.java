@@ -25,6 +25,7 @@ public class commandset {
     private short subdevice;
     private boolean has_toggle;
     private int portnumber;
+    private String additional_parameters;
     private String name;
     private String remotename;
     private String pseudo_power_on;
@@ -62,6 +63,10 @@ public class commandset {
 
     public boolean get_toggle() {
         return has_toggle;
+    }
+    
+    public String get_additional_parameters() {
+        return additional_parameters;
     }
 
     public short get_deviceno() {
@@ -112,6 +117,7 @@ public class commandset {
                 "   toggle = " + has_toggle + "\n" +
                 "   deviceno = " + deviceno + "\n" +
                 "   subdevice = " + subdevice + "\n" +
+                "   additional_parameters = " + additional_parameters + "\n" +
                 "   remotename = " + remotename + "\n" +
                 "   prefix = " + prefix + "\n" +
                 "   suffix = " + suffix + "\n" +
@@ -148,7 +154,7 @@ public class commandset {
     }
 
     public commandset(commandset_entry[] commands, commandtype_t type, String protocol,
-            short deviceno, short subdevice, boolean has_toggle, String name,
+            short deviceno, short subdevice, boolean has_toggle, String additional_parameters, String name,
             String remotename, String pseudo_power_on, String prefix,
             String suffix, int delay_between_reps, String open, String close, int portnumber, String charset) {
         this.entries = commands;
@@ -157,6 +163,7 @@ public class commandset {
         this.subdevice = subdevice;
         this.protocol = protocol;
         this.has_toggle = has_toggle;
+        this.additional_parameters = additional_parameters;
         this.name = name;
         this.remotename = remotename;
         this.pseudo_power_on = pseudo_power_on;
@@ -171,13 +178,13 @@ public class commandset {
 
     public commandset(commandset_entry[] commands, String type,
             String protocol, String deviceno, String subdevice, String toggle,
-            String name, String remotename, String pseudo_power_on,
+            String additional_parameters, String name, String remotename, String pseudo_power_on,
             String prefix, String suffix, String delay_between_reps,
             String open, String close, String portnumber, String charset) {
         this(commands, commandtype_t.valueOf(type), protocol,
                 deviceno.equals("") ? -1 : Short.parseShort(deviceno),
                 subdevice.equals("") ? -1 : Short.parseShort(subdevice),
-                toggle.equals("yes"), name, remotename, pseudo_power_on,
+                toggle.equals("yes"), additional_parameters, name, remotename, pseudo_power_on,
                 prefix, suffix, Integer.parseInt(delay_between_reps),
                 open, close, harcutils.safe_parse_portnumber(portnumber), charset);
     }
