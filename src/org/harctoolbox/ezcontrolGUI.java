@@ -17,17 +17,6 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import IrpMaster.DecodeIR;
-import IrpMaster.ICT;
-import IrpMaster.IncompatibleArgumentException;
-import IrpMaster.IrSignal;
-import IrpMaster.IrpMaster;
-import IrpMaster.IrpMasterException;
-import IrpMaster.IrpUtils;
-import IrpMaster.Pronto;
-import IrpMaster.Protocol;
-import IrpMaster.UnassignedException;
-import java.awt.Dimension;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
@@ -41,43 +30,12 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.net.UnknownHostException;
 import java.util.HashMap;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.antlr.runtime.RecognitionException;
-// do not import org.harctoolbox.protocol;
-
-/**
- * This class implements a GUI for most functionality in Harc.
- */
-// TODO: Implement limited functionallity without home/macro file.
 
 public class ezcontrolGUI extends javax.swing.JFrame {
-    private static IrpMaster irpMaster = null;
-    private static HashMap<String, Protocol> protocols = null;
-    //private String last_rmdu_export = null;
-    private final static short invalid_parameter = -1;
-    private int debug = 0;
     private boolean verbose = false;
-    private DefaultComboBoxModel gc_modules_dcbm;
-    private DefaultComboBoxModel rdf_dcbm;
-    private String[] prontomodelnames;
-    private String[] button_remotenames;
-    //private resultformatter formatter = new resultformatter();
-    //private resultformatter cmd_formatter = new resultformatter(Props.get_instance().get_commandformat());
-    private static final String dummy_no_selection = "--------";
-
-    private globalcache_thread the_globalcache_device_thread = null;
-    private globalcache_thread the_globalcache_protocol_thread = null;
-    private irtrans_thread the_irtrans_thread = null;
-    
-    private globalcache gc = null;
-    private irtrans irt = null;
-
-    private final static int default_rmdu_export_remoteindex = 1; //FIXME
 
     private HashMap<String, String> filechooserdirs = new HashMap<String, String>();
 
@@ -109,44 +67,10 @@ public class ezcontrolGUI extends javax.swing.JFrame {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(str), this);
         }
     }
-    
-    private static Protocol get_protocol(String name) throws UnassignedException, RecognitionException {
-        if (!protocols.containsKey(name)) {
-            Protocol protocol = irpMaster.newProtocol(name);
-            protocols.put(name, protocol);
-        }
-        return protocols.get(name);            
-    }
 
     /** Creates new form gui_main */
     public ezcontrolGUI() {
-        gc_modules_dcbm = new DefaultComboBoxModel(new String[]{"2"}); // ?
-
-        // TODO: check behavior in abscense of tonto
-        com.neuron.app.tonto.ProntoModel[] prontomodels = com.neuron.app.tonto.ProntoModel.getModels();
-        prontomodelnames = new String[prontomodels.length];
-        for (int i = 0; i < prontomodels.length; i++)
-            prontomodelnames[i] = prontomodels[i].toString();
-        
-        // Since remotemaster generates an enormous amount of noise on stderr,
-        // we redirect stderr temporarilly.
-        //try {
-        //    System.setErr(new PrintStream(new FileOutputStream(".harc_rmaster.err")));
-        //} catch (FileNotFoundException ex) {
-        //    ex.printStackTrace();
-        //}
-
-        // FIXME button_remotenames = button_remote.get_button_remotes();
-        
-        //if (button_remotenames == null || button_remotenames.length == 0)
-        //    button_remotenames = new String[]{"*** Error ***"}; // FIXME
-        //java.util.Arrays.sort(button_remotenames);
-
-      
-        
         initComponents();
-    
-
         System.setErr(console_PrintStream);
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -155,19 +79,6 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                 System.out.println("*************** This is GUI shutdown **********");
             }
         });
-
-   
-        //browse_device_MenuItem.setEnabled(hm.has_command((String)devices_dcbm.getSelectedItem(), commandtype_t.www, command_t.browse));
-
-        gc = new globalcache("globalcache", globalcache.gc_model.gc_unknown, verbose);
-        irt = new irtrans("irtrans", verbose);
-
-       
-        //remotemaster_home_TextField.setText(Props.get_instance().get_remotemaster_home());
-        //rmdu_button_rules_TextField.setText(Props.get_instance().get_rmdu_button_rules());
-
-        //System.setOut(console_PrintStream);
-        
     }
 
     // From Real Gagnon        
@@ -188,12 +99,6 @@ public class ezcontrolGUI extends javax.swing.JFrame {
             String aString = new String(b, off, len);
             console_TextArea.append(aString);
             console_TextArea.setCaretPosition(console_TextArea.getDocument().getLength());
-        /*
-        if (logFile) {
-        FileWriter aWriter = new FileWriter("error.log", true);
-        aWriter.write(aString);
-        aWriter.close();
-        }*/
         }
     }
     
@@ -201,7 +106,6 @@ public class ezcontrolGUI extends javax.swing.JFrame {
             new FilteredStream(
             new ByteArrayOutputStream()));
 
-    //TODO: boolean logFile;
     private void warning(String message) {
         System.err.println("Warning: " + message);
     }
@@ -215,8 +119,6 @@ public class ezcontrolGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainTabbedPane = new javax.swing.JTabbedPane();
-        outputHWTabbedPane = new javax.swing.JTabbedPane();
         ezcontrolPanel = new javax.swing.JPanel();
         t10_address_TextField = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
@@ -253,7 +155,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("HARCToolbox: Home Automation and Remote Control Toolbox"); // NOI18N
+        setTitle("EZControl T10 GUI of HARCToolbox"); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -262,7 +164,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
 
         t10_address_TextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         t10_address_TextField.setText("192.168.1.42");
-        t10_address_TextField.setToolTipText("IP-Address of GlobalCache to use");
+        t10_address_TextField.setToolTipText("IP-Address of EzControl to use");
         t10_address_TextField.setMinimumSize(new java.awt.Dimension(120, 27));
         t10_address_TextField.setPreferredSize(new java.awt.Dimension(120, 27));
         t10_address_TextField.addActionListener(new java.awt.event.ActionListener() {
@@ -396,7 +298,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                         .addComponent(ezcontrol_onButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ezcontrol_off_Button)
-                        .addContainerGap(73, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(ezcontrolPanelLayout.createSequentialGroup()
                         .addComponent(ezcontrol_preset_no_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -409,7 +311,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                         .addComponent(ezcontrol_preset_off_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(t10_update_Button)
-                        .addContainerGap(159, Short.MAX_VALUE))))
+                        .addContainerGap(108, Short.MAX_VALUE))))
         );
         ezcontrolPanelLayout.setVerticalGroup(
             ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -439,10 +341,6 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                     .addComponent(t10_browse_Button))
                 .addContainerGap())
         );
-
-        outputHWTabbedPane.addTab("EZControl", ezcontrolPanel);
-
-        mainTabbedPane.addTab("Output HW", outputHWTabbedPane);
 
         console_TextArea.setColumns(20);
         console_TextArea.setEditable(false);
@@ -523,6 +421,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         contentMenuItem.setMnemonic('C');
         contentMenuItem.setText("Content...");
         contentMenuItem.setToolTipText("Brings up documentation.");
+        contentMenuItem.setEnabled(false);
         contentMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 contentMenuItemActionPerformed(evt);
@@ -549,110 +448,22 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(mainTabbedPane, 0, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE))
+                .addComponent(ezcontrolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(mainTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                .addComponent(ezcontrolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private class globalcache_thread extends Thread {
-        private IrSignal code;
-        private int module;
-        private int connector;
-        private int count;
-        private JButton start_button;
-        private JButton stop_button;
-
-        public globalcache_thread(IrSignal code, int module, int connector, int count,
-                JButton start_button, JButton stop_button) {
-            super("globalcache_thread");
-            this.code = code;
-            this.module = module;
-            this.connector = connector;
-            this.count = count;
-            this.start_button = start_button;
-            this.stop_button = stop_button;
-        }
-
-        @Override
-        public void run() {
-            start_button.setEnabled(false);
-            stop_button.setEnabled(true);
-            boolean success = false;
-            try {
-                success = gc.send_ir(code, module, connector, count);
-            } catch (UnknownHostException ex) {
-                System.err.println("Globalcache hostname is not found.");
-            } catch (IOException e) {
-                System.err.println(e);
-            } catch (InterruptedException e) {
-                System.err.println("*** Interrupted *** ");
-                success = true;
-            }
-
-            if (!success)
-                System.err.println("** Failed **");
-
-            //the_globalcache_thread = null;
-            start_button.setEnabled(true);
-            stop_button.setEnabled(false);
-        }
-    }
-
-    private class irtrans_thread extends Thread {
-        private String remote;
-        private String commandname;
-        private irtrans.led_t led;
-        private int count;
-        private JButton start_button;
-        private JButton stop_button;
-
-        public irtrans_thread(String remote, String commandname, irtrans.led_t led, int count,
-                JButton start_button, JButton stop_button) {
-            super("irtrans_thread");
-            this.remote = remote;
-            this.commandname = commandname;
-            this.led = led;
-            this.count = count;
-            this.start_button = start_button;
-            this.stop_button = stop_button;
-        }
-
-        @Override
-        public void run() {
-            start_button.setEnabled(false);
-            stop_button.setEnabled(true);
-            boolean success = false;
-            try {
-                success = irt.send_flashed_command(remote, commandname, led, count);
-            } catch (UnknownHostException ex) {
-                System.err.println("IRTrans hostname not found.");
-            } catch (IOException e) {
-                System.err.println(e);
-            } catch (InterruptedException e) {
-                System.err.println("*** Interrupted *** ");
-                success = true;
-            }
-
-            if (!success)
-                System.err.println("** Failed **");
-
-            the_irtrans_thread = null;
-            start_button.setEnabled(true);
-            stop_button.setEnabled(false);
-        }
-    }
 
     private void do_exit() {
         System.out.println("Exiting...");
@@ -673,7 +484,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void contentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contentMenuItemActionPerformed
-        //harcutils.browse(Props.get_instance().get_helpfilename());
+
 }//GEN-LAST:event_contentMenuItemActionPerformed
 
     private void verbose_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verbose_CheckBoxMenuItemActionPerformed
@@ -707,9 +518,6 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         } catch (NullPointerException e) {
         }
     }//GEN-LAST:event_consoletext_save_MenuItemActionPerformed
-
-
-  
 
     private void t10_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_address_TextFieldActionPerformed
 
@@ -776,12 +584,6 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         harcutils.browse(t10_address_TextField.getText());
     }//GEN-LAST:event_t10_browse_ButtonActionPerformed
 
-  
-    
-
-    //public static gui_main getApplication() {
-    //  return Application.getInstance(gui_main.class);
-    //}
     /**
      * @param args the command line arguments
      */
@@ -821,11 +623,9 @@ public class ezcontrolGUI extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTabbedPane mainTabbedPane;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu miscMenu;
     private javax.swing.JComboBox n_ezcontrol_ComboBox;
-    private javax.swing.JTabbedPane outputHWTabbedPane;
     private javax.swing.JTextField t10_address_TextField;
     private javax.swing.JButton t10_browse_Button;
     private javax.swing.JButton t10_get_status_Button;
