@@ -39,6 +39,7 @@ public class globalcache {
     // MUCH simpler to implement.
     // TODO: fix
     private static int socket_timeout = 2000;
+    private static int beacon_timeout = 60000;
 
     /** GlobalCache models */
     public enum gc_model {
@@ -523,7 +524,7 @@ public class globalcache {
     }
 
     public static amx_beacon.result listen_beacon() {
-        return amx_beacon.listen_for("-Make", "GlobalCache");
+        return amx_beacon.listen_for("-Make", "GlobalCache", beacon_timeout);
     }
 
     public static void usage() {

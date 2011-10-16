@@ -35,6 +35,10 @@ public class amx_beacon {
             System.err.println(gadgets.get(addr));
         }
     }
+    
+    public static void reset() {
+        gadgets.clear();
+    }
 
     public static class result {
         public InetAddress addr;
@@ -57,7 +61,7 @@ public class amx_beacon {
         }
     }
     
-    public static void listen(boolean verbose, int count) {
+    public static boolean listen(boolean verbose, int count, int timeout) {
         if (verbose)
             System.err.println("listening to beacon...");
 
@@ -67,6 +71,7 @@ public class amx_beacon {
                 InetAddress group = java.net.InetAddress.getByName(broadcast_ip);
                 MulticastSocket sock = new MulticastSocket(broadcast_port/*, addr*/);
                 sock.joinGroup(group);
+                sock.setSoTimeout(timeout);
                 DatagramPacket pack = new DatagramPacket(buf, buf.length);
                 //System.err.println("listening...");
                 sock.receive(pack);
@@ -91,8 +96,11 @@ public class amx_beacon {
                 //System.err.println(r);
 
             } catch (IOException ex) {
-            }
+                System.err.println(ex.getMessage());
+                return false;
+            } 
         }
+        return true;
     }
 
     public static result get_key(String key, String value) {
@@ -103,12 +111,15 @@ public class amx_beacon {
         return null;
     }
 
-    public static result listen_for(String key, String value) {
+    public static result listen_for(String key, String value, int timeout) {
         result r = null;
         while (r == null) {
             r = get_key(key, value);
-            if (r == null)
-                listen(false, 1);
+            if (r == null) {
+                boolean got_response = listen(false, 1, timeout);
+                if (!got_response)
+                    return null;
+            }
         }
         return r;
     }
@@ -116,7 +127,7 @@ public class amx_beacon {
     public static void main(String args[]) {
         //listen(true, 4);
         //print_gadgets();
-        result r = listen_for("-Make", args[0]);
+        result r = listen_for("-Make", args[0], Integer.parseInt(args[1]));
         System.err.println(r);
     }
 }
