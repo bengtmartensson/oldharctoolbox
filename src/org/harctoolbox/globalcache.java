@@ -39,7 +39,7 @@ public class globalcache {
     // MUCH simpler to implement.
     // TODO: fix
     private static int socket_timeout = 2000;
-    private static int beacon_timeout = 60000;
+    private static int beacon_timeout = 30000; // There seems to be a bug somewhere in the SoTimeout code if larger than 30000...
 
     /** GlobalCache models */
     public enum gc_model {
