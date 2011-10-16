@@ -80,6 +80,7 @@
         portnumber CDATA #IMPLIED
         deviceno CDATA #IMPLIED
         subdevice CDATA #IMPLIED
+        additional_parameters CDATA #IMPLIED
         fixed_data CDATA #IMPLIED
         user CDATA #IMPLIED
         password CDATA #IMPLIED
