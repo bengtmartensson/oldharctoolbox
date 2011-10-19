@@ -269,6 +269,10 @@ public class harcutils {
     }
     
     public static String[] get_basenames(String dirname, String extension) {
+        return get_basenames(dirname, extension, false);
+    }
+    
+    public static String[] get_basenames(String dirname, String extension, boolean toLowercase) {
         File dir = new File(dirname);
         if (!dir.isDirectory())
             return null;
@@ -276,8 +280,9 @@ public class harcutils {
         String[] files = dir.list(new extension_filter(extension));
         String[] result = new String[files.length];
         for (int i =0; i < files.length; i++)
-            result[i] = files[i].substring(0, files[i].lastIndexOf(extension));
-        return result;//String[] {"sjkdfld"};
+            result[i] = toLowercase ? files[i].toLowerCase().substring(0, files[i].lastIndexOf(extension))
+                    : files[i].substring(0, files[i].lastIndexOf(extension));
+        return result;
     }
 
     @SuppressWarnings("empty-statement")

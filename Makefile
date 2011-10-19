@@ -3,7 +3,7 @@
 # make than with ant...) It is probably not of interest for anyone
 # else.
 
-VERSION=0.6.0
+VERSION=0.7.0
 INSTALLDIR=/usr/local/harctoolbox
 BINDIR=/usr/local/bin
 SVNURL=svn://localhost/harctoolbox/trunk
