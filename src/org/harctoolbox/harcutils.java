@@ -277,6 +277,8 @@ public class harcutils {
         if (!dir.isDirectory())
             return null;
 
+        if (extension.charAt(0) != '.')
+            extension = "." + extension;
         String[] files = dir.list(new extension_filter(extension));
         String[] result = new String[files.length];
         for (int i =0; i < files.length; i++)
