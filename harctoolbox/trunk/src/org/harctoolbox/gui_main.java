@@ -6,7 +6,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 3 of the License, or (at
 your option) any later version.
 
-This program is distributed in the hope thlat it will be useful, but
+This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 General Public License for more details.
@@ -25,12 +25,14 @@ import IrpMaster.IrpMasterException;
 import IrpMaster.Pronto;
 import IrpMaster.UnassignedException;
 import java.awt.Dimension;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import org.antlr.runtime.RecognitionException;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -115,11 +117,23 @@ public class gui_main extends javax.swing.JFrame {
 
     private class copy_clipboard_text implements ClipboardOwner {
 
+        @Override
         public void lostOwnership(Clipboard c, Transferable t) {
         }
 
         public void to_clipboard(String str) {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(str), this);
+        }
+        
+        public String from_clipboard() {
+            try {
+                return (String) Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this).getTransferData(DataFlavor.stringFlavor);
+            } catch (UnsupportedFlavorException ex) {
+                System.err.println(ex.getMessage());
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            }
+            return null;
         }
     }
 
