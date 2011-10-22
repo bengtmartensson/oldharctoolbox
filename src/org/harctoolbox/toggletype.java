@@ -51,7 +51,7 @@ public enum toggletype {
     }
 
     public static int toInt(toggletype t) {
-        return t.ordinal();// == toggle_1 ? 1 : 0;
+        return t == dont_care ? -1 : t.ordinal();// == toggle_1 ? 1 : 0;
     }
 
     public static toggletype decode_toggle(String t) {
