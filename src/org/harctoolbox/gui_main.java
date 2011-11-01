@@ -89,7 +89,7 @@ public class gui_main extends javax.swing.JFrame {
     private globalcache_thread the_globalcache_device_thread = null;
     private globalcache_thread the_globalcache_protocol_thread = null;
     private irtrans_thread the_irtrans_thread = null;
-    
+
     private globalcache gc = null;
     private irtrans irt = null;
 
@@ -124,7 +124,7 @@ public class gui_main extends javax.swing.JFrame {
         public void to_clipboard(String str) {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(str), this);
         }
-        
+
         public String from_clipboard() {
             try {
                 return (String) Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this).getTransferData(DataFlavor.stringFlavor);
@@ -196,13 +196,13 @@ public class gui_main extends javax.swing.JFrame {
         //}
 
         // FIXME button_remotenames = button_remote.get_button_remotes();
-        
+
         if (button_remotenames == null || button_remotenames.length == 0)
             button_remotenames = new String[]{"*** Error ***"}; // FIXME
         java.util.Arrays.sort(button_remotenames);
 
         initComponents();
-        
+
         try {
             DecodeIRVersion.setText("DecodeIR ver. " + DecodeIR.getVersion());
         } catch (UnsatisfiedLinkError ex) {
@@ -250,14 +250,14 @@ public class gui_main extends javax.swing.JFrame {
         update_from_frequency();
 
         //System.setOut(console_PrintStream);
-        
+
     }
 
     public gui_main() {
         this(harcprops.get_instance().get_homefilename());
     }
 
-    // From Real Gagnon        
+    // From Real Gagnon
     class FilteredStream extends FilterOutputStream {
 
         public FilteredStream(OutputStream aStream) {
@@ -283,7 +283,7 @@ public class gui_main extends javax.swing.JFrame {
         }*/
         }
     }
-    
+
     PrintStream console_PrintStream = new PrintStream(
             new FilteredStream(
             new ByteArrayOutputStream()));
@@ -2701,7 +2701,7 @@ public class gui_main extends javax.swing.JFrame {
     private void macroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macroButtonActionPerformed
         if (the_macro_thread != null)
             System.err.println("Internal error: the_macro_thread != null");
-        
+
         the_macro_thread = new macro_thread((String) macros_dcbm.getSelectedItem());
         macroButton.setEnabled(false);
         stop_macro_Button.setEnabled(true);
@@ -2963,7 +2963,7 @@ public class gui_main extends javax.swing.JFrame {
             stop_command_Button.setEnabled(true);
             the_command_thread.start();
         }
-        
+
     }//GEN-LAST:event_commandButtonActionPerformed
 
     private void sort_commands_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sort_commands_CheckBoxMenuItemActionPerformed
@@ -3031,7 +3031,7 @@ public class gui_main extends javax.swing.JFrame {
         //System.err.println(protocol_name + devno + " " + sub_devno + " " + cmd_no + toggle);
         return protocol.encode(protocol_name, devno, sub_devno, cmd_no, toggle, add_params, false);
     }
-    
+
     private void export_ccf() throws NumberFormatException, IrpMasterException, RecognitionException, FileNotFoundException {
         String protocol_name = (String) protocol_ComboBox.getModel().getSelectedItem();
         short devno = deviceno_TextField.getText().trim().isEmpty() ? -1 : harcutils.parse_shortnumber(deviceno_TextField.getText());
@@ -3082,7 +3082,7 @@ public class gui_main extends javax.swing.JFrame {
 
         try {
             //com.hifiremote.decodeir.DecodeIR.DecodedSignal[] result = com.hifiremote.decodeir.DecodeIR.decode(code);
-            DecodeIR.DecodedSignal[] result = DecodeIR.decodePronto(code);
+            DecodeIR.DecodedSignal[] result = DecodeIR.decode(code);
             if (result == null || result.length == 0) {
                 System.err.println("DecodeIR failed (but was found).");
                 return;
@@ -3090,6 +3090,8 @@ public class gui_main extends javax.swing.JFrame {
             for (int i = 0; i < result.length; i++) {
                 System.err.println(result[i]);
             }
+        } catch (IrpMasterException ex) {
+            System.err.println(ex.getMessage());
         } catch (UnsatisfiedLinkError e) {
             System.err.println("Error: DecodeIR not found.");
         } catch (NumberFormatException e) {
@@ -3181,7 +3183,7 @@ public class gui_main extends javax.swing.JFrame {
         } catch (SAXException e) {
             System.err.println(e.getMessage());
         }
-        
+
         if (c == null) {
             System.err.println("No IR command for " + cmd + " found.");
             return;
@@ -3232,7 +3234,7 @@ public class gui_main extends javax.swing.JFrame {
     }//GEN-LAST:event_zones_ComboBoxActionPerformed
 
     private void audio_video_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audio_video_ComboBoxActionPerformed
-    
+
     }//GEN-LAST:event_audio_video_ComboBoxActionPerformed
 
     private void consoletext_save_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consoletext_save_MenuItemActionPerformed
@@ -3317,7 +3319,7 @@ public class gui_main extends javax.swing.JFrame {
     private void stop_macro_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_macro_ButtonActionPerformed
         the_macro_thread.interrupt();
         macroButton.setEnabled(true);
-        stop_macro_Button.setEnabled(false);       
+        stop_macro_Button.setEnabled(false);
         System.err.println("************ Execution of macro `"
                 + (the_macro_thread != null ? the_macro_thread.get_name() : "") + "' interrupted *************");
         the_macro_thread = null;
@@ -3736,13 +3738,13 @@ public class gui_main extends javax.swing.JFrame {
         prontocode_TextField.setText(Pronto.formatInteger(Pronto.getProntoCode(freq)));//ir_code.ccf_integer(ir_code.get_frequency_code(freq)));
         update_from_frequency(freq);
     }
-    
+
     private void update_from_frequencycode() {
         int freq = (int) Pronto.getFrequency(Integer.parseInt(prontocode_TextField.getText(),16));
         frequency_TextField.setText(Integer.toString(freq));
         update_from_frequency(freq);
     }
-        
+
     private void update_from_frequency(int freq) {
         if (period_selection_enable_CheckBox.isSelected()) {
             double no_periods = Double.parseDouble(no_periods_TextField.getText());
@@ -3752,7 +3754,7 @@ public class gui_main extends javax.swing.JFrame {
             no_periods_TextField.setText(String.format("%.1f", (time*freq)/1000000.0));
         }
     }
-    
+
     private void no_periods_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_no_periods_TextFieldActionPerformed
         double no_periods = Double.parseDouble(no_periods_TextField.getText());
         int freq = Integer.parseInt(frequency_TextField.getText());
