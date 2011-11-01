@@ -37,29 +37,29 @@ public class protocol {
 
     private static IrpMaster irpMaster = null;
     private static HashMap<String, Protocol> protocols = null;
-    
+
     private final static short invalid_parameter = -1;
-    
+
     public static void initialize(String irp_database) throws FileNotFoundException, IncompatibleArgumentException {
         irpMaster = new IrpMaster(irp_database);
         protocols = new HashMap<String, Protocol>();
     }
-    
+
     public static void initialize() throws FileNotFoundException, IncompatibleArgumentException {
         initialize(harcprops.get_instance().get_irpmaster_configfile());
     }
-    
+
     // States for toggles, one per protocol
     //private static Hashtable<String, Integer> toggle_state = new Hashtable<String, Integer>();
-    
+
     private static Protocol get_protocol(String name) throws UnassignedException, RecognitionException {
         if (!protocols.containsKey(name)) {
             Protocol protocol = irpMaster.newProtocol(name);
             protocols.put(name, protocol);
         }
-        return protocols.get(name);            
+        return protocols.get(name);
     }
-    
+
     public static IrSignal encode(String protocol_name, short deviceno,
             short subdevice, short cmdno, toggletype toggle, String params, boolean verbose) throws IrpMasterException, RecognitionException {
         //int itoggle = 0;
@@ -70,7 +70,7 @@ public class protocol {
         IrSignal ir =
             protocol_name.equals("raw_ccf") ? null // new raw_ir()
             : /*new*/ protocol_parser(protocol_name, deviceno, subdevice, cmdno, /*i*/toggle, params);
-        
+
         /*if (!ir.is_valid()) {
             if (verbose)
                 System.err.println(protocol_name.equals("")
@@ -80,7 +80,7 @@ public class protocol {
         }*/
         return ir;
     }
-    
+
     private static HashMap<String, Long>parameters(short deviceno, short subdevice, short cmdno, toggletype toggle, String extra_params) {
         HashMap<String, Long>params = new HashMap<String, Long>();
         if (deviceno != invalid_parameter)
@@ -101,18 +101,18 @@ public class protocol {
         }
         return params;
     }
-    
+
     private static IrSignal protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno, toggletype /*i*/toggle, String extra_params) throws IrpMasterException, RecognitionException {
         Protocol protocol = get_protocol(protocol_name);
         if (protocol == null)
             return null;
-        
+
         HashMap<String, Long> params = parameters(deviceno, subdevice, cmdno, toggle, extra_params);
         IrSignal irSignal = protocol.renderIrSignal(params);
         return irSignal;
-        
+
     }
-    
+
     /*private static raw_ir irSignal2ir_code(IrSignal irSignal) throws IncompatibleArgumentException {
         //IrpMaster.Pronto.getProntoCode(irSignal.getFrequency());
         Pronto pronto = new Pronto(irSignal);
@@ -133,7 +133,7 @@ public class protocol {
         Protocol protocol = get_protocol(protocol_name);
         return protocol.hasParameterDefault("S");
     }
-    
+
     public static String get_IRP(String protocol_name) {
         return irpMaster.getIrp(protocol_name);
     }
@@ -266,17 +266,17 @@ public class protocol {
 
                         DecodeIR.loadLibrary();
                         //System.err.println("++++++++++++++++" + DecodeIR.getVersion());
-                        out = DecodeIR.decodePronto(ir.ccfString());
+                        out = DecodeIR.decode(ir.ccfString());
                         if (out == null || out.length == 0)
                             System.out.println("No decodings from DecodeIR.");
                         for (int i = 0; i < out.length; i++) {
                             System.out.println(out[i]);
                         }
+                    } catch (IrpMasterException ex) {
+                        System.err.println(ex.getMessage());
                     } catch (UnsatisfiedLinkError e) {
                         System.err.println("Did not find DecodeIR");
                         System.exit(harcutils.exit_dynamic_link_error);
-                    } catch (IncompatibleArgumentException ex) {
-                        System.err.println(ex.getMessage());
                     }
                 }
 
