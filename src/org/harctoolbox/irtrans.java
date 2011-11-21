@@ -163,7 +163,7 @@ public class irtrans {
         return send_command("Aver");
     }
 
-    public String[] get_table(String str)
+    private String[] get_table(String str)
             throws InterruptedException, IOException, InterruptedException {
         if (verbose)
             System.err.println("Sending command `" + str + "0' to Irtrans");
@@ -183,7 +183,7 @@ public class irtrans {
             Thread.sleep(dummy_delay);
             int index = 0;
             int no_remotes = 99999;
-            while (index < no_remotes - 1) {
+            while (index < no_remotes) {
                 Thread.sleep(100);
                 outToServer.print(str + index + "\r");
                 result = inFromServer.readLine(); // hangs here sometimes
