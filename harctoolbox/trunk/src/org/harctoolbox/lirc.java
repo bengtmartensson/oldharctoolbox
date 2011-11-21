@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.NoRouteToHostException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 /**
@@ -71,6 +72,8 @@ public class lirc {
     private final static int P_N = 4;
     private final static int P_DATA_N = 5;
     private final static int P_END = 6;
+    
+    private final static int socket_timeout = 2000;
 
     private class bad_packet extends Exception {
 
@@ -83,7 +86,7 @@ public class lirc {
         }
     }
 
-    private String[] send_command(String packet) throws IOException, UnknownHostException, NoRouteToHostException {
+    private String[] send_command(String packet) throws IOException {
         if (verbose) {
             System.err.println("Sending command `" + packet + "' to Lirc@" + lirc_host);
         }
@@ -93,6 +96,7 @@ public class lirc {
         String string = "";
 
         sock = new Socket(lirc_host, lirc_port);
+        sock.setSoTimeout(socket_timeout);
         outToServer = new PrintStream(sock.getOutputStream());
         inFromServer =
                 new BufferedReader(new InputStreamReader(sock.getInputStream()));
@@ -180,56 +184,66 @@ public class lirc {
             }
         } catch (bad_packet e) {
             System.err.println("bad return packet");
+            status = -1;
+        } catch (SocketTimeoutException e) {
+            System.err.println("Sockettimeout Lirc: " + e.getMessage());
+            result = null;
+            status = -1;
         } catch (IOException e) {
             System.err.println("Couldn't read from " + lirc_host);
-            System.exit(1);
+            status = -1;
+            //System.exit(1);
         } finally {
             try {
                 sock.close();
             } catch (IOException e) {
                 System.err.println("Couldn't close socket.");
-                System.exit(1);
+                //System.exit(1);
             }
         }
         if (verbose) {
             System.err.println(status == 0 ? "Lirc command succeded."
                     : "Lirc command failed.");
         }
-        if (status != 0 && result != null) {
-            System.err.println(result[0]);
+        if (result != null && verbose) {
+            System.err.println("result[0] = " + result[0]);
         }
 
-        return result;
+        return status == 0 ? result : null;
     }
 
     /** Requires a nonstandard LIRC server */
-    public void send_ccf(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
-        send_command("SEND_CCF_ONCE " + (count - 1) + " " + ccf);
+    public boolean send_ccf(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
+        return send_command("SEND_CCF_ONCE " + (count - 1) + " " + ccf) != null;
     }
 
     /** Requires a nonstandard LIRC server */
-    public void send_ccf_repeat(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
-        send_command("SEND_CCF_START " + ccf);
+    public boolean send_ccf_repeat(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
+        return send_command("SEND_CCF_START " + ccf) != null;
     }
 
-    public String send_ir(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_ir(remote, command, 1) ? "" : null;
+    public boolean send_ir(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
+        return send_ir(remote, command, 1);
     }
 
     public boolean send_ir(String remote, String command, int count) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_ONCE " + remote + " " + command + " " + (count - 1)) == null;
+        return send_command("SEND_ONCE " + remote + " " + command + " " + (count - 1)) != null;
     }
 
     public boolean send_ir(String remote, command_t cmd, int count) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_ONCE " + remote + " " + cmd + " " + (count - 1)) == null;
+        return send_command("SEND_ONCE " + remote + " " + cmd + " " + (count - 1)) != null;
     }
 
-    public void send_ir_repeat(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
-        send_command("SEND_START " + remote + " " + command);
+    public boolean send_ir_repeat(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
+        return send_command("SEND_START " + remote + " " + command) != null;
     }
 
-    public void stop_ir(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
-        send_command("SEND_STOP " + remote + " " + command);
+    public boolean stop_ir(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
+        return send_command("SEND_STOP " + remote + " " + command) != null;
+    }
+    
+    public boolean stop_ir() throws IOException, UnknownHostException, NoRouteToHostException {
+        return send_command("SEND_STOP") != null;
     }
 
     public String[] get_remotes() throws IOException, UnknownHostException, NoRouteToHostException {
@@ -237,38 +251,40 @@ public class lirc {
     }
 
     /** Requires a nonstandard LIRC server */
-    public String[] get_ccf_remote() throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("CCF");
-    }
+    //public String[] get_ccf_remote() throws IOException, UnknownHostException, NoRouteToHostException {
+    //    return send_command("CCF");
+    //}
 
     public String[] get_commands(String remote) throws IOException, UnknownHostException, NoRouteToHostException {
         return send_command("LIST " + remote);
     }
 
     /** Requires a nonstandard LIRC server */
-    public String[] get_ccf_remote(String remote) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("CCF " + remote);
-    }
+    //public String[] get_ccf_remote(String remote) throws IOException, UnknownHostException, NoRouteToHostException {
+    //    return send_command("CCF " + remote);
+    //}
 
     public String get_remote_command(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("LIST " + remote + " " + command)[0];
+        String[] result = send_command("LIST " + remote + " " + command);
+        return result != null ? result[0] : null;
     }
 
     /** Requires a nonstandard LIRC server */
-    public String get_ccf_remote_command(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("CCF " + remote + " " + command)[0];
-    }
+    //public String get_ccf_remote_command(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
+    //    return send_command("CCF " + remote + " " + command)[0];
+    //}
 
-    public void set_transmitters(int[] trans) throws IOException, UnknownHostException, NoRouteToHostException {
+    public boolean set_transmitters(int[] trans) throws IOException, UnknownHostException, NoRouteToHostException {
         String s = "SET_TRANSMITTERS";
         for (int i = 0; i < trans.length; i++) {
             s = s + " " + trans[i];
         }
-        send_command(s);
+        return send_command(s) != null;
     }
 
     public String get_version() throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("VERSION")[0];
+        String[] result = send_command("VERSION");
+        return result != null ? result[0] :  null;
     }
 
     public static void main(String[] args) {
