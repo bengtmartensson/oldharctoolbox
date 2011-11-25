@@ -86,7 +86,7 @@ public class lirc {
         }
     }
 
-    private String[] send_command(String packet) throws IOException {
+    private String[] send_command(String packet, boolean one_word) throws IOException {
         if (verbose) {
             System.err.println("Sending command `" + packet + "' to Lirc@" + lirc_host);
         }
@@ -95,7 +95,7 @@ public class lirc {
         BufferedReader inFromServer = null;
         String string = "";
 
-        sock = new Socket(lirc_host, lirc_port);
+        sock = new Socket(lirc_host, lirc_port); // hangs if noone is listening
         sock.setSoTimeout(socket_timeout);
         outToServer = new PrintStream(sock.getOutputStream());
         inFromServer =
@@ -117,69 +117,72 @@ public class lirc {
                 //System.out.println("***"+string+"***"+state);
                 if (string == null) {
                     done = true;
-                }
-
-                switch (state) {
-                    case P_BEGIN:
-                        if (!string.equals("BEGIN")) {
-                            System.err.println("!begin");
-                            continue;
-                        }
-                        state = P_MESSAGE;
-                        break;
-                    case P_MESSAGE:
-                        if (!string.equals(packet)) {
-                            state = P_BEGIN;
-                            continue;
-                        }
-                        state = P_STATUS;
-                        break;
-                    case P_STATUS:
-                        if (string.equals("SUCCESS")) {
-                            status = 0;
-                        } else if (string.equals("END")) {
-                            status = 0;
-                            done = true;
-                        } else if (string.equals("ERROR")) {
-                            System.err.println("command failed: " + packet);
-                            status = -1;
-                        } else {
-                            throw new bad_packet();
-                        }
-                        state = P_DATA;
-                        break;
-                    case P_DATA:
-                        if (string.equals("END")) {
-                            done = true;
+                    status = -1;
+                } else {
+                    switch (state) {
+                        case P_BEGIN:
+                            if (!string.equals("BEGIN")) {
+                                System.err.println("!begin");
+                                continue;
+                            }
+                            state = P_MESSAGE;
                             break;
-                        } else if (string.equals("DATA")) {
-                            state = P_N;
+                        case P_MESSAGE:
+                            if (!string.equals(packet)) {
+                                state = P_BEGIN;
+                                continue;
+                            }
+                            state = P_STATUS;
                             break;
-                        }
-                        throw new bad_packet();
-                    case P_N:
-                        errno = 0;
-                        data_n = Integer.parseInt(string);
-                        result = new String[data_n];
-
-                        state = data_n == 0 ? P_END : P_DATA_N;
-                        break;
-                    case P_DATA_N:
-                        if (verbose) {
-                            System.out.println(string);
-                        }
-                        result[n++] = string;
-                        if (n == data_n) {
-                            state = P_END;
-                        }
-                        break;
-                    case P_END:
-                        if (string.equals("END")) {
-                            done = true;
-                        } else {
+                        case P_STATUS:
+                            if (string.equals("SUCCESS")) {
+                                status = 0;
+                            } else if (string.equals("END")) {
+                                status = 0;
+                                done = true;
+                            } else if (string.equals("ERROR")) {
+                                System.err.println("command failed: " + packet);
+                                status = -1;
+                            } else {
+                                throw new bad_packet();
+                            }
+                            state = P_DATA;
+                            break;
+                        case P_DATA:
+                            if (string.equals("END")) {
+                                done = true;
+                                break;
+                            } else if (string.equals("DATA")) {
+                                state = P_N;
+                                break;
+                            }
                             throw new bad_packet();
-                        }
-                        break;
+                        case P_N:
+                            errno = 0;
+                            data_n = Integer.parseInt(string);
+                            result = new String[data_n];
+
+                            state = data_n == 0 ? P_END : P_DATA_N;
+                            break;
+                        case P_DATA_N:
+                            if (verbose) {
+                                System.out.println(string);
+                            }
+                            // Different LIRC servers seems to deliver commands in different
+                            // formats. Just take the last word.
+                            result[n++] = one_word ? string.replaceAll("\\S*\\s+", "") : string;
+                            if (n == data_n) {
+                                state = P_END;
+                            }
+                            break;
+                        case P_END:
+                            if (string.equals("END")) {
+                                done = true;
+                            } else {
+                                throw new bad_packet();
+                            }
+                            break;
+                    }
                 }
             }
         } catch (bad_packet e) {
@@ -214,12 +217,12 @@ public class lirc {
 
     /** Requires a nonstandard LIRC server */
     public boolean send_ccf(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_CCF_ONCE " + (count - 1) + " " + ccf) != null;
+        return send_command("SEND_CCF_ONCE " + (count - 1) + " " + ccf, false) != null;
     }
 
     /** Requires a nonstandard LIRC server */
     public boolean send_ccf_repeat(String ccf, int count) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_CCF_START " + ccf) != null;
+        return send_command("SEND_CCF_START " + ccf, false) != null;
     }
 
     public boolean send_ir(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
@@ -227,27 +230,27 @@ public class lirc {
     }
 
     public boolean send_ir(String remote, String command, int count) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_ONCE " + remote + " " + command + " " + (count - 1)) != null;
+        return send_command("SEND_ONCE " + remote + " " + command + " " + (count - 1), false) != null;
     }
 
     public boolean send_ir(String remote, command_t cmd, int count) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_ONCE " + remote + " " + cmd + " " + (count - 1)) != null;
+        return send_command("SEND_ONCE " + remote + " " + cmd + " " + (count - 1), false) != null;
     }
 
     public boolean send_ir_repeat(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_START " + remote + " " + command) != null;
+        return send_command("SEND_START " + remote + " " + command, false) != null;
     }
 
     public boolean stop_ir(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_STOP " + remote + " " + command) != null;
+        return send_command("SEND_STOP " + remote + " " + command, false) != null;
     }
     
     public boolean stop_ir() throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("SEND_STOP") != null;
+        return send_command("SEND_STOP", false) != null;
     }
 
     public String[] get_remotes() throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("LIST");
+        return send_command("LIST", false);
     }
 
     /** Requires a nonstandard LIRC server */
@@ -256,7 +259,7 @@ public class lirc {
     //}
 
     public String[] get_commands(String remote) throws IOException, UnknownHostException, NoRouteToHostException {
-        return send_command("LIST " + remote);
+        return send_command("LIST " + remote, true);
     }
 
     /** Requires a nonstandard LIRC server */
@@ -265,7 +268,7 @@ public class lirc {
     //}
 
     public String get_remote_command(String remote, String command) throws IOException, UnknownHostException, NoRouteToHostException {
-        String[] result = send_command("LIST " + remote + " " + command);
+        String[] result = send_command("LIST " + remote + " " + command, false);
         return result != null ? result[0] : null;
     }
 
@@ -279,11 +282,11 @@ public class lirc {
         for (int i = 0; i < trans.length; i++) {
             s = s + " " + trans[i];
         }
-        return send_command(s) != null;
+        return send_command(s, false) != null;
     }
 
     public String get_version() throws IOException, UnknownHostException, NoRouteToHostException {
-        String[] result = send_command("VERSION");
+        String[] result = send_command("VERSION", false);
         return result != null ? result[0] :  null;
     }
 
@@ -297,7 +300,10 @@ public class lirc {
             // 	System.out.println(l.get_ccf_remote_command("panasonic_dvd", "power_toggle"));
             // 	dump_array(l.get_ccf_remote("panasonic_dvd"));
             System.out.println(l.get_version());
-            harcutils.printtable("Remotes: ", l.get_remotes());
+            String[] remotes = l.get_remotes();
+            harcutils.printtable("Remotes: ", remotes);
+            String[] commands = l.get_commands(remotes[0]);
+            harcutils.printtable("Commands for " + remotes[0] + ": ", commands);
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to: " + l.lirc_host);
             System.exit(1);
