@@ -33,7 +33,7 @@ import java.net.UnknownHostException;
 public class lirc {
 
     private String lirc_host;
-    private final static int lirc_default_port = 8765;
+    public final static int lirc_default_port = 8765;
     private int lirc_port;
     public final static String default_lirc_host = "localhost";
 

@@ -34,7 +34,7 @@ public class irtrans {
     private String irtrans_host;
     
     public final static int irtrans_port = 21000;
-    public final static String default_irtrans_host = "irtrans";//"192.168.0.31";
+    public final static String default_irtrans_host = "192.168.0.32";
 
     public static final int dummy_delay = 10; // milliseconds
 
