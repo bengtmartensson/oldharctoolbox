@@ -103,7 +103,7 @@ public class lirc {
         
         outToServer.print(packet + '\n');
 
-        String[] result = null;
+        String[] result = new String[0];
         int status = 0;
         try {
             int state = P_BEGIN;
@@ -208,7 +208,7 @@ public class lirc {
             System.err.println(status == 0 ? "Lirc command succeded."
                     : "Lirc command failed.");
         }
-        if (result != null && verbose) {
+        if (result != null && result.length > 0 && verbose) {
             System.err.println("result[0] = " + result[0]);
         }
 
