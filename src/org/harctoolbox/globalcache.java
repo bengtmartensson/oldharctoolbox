@@ -46,10 +46,22 @@ public class globalcache {
         gc_100_06,
         gc_100_12,
         gc_100_18,
+        wf2ir,
+        ip2ir,
+        ip2ir_p,
+        wf2sl,
+        ip2sl,
+        ip2sl_p,
+        wf2cc,
+        ip2cc,
+        ip2cc_p,
         gc_unknown;
 
         public static int default_ir_module(gc_model m) {
-            return m == gc_100_06 ? 2 : 4;
+            return m == gc_100_12 || m == gc_100_18 ? 4
+                    : m == gc_100_06 ? 2
+                    : m == wf2ir || m == ip2ir || m == ip2ir_p ? 1
+                    : -1;
         }
     }
 
@@ -139,7 +151,6 @@ public class globalcache {
         int[] repeat = code.getRepeatPulses();
         return ((int)code.getFrequency()) + "," + count + "," + (1 + intro.length) + gc_joiner(intro) + gc_joiner(repeat);
     }
-    ;
 
     public globalcache(String hostname, gc_model type, boolean verbose) {
         gc_host = (hostname != null) ? hostname : default_gc_host;
@@ -352,6 +363,35 @@ public class globalcache {
         stop_ir(gc_default_connector);
     }
 
+    /**
+     * Transforms a GlobalCache send string to a CCF string.
+     *
+     * @param gc_string command string for GlobalCache
+     * @return CCF command as string
+     */
+    public static String gc2ccf(String gc_string) {
+        String[] str = gc_string.split(",");
+        int offset = 0;
+        while (str[offset].matches("\\D+")) // nukes off "sendir"
+            offset++;
+        while (str[offset].matches("\\d:\\d")) // nukes off module:connector
+            offset++;
+        while (Integer.parseInt(str[offset]) < 1000) // nukes off count
+            offset++;
+
+        int frequency = Integer.parseInt(str[offset++]);
+        offset++;
+        int intro_length = Integer.parseInt(str[offset++]) - 1;
+        int tot_length = str.length - offset;
+        int arr[] = new int[tot_length];
+        String result = String.format("0000 %04X %04X %04X",
+                Pronto.getProntoCode(frequency), intro_length/2, (tot_length-intro_length)/2);
+        for (int i = offset; i < str.length; i++)
+            result = result + String.format(" %04X", Integer.parseInt(str[i]));
+
+        return result;
+    }
+
     public boolean send_ir(IrSignal code, int module, int connector, int count) throws UnknownHostException, IOException, InterruptedException {
         if (!valid_connector(connector))
             connector = gc_default_connector;
@@ -531,7 +571,7 @@ public class globalcache {
         System.err.println("Usage:");
         System.err.println("globalcache [options] <command> [<argument>]");
         System.err.println("where options=-# <count>,-h <hostname>,-c <connector>,-m <module>,-b <baudrate>,-v,-B");
-        System.err.println("and command=send_ir,send_serial,listen_serial,set_relay,get_devices,get_version,set_blink,[set|get]_serial,[set|get]_ir,[set|get]_net,[get|set]_state");
+        System.err.println("and command=send_ir,send_serial,listen_serial,set_relay,get_devices,get_version,set_blink,[set|get]_serial,[set|get]_ir,[set|get]_net,[get|set]_state,ccf");
         System.exit(1);
     }
 
@@ -652,6 +692,11 @@ public class globalcache {
                     System.err.println("Press Ctrl-C to interrupt.");
                     // Never returns
                     gc.listen_serial(module);
+                } else if (cmd.equals("ccf")) {
+                    String s = "";
+                    for (int i = arg_i + 1; i < args.length; i++)
+                        s = s + args[i];
+                    System.out.println(gc2ccf(s));
                 } else {
                     usage();
                 }
