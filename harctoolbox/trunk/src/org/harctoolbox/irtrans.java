@@ -17,8 +17,8 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import IrpMaster.IncompatibleArgumentException;
-import IrpMaster.IrSignal;
+import org.harctoolbox.IrpMaster.IncompatibleArgumentException;
+import org.harctoolbox.IrpMaster.IrSignal;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

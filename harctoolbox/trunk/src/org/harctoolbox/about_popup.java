@@ -79,7 +79,7 @@ public class about_popup extends javax.swing.JDialog {
         license_text.setFocusable(false);
         jScrollPane1.setViewportView(license_text);
 
-        version_label2.setText(IrpMaster.IrpUtils.version_string);
+        version_label2.setText(org.harctoolbox.IrpMaster.IrpUtils.version_string);
 
         homepage_button.setText(harcutils.homepage_url);
         homepage_button.setToolTipText("Visit project's home page");

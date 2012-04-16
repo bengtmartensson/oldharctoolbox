@@ -248,6 +248,14 @@ public class harcutils {
     public static short parse_shortnumber(String s) throws NumberFormatException {
         return s.startsWith("0x") ? Short.parseShort(s.substring(2), 16) : Short.parseShort(s);
     }
+    
+    public static int parse_intnumber(String s) throws NumberFormatException {
+        return s.startsWith("0x") ? Integer.parseInt(s.substring(2), 16) : Integer.parseInt(s);
+    }
+
+    public static long parse_longnumber(String s) throws NumberFormatException {
+        return s.startsWith("0x") ? Long.parseLong(s.substring(2), 16) : Long.parseLong(s);
+    }
 
     public static String join(String[] stuff, char separator, int start_index) {
         if (stuff == null || stuff.length < start_index + 1)

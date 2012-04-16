@@ -17,8 +17,8 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import IrpMaster.IrSignal;
-import IrpMaster.IrpMasterException;
+import org.harctoolbox.IrpMaster.IrSignal;
+import org.harctoolbox.IrpMaster.IrpMasterException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
