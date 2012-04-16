@@ -21,14 +21,14 @@ this program. If not, see http://www.gnu.org/licenses/.
 // Take care of toggling state here
 package org.harctoolbox;
 
-import IrpMaster.DecodeIR;
-import IrpMaster.IncompatibleArgumentException;
-import IrpMaster.IrSignal;
-import IrpMaster.IrpMaster;
-import IrpMaster.IrpMasterException;
-import IrpMaster.IrpUtils;
-import IrpMaster.Protocol;
-import IrpMaster.UnassignedException;
+import org.harctoolbox.IrpMaster.DecodeIR;
+import org.harctoolbox.IrpMaster.IncompatibleArgumentException;
+import org.harctoolbox.IrpMaster.IrSignal;
+import org.harctoolbox.IrpMaster.IrpMaster;
+import org.harctoolbox.IrpMaster.IrpMasterException;
+import org.harctoolbox.IrpMaster.IrpUtils;
+import org.harctoolbox.IrpMaster.Protocol;
+import org.harctoolbox.IrpMaster.UnassignedException;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import org.antlr.runtime.RecognitionException;

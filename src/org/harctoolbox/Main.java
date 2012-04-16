@@ -16,7 +16,7 @@ this program. If not, see http://www.gnu.org/licenses/.
  */
 package org.harctoolbox;
 
-import IrpMaster.IrpMasterException;
+import org.harctoolbox.IrpMaster.IrpMasterException;
 import java.io.FileNotFoundException;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;

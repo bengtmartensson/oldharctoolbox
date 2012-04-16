@@ -17,13 +17,13 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import IrpMaster.DecodeIR;
-import IrpMaster.ICT;
-import IrpMaster.IncompatibleArgumentException;
-import IrpMaster.IrSignal;
-import IrpMaster.IrpMasterException;
-import IrpMaster.Pronto;
-import IrpMaster.UnassignedException;
+import org.harctoolbox.IrpMaster.DecodeIR;
+import org.harctoolbox.IrpMaster.ICT;
+import org.harctoolbox.IrpMaster.IncompatibleArgumentException;
+import org.harctoolbox.IrpMaster.IrSignal;
+import org.harctoolbox.IrpMaster.IrpMasterException;
+import org.harctoolbox.IrpMaster.Pronto;
+import org.harctoolbox.IrpMaster.UnassignedException;
 import java.awt.Dimension;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import org.antlr.runtime.RecognitionException;
@@ -3021,7 +3021,7 @@ public class gui_main extends javax.swing.JFrame {
         short sub_devno = -1;
         if (protocol.has_subdevice(protocol_name) && !(protocol.subdevice_optional(protocol_name) && subdevice_TextField.getText().trim().equals("")))
             sub_devno = harcutils.parse_shortnumber(subdevice_TextField.getText());
-        if (IrpMaster.IrpUtils.parseUpper(commandno_TextField.getText()) != IrpMaster.IrpUtils.invalid) {
+        if (org.harctoolbox.IrpMaster.IrpUtils.parseUpper(commandno_TextField.getText()) != org.harctoolbox.IrpMaster.IrpUtils.invalid) {
             System.err.println("Interval in command number not allowed here.");
             return null;
         }
@@ -3038,9 +3038,9 @@ public class gui_main extends javax.swing.JFrame {
         short sub_devno = -1;
         if (protocol.has_subdevice(protocol_name) && !(protocol.subdevice_optional(protocol_name) && subdevice_TextField.getText().trim().equals("")))
             sub_devno = harcutils.parse_shortnumber(subdevice_TextField.getText());
-        short cmd_no_upper = (short) IrpMaster.IrpUtils.parseUpper(commandno_TextField.getText());
-        short cmd_no_lower = (short) IrpMaster.IrpUtils.parseLong(commandno_TextField.getText());
-        if (cmd_no_upper == (short)IrpMaster.IrpUtils.invalid)
+        short cmd_no_upper = (short) org.harctoolbox.IrpMaster.IrpUtils.parseUpper(commandno_TextField.getText());
+        short cmd_no_lower = (short) org.harctoolbox.IrpMaster.IrpUtils.parseLong(commandno_TextField.getText());
+        if (cmd_no_upper == (short)org.harctoolbox.IrpMaster.IrpUtils.invalid)
             cmd_no_upper = cmd_no_lower;
         toggletype toggle = (toggletype) toggle_ComboBox.getModel().getSelectedItem();
         String add_params = protocol_params_TextField.getText();
