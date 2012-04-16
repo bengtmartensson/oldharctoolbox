@@ -72,8 +72,9 @@ public class lirc {
     private final static int P_N = 4;
     private final static int P_DATA_N = 5;
     private final static int P_END = 6;
-    
-    private final static int socket_timeout = 2000;
+
+    // TODO: possibibility to override in instance
+    private final static int socket_timeout = 5000; // WinLirc can be really slow...
 
     private class bad_packet extends Exception {
 
