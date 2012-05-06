@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="ezcontrol_t10" name="EZControl T10" vendor="Rose + Herleth"
+  vendorurl="http://www.ezcontrol.de/" model="T-10" type="ha">
+  <jp1data>
+    <setupcode value="2014"/>
+  </jp1data>
+  <commandset type="web_api" prefix="">
+    <command cmdref="cmd_1on"	transmit="preset?switch=1&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_2on"	transmit="preset?switch=2&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_3on"	transmit="preset?switch=3&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_4on"	transmit="preset?switch=4&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_5on"	transmit="preset?switch=5&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_6on"	transmit="preset?switch=6&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_7on"	transmit="preset?switch=7&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_8on"	transmit="preset?switch=8&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_9on"	transmit="preset?switch=9&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_10on"	transmit="preset?switch=10&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_11on"	transmit="preset?switch=11&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_12on"	transmit="preset?switch=12&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_13on"	transmit="preset?switch=13&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_14on"	transmit="preset?switch=14&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_15on"	transmit="preset?switch=15&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_16on"	transmit="preset?switch=16&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_17on"	transmit="preset?switch=17&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_18on"	transmit="preset?switch=18&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_19on"	transmit="preset?switch=19&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_20on"	transmit="preset?switch=20&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_21on"	transmit="preset?switch=21&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_22on"	transmit="preset?switch=22&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_23on"	transmit="preset?switch=23&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_24on"	transmit="preset?switch=24&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_25on"	transmit="preset?switch=25&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_26on"	transmit="preset?switch=26&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_27on"	transmit="preset?switch=27&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_28on"	transmit="preset?switch=28&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_29on"	transmit="preset?switch=29&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_30on"	transmit="preset?switch=30&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_31on"	transmit="preset?switch=31&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_32on"	transmit="preset?switch=32&amp;value=on" response_lines="-1"/>
+    <command cmdref="cmd_1off"	transmit="preset?switch=1&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_2off"	transmit="preset?switch=2&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_3off"	transmit="preset?switch=3&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_4off"	transmit="preset?switch=4&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_5off"	transmit="preset?switch=5&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_6off"	transmit="preset?switch=6&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_7off"	transmit="preset?switch=7&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_8off"	transmit="preset?switch=8&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_9off"	transmit="preset?switch=9&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_10off"	transmit="preset?switch=10&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_11off"	transmit="preset?switch=11&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_12off"	transmit="preset?switch=12&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_13off"	transmit="preset?switch=13&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_14off"	transmit="preset?switch=14&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_15off"	transmit="preset?switch=15&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_16off"	transmit="preset?switch=16&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_17off"	transmit="preset?switch=17&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_18off"	transmit="preset?switch=18&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_19off"	transmit="preset?switch=19&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_20off"	transmit="preset?switch=20&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_21off"	transmit="preset?switch=21&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_22off"	transmit="preset?switch=22&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_23off"	transmit="preset?switch=23&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_24off"	transmit="preset?switch=24&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_25off"	transmit="preset?switch=25&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_26off"	transmit="preset?switch=26&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_27off"	transmit="preset?switch=27&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_28off"	transmit="preset?switch=28&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_29off"	transmit="preset?switch=29&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_30off"	transmit="preset?switch=30&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_31off"	transmit="preset?switch=31&amp;value=off" response_lines="-1"/>
+    <command cmdref="cmd_32off"	transmit="preset?switch=32&amp;value=off" response_lines="-1"/>
+
+    <!--command cmdref="cmd_switch_2arg" transmit="preset?switch=$1&amp;value=$2" response_lines="-1">
+      <argument name="switch_no"/>
+      <argument name="value"/>
+    </command-->
+
+    <command cmdref="get_status" transmit="" response_lines="-1"/>
+    <command cmdref="get_configuration" transmit="config.html" response_lines="-1"/>
+    <command cmdref="get_timers" transmit="timer.html" response_lines="-1"/>
+    <command cmdref="get_net" transmit="network.html" response_lines="-1"/>
+  </commandset>
+
+  <commandset type="special">
+    <command cmdref="get_timer">
+      <argument name="timer_name"/>
+    </command>
+    <command cmdref="get_timers"/>
+    <command cmdref="get_status"/>
+    <command cmdref="get_configuration">
+      <argument name="filename"/>
+    </command>
+
+    <command cmdref="power_toggle">
+      <argument name="switch"/>
+    </command>
+
+  </commandset>
+
+  <commandset type="ir" protocol="rc5" toggle="no" deviceno="31"
+    remotename="t10dummy" remark="This is implemented through a suitably
+    programmed IRTrans: rem-export this file, and flash t10dummy on IRTrans
+    Ethernet IRDB, then define actions on the IRTrans.">
+    <command cmdref="cmd_1on"	cmdno="0"/>
+    <command cmdref="cmd_2on"	cmdno="1"/>
+    <command cmdref="cmd_3on"	cmdno="2"/>
+    <command cmdref="cmd_4on"	cmdno="3"/>
+    <command cmdref="cmd_5on"	cmdno="4"/>
+    <command cmdref="cmd_6on"	cmdno="5"/>
+    <command cmdref="cmd_7on"	cmdno="6"/>
+    <command cmdref="cmd_8on"	cmdno="7"/>
+    <command cmdref="cmd_9on"	cmdno="8"/>
+    <command cmdref="cmd_10on"	cmdno="9"/>
+    <command cmdref="cmd_11on"	cmdno="10"/>
+    <command cmdref="cmd_12on"	cmdno="11"/>
+    <command cmdref="cmd_13on"	cmdno="12"/>
+    <command cmdref="cmd_14on"	cmdno="13"/>
+    <command cmdref="cmd_15on"	cmdno="14"/>
+    <command cmdref="cmd_16on"	cmdno="15"/>
+    <command cmdref="cmd_17on"	cmdno="16"/>
+    <command cmdref="cmd_18on"	cmdno="17"/>
+    <command cmdref="cmd_19on"	cmdno="18"/>
+    <command cmdref="cmd_20on"	cmdno="19"/>
+    <command cmdref="cmd_21on"	cmdno="20"/>
+    <command cmdref="cmd_22on"	cmdno="21"/>
+    <command cmdref="cmd_23on"	cmdno="22"/>
+    <command cmdref="cmd_24on"	cmdno="23"/>
+    <command cmdref="cmd_25on"	cmdno="24"/>
+    <command cmdref="cmd_26on"	cmdno="25"/>
+    <command cmdref="cmd_27on"	cmdno="26"/>
+    <command cmdref="cmd_28on"	cmdno="27"/>
+    <command cmdref="cmd_29on"	cmdno="28"/>
+    <command cmdref="cmd_30on"	cmdno="29"/>
+    <command cmdref="cmd_31on"	cmdno="30"/>
+    <command cmdref="cmd_32on"	cmdno="31"/>
+    <command cmdref="cmd_1off"	cmdno="32"/>
+    <command cmdref="cmd_2off"	cmdno="33"/>
+    <command cmdref="cmd_3off"	cmdno="34"/>
+    <command cmdref="cmd_4off"	cmdno="35"/>
+    <command cmdref="cmd_5off"	cmdno="36"/>
+    <command cmdref="cmd_6off"	cmdno="37"/>
+    <command cmdref="cmd_7off"	cmdno="38"/>
+    <command cmdref="cmd_8off"	cmdno="39"/>
+    <command cmdref="cmd_9off"	cmdno="40"/>
+    <command cmdref="cmd_10off"	cmdno="41"/>
+    <command cmdref="cmd_11off"	cmdno="42"/>
+    <command cmdref="cmd_12off"	cmdno="43"/>
+    <command cmdref="cmd_13off"	cmdno="44"/>
+    <command cmdref="cmd_14off"	cmdno="45"/>
+    <command cmdref="cmd_15off"	cmdno="46"/>
+    <command cmdref="cmd_16off"	cmdno="47"/>
+    <command cmdref="cmd_17off"	cmdno="48"/>
+    <command cmdref="cmd_18off"	cmdno="49"/>
+    <command cmdref="cmd_19off"	cmdno="50"/>
+    <command cmdref="cmd_20off"	cmdno="51"/>
+    <command cmdref="cmd_21off"	cmdno="52"/>
+    <command cmdref="cmd_22off"	cmdno="53"/>
+    <command cmdref="cmd_23off"	cmdno="54"/>
+    <command cmdref="cmd_24off"	cmdno="55"/>
+    <command cmdref="cmd_25off"	cmdno="56"/>
+    <command cmdref="cmd_26off"	cmdno="57"/>
+    <command cmdref="cmd_27off"	cmdno="58"/>
+    <command cmdref="cmd_28off"	cmdno="59"/>
+    <command cmdref="cmd_29off"	cmdno="60"/>
+    <command cmdref="cmd_30off"	cmdno="61"/>
+    <command cmdref="cmd_31off"	cmdno="62"/>
+    <command cmdref="cmd_32off"	cmdno="63"/>
+  </commandset>
+
+  <xi:include href="www.xi"/>
+  <xi:include href="ping.xi"/>
+</device>

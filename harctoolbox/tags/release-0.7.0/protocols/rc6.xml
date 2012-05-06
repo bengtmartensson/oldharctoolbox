@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE irprotocol PUBLIC "-//bengt-martensson.de//irprotocols//en"
+ "../dtds/irprotocols.dtd">
+<irprotocol name="rc6" id="rc6">
+<!--
+DecodeIR says:
+ RC6 is the name used for the first member of the RC6 family of
+  protocols. Technically this is RC6-0-16, but DecodeIr will always display
+  that as simply "RC6"
+-->
+<!--  http://www.sbprojects.com/knowledge/ir/rc6.htm -->
+<jp1data>
+    <protocol number="00 58" name="RC6"/>
+    <tohex function="reverse_complement" bits="8"/>
+  </jp1data>
+  <cooked-ccf-string format="6000 0073 0000 0002 FIXME %04x %04x">
+    <parameterref parameter="deviceno"/>
+    <parameterref parameter="subdevice"/>
+    <parameterref parameter="cmdno"/>
+  </cooked-ccf-string>
+  <parameters>
+    <parameter id="deviceno" bits="8"/><!-- Philips: system -->
+    <parameter id="subdevice" bits="5"/>
+    <parameter id="cmdno" bits="8"/>
+    <parameter id="toggle" bits="1"/>
+  </parameters>
+  <frequency value="36000"/>
+  <irpnotation-new>
+{36k,444,msb}&lt;-1,1|1,-1>(6,-2,1:1,0:3,&lt;-2,2|2,-2>(T:1),D:8,F:8,^107m)+ 
+  </irpnotation-new>
+  <body>
+    <timings>
+      <timing id="t1" cycles="16"/>
+      <timing id="t2" cycles="32"/>
+      <timing id="t6" cycles="96"/>
+      <timing id="ttotal" cycles="3852"/>
+    </timings>
+    <pairs>
+      <pair id="p0">
+        <zero timing="t1"/>
+        <one timing="t1"/>
+      </pair>
+      <pair id="p1">
+        <one timing="t1"/>
+        <zero timing="t1"/>
+      </pair>
+      <pair id="q0">
+        <zero timing="t2"/>
+        <one timing="t2"/>
+      </pair>
+      <pair id="q1">
+        <one timing="t2"/>
+        <zero timing="t2"/>
+      </pair>
+    </pairs>
+    <intro/>
+    <repeat>
+      <one timing="t6"/>
+      <zero timing="t2"/>
+      <coded_number direction="msb" zero="p0" one="p1" bits="1">
+	<constant value="1"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="3">
+	<constant value="0"/>
+      </coded_number>
+      <coded_number direction="msb" zero="q0" one="q1" bits="1">
+	<parameterref parameter="toggle"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="deviceno"/>
+      </coded_number>
+      <coded_number direction="msb" zero="p0" one="p1" bits="8">
+	<parameterref parameter="cmdno"/>
+      </coded_number>
+      <zeropadding timing="ttotal"/>
+    </repeat>
+  </body>
+</irprotocol>

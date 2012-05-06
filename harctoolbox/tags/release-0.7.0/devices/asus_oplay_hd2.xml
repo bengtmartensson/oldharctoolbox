@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="asus_oplay_hd2" name="ASUS O!Play HD2" vendor="asus"
+  model="oplay_hd2" type="misc_audio" pingable_on="yes" pingable_standby="no">
+  <jp1data>
+    <setupcode value="1324"/>
+  </jp1data>
+  <commandset type="ir" protocol="nec1" deviceno="108" subdevice="104" remotename="asus_oplay">
+    <command cmdref="power_toggle"	cmdno="86"/>
+    <command cmdref="display"		cmdno="84"/>
+    <command cmdref="file_mode"		cmdno="75" name="file"/>
+    <command cmdref="dvd_menu"		cmdno="80"/>
+    <command cmdref="eject"		cmdno="79"/>
+    <command cmdref="rewind"		cmdno="65" remark="set speed backwards"/>
+    <command cmdref="play_pause"	cmdno="24"/>
+    <command cmdref="fast_forward"	cmdno="23" remark="set speed forwards"/>
+    <command cmdref="previous"		cmdno="25"/>
+    <command cmdref="stop"		cmdno="4"/>
+    <command cmdref="next"		cmdno="19"/>
+    <command cmdref="home"		cmdno="64"/>
+    <command cmdref="cmd_return"	cmdno="68"/>
+    <command cmdref="up"		cmdno="94"/>
+    <command cmdref="left"		cmdno="88"/>
+    <command cmdref="ok"		cmdno="93"/>
+    <command cmdref="right"		cmdno="95"/>
+    <command cmdref="down"		cmdno="92"/>
+    <command cmdref="volume_up"		cmdno="27"/>
+    <command cmdref="setup"		cmdno="69"/>
+    <command cmdref="volume_down"	cmdno="76"/>
+    <command cmdref="shuffle"		cmdno="5"/>
+    <!--command cmdref="mode"		cmdno="73" type="cyclic"/-->
+    <command cmdref="mode"		cmdno="74" name="option" type="menu"/>
+    <command cmdref="subtitle"		cmdno="91"/>
+    <command cmdref="zoom"		cmdno="66"/>
+    <command cmdref="audio"		cmdno="87" name="language"/> 
+    <command cmdref="repeat"		cmdno="90"/>
+    <command cmdref="mute_toggle"	cmdno="81"/>
+    <command cmdref="nas_mode"		cmdno="77"/>
+    <command cmdref="movie_mode"	cmdno="70" name="movie"/>
+    <command cmdref="music_mode"	cmdno="71" name="music"/>
+    <command cmdref="picture_mode"	cmdno="72" name="photo"/>
+    <command cmdref="internet_mode"	cmdno="78"/>
+  </commandset>
+  <commandset type="telnet" portnumber="23" user="root" password="none"/>
+  <xi:include href="www.xi"/> <!-- really just dummy -->
+  <!--xi:include href="wol.xi"/-->
+  <xi:include href="ping.xi"/>
+</device>

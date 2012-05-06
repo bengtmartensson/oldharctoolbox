@@ -1,0 +1,111 @@
+<!-- Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
+-->
+
+<!ELEMENT irprotocols (irprotocol)+ >
+
+<!ELEMENT irprotocol (jp1data?,cooked-ccf-string?,parameters?,frequency?,irpnotation-old?,irpnotation-new?,body?) >
+<!ATTLIST irprotocol
+        id ID #REQUIRED
+        name CDATA #REQUIRED >
+
+<!ELEMENT jp1data (protocol,tohex,urc-code*) >
+
+<!ELEMENT protocol EMPTY >
+<!ATTLIST protocol
+	number CDATA #REQUIRED
+	name CDATA #IMPLIED >
+
+<!ELEMENT urc-code (#PCDATA) >
+<!ATTLIST urc-code
+	cpu CDATA #REQUIRED >
+
+<!ELEMENT cooked-ccf-string (parameterref|complement|plus|minus)+ >
+<!ATTLIST cooked-ccf-string
+    format CDATA #REQUIRED >
+
+<!ELEMENT tohex EMPTY >
+<!ATTLIST tohex
+	function NMTOKEN #REQUIRED
+	bits NMTOKEN #IMPLIED >
+
+<!ELEMENT frequency EMPTY >
+<!ATTLIST frequency
+	value NMTOKEN #REQUIRED >
+
+<!ELEMENT body (timings?,pairs?,intro?,repeat?) >
+
+<!ELEMENT timings (timing)+ >
+
+<!ELEMENT timing EMPTY >
+<!ATTLIST timing
+	id ID #REQUIRED
+	cycles CDATA #REQUIRED >
+
+<!ELEMENT pairs (pair)+ >
+
+<!ELEMENT pair ((one, zero)|(zero, one)) >
+<!ATTLIST pair
+	id ID #REQUIRED >
+
+<!ELEMENT coded_number (xor|mask|minus|plus|complement|parameterref|constant) >
+<!ATTLIST coded_number
+	direction (msb|lsb) #REQUIRED
+	zero  IDREF	#REQUIRED
+	one   IDREF	#REQUIRED
+	two   IDREF 	#IMPLIED
+	three IDREF 	#IMPLIED
+	bits  CDATA 	#REQUIRED >
+
+<!ELEMENT xor (mask|minus|plus|complement|parameterref|constant)+ >
+
+<!ELEMENT mask (mask|minus|plus|complement|parameterref|constant) >
+<!ATTLIST mask
+          mask CDATA #REQUIRED
+          shift CDATA "0" >
+
+<!ELEMENT intro ((one|zero|coded_number)+,(zero|zeropadding))? >
+
+<!ELEMENT repeat ((one|zero|coded_number)+,(zero|zeropadding))? >
+
+<!ELEMENT one EMPTY >
+<!ATTLIST one
+	timing IDREF #REQUIRED >
+
+<!ELEMENT zero EMPTY >
+<!ATTLIST zero
+	timing IDREF #REQUIRED >
+
+<!ELEMENT zeropadding EMPTY >
+<!ATTLIST zeropadding
+	timing IDREF #REQUIRED >
+
+<!ELEMENT parameters (parameter)+ >
+
+<!ELEMENT parameter (default?) >
+<!ATTLIST parameter
+	id ID #REQUIRED
+	name NMTOKEN #IMPLIED
+	bits NMTOKEN #REQUIRED >
+
+<!ELEMENT default (constant|minus|plus|complement|mask|parmeterref) >
+
+<!ELEMENT complement (minus|plus|parameterref|mask) >
+<!ATTLIST complement
+    bits NMTOKEN #REQUIRED >
+
+<!ELEMENT minus (constant|parameterref)+ >
+
+<!ELEMENT parameterref EMPTY >
+<!ATTLIST parameterref
+	parameter IDREF #REQUIRED >
+
+<!ELEMENT constant EMPTY >
+<!ATTLIST constant
+	value NMTOKEN #REQUIRED >
+
+<!ELEMENT irpnotation-new (#PCDATA) >
+
+<!ELEMENT irpnotation-old (#PCDATA) >
