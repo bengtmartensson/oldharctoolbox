@@ -17,33 +17,40 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import org.harctoolbox.IrpMaster.IrSignal;
-import org.harctoolbox.IrpMaster.IrpMasterException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import org.antlr.runtime.RecognitionException;
+import org.harctoolbox.IrpMaster.IncompatibleArgumentException;
+import org.harctoolbox.IrpMaster.IrSignal;
+import org.harctoolbox.IrpMaster.IrpMasterException;
 
 /**
+ * This class generates a wave audio file that can be played
+ * on standard audio equipment and fed to a double IR sending diode,
+ * which can thus control IR equipment.
  *
+ * @see <a href="http://www.compendiumarcana.com/iraudio/">www.compendiumarcana.com/iraudio/</a>
  */
 public class wav_export {
-    public static final int samplefreq = 44100;
+    private static final int samplefreq = 44100;
 
-    public static boolean export(byte[] buf, String filename) {
+    private wav_export() {
+    }
+
+    private static boolean export(byte[] buf, File file) {
         ByteArrayInputStream bs = new ByteArrayInputStream(buf);
-        //for (int i = 0; i < buf.length; i++)
-        //    System.out.println(bs.read());
      
         bs.reset();
 
-        AudioFormat af = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, samplefreq, (int) 8, (int) 1, (int) 1, samplefreq, false);
+        AudioFormat af = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, samplefreq, 8, 1, 1, samplefreq, false);
         AudioInputStream ais = new AudioInputStream(bs, af, (long) buf.length);
         try {
-            int result = AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(filename));
+            int result = AudioSystem.write(ais, AudioFileFormat.Type.WAVE, file);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -51,7 +58,15 @@ public class wav_export {
         return true;
     }
 
-    public static boolean export(int freq, int[] seq, String filename) {
+    /**
+     * Generates a wave audio file from its arguments.
+     *
+     * @param freq Carrier frequency.
+     * @param seq Integer array of pulse/gap times in micro seconds.
+     * @param file File to be written
+     * @return success.
+     */
+    public static boolean export(int freq, int[] seq, File file) {
         double c = ((double)samplefreq)/((double)freq);
 
         int length = 0;
@@ -70,33 +85,80 @@ public class wav_export {
             for (int j = 0; j < (int)(c*seq[i+1]+0.5); j++)
                 buf[index++] = 0;
         }
-        //for (int i = 0; i < length; i++)
-        //    System.out.println(i + " " + buf[i]);
 
-        export(buf, filename);
+        export(buf, file);
         return true;
     }
 
-    public static boolean export(IrSignal code, boolean repeat, String filename) {
+    /**
+     * Generates a wave file from the IrSignal given as first argument.
+     *
+     * @param code IrSignal to be exported
+     * @param intro boolean, signals if the intro sequence should be included: normally true.
+     * @param noRepeats Number of repeats to be included in the wave signal.
+     * @param file File to be written.
+     * @return success.
+     */
+    public static boolean export(IrSignal code, boolean intro, int noRepeats, File file) {
         int freq = (int) code.getFrequency();
-        //int [] seq = repeat ? code.get_repeat_array() : code.get_intro_array();
-        int [] seq = repeat ? code.getRepeatPulses() : code.getIntroPulses();
-        return export(freq, seq, filename);
+        int length = (intro ? code.getIntroLength() : 0)
+                     + noRepeats*code.getRepeatLength() + code.getEndingLength();
+        int [] seq = new int[length];
+        int index = 0;
+        if (intro)
+            for (int j = 0; j < code.getIntroLength(); j++)
+                seq[index++] = code.getIntroPulses()[j];
+
+        for (int i = 0; i < noRepeats; i++)
+            for (int j = 0; j < code.getRepeatLength(); j++)
+                seq[index++] = code.getRepeatPulses()[j];
+
+        for (int j = 0; j < code.getEndingLength(); j++)
+                seq[index++] = code.getEndingPulses()[j];
+
+        assert(index == length-1);
+        return export(freq, seq, file);
     }
 
+    /**
+     * Generates a wave file from the IrSignal given as first argument.
+     *
+     * @param protocolname Name of IR protocol
+     * @param deviceno Protocol parameter
+     * @param subdevice Protocol parameter
+     * @param command_no Protocol parameter
+     * @param toggle Protocol parameter
+     * @param intro boolean, signals if the intro sequence should be included: normally true.
+     * @param noRepeats Number of repeats to be included in the wave signal.
+     * @param file File to be written.
+     * @return success
+     * @throws IrpMasterException
+     * @throws RecognitionException
+     */
+
     public static boolean export(String protocolname, short deviceno,
-            short subdevice, short command_no, toggletype toggle, boolean repeat, String filename) throws IrpMasterException, RecognitionException {
-        return export(protocol.encode(protocolname, deviceno, subdevice, command_no, toggle, null/*additinal_parameters*/, false), repeat, filename);
+            short subdevice, short command_no, toggletype toggle,
+            boolean intro, int noRepeats, File file)
+            throws IrpMasterException, RecognitionException {
+        return export(protocol.encode(protocolname, deviceno, subdevice, command_no, toggle, null/*additinal_parameters*/, false),
+                intro, noRepeats, file);
     }
 
     private static void usage() {
         System.err.println("Usage:");
-        System.err.println("wav_export [-o filename][-r] <protocol> <deviceno> [<subdevice_no>] commandno");
+        System.err.println("wav_export [-o filename][-r <no_repeats>] <protocol> <deviceno> [<subdevice_no>] commandno");
         System.exit(harcutils.exit_usage_error);
     }
 
+    /**
+     * Provides a command line interface to the export functions.
+     * 
+     * Usage:
+     * wav_export [-o filename][-r &lt;no_repeats&gt;] &lt;protocol&gt; &lt;deviceno&gt; [&lt;subdevice_no&gt;] commandno
+     * @param args
+     */
     public static void main(String[] args) {
-        boolean repeat = false;
+        int noRepeats = 0;
         String protocolname = null;
         short device_no = 0;
         short subdevice = -1;
@@ -114,8 +176,11 @@ public class wav_export {
                     toggle = toggletype.valueOf(args[arg_i++]);
                  } else if (args[arg_i].equals("-r")) {
                     arg_i++;
-                    repeat = true;
-                } else
+                    noRepeats = Integer.parseInt(args[arg_i++]);
+                 } else if (args[arg_i].equals("-o")) {
+                     arg_i++;
+                     outputfile = args[arg_i++];
+                 } else
                     usage();
             }
             protocolname = args[arg_i++];
@@ -131,10 +196,15 @@ public class wav_export {
         if (outputfile == null)
             outputfile = protocolname + "_" + device_no
                     + (subdevice != -1 ? ("_" + subdevice) : "")
-                    + "_" + command_no
-                    + (repeat ? "_repeat.wav" : "_intro.wav");
+                    + "_" + command_no + ".wav";
         try {
-            export(protocolname, device_no, subdevice, command_no, toggle, repeat, outputfile);
+            protocol.initialize("/usr/local/irmaster/IrpProtocols.ini");
+            File file = new File(outputfile);
+            export(protocolname, device_no, subdevice, command_no, toggle, true, noRepeats, file);
+        } catch (FileNotFoundException ex) {
+            System.err.println(ex.getMessage());
+        } catch (IncompatibleArgumentException ex) {
+            System.err.println(ex.getMessage());
         } catch (IrpMasterException ex) {
             System.err.println(ex.getMessage());
         } catch (RecognitionException ex) {
