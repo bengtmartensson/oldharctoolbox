@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009-2011 Bengt Martensson.
+Copyright (C) 2009-2012 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,20 +17,8 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.*;
+import java.net.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -89,8 +77,15 @@ public class ezcontrol_t10 {
     };
     private final static int fs20_sysno = 2;
     private final static int rs200_sysno = 3;
+    private final static int ab400_sysno = 4;
+    private final static int ab601_sysno = 5;
     private final static int intertechno_sysno = 6;
     private final static int x10_sysno = 9;
+
+    public static boolean has_house_letter(String system) {
+        int sysno = system_no(system);
+        return sysno == ab601_sysno || sysno == intertechno_sysno || sysno == x10_sysno;
+    }
 
     private final static String[] daynames = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
@@ -263,6 +258,9 @@ public class ezcontrol_t10 {
             case rs200_sysno:
                 url = rs200_url(house, device, value, n);
                 break;
+            case ab400_sysno:
+                url = ab400_url(house, device, value, n);
+                break;
             case intertechno_sysno:
                 url = intertechno_url(house.charAt(0), device, value, n);
                 break;
@@ -434,10 +432,24 @@ public class ezcontrol_t10 {
         return buf;
     }
 
-    public String fs20_url(String house, int device, int value, int arg, int n) {
-        int hc1 = Integer.parseInt(house.substring(0, 4));
-        int hc2 = Integer.parseInt(house.substring(4));
-        return url_manual(fs20_sysno, hc1, hc2, device, value, arg, n);
+    public String fs20_url(String house_raw, int device, int value, int arg, int n) {
+        try {
+            String house = house_raw.replaceAll("\\s+", "");
+            int hc1 = Integer.parseInt(house.substring(0, 4));
+            int hc2 = Integer.parseInt(house.substring(4));
+            return url_manual(fs20_sysno, hc1, hc2, device, value, arg, n);
+        } catch (RuntimeException ex) {
+            throw new RuntimeException("String \"" + house_raw + "\" is not a valid housenumber for FS20.");
+        }
+    }
+
+    public String ab400_url(String house, int device, int value, int n) {
+        try {
+            int hc1 = Integer.parseInt(house);
+            return url_manual(ab400_sysno, hc1, 0, device, value, -1, n);
+        } catch (RuntimeException ex) {
+            throw new RuntimeException("String \"" + house + "\" is not a valid housenumber for AB400.");
+        }
     }
 
     public String intertechno_url(char house, int device, int value, int n) {

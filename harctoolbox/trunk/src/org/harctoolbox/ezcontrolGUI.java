@@ -17,19 +17,12 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.StringSelection;
-import java.awt.Toolkit;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.awt.datatransfer.Transferable;
+import java.io.*;
 import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -71,6 +64,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
     /** Creates new form gui_main */
     public ezcontrolGUI() {
         initComponents();
+        enableHouseInputFields();
         System.setErr(console_PrintStream);
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -137,6 +131,8 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         ezcontrol_off_Button = new javax.swing.JButton();
         n_ezcontrol_ComboBox = new javax.swing.JComboBox();
         t10_browse_Button = new javax.swing.JButton();
+        ezcontrol_house_TextField = new javax.swing.JTextField();
+        ezcontrol_deviceno_TextField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         console_TextArea = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
@@ -173,7 +169,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setText("IP-Address");
+        jLabel13.setText("IP");
 
         ezcontrol_preset_no_ComboBox.setMaximumRowCount(16);
         ezcontrol_preset_no_ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32" }));
@@ -234,6 +230,11 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         ezcontrol_system_ComboBox.setMaximumRowCount(16);
         ezcontrol_system_ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FS10", "FS20", "RS200", "AB400", "AB601", "Intertechno", "REV", "BS-QU", "X10", "OA-FM", "Kopp First Control (1st gen)", "RS862" }));
         ezcontrol_system_ComboBox.setSelectedIndex(5);
+        ezcontrol_system_ComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ezcontrol_system_ComboBoxActionPerformed(evt);
+            }
+        });
 
         ezcontrol_house_ComboBox.setMaximumRowCount(16);
         ezcontrol_house_ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P" }));
@@ -268,6 +269,22 @@ public class ezcontrolGUI extends javax.swing.JFrame {
             }
         });
 
+        ezcontrol_house_TextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        ezcontrol_house_TextField.setText("1111 1111");
+        ezcontrol_house_TextField.setToolTipText("IP-Address of EzControl to use");
+        ezcontrol_house_TextField.setMinimumSize(new java.awt.Dimension(120, 27));
+        ezcontrol_house_TextField.setPreferredSize(new java.awt.Dimension(120, 27));
+        ezcontrol_house_TextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ezcontrol_house_TextFieldActionPerformed(evt);
+            }
+        });
+
+        ezcontrol_deviceno_TextField.setText("1234");
+        ezcontrol_deviceno_TextField.setMaximumSize(new java.awt.Dimension(50, 2147483647));
+        ezcontrol_deviceno_TextField.setMinimumSize(new java.awt.Dimension(50, 27));
+        ezcontrol_deviceno_TextField.setPreferredSize(new java.awt.Dimension(50, 27));
+
         javax.swing.GroupLayout ezcontrolPanelLayout = new javax.swing.GroupLayout(ezcontrolPanel);
         ezcontrolPanel.setLayout(ezcontrolPanelLayout);
         ezcontrolPanelLayout.setHorizontalGroup(
@@ -276,42 +293,47 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(ezcontrolPanelLayout.createSequentialGroup()
+                        .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(ezcontrolPanelLayout.createSequentialGroup()
+                                .addComponent(ezcontrol_preset_no_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(ezcontrol_preset_name_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(ezcontrol_preset_state_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ezcontrol_preset_on_Button)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ezcontrol_preset_off_Button))
+                            .addGroup(ezcontrolPanelLayout.createSequentialGroup()
+                                .addComponent(ezcontrol_system_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ezcontrol_house_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ezcontrol_house_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(t10_update_Button)
+                            .addGroup(ezcontrolPanelLayout.createSequentialGroup()
+                                .addComponent(ezcontrol_deviceno_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ezcontrol_deviceno_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(n_ezcontrol_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(ezcontrolPanelLayout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(t10_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(t10_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(t10_browse_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(t10_get_status_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(t10_get_timers_Button)
-                        .addGap(697, 697, 697))
-                    .addGroup(ezcontrolPanelLayout.createSequentialGroup()
-                        .addComponent(ezcontrol_system_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ezcontrol_house_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ezcontrol_deviceno_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(n_ezcontrol_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ezcontrol_onButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ezcontrol_off_Button)
-                        .addContainerGap())
-                    .addGroup(ezcontrolPanelLayout.createSequentialGroup()
-                        .addComponent(ezcontrol_preset_no_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ezcontrol_preset_name_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ezcontrol_preset_state_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ezcontrol_preset_on_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ezcontrol_preset_off_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(t10_update_Button)
-                        .addContainerGap(108, Short.MAX_VALUE))))
+                        .addComponent(t10_get_timers_Button)))
+                .addGap(2, 2, 2)
+                .addComponent(ezcontrol_onButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ezcontrol_off_Button)
+                .addGap(89, 89, 89))
         );
         ezcontrolPanelLayout.setVerticalGroup(
             ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,7 +345,9 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                     .addComponent(ezcontrol_deviceno_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(n_ezcontrol_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ezcontrol_onButton)
-                    .addComponent(ezcontrol_off_Button))
+                    .addComponent(ezcontrol_off_Button)
+                    .addComponent(ezcontrol_house_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ezcontrol_deviceno_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ezcontrol_preset_no_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -332,14 +356,14 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                     .addComponent(ezcontrol_preset_on_Button)
                     .addComponent(ezcontrol_preset_off_Button)
                     .addComponent(t10_update_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(t10_get_timers_Button)
-                    .addComponent(t10_get_status_Button)
                     .addComponent(jLabel13)
                     .addComponent(t10_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(t10_browse_Button))
-                .addContainerGap())
+                    .addComponent(t10_browse_Button)
+                    .addComponent(t10_get_status_Button)
+                    .addComponent(t10_get_timers_Button))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         console_TextArea.setColumns(20);
@@ -450,7 +474,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(ezcontrolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -458,7 +482,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(ezcontrolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
         );
 
         pack();
@@ -533,14 +557,22 @@ public class ezcontrolGUI extends javax.swing.JFrame {
 
     private void t10_send_manual_command(command_t cmd) {
     try {
-            (new ezcontrol_t10(t10_address_TextField.getText())).send_manual(
+        String house = ezcontrol_t10.has_house_letter((String)ezcontrol_system_ComboBox.getSelectedItem())
+                ? (String) ezcontrol_house_ComboBox.getModel().getSelectedItem()
+                : ezcontrol_house_TextField.getText();
+        int address = Integer.parseInt(((String)ezcontrol_system_ComboBox.getSelectedItem()).equals("FS20")
+                ? ezcontrol_deviceno_TextField.getText()
+                : (String) ezcontrol_deviceno_ComboBox.getModel().getSelectedItem());
+        (new ezcontrol_t10(t10_address_TextField.getText(), verbose)).send_manual(
                     (String) ezcontrol_system_ComboBox.getModel().getSelectedItem(),
-                    (String) ezcontrol_house_ComboBox.getModel().getSelectedItem(),
-                    Integer.parseInt((String) ezcontrol_deviceno_ComboBox.getModel().getSelectedItem()),
+                    house,
+                    address,
                     cmd, -1,
                     Integer.parseInt((String) this.n_ezcontrol_ComboBox.getModel().getSelectedItem()));
         } catch (non_existing_command_exception ex) {
             System.err.println("This cannot happen.");
+        } catch (RuntimeException ex) {
+            System.err.println("Failure: " + ex.getMessage());
         }
     }
 
@@ -561,12 +593,12 @@ public class ezcontrolGUI extends javax.swing.JFrame {
 
     private void ezcontrol_preset_on_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_preset_on_ButtonActionPerformed
         t10_send_preset_command(command_t.power_on);
-        this.ezcontrol_preset_state_TextField.setText("on");
+        ezcontrol_preset_state_TextField.setText("on");
     }//GEN-LAST:event_ezcontrol_preset_on_ButtonActionPerformed
 
     private void ezcontrol_preset_off_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_preset_off_ButtonActionPerformed
         t10_send_preset_command(command_t.power_off);
-        this.ezcontrol_preset_state_TextField.setText("off");
+        ezcontrol_preset_state_TextField.setText("off");
 }//GEN-LAST:event_ezcontrol_preset_off_ButtonActionPerformed
 
     private void ezcontrol_preset_no_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_preset_no_ComboBoxActionPerformed
@@ -583,6 +615,23 @@ public class ezcontrolGUI extends javax.swing.JFrame {
     private void t10_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_browse_ButtonActionPerformed
         harcutils.browse(t10_address_TextField.getText());
     }//GEN-LAST:event_t10_browse_ButtonActionPerformed
+
+    private void ezcontrol_house_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_house_TextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ezcontrol_house_TextFieldActionPerformed
+
+    private void ezcontrol_system_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_system_ComboBoxActionPerformed
+        enableHouseInputFields();
+    }//GEN-LAST:event_ezcontrol_system_ComboBoxActionPerformed
+
+    private void enableHouseInputFields() {
+        boolean hasHouseLetter = ezcontrol_t10.has_house_letter((String)ezcontrol_system_ComboBox.getSelectedItem());
+        boolean hasAddressMenu = !((String)ezcontrol_system_ComboBox.getSelectedItem()).equals("FS20");
+        ezcontrol_house_ComboBox.setEnabled(hasHouseLetter);
+        ezcontrol_house_TextField.setEnabled(!hasHouseLetter);
+        ezcontrol_deviceno_ComboBox.setEnabled(hasAddressMenu);
+        ezcontrol_deviceno_TextField.setEnabled(!hasAddressMenu);
+    }
 
     /**
      * @param args the command line arguments
@@ -608,7 +657,9 @@ public class ezcontrolGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JPanel ezcontrolPanel;
     private javax.swing.JComboBox ezcontrol_deviceno_ComboBox;
+    private javax.swing.JTextField ezcontrol_deviceno_TextField;
     private javax.swing.JComboBox ezcontrol_house_ComboBox;
+    private javax.swing.JTextField ezcontrol_house_TextField;
     private javax.swing.JButton ezcontrol_off_Button;
     private javax.swing.JButton ezcontrol_onButton;
     private javax.swing.JTextField ezcontrol_preset_name_TextField;
