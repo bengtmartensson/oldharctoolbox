@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<device id="nubert" name="Nubert Subwoofer" vendor="Nubert" model="" type="misc_audio">
+  <commandset type="ir" protocol="f12" deviceno="1" subdevice="1" toggle="no" remotename="nubert">
+    <command cmdref="volume_down"         	cmdno="16"/>
+    <command cmdref="volume_up"           	cmdno="32"/>
+    <command cmdref="frequency_down"		cmdno="8"/>
+    <command cmdref="frequency_up"        	cmdno="4"/>
+  </commandset>
+  <xi:include href="on_off_toggle.xi"/>
+</device>

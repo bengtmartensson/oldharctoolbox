@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE device PUBLIC "-//bengt-martensson.de//devices//en" "../dtds/devices.dtd">
+<device id="panasonic_dvd_s75" name="Panasonic DVD S75" vendor="Panasonic" model="S75" type="dvd">
+  <!-- Use subdevice=32 for VCR2 -->
+  <commandset type="ir" protocol="panasonic" toggle="no" deviceno="144" subdevice="0" remotename="panasonic_vcr_nvf55">
+    <command cmdref="still_advance" 	cmdno="6"/>
+    <command cmdref="stop" 			cmdno="0"/>
+    <command cmdref="still_advance" 	cmdno="6"/>
+    <command cmdref="rewind" 		cmdno="2"/>
+    <command cmdref="play" 			cmdno="10"/>
+    <command cmdref="fast_forward" 		cmdno="3"/>
+    <command cmdref="record_on" 		cmdno="8"/>
+    <command cmdref="slow_down" 		cmdno="143"/>
+    <command cmdref="slow" 			cmdno="15"/>
+    <command cmdref="slow_up" 		cmdno="142"/>
+    <command cmdref="clock_counter" 	cmdno="86"/>
+    <command cmdref="tape_remaining" 	cmdno="85"/>
+    <command cmdref="reset" 		cmdno="84"/>
+    <command cmdref="monitor" 		cmdno="145"/>
+    <command cmdref="vcr_tv" 		cmdno="54"/>
+    <command cmdref="input_select" 		cmdno="192"/>
+    <command cmdref="index" 		cmdno="64"/>
+    <command cmdref="time_search" 		cmdno="68"/>
+    <command cmdref="tracking_down" 	cmdno="178"/>
+    <command cmdref="tracking_up" 		cmdno="177"/>
+    <command cmdref="repeat" 		cmdno="249"/>
+    <command cmdref="memory" 		cmdno="244"/>
+    <command cmdref="sleep" 		cmdno="242"/>
+    <command cmdref="auto_rewind" 		cmdno="243"/>
+    <command cmdref="audio" 		cmdno="51"/>
+    <command cmdref="cmd_1" 			cmdno="16"/>
+    <command cmdref="cmd_2" 			cmdno="17"/>
+    <command cmdref="cmd_3" 			cmdno="18"/>
+    <command cmdref="cmd_4" 			cmdno="19"/>
+    <command cmdref="cmd_5" 			cmdno="20"/>
+    <command cmdref="cmd_6" 			cmdno="21"/>
+    <command cmdref="cmd_7" 			cmdno="22"/>
+    <command cmdref="cmd_8" 			cmdno="23"/>
+    <command cmdref="cmd_9" 			cmdno="24"/>
+    <command cmdref="cmd_0" 			cmdno="25"/>
+    <command cmdref="two_digit" 		cmdno="59"/>
+    <command cmdref="timer" 		cmdno="180"/>
+    <command cmdref="pal_secam" 		cmdno="201"/>
+  </commandset>
+</device>
