@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009-2011 Bengt Martensson.
+Copyright (C) 2009-2012 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ public class about_popup extends javax.swing.JDialog {
 
         version_label.setText(harcutils.version_string);
 
-        author_label.setFont(new java.awt.Font("Lucida Bright", 2, 14));
+        author_label.setFont(new java.awt.Font("Lucida Bright", 2, 14)); // NOI18N
         author_label.setText("Author: Bengt Martensson");
 
         license_text.setColumns(20);
@@ -79,7 +79,7 @@ public class about_popup extends javax.swing.JDialog {
         license_text.setFocusable(false);
         jScrollPane1.setViewportView(license_text);
 
-        version_label2.setText(org.harctoolbox.IrpMaster.IrpUtils.version_string);
+        version_label2.setText(org.harctoolbox.IrpMaster.Version.versionString);
 
         homepage_button.setText(harcutils.homepage_url);
         homepage_button.setToolTipText("Visit project's home page");
