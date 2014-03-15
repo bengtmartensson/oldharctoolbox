@@ -193,7 +193,7 @@ public class device {
         }
         return cmds;
     }
-    
+
     public String[] get_protocols(String remotename) {
         String[] work = new String[commandsets.length];
         for (int i = 0; i < commandsets.length; i++)
@@ -280,7 +280,7 @@ public class device {
         }
         return max;
     }*/
-    
+
     public int get_frequency() {
         for (int cs = 0; cs < commandsets.length; cs++) {
             if (commandsets[cs].is_type_ir()) {
@@ -467,7 +467,7 @@ public class device {
         //System.err.println(expr);
         if (!attributes.containsKey(s))
             return true;
-        
+
         boolean hit = attributes.get(s).equalsIgnoreCase("yes");
         return positive ? hit : ! hit;
     }
@@ -517,7 +517,7 @@ public class device {
     public device(String name, HashMap<String, String>attributes) throws IOException, SAXParseException, SAXException {
         this(name, attributes, true);
     }
-    
+
     public device(String name) throws IOException, SAXParseException, SAXException {
         this(name, null);
     }
@@ -670,7 +670,8 @@ public class device {
                     cs.getAttribute("open"),
                     cs.getAttribute("close"),
                     cs.getAttribute("portnumber"),
-                    cs.getAttribute("charset"));
+                    cs.getAttribute("charset"),
+                    cs.getAttribute("flavor"));
         }
     }
 
@@ -723,7 +724,7 @@ public class device {
                         cmd_index++;
                         continue;
                     }
-                    
+
                     //short obc = get_command_by_index(i, cmd_index).get_commandno();
                     IrSignal ir = get_command_by_index(i, cmd_index++/*j*/).get_ir_code(toggletype.dont_care, verbose);
                     if (ir == null) {
@@ -740,7 +741,7 @@ public class device {
 
                     try {
                         Element code = null;
-                    
+
                     if (has_toggle) {
                         code = doc.createElement("toggle_pair");
 

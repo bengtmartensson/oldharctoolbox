@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -46,7 +48,7 @@ import wol.configuration.IllegalEthernetAddressException;
 
 /**
  * This class is immutable
- * 
+ *
  */
 public final class home {
 
@@ -85,7 +87,7 @@ public final class home {
         if (zone == null || zone.isEmpty())
             // assume this means "main" or "any" or "not applicable"
             return true;
-        
+
         dev d = get_dev(device);
         if (d == null)
             return false;
@@ -104,7 +106,7 @@ public final class home {
     }
 
     /**
-     * 
+     *
      * @return all devices in the home file, except for those of class "null"
      */
     public String[] get_devices() {
@@ -195,7 +197,7 @@ public final class home {
                     + ", type = "  + type + ", zone = " + zone + ", mediatype = " + the_mediatype
                     + ", connection = " + conn_type);
         dev d = get_dev(devname);
-        
+
         if (d == null) {
             System.err.println("No device " + devname + ".");
             return false;
@@ -258,7 +260,7 @@ public final class home {
             //int portnumber,
             //String gw_connector, String gw_model,
             //String gw_interface,
-            toggletype toggle/*, String mac*/, HashMap<String, String> attributes)
+            toggletype toggle/*, String mac*/, HashMap<String, String> attributes, String flavor)
             throws InterruptedException {
         if (debugargs.dbg_transmit())
             System.err.println("transmit_command: device " + dev_class
@@ -560,7 +562,7 @@ public final class home {
                                 result = result + inFromServer.readLine();
                             }
                         }
-                        
+
                         String closer = dev.get_close(cmd, commandtype_t.tcp);
                         if (closer != null && !closer.isEmpty()) { // This code is not tested
                             if (debugargs.dbg_transmit() || userprefs.get_instance().get_verbose())
@@ -700,61 +702,78 @@ public final class home {
                 case serial:
                     // TODO: handle cases expected_lines < 0 (loop forever) senisble, (if possible).
                     if (gw.get_class().equals("globalcache")) {
-                        // TODO: expand expected_response similarly.
+                        globalcache gc = new globalcache(gw.get_hostname(), gw.get_model(), userprefs.get_instance().get_verbose());
                         subst_transmitstring = dev.get_command(cmd, commandtype_t.serial).get_transmitstring(true);
                         subst_transmitstring_printable = dev.get_command(cmd, commandtype_t.serial).get_transmitstring(false);
-                        for (int i = 0; i < arguments_length; i++) {
-                            subst_transmitstring = subst_transmitstring.replaceAll("\\$" + (i + 1), arguments[i]);
-                            subst_transmitstring_printable = subst_transmitstring_printable.replaceAll("\\$" + (i + 1), arguments[i]);
-                        }
-                        globalcache gc = new globalcache(gw.get_hostname(), gw.get_model(), userprefs.get_instance().get_verbose());
-                        try {
-                            if (debugargs.dbg_transmit() || userprefs.get_instance().get_verbose())
-                                System.err.println("Trying Globalcache (" + gw.get_hostname() + ") for serial using " + fgw.get_connectorno() + ", \"" + subst_transmitstring_printable + "\"");
+                        if (flavor.equals("SonySerialCommand")) {
+                            try {
+                                //gc.setserial(1, "38400,FLOW_NONE,PARITY_EVEN");
+                                String[] cmds = subst_transmitstring_printable.split(",");
+                                byte[] bytes = SonySerialCommand.bytes(Integer.parseInt(cmds[1]), Integer.parseInt(cmds[2]), cmds[0]);
+                                byte[] answer = gc.send_read_serial(bytes, fgw.get_connectorno(),
+                                        the_command.get_response_lines() > 0 ? SonySerialCommand.size : 0);
+                                output = the_command.get_response_lines() > 0
+                                        ? Integer.toString(SonySerialCommand.interpret(answer).getData())
+                                        : "";
 
-                            int delay_between_reps = the_command.get_delay_between_reps();
-                            int no_read_lines = the_command.get_response_lines();
+                            } catch (IOException ex) {
+                                Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else {
+                            // TODO: expand expected_response similarly.
+                            for (int i = 0; i < arguments_length; i++) {
+                                subst_transmitstring = subst_transmitstring.replaceAll("\\$" + (i + 1), arguments[i]);
+                                subst_transmitstring_printable = subst_transmitstring_printable.replaceAll("\\$" + (i + 1), arguments[i]);
+                            }
 
-                            result = gc.send_serial(subst_transmitstring, fgw.get_connectorno(), no_read_lines == 0 ? 0 : 1, count, delay_between_reps);
-                            if (no_read_lines > 0)
-                                no_read_lines--;
-                            Thread.sleep(10);
+                            try {
+                                if (debugargs.dbg_transmit() || userprefs.get_instance().get_verbose())
+                                    System.err.println("Trying Globalcache (" + gw.get_hostname() + ") for serial using " + fgw.get_connectorno() + ", \"" + subst_transmitstring_printable + "\"");
 
-                            if (!the_command.get_expected_response().equals("")) {
-                                if (result.equals(the_command.get_expected_response())) {
-                                    if (debugargs.dbg_transmit()) {
-                                        System.err.println("response equals expected.");
+                                int delay_between_reps = the_command.get_delay_between_reps();
+                                int no_read_lines = the_command.get_response_lines();
+
+                                result = gc.send_serial(subst_transmitstring, fgw.get_connectorno(), no_read_lines == 0 ? 0 : 1, count, delay_between_reps);
+                                if (no_read_lines > 0)
+                                    no_read_lines--;
+                                Thread.sleep(10);
+
+                                if (!the_command.get_expected_response().equals("")) {
+                                    if (result.equals(the_command.get_expected_response())) {
+                                        if (debugargs.dbg_transmit()) {
+                                            System.err.println("response equals expected.");
+                                        }
+                                        success = true;
+                                    } else {
+                                        System.err.println("response (= " + result + ") does not equal expected (= " + the_command.get_expected_response() + ").");
+                                        success = false;
                                     }
-                                    success = true;
                                 } else {
-                                    System.err.println("response (= " + result + ") does not equal expected (= " + the_command.get_expected_response() + ").");
-                                    success = false;
+                                    success = result != null;
                                 }
-                            } else {
-                                success = result != null;
-                            }
-                            if (no_read_lines != 0)
-                                System.err.println(">>> " + result);
-                            for (int i = 0; i < no_read_lines; i++) {
-                                String answ = gc.send_serial(null, fgw.get_connectorno(), 1, count, delay_between_reps);
-                                System.err.println(">>> " + answ);
-                                result = result.isEmpty() ? answ : (result + "\n" + answ);
-                            }
-                            if (no_read_lines < 0)
-                                for (;;) {
-                                    result = gc.send_serial(null, fgw.get_connectorno(), 1, count, delay_between_reps);
+                                if (no_read_lines != 0)
                                     System.err.println(">>> " + result);
+                                for (int i = 0; i < no_read_lines; i++) {
+                                    String answ = gc.send_serial(null, fgw.get_connectorno(), 1, count, delay_between_reps);
+                                    System.err.println(">>> " + answ);
+                                    result = result.isEmpty() ? answ : (result + "\n" + answ);
                                 }
-                            //success = result != null;
-                            if (the_command.get_response_lines() > 0)
-                                output = result;
-                        } catch (Exception e) {
-                            System.err.println("Silly exception: " + e.getClass().getName() + e.getMessage());
+                                if (no_read_lines < 0)
+                                    for (;;) {
+                                        result = gc.send_serial(null, fgw.get_connectorno(), 1, count, delay_between_reps);
+                                        System.err.println(">>> " + result);
+                                    }
+                                //success = result != null;
+                                if (the_command.get_response_lines() > 0)
+                                    output = result;
+                            } catch (Exception e) {
+                                System.err.println("Silly exception: " + e.getClass().getName() + e.getMessage());
                                 e.printStackTrace();
                         //} catch (NoRouteToHostException e) {
-                        //    System.err.println("No route to " + gw.get_hostname());
-                        //} catch (IOException e) {
-                        //    System.err.println("IOException with host " + gw.get_hostname());
+                                //    System.err.println("No route to " + gw.get_hostname());
+                                //} catch (IOException e) {
+                                //    System.err.println("IOException with host " + gw.get_hostname());
+                            }
                         }
                     } else {
                         System.err.println("Not implemented.");
@@ -853,7 +872,7 @@ public final class home {
                             try {
                                 if (userprefs.get_instance().get_verbose())
                                     System.err.print("Pinging hostname " + fgw.get_hostname() + "... ");
-                                
+
                                 success = InetAddress.getByName(fgw.get_hostname()).isReachable(harcutils.ping_timeout);
                                 if (!success) {
                                     // Java's isReachable may fail due to insufficient privileges;
@@ -962,7 +981,7 @@ public final class home {
         dev d = get_dev(dev_name);
         return d == null ? null : d.get_canonical_name();
     }
-    
+
     /**
      *
      * @param devicename Name of the device in question
@@ -1107,6 +1126,8 @@ public final class home {
             }
             cmd = command_t.parse(alias);
         }
+        // FIXME: Bug: If type == any, takes the first occurance, which is not necessarily the one
+        // that will actually be used.
         command the_command = the_device.get_command(cmd, type /* FIXME: , toggle*/);
         if (the_command == null && type != commandtype_t.www) {
             if (debugargs.dbg_transmit())
@@ -1125,7 +1146,7 @@ public final class home {
         for (gateway_port gwp : gateway_ports) {
             if (success)
                 break;
-            
+
             if (gwp == null) {
                 System.out.println("Configuration error: gateway port is null.");
                 return null;
@@ -1144,7 +1165,7 @@ public final class home {
                         (short) -1, //deviceno,
                         type,
                         count,
-                        toggle, 0, the_dev.get_attributes());
+                        toggle, 0, the_dev.get_attributes(), the_command.get_flavor());
             }
             success = output != null;
         }
@@ -1163,7 +1184,7 @@ public final class home {
             String house,
             short deviceno,
             commandtype_t type,
-            int count, toggletype toggle, int hop, HashMap<String, String>attributes)
+            int count, toggletype toggle, int hop, HashMap<String, String>attributes, String flavor)
             throws InterruptedException {
         if (debugargs.dbg_dispatch()) {
             for (int i = 0; i <= hop; i++)
@@ -1202,7 +1223,7 @@ public final class home {
                     act_type, count, //gw_class, fgw_hostname,
                     //fgw_portnumber, fgw_connector,
                     //gw_model, gw_interface,
-                    toggle/*, mac*/, attributes);
+                    toggle/*, mac*/, attributes, flavor);
         //} else if (!gw.get_hostname().isEmpty()) {
         // This gateway has a hostname, issue the command.
         //     outputs = transmit_command(dev_class, cmd, arguments, house,
@@ -1217,7 +1238,7 @@ public final class home {
             // None of the above, hope that the gateway is reachable from other
             // gateways.
             ArrayList<gateway_port> in_ports = gw.get_gateway_ports();
-            
+
             boolean success = false;
             //for (Enumeration<gateway_port> p = in_ports.elements(); p.hasMoreElements() && !success;) {
             //    gateway_port gwp = p.nextElement();
@@ -1260,7 +1281,8 @@ public final class home {
                             count,
                             toggle,
                             hop + 1,
-                            attributes);
+                            attributes,
+                            flavor);
                     success = outputs != null;
                 }
             }

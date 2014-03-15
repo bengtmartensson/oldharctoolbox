@@ -65,6 +65,9 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="get_vcroutput"/>
         <command id="get_scartmode"/>
         <command id="get_status"/>
+        <command id="get_status_error"/>
+        <command id="get_status_power"/>
+        <command id="get_status_error2"/>
         <command id="get_zone2_status"/>
         <command id="get_zone3_status"/>
         <command id="get_input"/>
@@ -373,6 +376,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="satellites" type="cyclic"/>
 
         <command id="in_video" remark="cvbs"/>
+        <command id="in_component"/>
         <command id="in_component1">
             <synonym name="in_yuv"/>
         </command>
@@ -839,6 +843,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="sb_off"/>
         <command id="get_sb"/>
 
+        <command id="lenstoggle_pattern"/>
         <command id="test_tone"/>
         <command id="test_mode"/>
         <command id="level_setmenu_parameter_up"/>
@@ -1036,6 +1041,8 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="page_down"/>
 
         <command id="epg"/>
+        <command id="status_on"/>
+        <command id="status_off"/>
 
         <command id="plus" remark="generic menu command"/>
         <command id="minus" remark="generic menu command"/>
@@ -1183,8 +1190,13 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="contrast"/>
         <command id="contrast_up" name="contrast+"/>
         <command id="contrast_down" name="contrast-"/>
+        <command id="hue_up"/>
+        <command id="hue_down"/>
+        <command id="colorspace"/>
         <command id="color_temp"/>
         <command id="sharpness"/>
+        <command id="sharpness_up"/>
+        <command id="sharpness_down"/>
 
         <command id="DNR" type="toggle"/>
         <command id="zoom"/>
@@ -1197,6 +1209,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="freeze_toggle"/>
         <command id="freeze_on"/>
         <command id="freeze_off"/>
+        <command id="black_insertion"/>
         <command id="video_mute_toggle">
             <synonym name="no_show"/>
         </command>
@@ -1209,6 +1222,23 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="resolution_1080p"/>
         <command id="resolution_auto"/>
 
+        <command id="cmd_3D"/>
+<command id="cmd_3D_mode" />
+<command id="cmd_3D_format"/>
+<command id="cmd_3D_depth_up"/>
+<command id="cmd_3D_depth_down" />
+<command id="cmd_3D_simulated_toggle" />
+<command id="cmd_3D_brightness_up" />
+<command id="cmd_3D_brightness_down" />
+<command id="cmd_3D_auto" />
+<command id="cmd_3D_3D" />
+<command id="cmd_3D_2D" />
+<command id="cmd_3D_over_under" />
+<command id="cmd_3D_side_by_side" />
+<command id="cmd_3D_simulated" />
+<command id="cmd_3D_simulated_high" />
+<command id="cmd_3D_simulated_mid" />
+<command id="cmd_3D_simulated_low" />
 
         <group id="aspect-ratio">
         <!-- To what extent are "zoom" and "aspectratio" synonyms? -->
@@ -1257,7 +1287,17 @@ command (see "ok" with the synonyms "enter" and "select").
             <command id="img7"/>
             <command id="img_my_pic_on"/>
             <command id="img_my_pic_off"/>
-        </group>
+            <command id="picturemode" />
+            <command id="picturemode_game" />
+            <command id="picturemode_reference" />
+            <command id="picturemode_user" />
+            <command id="picturemode_film1" />
+            <command id="picturemode_TV" />
+            <command id="picturemode_bright_TV"/>
+            <command id="picturemode_bright_cinema" />
+            <command id="picturemode_film2" />
+            <command id="picturemode_photo" />
+     </group>
 
         <group id="lamp_modes">
             <command id="lamp_mode" type="cyclic"/>
@@ -1272,6 +1312,12 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="iris"/>
         <command id="shutter"/>
         <command id="keystone"/>
+        <command id="vertical_keystone"/>
+        <command id="horizontal_keystone"/>
+        <command id="vertical_keystone_up"/>
+        <command id="vertical_keystone_down"/>
+        <command id="horizontal_keystone_up"/>
+        <command id="horizontal_keystone_down"/>
     <!--command id="picture"/-->
         <command id="img_logo_off"/>
         <command id="img_logo_default"/>
@@ -1288,6 +1334,10 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="color_toggle"/>
         <command id="high_fan"/>
         <command id="shutter_demo"/>
+        <command id="black_level"/>
+        <command id="reality_creation"/>
+        <command id="rcp"/>
+        <command id="motion_enhancer"/>
         <command id="logo"/>
         <command id="image" remark="???"/> <!-- sanyo z4 -->
     </group>

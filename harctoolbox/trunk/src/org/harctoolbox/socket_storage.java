@@ -35,7 +35,7 @@ public class socket_storage {
     }
 
     private static boolean debug = false;
-    
+
     public static void debug_enable(boolean d) {
         debug = d;
     }
@@ -89,7 +89,7 @@ public class socket_storage {
             throws UnknownHostException, IOException {
         return getsocket(hostname, portno, true);
     }
-    
+
     public static Socket getsocket(String hostname, int portno, boolean unique)
             throws UnknownHostException, IOException {
         if (!enable)
@@ -176,6 +176,7 @@ public class socket_storage {
                 if (!skt.isClosed())
                     skt.close();
                 sockettable.remove(addr);
+                break;
             }
         }
     }

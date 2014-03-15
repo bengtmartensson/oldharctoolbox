@@ -48,6 +48,7 @@ public class command {
     private String ccf_toggle_0;
     private String ccf_toggle_1;
     private String charset;
+    private String flavor;
 
     @Override
     public String toString() {
@@ -93,7 +94,7 @@ public class command {
     public boolean get_toggle() {
         return toggle;
     }
-    
+
     public String get_additional_parameters() {
         return additional_parameters;
     }
@@ -113,13 +114,17 @@ public class command {
     public short get_commandno() {
         return cmdno;
     }
-    
+
     public String get_remark() {
         return remark;
     }
 
     public commandtype_t get_commandtype() {
         return type;
+    }
+
+    public String get_flavor() {
+        return flavor;
     }
 
 //    public ir_code get_ir_code() {
@@ -202,5 +207,6 @@ public class command {
         this.suffix = cmdset.get_suffix();
         this.delay_between_reps = cmdset.get_delay_between_reps();
         this.charset = cmdset.get_charset();
+        this.flavor = cmdset.get_flavor();
     }
 }
