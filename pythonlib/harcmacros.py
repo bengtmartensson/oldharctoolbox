@@ -231,6 +231,9 @@ def is_on(device):
     elif hm.has_command(device, org.harctoolbox.commandtype_t.any, org.harctoolbox.command_t.get_power):
         response = device_command(device, org.harctoolbox.command_t.get_power)
         return "unknown" if (response is None) else (device_command(device, org.harctoolbox.command_t.get_power).find("ON") != -1)
+    elif hm.has_command(device, org.harctoolbox.commandtype_t.any, org.harctoolbox.command_t.get_status_power):
+        response = device_command(device, org.harctoolbox.command_t.get_status_power)
+        return response == '1' or response == '2' or response == '3'
     else:
         return "unknown"
 
@@ -619,8 +622,8 @@ def tv_unless_projector(wait=False):
 def projector_ison():
     """Returns true if the projector is on"""
     global hometheatre_outputdevice
-    stat=device_command("projector", "get_status")
-    result = stat=="00" or stat=="04" or stat=="40"
+    stat=device_command("projector", "get_status_power")
+    result = stat=='1' or stat=='2' or stat=='3'
     hometheatre_outputdevice = "projector" if result else "tv"
     return result
 

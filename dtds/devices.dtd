@@ -75,6 +75,7 @@
         protocol NMTOKEN #IMPLIED
         prefix CDATA ""
         suffix CDATA ""
+        flavor NMTOKEN #IMPLIED
         open CDATA #IMPLIED
         close CDATA #IMPLIED
         portnumber CDATA #IMPLIED

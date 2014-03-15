@@ -22,7 +22,9 @@ import org.harctoolbox.IrpMaster.IrpMasterException;
 import org.harctoolbox.IrpMaster.Pronto;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.NoRouteToHostException;
 import java.net.Socket;
@@ -133,7 +135,7 @@ public class globalcache {
         }
         return gc_string;
     }*/
-    
+
     private boolean verbose = true;
     private gc_model gc_type = gc_model.gc_100_06;
     private java.lang.Process gc_process;
@@ -188,6 +190,35 @@ public class globalcache {
 
     private String connector_address(int module, int connector) {
         return "" + module + ":" + connector;
+    }
+
+    public byte[] send_read_serial(byte[] cmd, int serial_no, int return_bytes)
+            throws UnknownHostException, IOException, NoRouteToHostException, InterruptedException {
+        Socket sock = null;
+        OutputStream outToServer = null;
+        InputStream inFromServer = null;
+
+        sock = socket_storage.getsocket(gc_host, gc_first_serial_port + serial_no - 1);
+        if (sock == null)
+            throw new IOException("got a null socket");
+        sock.setSoTimeout(socket_timeout);
+        outToServer = sock.getOutputStream();
+        inFromServer = sock.getInputStream();
+
+        byte[] result = new byte[return_bytes];
+        try {
+            outToServer.write(cmd);
+            if (return_bytes > 0)
+                inFromServer.read(result);
+        } catch (SocketTimeoutException e) {
+            System.err.println("Sockettimeout Globalcache: " + e.getMessage());
+            result = null;
+        } finally {
+            outToServer.close();
+            inFromServer.close();
+            socket_storage.returnsocket(sock, false);//sock.close();
+        }
+        return result;
     }
 
     public String send_serial(String cmd, int serial_no, int return_lines,
@@ -626,7 +657,7 @@ public class globalcache {
             usage();
         }
 
-        
+
 
         String output = "";
 
