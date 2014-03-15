@@ -16,31 +16,14 @@ this program. If not, see http://www.gnu.org/licenses/.
  */
 package org.harctoolbox;
 
-import org.harctoolbox.IrpMaster.IrpMasterException;
-import java.io.FileNotFoundException;
+import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
+import java.io.*;
+import java.net.*;
+import java.nio.charset.Charset;
+import java.util.*;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;
-import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
-import java.io.BufferedReader;
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.net.BindException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.nio.charset.Charset;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.TimeZone;
+import org.harctoolbox.IrpMaster.IrpMasterException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
