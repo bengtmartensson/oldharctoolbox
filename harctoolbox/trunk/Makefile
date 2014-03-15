@@ -22,6 +22,8 @@ $(SRCDISTFILE): /tmp/harctoolbox-$(VERSION)
 $(BINDISTFILE):
 	tar zcf $@ --exclude=.svn --exclude=javadoc --exclude=*class --exclude=*~ COPYING NEWS config devices dist docs dtds protocols pythonlib src/org/harctoolbox/commandnames.xml
 
+all:  $(SRCDISTFILE) $(BINDISTFILE) dist/javadoc
+
 dist: $(SRCDISTFILE) $(BINDISTFILE)
 
 # harctoolbox runs fine "inplace" (just for example execute

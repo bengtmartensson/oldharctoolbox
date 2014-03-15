@@ -17,14 +17,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.StringReader;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
@@ -276,6 +269,20 @@ public class harcutils {
         return join(stuff, 0);
     }
     
+    private static class extension_filter implements FilenameFilter {
+
+        protected String extension;
+
+        public extension_filter(String extension) {
+            this.extension = extension;
+        }
+
+        @Override
+        public boolean accept(File directory, String name) {
+            return name.toLowerCase().endsWith(extension.toLowerCase());
+        }
+    }
+
     public static String[] get_basenames(String dirname, String extension) {
         return get_basenames(dirname, extension, false);
     }
@@ -334,5 +341,10 @@ public class harcutils {
         System.out.println(no_lines("foo\r\nbar"));
         System.out.println(no_lines("foo\nbar"));
         System.out.println(no_lines("foo\rbar"));
+        
+        String[] basenames = get_basenames(".", "gz", false);
+        for (String s : basenames) 
+            System.out.println(s);
+
     }
 }
