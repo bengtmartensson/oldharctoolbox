@@ -75,7 +75,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         });
     }
 
-    // From Real Gagnon        
+    // From Real Gagnon
     class FilteredStream extends FilterOutputStream {
 
         public FilteredStream(OutputStream aStream) {
@@ -95,7 +95,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
             console_TextArea.setCaretPosition(console_TextArea.getDocument().getLength());
         }
     }
-    
+
     PrintStream console_PrintStream = new PrintStream(
             new FilteredStream(
             new ByteArrayOutputStream()));
@@ -333,7 +333,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                 .addComponent(ezcontrol_onButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ezcontrol_off_Button)
-                .addGap(89, 89, 89))
+                .addContainerGap())
         );
         ezcontrolPanelLayout.setVerticalGroup(
             ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -366,8 +366,8 @@ public class ezcontrolGUI extends javax.swing.JFrame {
                 .addContainerGap(88, Short.MAX_VALUE))
         );
 
-        console_TextArea.setColumns(20);
         console_TextArea.setEditable(false);
+        console_TextArea.setColumns(20);
         console_TextArea.setLineWrap(true);
         console_TextArea.setRows(5);
         console_TextArea.setToolTipText("This is the console, where errors and messages go, instead of annoying you with popups.");
@@ -471,10 +471,10 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(ezcontrolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(jScrollPane1)
+                .addComponent(ezcontrolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -528,8 +528,8 @@ public class ezcontrolGUI extends javax.swing.JFrame {
         System.out.println("asfkad");//do_exit();
     }//GEN-LAST:event_formWindowClosed
 
-   
-  
+
+
 
 
     private void consoletext_save_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consoletext_save_MenuItemActionPerformed
