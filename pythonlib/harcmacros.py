@@ -1515,3 +1515,20 @@ def irtrans(sw):
         return all_up()
     else: 
         return device_command_n('t10_dev', 'power_toggle', str(sw))
+
+def pana_command(cmd):
+    device_command('panasonic_dvd_s75', cmd)
+    time.sleep(2)
+
+def panasonic_codefree():
+    pana_command('ok')
+    pana_command('cmd_6')
+    pana_command('two_digit')
+    pana_command('rewind')
+    pana_command('cmd_0xf2')
+    pana_command('audio')
+    pana_command('cmd_8')
+    pana_command('cmd_1')
+    pana_command('subtitle')
+    pana_command('cmd_4')
+    return True
