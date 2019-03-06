@@ -109,6 +109,6 @@
     <command cmdref="up" 		cmdno="133"/>
     <command cmdref="vss" 		cmdno="158"/>
     <command cmdref="zoom" 		cmdno="193"/>
-    <command cmdref="cmd_0xfd"		cmdno="0xfd"/>
+    <command cmdref="cmd_0xf2"		cmdno="0xf2"/>
   </commandset>
 </device>
