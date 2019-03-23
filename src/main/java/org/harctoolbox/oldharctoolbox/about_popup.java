@@ -23,7 +23,10 @@ package org.harctoolbox.oldharctoolbox;
  */
 public class about_popup extends javax.swing.JDialog {
 
-    /** Creates new form about_popup */
+    /** Creates new form about_popup
+     * @param parent
+     * @param modal
+     */
     public about_popup(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -79,7 +82,7 @@ public class about_popup extends javax.swing.JDialog {
         license_text.setFocusable(false);
         jScrollPane1.setViewportView(license_text);
 
-        version_label2.setText(org.harctoolbox.IrpMaster.Version.versionString);
+        version_label2.setText(org.harctoolbox.irp.Version.versionString);
 
         homepage_button.setText(harcutils.homepage_url);
         homepage_button.setToolTipText("Visit project's home page");

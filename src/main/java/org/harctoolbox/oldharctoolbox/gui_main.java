@@ -17,8 +17,6 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
-import org.harctoolbox.IrpMaster.IrSignal;
-import org.harctoolbox.IrpMaster.IrpMasterException;
 import java.awt.Dimension;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.datatransfer.Clipboard;
@@ -42,6 +40,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.harctoolbox.ircore.IrSignal;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -82,10 +81,8 @@ public class gui_main extends javax.swing.JFrame {
     private command_thread the_command_thread = null;
     private globalcache_thread the_globalcache_device_thread = null;
     private globalcache_thread the_globalcache_protocol_thread = null;
-    private irtrans_thread the_irtrans_thread = null;
 
     private globalcache gc = null;
-    private irtrans irt = null;
 
     private final static int default_rmdu_export_remoteindex = 1; //FIXME
 
@@ -175,11 +172,11 @@ public class gui_main extends javax.swing.JFrame {
         connection_types_dcbm = new DefaultComboBoxModel(new String[]{"--"});
         gc_modules_dcbm = new DefaultComboBoxModel(new String[]{"2"}); // ?
 
-        // TODO: check behavior in abscense of tonto
-        com.neuron.app.tonto.ProntoModel[] prontomodels = com.neuron.app.tonto.ProntoModel.getModels();
-        prontomodelnames = new String[prontomodels.length];
-        for (int i = 0; i < prontomodels.length; i++)
-            prontomodelnames[i] = prontomodels[i].toString();
+//        // TODO: check behavior in abscense of tonto
+//        com.neuron.app.tonto.ProntoModel[] prontomodels = com.neuron.app.tonto.ProntoModel.getModels();
+//        prontomodelnames = new String[prontomodels.length];
+//        for (int i = 0; i < prontomodels.length; i++)
+//            prontomodelnames[i] = prontomodels[i].toString();
 
         // Since remotemaster generates an enormous amount of noise on stderr,
         // we redirect stderr temporarilly.
@@ -231,7 +228,6 @@ public class gui_main extends javax.swing.JFrame {
         browse_device_MenuItem.setEnabled(hm.has_command((String)devices_dcbm.getSelectedItem(), commandtype_t.www, command_t.browse));
 
         gc = new globalcache("globalcache", globalcache.gc_model.gc_unknown, verbose);
-        irt = new irtrans("irtrans", verbose);
 
         homeconf_TextField.setText(homefilename);
         //macro_TextField.setText(macrofilename);
@@ -387,14 +383,6 @@ public class gui_main extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         exportdir_TextField = new javax.swing.JTextField();
         exportdir_browse_Button = new javax.swing.JButton();
-        ccf_export_opts_Panel = new javax.swing.JPanel();
-        ccf_export_prontomodel_ComboBox = new javax.swing.JComboBox();
-        ccf_export_raw_CheckBox = new javax.swing.JCheckBox();
-        ccf_export_screenwidth_TextField = new javax.swing.JTextField();
-        ccf_export_screenheight_TextField = new javax.swing.JTextField();
-        ccf_export_buttonwidth_TextField = new javax.swing.JTextField();
-        ccf_export_buttonheight_TextField = new javax.swing.JTextField();
-        ccf_export_export_Button = new javax.swing.JButton();
         rmdu_export_opts_Panel = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         rmdu_button_rules_TextField = new javax.swing.JTextField();
@@ -1165,7 +1153,7 @@ public class gui_main extends javax.swing.JFrame {
                                 .addComponent(ezcontrol_preset_off_Button)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(t10_update_Button)))
-                        .addContainerGap())))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         ezcontrolPanelLayout.setVerticalGroup(
             ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1457,92 +1445,6 @@ public class gui_main extends javax.swing.JFrame {
         );
 
         exportopts_TabbedPane.addTab("General", general_export_opts_Panel);
-
-        ccf_export_prontomodel_ComboBox.setMaximumRowCount(14);
-        ccf_export_prontomodel_ComboBox.setModel(new DefaultComboBoxModel(prontomodelnames));
-        ccf_export_prontomodel_ComboBox.setToolTipText("Pronto Model");
-        ccf_export_prontomodel_ComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ccf_export_prontomodel_ComboBoxActionPerformed(evt);
-            }
-        });
-
-        ccf_export_raw_CheckBox.setSelected(true);
-        ccf_export_raw_CheckBox.setText("Raw Codes");
-        ccf_export_raw_CheckBox.setToolTipText("Prohibit cooked codes in CCF export");
-
-        ccf_export_screenwidth_TextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        ccf_export_screenwidth_TextField.setText("240");
-        ccf_export_screenwidth_TextField.setToolTipText("Screen width (pixels)");
-        ccf_export_screenwidth_TextField.setMaximumSize(new java.awt.Dimension(50, 27));
-        ccf_export_screenwidth_TextField.setMinimumSize(new java.awt.Dimension(50, 27));
-        ccf_export_screenwidth_TextField.setPreferredSize(new java.awt.Dimension(50, 27));
-
-        ccf_export_screenheight_TextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        ccf_export_screenheight_TextField.setText("220");
-        ccf_export_screenheight_TextField.setToolTipText("Screen height (pixels)");
-        ccf_export_screenheight_TextField.setMaximumSize(new java.awt.Dimension(50, 27));
-        ccf_export_screenheight_TextField.setMinimumSize(new java.awt.Dimension(50, 27));
-        ccf_export_screenheight_TextField.setPreferredSize(new java.awt.Dimension(50, 27));
-
-        ccf_export_buttonwidth_TextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        ccf_export_buttonwidth_TextField.setText("60");
-        ccf_export_buttonwidth_TextField.setToolTipText("Button width (pixels)");
-        ccf_export_buttonwidth_TextField.setMaximumSize(new java.awt.Dimension(35, 27));
-        ccf_export_buttonwidth_TextField.setMinimumSize(new java.awt.Dimension(35, 27));
-        ccf_export_buttonwidth_TextField.setPreferredSize(new java.awt.Dimension(35, 27));
-
-        ccf_export_buttonheight_TextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        ccf_export_buttonheight_TextField.setText("30");
-        ccf_export_buttonheight_TextField.setToolTipText("Button height (pixels)");
-        ccf_export_buttonheight_TextField.setMaximumSize(new java.awt.Dimension(35, 27));
-        ccf_export_buttonheight_TextField.setMinimumSize(new java.awt.Dimension(35, 27));
-        ccf_export_buttonheight_TextField.setPreferredSize(new java.awt.Dimension(35, 27));
-
-        ccf_export_export_Button.setText("Export");
-        ccf_export_export_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ccf_export_export_ButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout ccf_export_opts_PanelLayout = new javax.swing.GroupLayout(ccf_export_opts_Panel);
-        ccf_export_opts_Panel.setLayout(ccf_export_opts_PanelLayout);
-        ccf_export_opts_PanelLayout.setHorizontalGroup(
-            ccf_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ccf_export_opts_PanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ccf_export_prontomodel_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ccf_export_screenwidth_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ccf_export_screenheight_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(ccf_export_buttonwidth_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ccf_export_buttonheight_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ccf_export_raw_CheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
-                .addComponent(ccf_export_export_Button)
-                .addContainerGap())
-        );
-        ccf_export_opts_PanelLayout.setVerticalGroup(
-            ccf_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ccf_export_opts_PanelLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(ccf_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ccf_export_prontomodel_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ccf_export_screenwidth_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ccf_export_screenheight_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ccf_export_buttonwidth_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ccf_export_buttonheight_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ccf_export_raw_CheckBox)
-                    .addComponent(ccf_export_export_Button))
-                .addContainerGap(28, Short.MAX_VALUE))
-        );
-
-        exportopts_TabbedPane.addTab("CCF", ccf_export_opts_Panel);
 
         rmdu_export_opts_Panel.setEnabled(false);
 
@@ -1949,7 +1851,7 @@ public class gui_main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(output_hw_TabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 219, Short.MAX_VALUE)
+                .addComponent(output_hw_TabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -2069,49 +1971,49 @@ public class gui_main extends javax.swing.JFrame {
         }
     }
 
-    private class irtrans_thread extends Thread {
-        private String remote;
-        private String commandname;
-        private irtrans.led_t led;
-        private int count;
-        private JButton start_button;
-        private JButton stop_button;
-
-        public irtrans_thread(String remote, String commandname, irtrans.led_t led, int count,
-                JButton start_button, JButton stop_button) {
-            super("irtrans_thread");
-            this.remote = remote;
-            this.commandname = commandname;
-            this.led = led;
-            this.count = count;
-            this.start_button = start_button;
-            this.stop_button = stop_button;
-        }
-
-        @Override
-        public void run() {
-            start_button.setEnabled(false);
-            stop_button.setEnabled(true);
-            boolean success = false;
-            try {
-                success = irt.send_flashed_command(remote, commandname, led, count);
-            } catch (UnknownHostException ex) {
-                System.err.println("IRTrans hostname not found.");
-            } catch (IOException e) {
-                System.err.println(e);
-            } catch (InterruptedException e) {
-                System.err.println("*** Interrupted *** ");
-                success = true;
-            }
-
-            if (!success)
-                System.err.println("** Failed **");
-
-            the_irtrans_thread = null;
-            start_button.setEnabled(true);
-            stop_button.setEnabled(false);
-        }
-    }
+//    private class irtrans_thread extends Thread {
+//        private String remote;
+//        private String commandname;
+//        private irtrans.led_t led;
+//        private int count;
+//        private JButton start_button;
+//        private JButton stop_button;
+//
+//        public irtrans_thread(String remote, String commandname, irtrans.led_t led, int count,
+//                JButton start_button, JButton stop_button) {
+//            super("irtrans_thread");
+//            this.remote = remote;
+//            this.commandname = commandname;
+//            this.led = led;
+//            this.count = count;
+//            this.start_button = start_button;
+//            this.stop_button = stop_button;
+//        }
+//
+//        @Override
+//        public void run() {
+//            start_button.setEnabled(false);
+//            stop_button.setEnabled(true);
+//            boolean success = false;
+//            try {
+//                success = irt.send_flashed_command(remote, commandname, led, count);
+//            } catch (UnknownHostException ex) {
+//                System.err.println("IRTrans hostname not found.");
+//            } catch (IOException e) {
+//                System.err.println(e);
+//            } catch (InterruptedException e) {
+//                System.err.println("*** Interrupted *** ");
+//                success = true;
+//            }
+//
+//            if (!success)
+//                System.err.println("** Failed **");
+//
+//            the_irtrans_thread = null;
+//            start_button.setEnabled(true);
+//            stop_button.setEnabled(false);
+//        }
+//    }
 
     private void do_exit() {
         System.out.println("Exiting...");
@@ -2272,7 +2174,6 @@ public class gui_main extends javax.swing.JFrame {
     private void update_verbosity() {
         userprefs.get_instance().set_verbose(verbose);
         gc.set_verbosity(verbose);
-        irt.set_verbosity(verbose);
         verbose_CheckBoxMenuItem.setSelected(verbose);
         verbose_CheckBox.setSelected(verbose);
     }
@@ -2567,7 +2468,7 @@ public class gui_main extends javax.swing.JFrame {
             return;
         }
 
-        try {
+//        try {
             if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("GlobalCache")) {
                 //gc.send_ir(c.get_ir_code(toggletype.do_toggle, verbose), get_gc_module(), get_gc_connector(), no_sends);
                 if (the_globalcache_device_thread != null && the_globalcache_device_thread.isAlive())
@@ -2575,33 +2476,33 @@ public class gui_main extends javax.swing.JFrame {
 
                 the_globalcache_device_thread = new globalcache_thread(c.get_ir_code(toggletype.dont_care, verbose), get_gc_module(), get_gc_connector(), no_sends, deviceclass_send_Button, deviceclass_stop_Button);
                 the_globalcache_device_thread.start();
-            } else if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("IRTrans (preprog_ascii)")) {
-                //irt.send_flashed_command(remote, cmd, this.get_irtrans_led(), no_sends);
-                if (the_irtrans_thread != null && the_irtrans_thread.isAlive())
-                    System.err.println("Internal error: the_irtrans_thread active??!");
-
-                the_irtrans_thread = new irtrans_thread(remote, cmd.toString(), this.get_irtrans_led(), no_sends, deviceclass_send_Button, deviceclass_stop_Button);
-                the_irtrans_thread.start();
-            } else if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("IRTrans (web_api)")) {
-                if (no_sends > 1)
-                    System.err.println("Warning: Sending only one time");
-                String url = irtrans.make_url(irtrans_address_TextField.getText(),
-                        remote, cmd, get_irtrans_led());
-                if (verbose)
-                    System.err.println("Getting URL " + url);
-                // TODO: Right now, I dont care to implement status checking...
-                (new URL(url)).getContent();
-            } else if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("IRTrans (udp)")) {
-                irt.send_ir(c.get_ir_code(toggletype.dont_care, verbose), get_irtrans_led(), no_sends);
+//            } else if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("IRTrans (preprog_ascii)")) {
+//                //irt.send_flashed_command(remote, cmd, this.get_irtrans_led(), no_sends);
+//                if (the_irtrans_thread != null && the_irtrans_thread.isAlive())
+//                    System.err.println("Internal error: the_irtrans_thread active??!");
+//
+//                the_irtrans_thread = new irtrans_thread(remote, cmd.toString(), this.get_irtrans_led(), no_sends, deviceclass_send_Button, deviceclass_stop_Button);
+//                the_irtrans_thread.start();
+//            } else if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("IRTrans (web_api)")) {
+//                if (no_sends > 1)
+//                    System.err.println("Warning: Sending only one time");
+//                String url = irtrans.make_url(irtrans_address_TextField.getText(),
+//                        remote, cmd, get_irtrans_led());
+//                if (verbose)
+//                    System.err.println("Getting URL " + url);
+//                // TODO: Right now, I dont care to implement status checking...
+//                (new URL(url)).getContent();
+//            } else if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("IRTrans (udp)")) {
+//                irt.send_ir(c.get_ir_code(toggletype.dont_care, verbose), get_irtrans_led(), no_sends);
             } else {
                 System.err.println("Internal error: cannot find output device: " + (String) output_deviceComboBox.getModel().getSelectedItem());
-            }
-        } catch (UnknownHostException e) {
-            System.err.println(e.getMessage());
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        } catch (IrpMasterException e) {
-            System.err.println(e.getMessage());
+//            }
+//        } catch (UnknownHostException e) {
+//            System.err.println(e.getMessage());
+//        } catch (IOException e) {
+//            System.err.println(e.getMessage());
+//        } catch (IrpMasterException e) {
+//            System.err.println(e.getMessage());
         //} catch (InterruptedException e) {
         //    System.err.println(e.getMessage());
         }
@@ -2635,24 +2536,24 @@ public class gui_main extends javax.swing.JFrame {
 }//GEN-LAST:event_lirc_export_all_MenuItemActionPerformed
 
     private void ccf_export_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccf_export_MenuItemActionPerformed
-        ccf_export();
+        //ccf_export();
     }//GEN-LAST:event_ccf_export_MenuItemActionPerformed
 
-    private void ccf_export() {
-        //FIXME
-        String devname = (String) deviceclasses_dcbm.getSelectedItem();
-        com.neuron.app.tonto.ProntoModel prontomodel = com.neuron.app.tonto.ProntoModel.getModelByName((String)ccf_export_prontomodel_ComboBox.getModel().getSelectedItem());
-        int buttonwidth = Integer.parseInt(ccf_export_buttonwidth_TextField.getText());
-        int buttonheight = Integer.parseInt(ccf_export_buttonheight_TextField.getText());
-        int screenwidth = Integer.parseInt(ccf_export_screenwidth_TextField.getText());
-        int screenheight = Integer.parseInt(ccf_export_screenheight_TextField.getText());
-        String filename = harcprops.get_instance().get_exportdir() + File.separator + devname + ".ccf";
-
-        ccf_export.ccf_exporter(new String[]{devname}, prontomodel,
-                ccf_export_raw_CheckBox.isEnabled(),
-                buttonwidth, buttonheight, screenwidth, screenheight, filename);
-        System.err.println("Exported " + devname + " to " + filename + " for " + prontomodel.toString());
-    }
+//    private void ccf_export() {
+//        //FIXME
+//        String devname = (String) deviceclasses_dcbm.getSelectedItem();
+//        com.neuron.app.tonto.ProntoModel prontomodel = com.neuron.app.tonto.ProntoModel.getModelByName((String)ccf_export_prontomodel_ComboBox.getModel().getSelectedItem());
+//        int buttonwidth = Integer.parseInt(ccf_export_buttonwidth_TextField.getText());
+//        int buttonheight = Integer.parseInt(ccf_export_buttonheight_TextField.getText());
+//        int screenwidth = Integer.parseInt(ccf_export_screenwidth_TextField.getText());
+//        int screenheight = Integer.parseInt(ccf_export_screenheight_TextField.getText());
+//        String filename = harcprops.get_instance().get_exportdir() + File.separator + devname + ".ccf";
+//
+//        ccf_export.ccf_exporter(new String[]{devname}, prontomodel,
+//                ccf_export_raw_CheckBox.isEnabled(),
+//                buttonwidth, buttonheight, screenwidth, screenheight, filename);
+//        System.err.println("Exported " + devname + " to " + filename + " for " + prontomodel.toString());
+//    }
 
     private void stop_macro_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_macro_ButtonActionPerformed
         the_macro_thread.interrupt();
@@ -2772,7 +2673,7 @@ public class gui_main extends javax.swing.JFrame {
 }//GEN-LAST:event_gc_address_TextFieldActionPerformed
 
     private void irtrans_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irtrans_address_TextFieldActionPerformed
-        irt = new irtrans(irtrans_address_TextField.getText(), verbose_CheckBoxMenuItem.getState());
+        //irt = new irtrans(irtrans_address_TextField.getText(), verbose_CheckBoxMenuItem.getState());
 }//GEN-LAST:event_irtrans_address_TextFieldActionPerformed
 
     private void device_remote_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_device_remote_ComboBoxActionPerformed
@@ -2795,10 +2696,6 @@ public class gui_main extends javax.swing.JFrame {
         try {
             if (the_globalcache_device_thread != null)
                 the_globalcache_device_thread.interrupt();
-            else if (the_irtrans_thread != null) {
-                //System.err.println("$$$$$$$$$$$$$$$$$$$$interruptt");
-                the_irtrans_thread.interrupt();
-            }
 
             if (this.output_deviceComboBox.getSelectedIndex() == 0)
                 gc.stop_ir(this.get_gc_module(), this.get_gc_connector());
@@ -2818,18 +2715,6 @@ public class gui_main extends javax.swing.JFrame {
     private void lirc_export_server_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lirc_export_server_MenuItemActionPerformed
         hm.lirc_conf_export();
     }//GEN-LAST:event_lirc_export_server_MenuItemActionPerformed
-
-    private void ccf_export_prontomodel_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccf_export_prontomodel_ComboBoxActionPerformed
-        com.neuron.app.tonto.ProntoModel prontomodel = com.neuron.app.tonto.ProntoModel.getModelByName((String)ccf_export_prontomodel_ComboBox.getModel().getSelectedItem());
-        Dimension size = prontomodel.getScreenSize();
-        this.ccf_export_screenwidth_TextField.setText(Integer.toString(size.width));
-        this.ccf_export_screenheight_TextField.setText(Integer.toString(size.height));
-        //System.err.println(prontomodel + " " + size.height + " "+size.width);
-    }//GEN-LAST:event_ccf_export_prontomodel_ComboBoxActionPerformed
-
-    private void ccf_export_export_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccf_export_export_ButtonActionPerformed
-        ccf_export();
-    }//GEN-LAST:event_ccf_export_export_ButtonActionPerformed
 
     private void home_select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_home_select_ButtonActionPerformed
         String filename = select_file("Select home file", "xml", "XML Files", false,
@@ -3039,7 +2924,7 @@ private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
 }//GEN-LAST:event_discoverButtonActionPerformed
 
 private void ccfDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccfDeviceExportButtonActionPerformed
-    ccf_export();
+    //ccf_export();
 }//GEN-LAST:event_ccfDeviceExportButtonActionPerformed
 
 private void lircAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lircAllDevicesExportButtonActionPerformed
@@ -3078,10 +2963,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
         return Integer.parseInt((String) gc_connector_ComboBox.getModel().getSelectedItem());
     }
 
-    private irtrans.led_t get_irtrans_led() {
-        return irtrans.led_t.parse((String)irtrans_led_ComboBox.getSelectedItem());
-    }
-
     //public static gui_main getApplication() {
     //  return Application.getInstance(gui_main.class);
     //}
@@ -3108,14 +2989,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JButton browser_select_Button;
     private javax.swing.JButton ccfDeviceExportButton;
     private javax.swing.JMenuItem ccf_export_MenuItem;
-    private javax.swing.JTextField ccf_export_buttonheight_TextField;
-    private javax.swing.JTextField ccf_export_buttonwidth_TextField;
-    private javax.swing.JButton ccf_export_export_Button;
-    private javax.swing.JPanel ccf_export_opts_Panel;
-    private javax.swing.JComboBox ccf_export_prontomodel_ComboBox;
-    private javax.swing.JCheckBox ccf_export_raw_CheckBox;
-    private javax.swing.JTextField ccf_export_screenheight_TextField;
-    private javax.swing.JTextField ccf_export_screenwidth_TextField;
     private javax.swing.JMenuItem clear_console_MenuItem;
     private javax.swing.JButton commandButton;
     private javax.swing.JComboBox command_ComboBox;

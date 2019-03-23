@@ -21,49 +21,47 @@ this program. If not, see http://www.gnu.org/licenses/.
 // Take care of toggling state here
 package org.harctoolbox.oldharctoolbox;
 
-import org.harctoolbox.IrpMaster.DecodeIR;
-import org.harctoolbox.IrpMaster.IncompatibleArgumentException;
-import org.harctoolbox.IrpMaster.IrSignal;
-import org.harctoolbox.IrpMaster.IrpMaster;
-import org.harctoolbox.IrpMaster.IrpMasterException;
-import org.harctoolbox.IrpMaster.IrpUtils;
-import org.harctoolbox.IrpMaster.Protocol;
-import org.harctoolbox.IrpMaster.UnassignedException;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
-import org.antlr.runtime.RecognitionException;
-import org.harctoolbox.IrpMaster.ParseException;
-import org.harctoolbox.IrpMaster.UnknownProtocolException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import org.harctoolbox.ircore.IrCoreUtils;
+import org.harctoolbox.ircore.IrSignal;
+import org.harctoolbox.irp.IrpDatabase;
+import org.harctoolbox.irp.IrpException;
+import org.harctoolbox.irp.Protocol;
 
 public class protocol {
 
-    private static IrpMaster irpMaster = null;
-    private static HashMap<String, Protocol> protocols = null;
+    private static IrpDatabase irpDatabase = null;
+    //private static HashMap<String, Protocol> protocols = null;
 
     private final static short invalid_parameter = -1;
 
-    public static void initialize(String irp_database) throws FileNotFoundException, IncompatibleArgumentException {
-        irpMaster = new IrpMaster(irp_database);
-        protocols = new HashMap<String, Protocol>();
+    public static void initialize(String irp_database) throws IOException {
+        irpDatabase = new IrpDatabase(irp_database);
+        //protocols = new HashMap<String, Protocol>();
     }
 
-    public static void initialize() throws FileNotFoundException, IncompatibleArgumentException {
-        initialize(harcprops.get_instance().get_irpmaster_configfile());
+    public static void initialize() throws IOException {
+        //initialize(harcprops.get_instance().get_irpmaster_configfile());
+        irpDatabase = new IrpDatabase();
+        //protocols = new HashMap<String, Protocol>();
     }
 
     // States for toggles, one per protocol
     //private static Hashtable<String, Integer> toggle_state = new Hashtable<String, Integer>();
 
-    private static Protocol get_protocol(String name) throws UnassignedException, RecognitionException, ParseException, UnknownProtocolException {
-        if (!protocols.containsKey(name)) {
-            Protocol protocol = irpMaster.newProtocol(name);
-            protocols.put(name, protocol);
-        }
-        return protocols.get(name);
-    }
+//    private static Protocol get_protocol(String name) throws UnassignedException, RecognitionException, ParseException, UnknownProtocolException {
+//        if (!protocols.containsKey(name)) {
+//            Protocol protocol = irpMaster.newProtocol(name);
+//            protocols.put(name, protocol);
+//        }
+//        return protocols.get(name);
+//    }
 
     public static IrSignal encode(String protocol_name, short deviceno,
-            short subdevice, short cmdno, toggletype toggle, String params, boolean verbose) throws IrpMasterException, RecognitionException {
+            short subdevice, short cmdno, toggletype toggle, String params, boolean verbose) throws IrpException {
         //int itoggle = 0;
         //if (toggle == toggletype.do_toggle) {
         //    itoggle = toggle_state.containsKey(protocol_name) ? 1 - toggle_state.get(protocol_name) : 0;
@@ -83,8 +81,8 @@ public class protocol {
         return ir;
     }
 
-    private static HashMap<String, Long>parameters(short deviceno, short subdevice, short cmdno, toggletype toggle, String extra_params) {
-        HashMap<String, Long>params = new HashMap<String, Long>();
+    private static HashMap<String, Long> parameters(short deviceno, short subdevice, short cmdno, toggletype toggle, String extra_params) {
+        HashMap<String, Long>params = new LinkedHashMap<>(4);
         if (deviceno != invalid_parameter)
             params.put("D", (long) deviceno);
         if (subdevice != invalid_parameter)
@@ -98,21 +96,20 @@ public class protocol {
             for (String s : str) {
                 String[] q = s.split("=");
                 if (q.length == 2)
-                    params.put(q[0], IrpUtils.parseLong(q[1]));
+                    params.put(q[0], IrCoreUtils.parseLong(q[1]));
             }
         }
         return params;
     }
 
-    private static IrSignal protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno, toggletype /*i*/toggle, String extra_params) throws IrpMasterException, RecognitionException {
-        Protocol protocol = get_protocol(protocol_name);
+    private static IrSignal protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno, toggletype /*i*/toggle, String extra_params) throws IrpException {
+        Protocol protocol = irpDatabase.getNamedProtocol(protocol_name);
         if (protocol == null)
             return null;
 
         HashMap<String, Long> params = parameters(deviceno, subdevice, cmdno, toggle, extra_params);
-        IrSignal irSignal = protocol.renderIrSignal(params);
+        IrSignal irSignal = protocol.toIrSignal(params);
         return irSignal;
-
     }
 
     /*private static raw_ir irSignal2ir_code(IrSignal irSignal) throws IncompatibleArgumentException {
@@ -121,34 +118,35 @@ public class protocol {
         return new raw_ir((int)pronto.getFrequency(), pronto.initArray(), pronto.repeatArray(), null);
     }*/
 
-    public static boolean has_toggle(String protocol_name) throws UnassignedException, RecognitionException, ParseException, UnknownProtocolException {
-        Protocol protocol = get_protocol(protocol_name);
-        return protocol.hasParameter("T");
+    private static boolean hasParameter(String protocol_name, String paramName) throws IrpException {
+        return irpDatabase.getNamedProtocol(protocol_name).hasParameter(paramName);
     }
 
-    public static boolean has_subdevice(String protocol_name) throws UnassignedException, RecognitionException, ParseException, UnknownProtocolException {
-        Protocol protocol = get_protocol(protocol_name);
-        return protocol.hasParameter("S");
+    public static boolean has_toggle(String protocol_name) throws IrpException {
+        return hasParameter(protocol_name, "T");
     }
 
-    public static boolean subdevice_optional(String protocol_name) throws UnassignedException, RecognitionException, ParseException, UnknownProtocolException {
-        Protocol protocol = get_protocol(protocol_name);
-        return protocol.hasParameterDefault("S");
+    public static boolean has_subdevice(String protocol_name) throws IrpException {
+                return hasParameter(protocol_name, "S");
+    }
+
+    public static boolean subdevice_optional(String protocol_name) throws IrpException {
+        return irpDatabase.getNamedProtocol(protocol_name).hasParameterDefault("S");
     }
 
     public static String get_IRP(String protocol_name) {
-        return irpMaster.getIrp(protocol_name);
+        return irpDatabase.getIrp(protocol_name);
     }
 
     /**
      *
-     * @return Array of strings describing names of implemented protocols.
+     * @return List of strings describing names of implemented protocols.
      */
-    public static String[] get_protocols() {
+    public static List<String> get_protocols() {
         //return harcutils.get_basenames(harcprops.get_instance().get_protocolsdir(), harcutils.protocolfile_extension);
-        return irpMaster.getNames().toArray(new String[0]);
+        return irpDatabase.getNames();//.toArray(new String[0]);
     }
-
+/*
     private static void usage(int returncode) {
         System.err.println("Usage:\n" + "protocol [<options>] <protocol_name> <device> [<subdevice>] <commandno|min:max>" + "\nwhere options=-l,-d,-g <gc_hostname>,-t 0|1,-c <connector>,-v,-m <module>,-w <milliseconds>");
         System.exit(returncode);
@@ -246,7 +244,7 @@ public class protocol {
                 IrSignal ir = null;
                 try {
                     ir = encode(protocol_name, device, subdevice,
-                   (short) command, toggle, null/* additional_parameters */, verbose);
+                   (short) command, toggle, null/* additional_parameters * /, verbose);
                 } catch (IrpMasterException ex) {
                     System.err.println(ex.getMessage());
                 } catch (RecognitionException ex) {
@@ -323,5 +321,8 @@ public class protocol {
             usage();
         }
 
+    }*/
+
+    private protocol() {
     }
 }

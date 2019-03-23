@@ -17,10 +17,13 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
-import org.harctoolbox.IrpMaster.IrSignal;
-import org.harctoolbox.IrpMaster.IrpMasterException;
-import org.harctoolbox.IrpMaster.Pronto;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.antlr.runtime.RecognitionException;
+import org.harctoolbox.ircore.InvalidArgumentException;
+import org.harctoolbox.ircore.IrSignal;
+import org.harctoolbox.ircore.Pronto;
+import org.harctoolbox.irp.IrpException;
 
 
 // TODO: use a reference to the commandset instead of copying most of its content.
@@ -150,11 +153,9 @@ public class command {
                     System.err.println("No protocol code available, falling back to raw CCF code");
 
                 //ir = new ccf_parse(ccf);
-                ir = Pronto.ccfSignal(ccf);
+                ir = Pronto.parse(ccf);
             }
-        } catch (RecognitionException ex) {
-            System.out.println(ex.getMessage());
-        } catch (IrpMasterException ex) {
+        } catch (IrpException | Pronto.NonProntoFormatException | InvalidArgumentException ex) {
             System.err.println(ex.getMessage());
         }
         return ir ;

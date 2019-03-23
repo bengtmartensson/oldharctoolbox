@@ -1,7 +1,7 @@
 import sys
 import inspect
 import harcmacros
-import org.harctoolbox.harcutils
+import org.harctoolbox.oldharctoolbox.harcutils
 
 sys.ps1 = '[[>>> '
 sys.ps2 = '..... '

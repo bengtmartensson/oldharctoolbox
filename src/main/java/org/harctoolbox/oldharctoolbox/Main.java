@@ -23,7 +23,6 @@ import java.nio.charset.Charset;
 import java.util.*;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;
-import org.harctoolbox.IrpMaster.IrpMasterException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -252,11 +251,8 @@ public class Main {
 
         try {
             protocol.initialize();
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
-            System.exit(1);
-        } catch (IrpMasterException ex) {
-            System.err.println(ex.getMessage());
             System.exit(1);
         }
 

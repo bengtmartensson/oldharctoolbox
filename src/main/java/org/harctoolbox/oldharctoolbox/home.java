@@ -17,8 +17,6 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
-import org.harctoolbox.IrpMaster.IrSignal;
-import org.harctoolbox.IrpMaster.IrpMasterException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +31,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +40,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.harctoolbox.harchardware.HarcHardwareException;
 import org.harctoolbox.harchardware.comm.Wol;
+import org.harctoolbox.ircore.InvalidArgumentException;
+import org.harctoolbox.ircore.IrSignal;
+import org.harctoolbox.ircore.Pronto;
+import org.harctoolbox.irp.IrpException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -346,7 +349,7 @@ public final class home {
 
                                 failure = true;
                             } else {
-                                String raw_ccf = code.ccfString();
+                                String raw_ccf = Pronto.toString(code);
                                 globalcache gc = new globalcache(gw.get_hostname(), gw.get_model(), userprefs.get_instance().get_verbose());
                                 if (gc != null) {
                                     //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
@@ -356,60 +359,62 @@ public final class home {
                                     }
                                 }
                             }
-                        } else if (gw.get_class().equals("irtrans")) {
-                            if (debugargs.dbg_transmit()) {
-                                System.err.println("Trying an Irtrans (" + gw.get_hostname() + ")...");
-                            }
-                            irtrans irt = new irtrans(gw.get_hostname(), userprefs.get_instance().get_verbose());
-                            command c = dev.get_command(cmd, commandtype_t.ir);
-                            if (c == null) {
-                                if (userprefs.get_instance().get_verbose()) {
-                                    System.err.println("Command " + cmd + " exists, but has no ir code.");
-                                }
-                                failure = true;
-                            } else {
-                                if (gw.get_interface().equals("preprog_ascii")) {
-                                    success = irt.send_flashed_command(the_command.get_remotename(), c.get_cmd(), fgw.get_connectorno(), count);
-                                } else if (gw.get_interface().equals("web_api")) {
-                                    if (count > 1)
-                                        System.err.println("** Warning: count > 1 (= " + count + ") ignored.");
-
-                                    String url = irtrans.make_url(gw.get_hostname(), the_command.get_remotename(), cmd/*c.getcmd().toString()*/, fgw.get_connectorno());
-                                    if (debugargs.dbg_transmit() || userprefs.get_instance().get_verbose())
-                                        System.err.println("Getting URL " + url);
-
-                                    success = (new URL(url)).getContent() != null;
-                                } else if (gw.get_interface().equals("udp")) {
-                                    IrSignal code = dev.get_code(cmd, commandtype_t.ir, toggle, debugargs.dbg_ir_protocols());
-                                    success = irt.send_ir(code, fgw.get_connectorno(), count);
-                                } else {
-                                    System.err.println("Interface `" + gw.get_interface() + "' for IRTrans not implemented.");
-                                    success = false;
-                                }
-                            }
-                        } else if (gw.get_class().equals("lirc_server")) {
-                            if (debugargs.dbg_transmit())
-                                System.err.println("Trying a Lirc server...");
-
-                            command c = dev.get_command(cmd, commandtype_t.ir);
-                            if (c == null) {
-                                if (userprefs.get_instance().get_verbose())
-                                    System.err.println("Command " + cmd + " exists, but has no ir code.");
-
-                                failure = true;
-                            } else {
-                                lirc lirc_client = new lirc(gw.get_hostname(), userprefs.get_instance().get_verbose());
-                                if (lirc_client != null)
-                                    // TODO: evaluate connector
-                                    success = lirc_client.send_ir(the_command.get_remotename(), c.get_cmd(), count);
-                            }
+//                        } else if (gw.get_class().equals("irtrans")) {
+//                            if (debugargs.dbg_transmit()) {
+//                                System.err.println("Trying an Irtrans (" + gw.get_hostname() + ")...");
+//                            }
+//                            irtrans irt = new irtrans(gw.get_hostname(), userprefs.get_instance().get_verbose());
+//                            command c = dev.get_command(cmd, commandtype_t.ir);
+//                            if (c == null) {
+//                                if (userprefs.get_instance().get_verbose()) {
+//                                    System.err.println("Command " + cmd + " exists, but has no ir code.");
+//                                }
+//                                failure = true;
+//                            } else {
+//                                if (gw.get_interface().equals("preprog_ascii")) {
+//                                    success = irt.send_flashed_command(the_command.get_remotename(), c.get_cmd(), fgw.get_connectorno(), count);
+//                                } else if (gw.get_interface().equals("web_api")) {
+//                                    if (count > 1)
+//                                        System.err.println("** Warning: count > 1 (= " + count + ") ignored.");
+//
+//                                    String url = irtrans.make_url(gw.get_hostname(), the_command.get_remotename(), cmd/*c.getcmd().toString()*/, fgw.get_connectorno());
+//                                    if (debugargs.dbg_transmit() || userprefs.get_instance().get_verbose())
+//                                        System.err.println("Getting URL " + url);
+//
+//                                    success = (new URL(url)).getContent() != null;
+//                                } else if (gw.get_interface().equals("udp")) {
+//                                    IrSignal code = dev.get_code(cmd, commandtype_t.ir, toggle, debugargs.dbg_ir_protocols());
+//                                    success = irt.send_ir(code, fgw.get_connectorno(), count);
+//                                } else {
+//                                    System.err.println("Interface `" + gw.get_interface() + "' for IRTrans not implemented.");
+//                                    success = false;
+//                                }
+//                            }
+//                        } else if (gw.get_class().equals("lirc_server")) {
+//                            if (debugargs.dbg_transmit())
+//                                System.err.println("Trying a Lirc server...");
+//
+//                            command c = dev.get_command(cmd, commandtype_t.ir);
+//                            if (c == null) {
+//                                if (userprefs.get_instance().get_verbose())
+//                                    System.err.println("Command " + cmd + " exists, but has no ir code.");
+//
+//                                failure = true;
+//                            } else {
+//                                lirc lirc_client = new lirc(gw.get_hostname(), userprefs.get_instance().get_verbose());
+//                                if (lirc_client != null)
+//                                    // TODO: evaluate connector
+//                                    success = lirc_client.send_ir(the_command.get_remotename(), c.get_cmd(), count);
+//                            }
                         }
-                    } catch (IrpMasterException ex) {
-                        System.err.println(ex.getMessage());
                     } catch (java.net.NoRouteToHostException e) {
                         System.err.println("No route to " + gw.get_hostname());
                     } catch (IOException e) {
                         System.err.println("IOException with host " + gw.get_hostname() + ": " + e.getMessage());
+                    } catch (Pronto.NonProntoFormatException ex) {
+                        Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InvalidArgumentException ex) {
+                        Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
 

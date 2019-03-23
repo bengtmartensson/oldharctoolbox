@@ -17,8 +17,6 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
-import org.harctoolbox.IrpMaster.IrSignal;
-import org.harctoolbox.IrpMaster.IrpMasterException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,6 +31,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.harctoolbox.ircore.IrSignal;
+import org.harctoolbox.ircore.Pronto;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -287,7 +287,7 @@ public class device {
                 //for (int i = 0; i < commandsets[cs].get_no_commands(); i++) {
                     IrSignal irc = get_command_by_index(cs, 0).get_ir_code(toggletype.toggle_0, false);
                     //System.out.println(irc.);
-                    return irc == null ? 0 : (int) irc.getFrequency();
+                    return irc == null ? 0 : irc.getFrequency().intValue();
                     //if (gap > max)
                       //  max = gap;
                 //}
@@ -739,7 +739,7 @@ public class device {
                     //    cmd_el.appendChild(cooked);
                     //}
 
-                    try {
+//                    try {
                         Element code = null;
 
                     if (has_toggle) {
@@ -749,23 +749,23 @@ public class device {
                         c.setAttribute("toggle", "0");
                         code.appendChild(c);
                         ir = get_command_by_index(i, j).get_ir_code(toggletype.toggle_0, verbose);
-                        c.appendChild(doc.createTextNode(ir.ccfString()));
+                        c.appendChild(doc.createTextNode(Pronto.toString(ir)));
 
                         c = doc.createElement("ccf");
                         c.setAttribute("toggle", "1");
                         code.appendChild(c);
                         ir = get_command_by_index(i, j).get_ir_code(toggletype.toggle_1, verbose);
-                        c.appendChild(doc.createTextNode(ir.ccfString()));
+                        c.appendChild(doc.createTextNode(Pronto.toString(ir)));
                     } else {
                         code = doc.createElement("ccf");
                         //ir_code ir = get_command_by_index(i, j).get_ir_code(toggletype.no_toggle, verbose);
                         //code.appendChild(doc.createTextNode(ir.ccf_string()));
-                        code.appendChild(doc.createTextNode(ir.ccfString()));
+                        code.appendChild(doc.createTextNode(Pronto.toString(ir)));
                     }
                     cmd_el.appendChild(code);
-                    } catch (IrpMasterException e) {
-                        System.err.println(e.getMessage());
-                    }
+//                    } catch (IrpException e) {
+//                        System.err.println(e.getMessage());
+//                    }
                     //if (jp1data != null) {
                     //    short hex = jp1data.obc2hex(obc);
                     //    cmd_el.setAttribute("hex", String.format("%02x", hex));
