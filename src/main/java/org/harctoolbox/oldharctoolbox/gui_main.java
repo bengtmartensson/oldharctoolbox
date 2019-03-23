@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009-2011 Bengt Martensson.
+Copyright (C) 2009-2011, 2019 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,14 +17,13 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
-import java.awt.Dimension;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.StringSelection;
-import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,13 +32,14 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -53,7 +53,6 @@ public class gui_main extends javax.swing.JFrame {
 
     private home hm = null;
     private jython_engine engine = null;
-    private String last_rmdu_export = null;
     private int debug = 0;
     private boolean verbose = false;
     private DefaultComboBoxModel macros_dcbm;
@@ -70,9 +69,6 @@ public class gui_main extends javax.swing.JFrame {
     private DefaultComboBoxModel connection_types_dcbm;
     private DefaultComboBoxModel device_remotes_dcbm;
     private DefaultComboBoxModel gc_modules_dcbm;
-    private DefaultComboBoxModel rdf_dcbm;
-    private String[] prontomodelnames;
-    private String[] button_remotenames;
     private resultformatter formatter = new resultformatter();
     private resultformatter cmd_formatter = new resultformatter(harcprops.get_instance().get_commandformat());
     private static final String dummy_no_selection = "--------";
@@ -80,13 +76,10 @@ public class gui_main extends javax.swing.JFrame {
     private macro_thread the_macro_thread = null;
     private command_thread the_command_thread = null;
     private globalcache_thread the_globalcache_device_thread = null;
-    private globalcache_thread the_globalcache_protocol_thread = null;
 
     private globalcache gc = null;
 
-    private final static int default_rmdu_export_remoteindex = 1; //FIXME
-
-    private HashMap<String, String> filechooserdirs = new HashMap<String, String>();
+    private HashMap<String, String> filechooserdirs = new HashMap<>(8);
 
     private File select_file(String title, String extension, String file_type_desc, boolean save, String defaultdir) {
         String startdir = this.filechooserdirs.containsKey(title) ? this.filechooserdirs.get(title) : defaultdir;
@@ -106,7 +99,7 @@ public class gui_main extends javax.swing.JFrame {
             return null;
     }
 
-    private class copy_clipboard_text implements ClipboardOwner {
+    private static class copy_clipboard_text implements ClipboardOwner {
 
         @Override
         public void lostOwnership(Clipboard c, Transferable t) {
@@ -119,16 +112,17 @@ public class gui_main extends javax.swing.JFrame {
         public String from_clipboard() {
             try {
                 return (String) Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this).getTransferData(DataFlavor.stringFlavor);
-            } catch (UnsupportedFlavorException ex) {
-                System.err.println(ex.getMessage());
-            } catch (IOException ex) {
+            } catch (UnsupportedFlavorException | IOException ex) {
                 System.err.println(ex.getMessage());
             }
             return null;
         }
     }
 
-    /** Creates new form gui_main */
+    /**
+     * Creates new form gui_main
+     * @param homefilename
+     */
     public gui_main(String homefilename/*, String macrofilename, boolean verbose, int debug, String browser*/) {
         try {
             hm = new home(homefilename);
@@ -160,7 +154,6 @@ public class gui_main extends javax.swing.JFrame {
         // FIXME
         toplevel_macrofolders_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
         secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
-
         devices_dcbm = new DefaultComboBoxModel(hm.get_devices());
         devicegroups_dcbm = new DefaultComboBoxModel(hm.get_devicegroups());
         commands_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
@@ -172,34 +165,8 @@ public class gui_main extends javax.swing.JFrame {
         connection_types_dcbm = new DefaultComboBoxModel(new String[]{"--"});
         gc_modules_dcbm = new DefaultComboBoxModel(new String[]{"2"}); // ?
 
-//        // TODO: check behavior in abscense of tonto
-//        com.neuron.app.tonto.ProntoModel[] prontomodels = com.neuron.app.tonto.ProntoModel.getModels();
-//        prontomodelnames = new String[prontomodels.length];
-//        for (int i = 0; i < prontomodels.length; i++)
-//            prontomodelnames[i] = prontomodels[i].toString();
-
-        // Since remotemaster generates an enormous amount of noise on stderr,
-        // we redirect stderr temporarilly.
-        //try {
-        //    System.setErr(new PrintStream(new FileOutputStream(".harc_rmaster.err")));
-        //} catch (FileNotFoundException ex) {
-        //    ex.printStackTrace();
-        //}
-
-        // FIXME button_remotenames = button_remote.get_button_remotes();
-
-        if (button_remotenames == null || button_remotenames.length == 0)
-            button_remotenames = new String[]{"*** Error ***"}; // FIXME
-        java.util.Arrays.sort(button_remotenames);
-
         initComponents();
 
-        /*try {
-            DecodeIRVersion.setText("DecodeIR ver. " + DecodeIR.getVersion());
-        } catch (UnsatisfiedLinkError ex) {
-            System.err.println(ex.getMessage());
-            DecodeIRVersion.setText("DecodeIR not found.");
-        }*/
         System.setErr(console_PrintStream);
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -208,7 +175,7 @@ public class gui_main extends javax.swing.JFrame {
                 try {
                     harcprops.get_instance().save();
                     socket_storage.dispose_sockets(true);
-                } catch (Exception e) {
+                } catch (IOException e) {
                     System.out.println("Problems saving properties; " + e.getMessage());
                 }
                 System.out.println("*************** This is GUI shutdown **********");
@@ -234,10 +201,7 @@ public class gui_main extends javax.swing.JFrame {
         aliases_TextField.setText(harcprops.get_instance().get_aliasfilename());
         browser_TextField.setText(harcprops.get_instance().get_browser());
         exportdir_TextField.setText(harcprops.get_instance().get_exportdir());
-        remotemaster_home_TextField.setText(harcprops.get_instance().get_remotemaster_home());
-        rmdu_button_rules_TextField.setText(harcprops.get_instance().get_rmdu_button_rules());
         //System.setOut(console_PrintStream);
-
     }
 
     public gui_main() {
@@ -245,9 +209,9 @@ public class gui_main extends javax.swing.JFrame {
     }
 
     // From Real Gagnon
-    class FilteredStream extends FilterOutputStream {
+    private class FilteredStream extends FilterOutputStream {
 
-        public FilteredStream(OutputStream aStream) {
+        FilteredStream(OutputStream aStream) {
             super(aStream);
         }
 
@@ -262,20 +226,11 @@ public class gui_main extends javax.swing.JFrame {
             String aString = new String(b, off, len);
             console_TextArea.append(aString);
             console_TextArea.setCaretPosition(console_TextArea.getDocument().getLength());
-        /*
-        if (logFile) {
-        FileWriter aWriter = new FileWriter("error.log", true);
-        aWriter.write(aString);
-        aWriter.close();
-        }*/
         }
     }
 
-    PrintStream console_PrintStream = new PrintStream(
-            new FilteredStream(
-            new ByteArrayOutputStream()));
+    private PrintStream console_PrintStream = new PrintStream(new FilteredStream(new ByteArrayOutputStream()));
 
-    //TODO: boolean logFile;
     private void warning(String message) {
         System.err.println("Warning: " + message);
     }
@@ -320,13 +275,9 @@ public class gui_main extends javax.swing.JFrame {
         deviceclass_stop_Button = new javax.swing.JButton();
         device_remote_ComboBox = new javax.swing.JComboBox();
         xmlDeviceExportButton = new javax.swing.JButton();
-        lircDeviceExportButton = new javax.swing.JButton();
-        ccfDeviceExportButton = new javax.swing.JButton();
-        rmduDeviceExportButton = new javax.swing.JButton();
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
         xmlAllDevicesExportButton = new javax.swing.JButton();
-        lircAllDevicesExportButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         outputHWTabbedPane = new javax.swing.JTabbedPane();
         globalcache_Panel = new javax.swing.JPanel();
@@ -335,12 +286,6 @@ public class gui_main extends javax.swing.JFrame {
         gc_connector_ComboBox = new javax.swing.JComboBox();
         gc_browse_Button = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        discoverButton = new javax.swing.JButton();
-        gcDiscoveredTypejTextField = new javax.swing.JTextField();
-        irtrans_Panel = new javax.swing.JPanel();
-        irtrans_address_TextField = new javax.swing.JTextField();
-        irtrans_led_ComboBox = new javax.swing.JComboBox();
-        irtrans_browse_Button = new javax.swing.JButton();
         ezcontrolPanel = new javax.swing.JPanel();
         t10_address_TextField = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
@@ -383,15 +328,6 @@ public class gui_main extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         exportdir_TextField = new javax.swing.JTextField();
         exportdir_browse_Button = new javax.swing.JButton();
-        rmdu_export_opts_Panel = new javax.swing.JPanel();
-        jLabel12 = new javax.swing.JLabel();
-        rmdu_button_rules_TextField = new javax.swing.JTextField();
-        jLabel20 = new javax.swing.JLabel();
-        keymap_rules_browse_Button = new javax.swing.JButton();
-        rdf_ComboBox = new javax.swing.JComboBox();
-        remotemaster_home_TextField = new javax.swing.JTextField();
-        remotemaster_home_browse_Button = new javax.swing.JButton();
-        jLabel21 = new javax.swing.JLabel();
         debug_Panel = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         debug_TextField = new javax.swing.JTextField();
@@ -407,11 +343,6 @@ public class gui_main extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         export_device_MenuItem = new javax.swing.JMenuItem();
         export_all_MenuItem = new javax.swing.JMenuItem();
-        lirc_export_device_MenuItem = new javax.swing.JMenuItem();
-        lirc_export_all_MenuItem = new javax.swing.JMenuItem();
-        lirc_export_server_MenuItem = new javax.swing.JMenuItem();
-        ccf_export_MenuItem = new javax.swing.JMenuItem();
-        rmdu_export_MenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
@@ -429,7 +360,6 @@ public class gui_main extends javax.swing.JFrame {
         clear_console_MenuItem = new javax.swing.JMenuItem();
         browse_device_MenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
-        contentMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -756,19 +686,6 @@ public class gui_main extends javax.swing.JFrame {
             }
         });
 
-        lircDeviceExportButton.setText("LIRC");
-        lircDeviceExportButton.setEnabled(false);
-
-        ccfDeviceExportButton.setText("CCF");
-        ccfDeviceExportButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ccfDeviceExportButtonActionPerformed(evt);
-            }
-        });
-
-        rmduDeviceExportButton.setText("RMDU");
-        rmduDeviceExportButton.setEnabled(false);
-
         jLabel27.setText("Export current device class");
 
         jLabel28.setText("Export all known device classes");
@@ -777,14 +694,6 @@ public class gui_main extends javax.swing.JFrame {
         xmlAllDevicesExportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 xmlAllDevicesExportButtonActionPerformed(evt);
-            }
-        });
-
-        lircAllDevicesExportButton.setText("LIRC");
-        lircAllDevicesExportButton.setEnabled(false);
-        lircAllDevicesExportButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lircAllDevicesExportButtonActionPerformed(evt);
             }
         });
 
@@ -803,14 +712,7 @@ public class gui_main extends javax.swing.JFrame {
                         .addComponent(output_deviceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(no_sends_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(deviceclassesPanelLayout.createSequentialGroup()
-                        .addComponent(xmlDeviceExportButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lircDeviceExportButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ccfDeviceExportButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rmduDeviceExportButton))
+                    .addComponent(xmlDeviceExportButton)
                     .addComponent(jLabel27))
                 .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(deviceclassesPanelLayout.createSequentialGroup()
@@ -823,18 +725,15 @@ public class gui_main extends javax.swing.JFrame {
                                 .addComponent(deviceclass_stop_Button)
                                 .addGap(18, 18, 18)
                                 .addComponent(deviceclass_send_Button))
-                            .addGroup(deviceclassesPanelLayout.createSequentialGroup()
-                                .addComponent(xmlAllDevicesExportButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lircAllDevicesExportButton))
+                            .addComponent(xmlAllDevicesExportButton)
                             .addComponent(jLabel28))))
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(62, Short.MAX_VALUE))
             .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
         );
         deviceclassesPanelLayout.setVerticalGroup(
             deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(deviceclassesPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(19, Short.MAX_VALUE)
                 .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deviceclass_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(device_remote_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -854,10 +753,6 @@ public class gui_main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(xmlAllDevicesExportButton)
-                    .addComponent(lircAllDevicesExportButton)
-                    .addComponent(rmduDeviceExportButton)
-                    .addComponent(ccfDeviceExportButton)
-                    .addComponent(lircDeviceExportButton)
                     .addComponent(xmlDeviceExportButton))
                 .addGap(30, 30, 30))
         );
@@ -901,22 +796,6 @@ public class gui_main extends javax.swing.JFrame {
             }
         });
 
-        discoverButton.setText("Discover");
-        discoverButton.setToolTipText("Try to discover a GlobalCache on LAN. Takes up to 60 seconds!");
-        discoverButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                discoverButtonActionPerformed(evt);
-            }
-        });
-
-        gcDiscoveredTypejTextField.setText("<unknown>");
-        gcDiscoveredTypejTextField.setToolTipText("Type of discovered GlobalCache");
-        gcDiscoveredTypejTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                gcDiscoveredTypejTextFieldActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout globalcache_PanelLayout = new javax.swing.GroupLayout(globalcache_Panel);
         globalcache_Panel.setLayout(globalcache_PanelLayout);
         globalcache_PanelLayout.setHorizontalGroup(
@@ -932,11 +811,7 @@ public class gui_main extends javax.swing.JFrame {
                 .addComponent(gc_browse_Button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addGap(78, 78, 78)
-                .addGroup(globalcache_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gcDiscoveredTypejTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
-                    .addComponent(discoverButton))
-                .addContainerGap())
+                .addContainerGap(214, Short.MAX_VALUE))
         );
         globalcache_PanelLayout.setVerticalGroup(
             globalcache_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -947,61 +822,11 @@ public class gui_main extends javax.swing.JFrame {
                     .addComponent(gc_module_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(gc_connector_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(gc_browse_Button)
-                    .addComponent(jButton1)
-                    .addComponent(discoverButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(gcDiscoveredTypejTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton1))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
 
         outputHWTabbedPane.addTab("GlobalCache", globalcache_Panel);
-
-        irtrans_address_TextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        irtrans_address_TextField.setText("192.168.1.71");
-        irtrans_address_TextField.setToolTipText("IP-Address of GlobalCache to use");
-        irtrans_address_TextField.setMinimumSize(new java.awt.Dimension(120, 27));
-        irtrans_address_TextField.setPreferredSize(new java.awt.Dimension(120, 27));
-        irtrans_address_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                irtrans_address_TextFieldActionPerformed(evt);
-            }
-        });
-
-        irtrans_led_ComboBox.setMaximumRowCount(12);
-        irtrans_led_ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "intern", "extern", "both", "0", "1", "2", "3", "4", "5", "6", "7", "8" }));
-
-        irtrans_browse_Button.setText("Browse");
-        irtrans_browse_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                irtrans_browse_ButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout irtrans_PanelLayout = new javax.swing.GroupLayout(irtrans_Panel);
-        irtrans_Panel.setLayout(irtrans_PanelLayout);
-        irtrans_PanelLayout.setHorizontalGroup(
-            irtrans_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(irtrans_PanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(irtrans_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(irtrans_led_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(irtrans_browse_Button)
-                .addContainerGap(294, Short.MAX_VALUE))
-        );
-        irtrans_PanelLayout.setVerticalGroup(
-            irtrans_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(irtrans_PanelLayout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addGroup(irtrans_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(irtrans_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(irtrans_led_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(irtrans_browse_Button))
-                .addContainerGap(49, Short.MAX_VALUE))
-        );
-
-        outputHWTabbedPane.addTab("IRTrans", irtrans_Panel);
 
         t10_address_TextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         t10_address_TextField.setText("192.168.1.42");
@@ -1446,98 +1271,6 @@ public class gui_main extends javax.swing.JFrame {
 
         exportopts_TabbedPane.addTab("General", general_export_opts_Panel);
 
-        rmdu_export_opts_Panel.setEnabled(false);
-
-        jLabel12.setText("Remote");
-        jLabel12.setEnabled(false);
-
-        rmdu_button_rules_TextField.setToolTipText("Path to file with rules mapping commands to buttons.");
-        rmdu_button_rules_TextField.setEnabled(false);
-        rmdu_button_rules_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
-        rmdu_button_rules_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
-        rmdu_button_rules_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
-
-        jLabel20.setText("Keymap Rules");
-        jLabel20.setEnabled(false);
-
-        keymap_rules_browse_Button.setText("...");
-        keymap_rules_browse_Button.setToolTipText("Select rules file");
-        keymap_rules_browse_Button.setEnabled(false);
-        keymap_rules_browse_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                keymap_rules_browse_ButtonActionPerformed(evt);
-            }
-        });
-
-        rdf_ComboBox.setModel(new DefaultComboBoxModel(button_remotenames));
-        rdf_ComboBox.setSelectedIndex(default_rmdu_export_remoteindex < button_remotenames.length ? default_rmdu_export_remoteindex : 0);
-        rdf_ComboBox.setToolTipText("Rdf file for the desired JP1 remote");
-        rdf_ComboBox.setEnabled(false);
-        rdf_ComboBox.setMaximumSize(new java.awt.Dimension(300, 32767));
-        rdf_ComboBox.setMinimumSize(new java.awt.Dimension(300, 27));
-        rdf_ComboBox.setPreferredSize(new java.awt.Dimension(300, 27));
-
-        remotemaster_home_TextField.setEditable(false);
-        remotemaster_home_TextField.setToolTipText("Path to RemoteMaster's directory");
-        remotemaster_home_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
-        remotemaster_home_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
-        remotemaster_home_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
-
-        remotemaster_home_browse_Button.setText("...");
-        remotemaster_home_browse_Button.setToolTipText("Select RemoteMaster directory");
-        remotemaster_home_browse_Button.setEnabled(false);
-        remotemaster_home_browse_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                remotemaster_home_browse_ButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel21.setText("RM Home");
-        jLabel21.setEnabled(false);
-
-        javax.swing.GroupLayout rmdu_export_opts_PanelLayout = new javax.swing.GroupLayout(rmdu_export_opts_Panel);
-        rmdu_export_opts_Panel.setLayout(rmdu_export_opts_PanelLayout);
-        rmdu_export_opts_PanelLayout.setHorizontalGroup(
-            rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rmdu_export_opts_PanelLayout.createSequentialGroup()
-                .addGroup(rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel20)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel21))
-                .addGap(24, 24, 24)
-                .addGroup(rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rmdu_button_rules_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(remotemaster_home_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rdf_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(keymap_rules_browse_Button)
-                    .addComponent(remotemaster_home_browse_Button))
-                .addContainerGap(152, Short.MAX_VALUE))
-        );
-        rmdu_export_opts_PanelLayout.setVerticalGroup(
-            rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rmdu_export_opts_PanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rdf_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rmdu_button_rules_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel20)
-                    .addComponent(keymap_rules_browse_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(rmdu_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(remotemaster_home_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(remotemaster_home_browse_Button))
-                    .addComponent(jLabel21))
-                .addContainerGap())
-        );
-
-        exportopts_TabbedPane.addTab("RMDU", rmdu_export_opts_Panel);
-
         optsTabbedPane.addTab("Exportopts", exportopts_TabbedPane);
 
         jLabel11.setText("Debugcode");
@@ -1594,8 +1327,8 @@ public class gui_main extends javax.swing.JFrame {
 
         output_hw_TabbedPane.addTab("Options", optsTabbedPane);
 
-        console_TextArea.setColumns(20);
         console_TextArea.setEditable(false);
+        console_TextArea.setColumns(20);
         console_TextArea.setLineWrap(true);
         console_TextArea.setRows(5);
         console_TextArea.setToolTipText("This is the console, where errors and messages go, instead of annoying you with popups.");
@@ -1650,48 +1383,6 @@ public class gui_main extends javax.swing.JFrame {
             }
         });
         fileMenu.add(export_all_MenuItem);
-
-        lirc_export_device_MenuItem.setText("Export LIRC (deviceclass)");
-        lirc_export_device_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lirc_export_device_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(lirc_export_device_MenuItem);
-
-        lirc_export_all_MenuItem.setText("Export LIRC (all)");
-        lirc_export_all_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lirc_export_all_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(lirc_export_all_MenuItem);
-
-        lirc_export_server_MenuItem.setText("Export LIRC Server config.");
-        lirc_export_server_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lirc_export_server_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(lirc_export_server_MenuItem);
-
-        ccf_export_MenuItem.setText("Export CCF (deviceclass)");
-        ccf_export_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ccf_export_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(ccf_export_MenuItem);
-
-        rmdu_export_MenuItem.setText("Export RMDU (deviceclass)");
-        rmdu_export_MenuItem.setToolTipText("Presently disabled");
-        rmdu_export_MenuItem.setEnabled(false);
-        rmdu_export_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rmdu_export_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(rmdu_export_MenuItem);
         fileMenu.add(jSeparator2);
 
         exitMenuItem.setMnemonic('x');
@@ -1813,16 +1504,6 @@ public class gui_main extends javax.swing.JFrame {
         helpMenu.setMnemonic('H');
         helpMenu.setText("Help");
 
-        contentMenuItem.setMnemonic('C');
-        contentMenuItem.setText("Content...");
-        contentMenuItem.setToolTipText("Brings up documentation.");
-        contentMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                contentMenuItemActionPerformed(evt);
-            }
-        });
-        helpMenu.add(contentMenuItem);
-
         aboutMenuItem.setMnemonic('A');
         aboutMenuItem.setText("About...");
         aboutMenuItem.setToolTipText("The mandatory About popup");
@@ -1851,7 +1532,7 @@ public class gui_main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(output_hw_TabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                .addComponent(output_hw_TabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1860,8 +1541,8 @@ public class gui_main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private class macro_thread extends Thread {
-        private String macroname;
-        public macro_thread(String name) {
+        private final String macroname;
+        macro_thread(String name) {
             super("macro_thread");
             macroname = name;
         }
@@ -1872,11 +1553,10 @@ public class gui_main extends javax.swing.JFrame {
 
         @Override
         public void run() {
-            String result = null;
             //String cmd = (String) macros_dcbm.getSelectedItem();
             System.err.println(cmd_formatter.format("harcmacros." + macroname + "()"));
             //try {
-                result = engine.eval("harcmacros." + macroname + "()");
+            String result = engine.eval("harcmacros." + macroname + "()");
             //} catch (non_existing_command_exception e) {
                 // This should not happen
             //    System.err.println("*** Non existing macro " + e.getMessage());
@@ -1885,7 +1565,7 @@ public class gui_main extends javax.swing.JFrame {
             //}
             if (result == null)
                 System.err.println("** Failed **");
-            else if (!result.equals(""))
+            else if (!result.isEmpty())
                 System.err.println(formatter.format(result));
 
             macroButton.setEnabled(engine != null);
@@ -1895,11 +1575,11 @@ public class gui_main extends javax.swing.JFrame {
     }
 
     private class command_thread extends Thread {
-        private String device;
-        private command_t cmd;
-        private String[] args;
+        private final String device;
+        private final command_t cmd;
+        private final String[] args;
 
-        public command_thread(String device, command_t cmd, String[] args) {
+        command_thread(String device, command_t cmd, String[] args) {
             super("command_thread");
             this.device = device;
             this.cmd = cmd;
@@ -1918,7 +1598,7 @@ public class gui_main extends javax.swing.JFrame {
             }
             if (result == null)
                 System.err.println("** Failed **");
-            else if (!result.equals(""))
+            else if (!result.isEmpty())
                 System.err.println(formatter.format(result));
 
             commandButton.setEnabled(true);
@@ -1928,14 +1608,14 @@ public class gui_main extends javax.swing.JFrame {
     }
 
     private class globalcache_thread extends Thread {
-        private IrSignal code;
-        private int module;
-        private int connector;
-        private int count;
-        private JButton start_button;
-        private JButton stop_button;
+        private final IrSignal code;
+        private final int module;
+        private final int connector;
+        private final int count;
+        private final JButton start_button;
+        private final JButton stop_button;
 
-        public globalcache_thread(IrSignal code, int module, int connector, int count,
+        globalcache_thread(IrSignal code, int module, int connector, int count,
                 JButton start_button, JButton stop_button) {
             super("globalcache_thread");
             this.code = code;
@@ -1971,50 +1651,6 @@ public class gui_main extends javax.swing.JFrame {
         }
     }
 
-//    private class irtrans_thread extends Thread {
-//        private String remote;
-//        private String commandname;
-//        private irtrans.led_t led;
-//        private int count;
-//        private JButton start_button;
-//        private JButton stop_button;
-//
-//        public irtrans_thread(String remote, String commandname, irtrans.led_t led, int count,
-//                JButton start_button, JButton stop_button) {
-//            super("irtrans_thread");
-//            this.remote = remote;
-//            this.commandname = commandname;
-//            this.led = led;
-//            this.count = count;
-//            this.start_button = start_button;
-//            this.stop_button = stop_button;
-//        }
-//
-//        @Override
-//        public void run() {
-//            start_button.setEnabled(false);
-//            stop_button.setEnabled(true);
-//            boolean success = false;
-//            try {
-//                success = irt.send_flashed_command(remote, commandname, led, count);
-//            } catch (UnknownHostException ex) {
-//                System.err.println("IRTrans hostname not found.");
-//            } catch (IOException e) {
-//                System.err.println(e);
-//            } catch (InterruptedException e) {
-//                System.err.println("*** Interrupted *** ");
-//                success = true;
-//            }
-//
-//            if (!success)
-//                System.err.println("** Failed **");
-//
-//            the_irtrans_thread = null;
-//            start_button.setEnabled(true);
-//            stop_button.setEnabled(false);
-//        }
-//    }
-
     private void do_exit() {
         System.out.println("Exiting...");
         System.exit(0);
@@ -2028,9 +1664,8 @@ public class gui_main extends javax.swing.JFrame {
         try {
             String result = harcprops.get_instance().save();
             System.err.println(result == null ? "No need to save properties." : ("Property file written to " + result + "."));
-        } catch (Exception e) {
+        } catch (IOException e) {
             warning("Problems saving properties: " + e.getMessage());
-            return;
         }
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
@@ -2042,10 +1677,6 @@ public class gui_main extends javax.swing.JFrame {
         }
         aboutBox.setVisible(true);
     }//GEN-LAST:event_aboutMenuItemActionPerformed
-
-    private void contentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contentMenuItemActionPerformed
-        harcutils.browse(harcprops.get_instance().get_helpfilename());
-}//GEN-LAST:event_contentMenuItemActionPerformed
 
     private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
         try {
@@ -2099,9 +1730,7 @@ public class gui_main extends javax.swing.JFrame {
     }
 
     private void update_command_menu() {
-        String[] commands = null;
-
-        commands = hm.get_commands((String) devices_dcbm.getSelectedItem(), commandtype_t.any);
+        String[] commands = hm.get_commands((String) devices_dcbm.getSelectedItem(), commandtype_t.any);
         if (commands == null)
             commands = new String[]{ dummy_no_selection };
         if (sort_commands_CheckBoxMenuItem.isSelected())
@@ -2116,10 +1745,7 @@ public class gui_main extends javax.swing.JFrame {
     }
 
     private void update_device_menu() {
-        //warning("Update_devices menu");
-        String[] devices = null;
-
-        devices = enable_devicegroups_CheckBoxMenuItem.isSelected()
+        String[] devices = enable_devicegroups_CheckBoxMenuItem.isSelected()
                 ? hm.get_devices((String) devicegroups_dcbm.getSelectedItem())
                 : hm.get_devices();
 
@@ -2245,19 +1871,15 @@ public class gui_main extends javax.swing.JFrame {
             device_remotes_dcbm = new DefaultComboBoxModel(remotes);
             device_remote_ComboBox.setModel(device_remotes_dcbm);
             update_device_commands_menu();
-        } catch (IOException e) {
+        } catch (IOException | SAXException e) {
             System.err.println(e.getMessage());
-       } catch (SAXParseException e) {
-            System.err.println(e.getMessage());
-       } catch (SAXException e) {
-            System.err.println(e.getMessage());
-       }
+        }
     }
 
     private void update_device_commands_menu() {
         String dev = (String) deviceclasses_dcbm.getSelectedItem();
-        String remote = device_remotes_dcbm != null ? (String) device_remotes_dcbm.getSelectedItem() :
-            null;
+        String remote = device_remotes_dcbm != null ? (String) device_remotes_dcbm.getSelectedItem()
+                : null;
         try {
             device dvc = new device(dev);
             command_t[] commands = dvc.get_commands(commandtype_t.ir, remote);
@@ -2266,13 +1888,9 @@ public class gui_main extends javax.swing.JFrame {
             java.util.Arrays.sort(commands);
             device_commands_dcbm = new DefaultComboBoxModel(commands);
             device_command_ComboBox.setModel(device_commands_dcbm);
-        } catch (IOException e) {
+        } catch (IOException | SAXException e) {
             System.err.println(e.getMessage());
-       } catch (SAXParseException e) {
-            System.err.println(e.getMessage());
-       } catch (SAXException e) {
-            System.err.println(e.getMessage());
-       }
+        }
     }
 
     private void update_connection_types_menu() {
@@ -2295,7 +1913,7 @@ public class gui_main extends javax.swing.JFrame {
     }//GEN-LAST:event_src_device_ComboBoxActionPerformed
 
     private void commandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commandButtonActionPerformed
-        String result = null;
+        //String result = null;
         String cmd_name = (String) commands_dcbm.getSelectedItem();
         command_t cmd = command_t.parse(cmd_name);
         String device = (String) devices_dcbm.getSelectedItem();
@@ -2303,7 +1921,7 @@ public class gui_main extends javax.swing.JFrame {
         int no_required_args = hm.get_arguments(device, cmd, commandtype_t.any);
         //warning("# args: " + no_required_args);
         String arg0 = command_argument_TextField.getText().trim();
-        String[] args = arg0.equals("") ? new String[0] : new String[]{arg0};
+        String[] args = arg0.isEmpty() ? new String[0] : new String[]{arg0};
         if (args.length < no_required_args) {
             warning("To few arguments to command. Not executed.");
             return;
@@ -2312,22 +1930,22 @@ public class gui_main extends javax.swing.JFrame {
             warning("Excess arguments ignored");
         }
 
-        if (false) {
-            try {
-                result = hm.do_command(device, cmd, args, commandtype_t.any, 1, toggletype.dont_care, false);
-            } catch (InterruptedException e) {
-                System.err.println("Interrupted");
-            }
-            if (result == null)
-                System.err.println("**Failed**");
-            else if (!result.equals(""))
-                System.err.println(formatter.format(result));
-        } else {
-            the_command_thread = new command_thread(device, cmd, args);
-            commandButton.setEnabled(false);
-            stop_command_Button.setEnabled(true);
-            the_command_thread.start();
-        }
+//        if (false) {
+//            try {
+//                result = hm.do_command(device, cmd, args, commandtype_t.any, 1, toggletype.dont_care, false);
+//            } catch (InterruptedException e) {
+//                System.err.println("Interrupted");
+//            }
+//            if (result == null)
+//                System.err.println("**Failed**");
+//            else if (!result.isEmpty())
+//                System.err.println(formatter.format(result));
+//        } else {
+        the_command_thread = new command_thread(device, cmd, args);
+        commandButton.setEnabled(false);
+        stop_command_Button.setEnabled(true);
+        the_command_thread.start();
+//        }
 
     }//GEN-LAST:event_commandButtonActionPerformed
 
@@ -2353,7 +1971,7 @@ public class gui_main extends javax.swing.JFrame {
         System.err.println(cmd_formatter.format("--select " + device + " " + src_device
                 + (zone != null ? (" (zone = " + zone + ")") : "")
                 + (audio_video_ComboBox.isEnabled() ? (" (" + mt + ")") : "")
-                + (connection_type_ComboBox.isEnabled() ? (" (" + (connectiontype) connection_types_dcbm.getSelectedItem() +")") : "")));
+                + (connection_type_ComboBox.isEnabled() ? (" (" + connection_types_dcbm.getSelectedItem() +")") : "")));
         boolean success = false;
         try {
             success = hm.select(device, src_device, commandtype_t.any, zone, mt,
@@ -2379,68 +1997,6 @@ public class gui_main extends javax.swing.JFrame {
         } catch (InterruptedException e) {
         }
     }//GEN-LAST:event_browse_device_MenuItemActionPerformed
-/*
-    private IrSignal extract_code() throws NumberFormatException, IrpMasterException, RecognitionException {
-        String protocol_name = (String) protocol_ComboBox.getModel().getSelectedItem();
-        short devno = deviceno_TextField.getText().trim().isEmpty() ? -1 : harcutils.parse_shortnumber(deviceno_TextField.getText());
-        short sub_devno = -1;
-        if (protocol.has_subdevice(protocol_name) && !(protocol.subdevice_optional(protocol_name) && subdevice_TextField.getText().trim().equals("")))
-            sub_devno = harcutils.parse_shortnumber(subdevice_TextField.getText());
-        if (org.harctoolbox.IrpMaster.IrpUtils.parseUpper(commandno_TextField.getText()) != org.harctoolbox.IrpMaster.IrpUtils.invalid) {
-            System.err.println("Interval in command number not allowed here.");
-            return null;
-        }
-        short cmd_no = harcutils.parse_shortnumber(commandno_TextField.getText());
-        toggletype toggle = (toggletype) toggle_ComboBox.getModel().getSelectedItem();
-        String add_params = protocol_params_TextField.getText();
-        //System.err.println(protocol_name + devno + " " + sub_devno + " " + cmd_no + toggle);
-        return protocol.encode(protocol_name, devno, sub_devno, cmd_no, toggle, add_params, false);
-    }
-
-    private void export_ccf() throws NumberFormatException, IrpMasterException, RecognitionException, FileNotFoundException {
-        String protocol_name = (String) protocol_ComboBox.getModel().getSelectedItem();
-        short devno = deviceno_TextField.getText().trim().isEmpty() ? -1 : harcutils.parse_shortnumber(deviceno_TextField.getText());
-        short sub_devno = -1;
-        if (protocol.has_subdevice(protocol_name) && !(protocol.subdevice_optional(protocol_name) && subdevice_TextField.getText().trim().equals("")))
-            sub_devno = harcutils.parse_shortnumber(subdevice_TextField.getText());
-        short cmd_no_upper = (short) org.harctoolbox.IrpMaster.IrpUtils.parseUpper(commandno_TextField.getText());
-        short cmd_no_lower = (short) org.harctoolbox.IrpMaster.IrpUtils.parseLong(commandno_TextField.getText());
-        if (cmd_no_upper == (short)org.harctoolbox.IrpMaster.IrpUtils.invalid)
-            cmd_no_upper = cmd_no_lower;
-        toggletype toggle = (toggletype) toggle_ComboBox.getModel().getSelectedItem();
-        String add_params = protocol_params_TextField.getText();
-        File file = harcutils.create_export_file(harcprops.get_instance().get_exportdir(),
-                protocol_name + "_" + devno + (sub_devno != -1 ? ("_" + sub_devno) : ""),
-                "hex");
-        PrintStream export_file = new PrintStream(file);
-        System.err.println("Exporting to " + file);
-        for (short cmd_no = cmd_no_lower; cmd_no <= cmd_no_upper; cmd_no++) {
-            export_file.println("Device Code: " + devno + (sub_devno != -1 ? ("." + sub_devno) : "") + ", Function: " + cmd_no + " " + add_params);
-            export_file.println(protocol.encode(protocol_name, devno, sub_devno, cmd_no, toggle, add_params, false).ccfString());
-        }
-        export_file.close();
-    }
-
-
-    private void update_protocol_parameters() {
-        try {
-            deviceno_TextField.setText(null);
-            commandno_TextField.setText(null);
-            subdevice_TextField.setText(null);
-            toggle_ComboBox.setSelectedItem(toggletype.dont_care);
-            subdevice_TextField.setEnabled(protocol.has_subdevice((String)protocol_ComboBox.getModel().getSelectedItem()));
-            toggle_ComboBox.setEnabled(protocol.has_toggle((String)protocol_ComboBox.getModel().getSelectedItem()));
-            IRP_TextField.setText(protocol.get_IRP((String)protocol_ComboBox.getModel().getSelectedItem()));
-        } catch (UnassignedException ex) {
-            subdevice_TextField.setEnabled(false);
-            toggle_ComboBox.setEnabled(false);
-        } catch (RecognitionException ex) {
-            subdevice_TextField.setEnabled(false);
-            toggle_ComboBox.setEnabled(false);
-        }
-    }
-    *
-    */
 
     private void deviceclass_send_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deviceclass_send_ButtonActionPerformed
         String dev = (String) deviceclasses_dcbm.getSelectedItem();
@@ -2455,11 +2011,7 @@ public class gui_main extends javax.swing.JFrame {
             cmd = (command_t) device_commands_dcbm.getSelectedItem();
             c = dvc.get_command(cmd, commandtype_t.ir, remote);
             //remote = dvc.
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        } catch (SAXParseException e) {
-            System.err.println(e.getMessage());
-        } catch (SAXException e) {
+        } catch (IOException | SAXException e) {
             System.err.println(e.getMessage());
         }
 
@@ -2495,7 +2047,7 @@ public class gui_main extends javax.swing.JFrame {
 //            } else if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("IRTrans (udp)")) {
 //                irt.send_ir(c.get_ir_code(toggletype.dont_care, verbose), get_irtrans_led(), no_sends);
             } else {
-                System.err.println("Internal error: cannot find output device: " + (String) output_deviceComboBox.getModel().getSelectedItem());
+                System.err.println("Internal error: cannot find output device: " + output_deviceComboBox.getModel().getSelectedItem());
 //            }
 //        } catch (UnknownHostException e) {
 //            System.err.println(e.getMessage());
@@ -2517,13 +2069,11 @@ public class gui_main extends javax.swing.JFrame {
     }//GEN-LAST:event_audio_video_ComboBoxActionPerformed
 
     private void consoletext_save_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consoletext_save_MenuItemActionPerformed
-        try {
-            String filename = select_file("Save console text as...", "txt", "Text file", true, null).getAbsolutePath();
-            PrintStream ps = new PrintStream(new FileOutputStream(filename));
+        String filename = select_file("Save console text as...", "txt", "Text file", true, null).getAbsolutePath();
+        try (PrintStream ps = new PrintStream(new FileOutputStream(filename), false, IrCoreUtils.DEFAULT_CHARSET_NAME)) {
             ps.println(console_TextArea.getText());
-        } catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             System.err.println(ex);
-        } catch (NullPointerException e) {
         }
     }//GEN-LAST:event_consoletext_save_MenuItemActionPerformed
 
@@ -2531,55 +2081,18 @@ public class gui_main extends javax.swing.JFrame {
         device.export_all_devices(harcprops.get_instance().get_exportdir());
 }//GEN-LAST:event_export_all_MenuItemActionPerformed
 
-    private void lirc_export_all_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lirc_export_all_MenuItemActionPerformed
-        // FIXME lirc_export.export_all();
-}//GEN-LAST:event_lirc_export_all_MenuItemActionPerformed
-
-    private void ccf_export_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccf_export_MenuItemActionPerformed
-        //ccf_export();
-    }//GEN-LAST:event_ccf_export_MenuItemActionPerformed
-
-//    private void ccf_export() {
-//        //FIXME
-//        String devname = (String) deviceclasses_dcbm.getSelectedItem();
-//        com.neuron.app.tonto.ProntoModel prontomodel = com.neuron.app.tonto.ProntoModel.getModelByName((String)ccf_export_prontomodel_ComboBox.getModel().getSelectedItem());
-//        int buttonwidth = Integer.parseInt(ccf_export_buttonwidth_TextField.getText());
-//        int buttonheight = Integer.parseInt(ccf_export_buttonheight_TextField.getText());
-//        int screenwidth = Integer.parseInt(ccf_export_screenwidth_TextField.getText());
-//        int screenheight = Integer.parseInt(ccf_export_screenheight_TextField.getText());
-//        String filename = harcprops.get_instance().get_exportdir() + File.separator + devname + ".ccf";
-//
-//        ccf_export.ccf_exporter(new String[]{devname}, prontomodel,
-//                ccf_export_raw_CheckBox.isEnabled(),
-//                buttonwidth, buttonheight, screenwidth, screenheight, filename);
-//        System.err.println("Exported " + devname + " to " + filename + " for " + prontomodel.toString());
-//    }
-
     private void stop_macro_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_macro_ButtonActionPerformed
         the_macro_thread.interrupt();
         macroButton.setEnabled(true);
         stop_macro_Button.setEnabled(false);
         System.err.println("************ Execution of macro `"
-                + (the_macro_thread != null ? the_macro_thread.get_name() : "") + "' interrupted *************");
+                + (the_macro_thread.get_name()) + "' interrupted *************");
         the_macro_thread = null;
     }//GEN-LAST:event_stop_macro_ButtonActionPerformed
 
     private void export_device_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_device_MenuItemActionPerformed
         device.export_device(harcprops.get_instance().get_exportdir(), (String) deviceclasses_dcbm.getSelectedItem());
     }//GEN-LAST:event_export_device_MenuItemActionPerformed
-
-    private void lirc_export_device_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lirc_export_device_MenuItemActionPerformed
-        // FIXME
-        /*try {
-            lirc_export.export(harcprops.get_instance().get_exportdir(), (String) deviceclasses_dcbm.getSelectedItem());
-        } catch (SAXParseException ex) {
-            System.err.println(ex);
-        } catch (SAXException ex) {
-            System.err.println(ex);
-        } catch (IOException ex) {
-            System.err.println(ex);
-        }*/
-    }//GEN-LAST:event_lirc_export_device_MenuItemActionPerformed
 
     private void t10_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_address_TextFieldActionPerformed
 
@@ -2661,20 +2174,13 @@ public class gui_main extends javax.swing.JFrame {
         } catch (UnknownHostException e) {
             gc = null;
             System.err.println(e.getMessage());
-        } catch (IOException e) {
-            gc = null;
-            System.err.println(e.getMessage());
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             gc = null;
             System.err.println(e.getMessage());
         }
         deviceclass_send_Button.setEnabled(gc != null);
         //protocol_send_Button.setEnabled(gc != null);
 }//GEN-LAST:event_gc_address_TextFieldActionPerformed
-
-    private void irtrans_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irtrans_address_TextFieldActionPerformed
-        //irt = new irtrans(irtrans_address_TextField.getText(), verbose_CheckBoxMenuItem.getState());
-}//GEN-LAST:event_irtrans_address_TextFieldActionPerformed
 
     private void device_remote_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_device_remote_ComboBoxActionPerformed
         update_device_commands_menu();
@@ -2683,10 +2189,6 @@ public class gui_main extends javax.swing.JFrame {
     private void t10_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_browse_ButtonActionPerformed
         harcutils.browse(t10_address_TextField.getText());
     }//GEN-LAST:event_t10_browse_ButtonActionPerformed
-
-    private void irtrans_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irtrans_browse_ButtonActionPerformed
-        harcutils.browse(irtrans_address_TextField.getText());
-    }//GEN-LAST:event_irtrans_browse_ButtonActionPerformed
 
     private void gc_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_browse_ButtonActionPerformed
         harcutils.browse(gc_address_TextField.getText());
@@ -2699,11 +2201,7 @@ public class gui_main extends javax.swing.JFrame {
 
             if (this.output_deviceComboBox.getSelectedIndex() == 0)
                 gc.stop_ir(this.get_gc_module(), this.get_gc_connector());
-        } catch (UnknownHostException e) {
-            System.err.println(e);
-        } catch (IOException e) {
-            System.err.println(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             System.err.println(e);
         }
     }//GEN-LAST:event_deviceclass_stop_ButtonActionPerformed
@@ -2711,10 +2209,6 @@ public class gui_main extends javax.swing.JFrame {
     private void stop_command_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_command_ButtonActionPerformed
         the_command_thread.interrupt();
     }//GEN-LAST:event_stop_command_ButtonActionPerformed
-
-    private void lirc_export_server_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lirc_export_server_MenuItemActionPerformed
-        hm.lirc_conf_export();
-    }//GEN-LAST:event_lirc_export_server_MenuItemActionPerformed
 
     private void home_select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_home_select_ButtonActionPerformed
         String filename = select_file("Select home file", "xml", "XML Files", false,
@@ -2740,11 +2234,7 @@ public class gui_main extends javax.swing.JFrame {
             hm = new home(homeconf_TextField.getText());
             // TODO: update GUI state
             System.err.println("Warning: This operation should update the GUI state; this is not yet implemented");
-        } catch (IOException ex) {
-            System.err.println(ex);
-        } catch (SAXParseException ex) {
-            System.err.println(ex);
-        } catch (SAXException ex) {
+        } catch (IOException | SAXException ex) {
             System.err.println(ex);
         }
 }//GEN-LAST:event_home_load_ButtonActionPerformed
@@ -2857,79 +2347,13 @@ public class gui_main extends javax.swing.JFrame {
         }
 }//GEN-LAST:event_exportdir_browse_ButtonActionPerformed
 
-    private void rmdu_export_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmdu_export_MenuItemActionPerformed
-        /*try {
-            br_export re = new br_export((String) rdf_ComboBox.getModel().getSelectedItem(),
-                    (String) deviceclass_ComboBox.getModel().getSelectedItem(),
-                    (String) rmdu_button_rules_TextField.getText(),
-                    (String) device_remote_ComboBox.getModel().getSelectedItem());
-            String filename = harcprops.get_instance().get_exportdir() + File.separator
-                    + ((String) rdf_ComboBox.getModel().getSelectedItem()).replaceAll(" .*$", "").toLowerCase()
-                    + "_" + deviceclass_ComboBox.getModel().getSelectedItem()
-                    + (device_remote_ComboBox.getModel().getSize() > 1 ? ("_" + (String) device_remote_ComboBox.getModel().getSelectedItem()) : "")
-                    + "." + br_export.extension;
-            re.generate_xml(filename);
-            System.err.println("Exported to " + filename);
-            last_rmdu_export = filename;
-        } catch (IOException ex) {
-            System.err.println(ex);
-        } catch (SAXParseException ex) {
-            System.err.println(ex);
-        } catch (SAXException ex) {
-            System.err.println(ex);
-        }*/
-    }//GEN-LAST:event_rmdu_export_MenuItemActionPerformed
-
-    private void keymap_rules_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keymap_rules_browse_ButtonActionPerformed
-        try {
-            String filename = select_file("Select rules file", "xml", "XML files", false, (new File(harcprops.get_instance().get_rmdu_button_rules())).getAbsoluteFile().getParent()).getAbsolutePath();
-            rmdu_button_rules_TextField.setText(filename);
-            harcprops.get_instance().set_rmdu_button_rules(filename);
-        } catch (NullPointerException e) {
-        }
-}//GEN-LAST:event_keymap_rules_browse_ButtonActionPerformed
-
-    private void remotemaster_home_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_remotemaster_home_browse_ButtonActionPerformed
-        try {
-            String dir = this.select_file("Select RemoteMaster directory", null, null, false, ((new File(harcprops.get_instance().get_remotemaster_home())).getAbsoluteFile().getParent())).getAbsolutePath();
-            harcprops.get_instance().set_remotemaster_home(dir);
-            this.remotemaster_home_TextField.setText(dir);
-        } catch (NullPointerException e) {
-        }
-}//GEN-LAST:event_remotemaster_home_browse_ButtonActionPerformed
-
     private void gc_stop_ir_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_stop_ir_ActionPerformed
         try {
             gc.stop_ir(get_gc_module(), get_gc_connector());
-        } catch (UnknownHostException ex) {
-            System.err.println(ex.getMessage());
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        } catch (InterruptedException ex) {
+        } catch (IOException | InterruptedException ex) {
             System.err.println(ex.getMessage());
         }
     }//GEN-LAST:event_gc_stop_ir_ActionPerformed
-
-private void gcDiscoveredTypejTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gcDiscoveredTypejTextFieldActionPerformed
-}//GEN-LAST:event_gcDiscoveredTypejTextFieldActionPerformed
-
-private void discoverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discoverButtonActionPerformed
-    //System.err.println("Now trying to discover a GlobalCache on LAN. This may take up to 60 seconds.");
-    //System.err.flush();
-    amx_beacon.result beacon = globalcache.listen_beacon();
-    String gcHostname = beacon.addr.getCanonicalHostName();
-    gc_address_TextField.setText(gcHostname);
-    gcDiscoveredTypejTextField.setText(beacon.table.get("-Model"));
-    gc_address_TextFieldActionPerformed(null);
-}//GEN-LAST:event_discoverButtonActionPerformed
-
-private void ccfDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccfDeviceExportButtonActionPerformed
-    //ccf_export();
-}//GEN-LAST:event_ccfDeviceExportButtonActionPerformed
-
-private void lircAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lircAllDevicesExportButtonActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_lircAllDevicesExportButtonActionPerformed
 
 private void xmlDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlDeviceExportButtonActionPerformed
     device.export_device(harcprops.get_instance().get_exportdir(), (String) deviceclasses_dcbm.getSelectedItem());
@@ -2938,22 +2362,6 @@ private void xmlDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt
 private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlAllDevicesExportButtonActionPerformed
     device.export_all_devices(harcprops.get_instance().get_exportdir());
 }//GEN-LAST:event_xmlAllDevicesExportButtonActionPerformed
-/*
-    private void possibly_enable_decode_button() {
-        boolean looks_ok = /*!protocol_params_TextField.getText().isEmpty()
-   //             ||*/ // !protocol_raw_TextArea.getText().isEmpty();
-   //     protocol_decode_Button.setEnabled(looks_ok);
-   //     protocol_clear_Button.setEnabled(looks_ok);
-   //     protocol_send_Button.setEnabled(looks_ok);
-    //}
-
-    //private void possibly_enable_encode_send() {
-    //    boolean looks_ok = !commandno_TextField.getText().isEmpty() /*&& !deviceno_TextField.getText().isEmpty()*/;
-    //    protocol_send_Button.setEnabled(looks_ok /*|| !protocol_params_TextField.getText().isEmpty()*/
-    //            || !protocol_raw_TextArea.getText().isEmpty());
-    //    protocol_generate_Button.setEnabled(looks_ok);
-        //wav_export_Button.setEnabled(looks_ok);
-    //}
 
     private int get_gc_module() {
         return Integer.parseInt((String) gc_modules_dcbm.getSelectedItem());
@@ -2963,18 +2371,12 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
         return Integer.parseInt((String) gc_connector_ComboBox.getModel().getSelectedItem());
     }
 
-    //public static gui_main getApplication() {
-    //  return Application.getInstance(gui_main.class);
-    //}
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                new gui_main().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new gui_main().setVisible(true);
         });
     }
 
@@ -2987,8 +2389,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JMenuItem browse_device_MenuItem;
     private javax.swing.JTextField browser_TextField;
     private javax.swing.JButton browser_select_Button;
-    private javax.swing.JButton ccfDeviceExportButton;
-    private javax.swing.JMenuItem ccf_export_MenuItem;
     private javax.swing.JMenuItem clear_console_MenuItem;
     private javax.swing.JButton commandButton;
     private javax.swing.JComboBox command_ComboBox;
@@ -2996,7 +2396,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JComboBox connection_type_ComboBox;
     private javax.swing.JTextArea console_TextArea;
     private javax.swing.JMenuItem consoletext_save_MenuItem;
-    private javax.swing.JMenuItem contentMenuItem;
     private javax.swing.JMenuItem copy_console_to_clipboard_MenuItem;
     private javax.swing.JPanel debug_Panel;
     private javax.swing.JTextField debug_TextField;
@@ -3008,7 +2407,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JButton deviceclass_stop_Button;
     private javax.swing.JPanel deviceclassesPanel;
     private javax.swing.JComboBox devicegroup_ComboBox;
-    private javax.swing.JButton discoverButton;
     private javax.swing.JMenu editMenu;
     private javax.swing.JCheckBoxMenuItem enable_devicegroups_CheckBoxMenuItem;
     private javax.swing.JCheckBoxMenuItem enable_macro_folders_CheckBoxMenuItem;
@@ -3030,7 +2428,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JTextField ezcontrol_preset_state_TextField;
     private javax.swing.JComboBox ezcontrol_system_ComboBox;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JTextField gcDiscoveredTypejTextField;
     private javax.swing.JTextField gc_address_TextField;
     private javax.swing.JButton gc_browse_Button;
     private javax.swing.JComboBox gc_connector_ComboBox;
@@ -3045,23 +2442,16 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JTextField homeconf_TextField;
     private javax.swing.JCheckBoxMenuItem immediate_execution_commands_CheckBoxMenuItem;
     private javax.swing.JCheckBoxMenuItem immediate_execution_macros_CheckBoxMenuItem;
-    private javax.swing.JPanel irtrans_Panel;
-    private javax.swing.JTextField irtrans_address_TextField;
-    private javax.swing.JButton irtrans_browse_Button;
-    private javax.swing.JComboBox irtrans_led_ComboBox;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
@@ -3071,12 +2461,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JButton keymap_rules_browse_Button;
-    private javax.swing.JButton lircAllDevicesExportButton;
-    private javax.swing.JButton lircDeviceExportButton;
-    private javax.swing.JMenuItem lirc_export_all_MenuItem;
-    private javax.swing.JMenuItem lirc_export_device_MenuItem;
-    private javax.swing.JMenuItem lirc_export_server_MenuItem;
     private javax.swing.JButton macroButton;
     private javax.swing.JComboBox macroComboBox;
     private javax.swing.JTextField macro_TextField;
@@ -3092,13 +2476,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JTabbedPane outputHWTabbedPane;
     private javax.swing.JComboBox output_deviceComboBox;
     private javax.swing.JTabbedPane output_hw_TabbedPane;
-    private javax.swing.JComboBox rdf_ComboBox;
-    private javax.swing.JTextField remotemaster_home_TextField;
-    private javax.swing.JButton remotemaster_home_browse_Button;
-    private javax.swing.JButton rmduDeviceExportButton;
-    private javax.swing.JTextField rmdu_button_rules_TextField;
-    private javax.swing.JMenuItem rmdu_export_MenuItem;
-    private javax.swing.JPanel rmdu_export_opts_Panel;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JComboBox secondlevel_macrofolders_ComboBox;

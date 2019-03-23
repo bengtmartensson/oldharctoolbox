@@ -594,10 +594,6 @@ public class globalcache {
         return true;
     }
 
-    public static amx_beacon.result listen_beacon() {
-        return amx_beacon.listen_for("-Make", "GlobalCache", beacon_timeout);
-    }
-
     public static void usage() {
         System.err.println("Usage:");
         System.err.println("globalcache [options] <command> [<argument>]");
