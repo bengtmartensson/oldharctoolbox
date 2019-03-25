@@ -20,6 +20,7 @@ package org.harctoolbox.oldharctoolbox;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,8 +32,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
 import org.harctoolbox.ircore.Pronto;
+import org.harctoolbox.ircore.XmlUtils;
 import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -134,7 +137,7 @@ public class device {
 
     public int get_portnumber(command_t cmd, commandtype_t cmdtype) {
         commandset cs = get_commandset(cmd, cmdtype);
-        return cs != null ? cs.get_portnumber() : harcutils.portnumber_invalid;
+        return cs != null ? cs.get_portnumber() : (int) IrCoreUtils.INVALID;
     }
 
     public String get_open(command_t cmd, commandtype_t cmdtype) {
@@ -201,7 +204,7 @@ public class device {
             if (commandsets[i].get_remotename().equals(remotename))
                 work[i] = commandsets[i].get_protocol();
 
-        return harcutils.sort_unique(harcutils.nonnulls(work));
+        return HarcUtils.sort_unique(HarcUtils.nonnulls(work));
     }
 
     public ArrayList<commandtype_t> get_commandtypes(command_t cmd) {
@@ -325,7 +328,7 @@ public class device {
         for (int i = 0; i < commandsets.length; i++)
             work[i] = commandsets[i].get_remotename();
 
-        return harcutils.nonnulls(harcutils.sort_unique(work));
+        return HarcUtils.nonnulls(HarcUtils.sort_unique(work));
     }
 
     public int get_delay(String type) {
@@ -407,7 +410,7 @@ public class device {
         for (int i = 0; i < no_aliases; i++)
             infostr = infostr + "alias: " + aliases[i][0] + "->" + aliases[i][1] + "\n";
 
-        infostr = infostr + "Remotenames: " + harcutils.join(get_remotenames(), ',', 0) + "\n";
+        infostr = infostr + "Remotenames: " + String.join(",", get_remotenames()) + "\n";
 
         infostr = infostr + "# commandsets = " + commandsets.length;
 
@@ -485,20 +488,49 @@ public class device {
      * @return Array of strings of the device names.
      */
     public static String[] get_devices() {
-        return harcutils.get_basenames(harcprops.get_instance().get_devicesdir(), harcutils.devicefile_extension);
+        return get_basenames(harcprops.get_instance().get_devicesdir(), HarcUtils.devicefile_extension, false);
+    }
+
+    private static String[] get_basenames(String dirname, String extension, boolean toLowercase) {
+        File dir = new File(dirname);
+        if (!dir.isDirectory())
+            return null;
+
+        if (extension.charAt(0) != '.')
+            extension = "." + extension;
+        String[] files = dir.list(new extension_filter(extension));
+        String[] result = new String[files.length];
+        for (int i =0; i < files.length; i++)
+            result[i] = toLowercase ? files[i].toLowerCase().substring(0, files[i].lastIndexOf(extension))
+                    : files[i].substring(0, files[i].lastIndexOf(extension));
+        return result;
+    }
+
+    private static class extension_filter implements FilenameFilter {
+
+        protected String extension;
+
+        extension_filter(String extension) {
+            this.extension = extension;
+        }
+
+        @Override
+        public boolean accept(File directory, String name) {
+            return name.toLowerCase().endsWith(extension.toLowerCase());
+        }
     }
 
     private device(String filename, HashMap<String, String>attributes, boolean barf_for_invalid)
             throws IOException, SAXParseException, SAXException {
          this( (filename.contains(File.separator) ? "" : harcprops.get_instance().get_devicesdir() + File.separator)
                  + filename
-                 + ((filename.endsWith(harcutils.devicefile_extension)) ? "" : harcutils.devicefile_extension),
+                 + ((filename.endsWith(HarcUtils.devicefile_extension)) ? "" : HarcUtils.devicefile_extension),
                  null, attributes, barf_for_invalid);
     }
 
     private device(String filename, String devicename, HashMap<String, String> attributes, boolean barf_for_invalid)
             throws IOException, SAXParseException, SAXException {
-        this(harcutils.open_xmlfile(filename), devicename, attributes, barf_for_invalid);
+        this(XmlUtils.openXmlFile(new File(filename)), devicename, attributes, barf_for_invalid);
     }
 
     private device(Document doc, HashMap<String, String>attributes, boolean barf_for_invalid) {
@@ -779,7 +811,7 @@ public class device {
     }
 
     public static boolean export_device(String export_dir, String devname) {
-        String out_filename = export_dir + File.separator + devname + harcutils.devicefile_extension;
+        String out_filename = export_dir + File.separator + devname + HarcUtils.devicefile_extension;
         System.err.println("Exporting " + devname + " to " + out_filename + ".");
         device dev = null;
         try {
@@ -911,7 +943,7 @@ public class device {
             System.exit(success ? IrpUtils.EXIT_SUCCESS : IrpUtils.EXIT_CONFIG_WRITE_ERROR);
         } else if (in_filename == null) {
             usage(-1);
-            harcutils.printtable("Known devices:", get_devices());
+            HarcUtils.printtable("Known devices:", get_devices());
             System.exit(IrpUtils.EXIT_SUCCESS);
         } else if ((args.length != arg_i) && (args.length != arg_i + 1))
             usage();

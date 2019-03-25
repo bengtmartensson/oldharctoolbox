@@ -158,7 +158,7 @@ public class debugargs {
 
     public static void main(String[] args) {
         debugargs db = new debugargs(Integer.parseInt(args[0]));
-        harcutils.printtable("things:", db.help());
+        HarcUtils.printtable("things:", db.help());
         System.out.println(db.decode_args());
         System.out.println(db.execute());
     }

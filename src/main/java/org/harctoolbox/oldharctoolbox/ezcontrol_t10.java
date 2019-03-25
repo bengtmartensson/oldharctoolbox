@@ -19,6 +19,7 @@ package org.harctoolbox.oldharctoolbox;
 
 import java.io.*;
 import java.net.*;
+import org.harctoolbox.ircore.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -35,6 +36,7 @@ public class ezcontrol_t10 {
     private boolean verbose = true;
 
     private final static int buf_size = 352;
+    private final String encoding = "utf-8";
 
     private class status {
 
@@ -775,7 +777,7 @@ public class ezcontrol_t10 {
     }
 
     public Document xml_config() {
-        Document doc = harcutils.newDocument();
+        Document doc = XmlUtils.newDocument();
         Element root = doc.createElement("ezcontrol_t10");
         root.setAttribute("hostname", ezcontrol_host);
         doc.appendChild(root);
@@ -858,16 +860,16 @@ public class ezcontrol_t10 {
     }
 
     private void generate_xml() {
-        harcutils.printDOM(System.out, xml_config(), "ezcontrol_t10_config.dtd");
+        XmlUtils.printDOM(System.out, xml_config(), encoding, null, "ezcontrol_t10_config.dtd");
     }
 
     public void generate_xml(String filename) throws FileNotFoundException {
-        harcutils.printDOM(filename, xml_config(), "ezcontrol_t10_config.dtd");
+        XmlUtils.printDOM(new File(filename), xml_config(), encoding, null, "ezcontrol_t10_config.dtd");
     }
 
     public void get_configuration(String filename) {
         try {
-            harcutils.printDOM(filename, xml_config(), "ezcontrol_t10_config.dtd");
+            XmlUtils.printDOM(new File(filename), xml_config(), encoding, null, "ezcontrol_t10_config.dtd");
         } catch (FileNotFoundException e) {
             System.err.println(e.getMessage());
         }

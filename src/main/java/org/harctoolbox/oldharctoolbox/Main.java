@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009-2011 Bengt Martensson.
+Copyright (C) 2009-2011, 2019 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import java.util.*;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;
 import org.harctoolbox.ircore.IrCoreUtils;
+import org.harctoolbox.ircore.XmlUtils;
 import org.harctoolbox.irp.IrpParseException;
 import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
@@ -36,47 +37,25 @@ import org.xml.sax.SAXException;
  * This class starts the program in GUI mode, interactive command line mode, port listening mode,
  * or noninteractive mode, depending on the command line parameters given.
  */
-public class Main {
+final public class Main {
 
     private final static String bell = "\007";
     private final static String formfeed = "\014";
     private final static int socketno_default = 9999;
     private final static int python_socketno_default = 9998;
-    //String homefilename = null;
-    //String macrofilename = null;
-    //String browser = null;
-    //String propsfilename = null;
-    private String aliasfilename = null;
-    private resultformatter formatter = null;
-    //debugargs db = null;
-    //private boolean no_execute = false;
-    private boolean select_mode = false;
-    //int debug = 0;
-    //boolean verbose = false;
-    private home hm = null;
-    //macro_engine engine = null;
-    private HashMap< String, Calendar> timertable = new HashMap<>(16);
-    //jython_engine jython = null;
-    private command_alias alias_expander = null;
-    private commandtype_t type = commandtype_t.any;
-    private mediatype the_mediatype = mediatype.audio_video;
-    private connectiontype connection_type = connectiontype.any;
-    private String charset = null;
-    private String zone = null;
-    private int count = 1;
-    private toggletype toggle = toggletype.dont_care;
-    private boolean smart_memory = false;
     private static volatile boolean spawn_new_socketthreads = false;
     private static boolean readline_go_on = true; // FIXME
     //private static volatile boolean go_on;
-
     // Experimental
     private static int no_threads = 0;
-
     private static Main the_instance = null;
-    public static Main getInstance() {
-        return the_instance;
-    }
+    private static final String helptext =
+            "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + commandtype_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -b <browserpath>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
+    private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<macro>\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
+
+//    public static Main getInstance() {
+//        return the_instance;
+//    }
 
     private static void usage(int exitstatus) {
         doExit(exitstatus, "Usage: one of" + IrCoreUtils.LINE_SEPARATOR + helptext);
@@ -85,12 +64,9 @@ public class Main {
     private static void usage() {
         usage(IrpUtils.EXIT_USAGE_ERROR);
     }
-    private static final String helptext =
-            "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + commandtype_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -b <browserpath>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
-    private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<macro>\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
 
     private static String formatdate(Calendar c) {
-            return c != null ? String.format("%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)) : "";
+        return c != null ? String.format("%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)) : "";
     }
 
     /**
@@ -135,7 +111,7 @@ public class Main {
                 }
                 if (args[arg_i].equals("--version")) {
                     //System.out.println("JVM: "+ System.getProperty("java.vendor") + " " + System.getProperty("java.version"));
-                    doExit(IrpUtils.EXIT_SUCCESS, harcutils.version_string + IrCoreUtils.LINE_SEPARATOR + harcutils.license_string);
+                    doExit(IrpUtils.EXIT_SUCCESS, HarcUtils.version_string + IrCoreUtils.LINE_SEPARATOR + HarcUtils.license_string);
                 }
                 switch (args[arg_i]) {
                     case "-#":
@@ -281,7 +257,7 @@ public class Main {
             noninteractive_args = new String[args.length - arg_i];
             System.arraycopy(args, arg_i, noninteractive_args, 0, args.length - arg_i);
             if ((args.length != arg_i) && (gui_mode || readline_mode || daemon_mode))
-                System.err.println("Warning: extra arguments ignored: " + harcutils.join(noninteractive_args));
+                System.err.println("Warning: extra arguments ignored: " + String.join(", ", noninteractive_args));
 
             Main m = new Main(homefilename, //propsfilename,
                     aliasfilename,
@@ -310,11 +286,10 @@ public class Main {
                     socketno = use_python ? python_socketno_default : socketno_default;
                 m.udp_execute(socketno, use_python, true);
                 status = m.socket_execute(socketno, use_python);
-            } else
-                if (use_python)
-                    status = m.jython_noninteractive_execute(noninteractive_args);
-                else
-                    status = m.noninteractive_execute(noninteractive_args);
+            } else if (use_python)
+                status = m.jython_noninteractive_execute(noninteractive_args);
+            else
+                status = m.noninteractive_execute(noninteractive_args);
 
             m.shutdown();
 
@@ -324,7 +299,99 @@ public class Main {
         }
     }
 
-    public Main(String homefilename, /*String macrofilename, String browser,*/
+    private static void doExit(int status, String message) {
+        if (message != null && !message.isEmpty())
+            (status == IrpUtils.EXIT_SUCCESS ? System.out : System.err).println(message);
+        System.exit(status);
+    }
+
+    private static void doExit(int status) {
+        doExit(status, null);
+    }
+
+// GUI does not expand aliases.
+    private static void gui_execute(String homefilename/*, String propsfilename*/) {
+        // Setup properites
+        /*if (propsfilename != null)
+        harcprops.initialize(propsfilename);
+        else
+        harcprops.initialize();*/
+
+        if (homefilename != null)
+            harcprops.get_instance().set_homefilename(homefilename);
+        else
+            homefilename = harcprops.get_instance().get_homefilename();
+
+        /*if (macrofilename != null)
+        harcprops.get_instance().set_macrofilename(macrofilename);
+        else
+        macrofilename = harcprops.get_instance().get_macrofilename();
+
+        if (browser != null)
+        harcprops.get_instance().set_browser(browser);
+        */
+        //else
+        //    browser = harcprops.get_instance().get_browser();
+
+        //System.err.println("Invoking GUI ...");
+        //final int dbg = debug;
+        //final boolean vrbs = verbose;
+        final String hmnam = homefilename;
+        //final String macronam = macrofilename;
+        //final String brwsr = browser;
+        java.awt.EventQueue.invokeLater(() -> {
+            new gui_main(hmnam/*, macronam, vrbs, dbg, brwsr*/).setVisible(true);
+        });
+    }
+
+    private static String join(String[] stuff, int start_index) {
+        if (stuff == null || stuff.length < start_index + 1)
+            return null;
+
+        StringBuilder result = new StringBuilder(stuff[start_index]);
+        for (int i = start_index + 1; i < stuff.length; i++)
+            result = result.append(" ").append(stuff[i]);
+
+        return result.toString();
+    }
+
+    @SuppressWarnings("empty-statement")
+    private static int no_lines(String s) {
+        LineNumberReader lnr = new LineNumberReader(new StringReader(s.trim()));
+        try {
+            while (lnr.readLine() != null)
+                ;
+        } catch (IOException ex) {
+        }
+        return lnr.getLineNumber();
+    }
+
+    //String homefilename = null;
+    //String macrofilename = null;
+    //String browser = null;
+    //String propsfilename = null;
+    private String aliasfilename = null;
+    private resultformatter formatter = null;
+    //debugargs db = null;
+    //private boolean no_execute = false;
+    private boolean select_mode = false;
+    //int debug = 0;
+    //boolean verbose = false;
+    private home hm = null;
+    //macro_engine engine = null;
+    private HashMap< String, Calendar> timertable = new HashMap<>(16);
+    //jython_engine jython = null;
+    private command_alias alias_expander = null;
+    private commandtype_t type = commandtype_t.any;
+    private mediatype the_mediatype = mediatype.audio_video;
+    private connectiontype connection_type = connectiontype.any;
+    private String charset = null;
+    private String zone = null;
+    private int count = 1;
+    private toggletype toggle = toggletype.dont_care;
+    private boolean smart_memory = false;
+
+    private Main(String homefilename, /*String macrofilename, String browser,*/
             /*String propsfilename,*/ String aliasfilename, //int debug, boolean verbose,
             boolean no_execute, boolean select_mode, boolean smart_memory,
             int count, commandtype_t type, toggletype toggle,
@@ -413,55 +480,10 @@ public class Main {
         }
     }
 
-    private static void doExit(int status, String message) {
-        if (message != null && !message.isEmpty())
-            (status == IrpUtils.EXIT_SUCCESS ? System.out : System.err).println(message);
-        System.exit(status);
-    }
-
-    private static void doExit(int status) {
-        doExit(status, null);
-    }
-
-    // GUI does not expand aliases.
-    private static void gui_execute(String homefilename/*, String propsfilename*/) {
-        // Setup properites
-        /*if (propsfilename != null)
-            harcprops.initialize(propsfilename);
-        else
-            harcprops.initialize();*/
-
-        if (homefilename != null)
-            harcprops.get_instance().set_homefilename(homefilename);
-        else
-            homefilename = harcprops.get_instance().get_homefilename();
-
-        /*if (macrofilename != null)
-            harcprops.get_instance().set_macrofilename(macrofilename);
-        else
-            macrofilename = harcprops.get_instance().get_macrofilename();
-
-        if (browser != null)
-            harcprops.get_instance().set_browser(browser);
-        */
-        //else
-        //    browser = harcprops.get_instance().get_browser();
-
-        //System.err.println("Invoking GUI ...");
-        //final int dbg = debug;
-        //final boolean vrbs = verbose;
-        final String hmnam = homefilename;
-        //final String macronam = macrofilename;
-        //final String brwsr = browser;
-        java.awt.EventQueue.invokeLater(() -> {
-            new gui_main(hmnam/*, macronam, vrbs, dbg, brwsr*/).setVisible(true);
-        });
-    }
-
     private void do_tasks(String tasksfilename) {
         Document doc;
         try {
-            doc = harcutils.open_xmlfile(tasksfilename);
+            doc = XmlUtils.openXmlFile(new File(tasksfilename));
         } catch (IOException | SAXException ex) {
             System.err.println(ex.getMessage());
             return;
@@ -512,232 +534,6 @@ public class Main {
             System.err.println("Warning, Time not parseable, task ignored.");
             System.err.println(ex.getMessage());
             return -1;
-        }
-    }
-
-    /*private void do_periodic_task(int secs, String name, String[] cmds) {
-        if (secs <= 0)
-            return;
-        System.err.println(secs);
-        System.err.println(name);
-        for (int i = 0; i < cmds.length; i++) {
-            System.err.print(cmds[i] + ": ");
-            try {
-                String result = process_line(cmds[i], false);
-            } catch (EOFException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }*/
-
-    private class periodic_thread extends Thread {
-        int secs;
-        String name;
-        String[] cmds;
-
-        periodic_thread(int secs, String name, String[] cmds) {
-            super(name);
-            this.secs = secs;
-            //this.name = name;
-            this.cmds = cmds;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                long starttime = System.currentTimeMillis();
-                for (String cmd : cmds) {
-                    System.out.print(cmd + ": ");
-                    try {
-                        String result = process_line(cmd, false);
-                    } catch (EOFException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                long towait = 1000L * secs - (System.currentTimeMillis() - starttime);
-                if (towait > 10) {
-                    try {
-                        Thread.sleep(towait);
-                    } catch (InterruptedException ex) {
-                        System.err.println("interrupted");
-                    }
-                }
-            }
-        }
-    }
-
-    private class nonperiodic_thread extends Thread {
-        Element ele;
-        String name;
-        String[] cmds;
-
-        nonperiodic_thread(Element ele, String name, String[] cmds) {
-            super(name);
-            this.ele = ele;
-            this.name = name;
-            this.cmds = cmds;
-        }
-
-        private void fix_cal(Calendar cal) {
-            if (cal != null) {
-                Calendar now = new GregorianCalendar();
-                //System.out.println(cal.getTime() + "*****" + now.getTime() + now.before(cal) + now.after(cal));
-                if (now.after(cal)) {
-                    cal.add(Calendar.DAY_OF_MONTH, 1);
-                    //System.out.println("Fixing: " + cal.getTime() + "*****" + now.getTime() + now.before(cal) + now.after(cal));
-                    }
-            }
-        }
-
-        private Element get_weekday(String weekday, NodeList nl) {
-            for (int i = 0; i < nl.getLength(); i++) {
-                Element e = (Element) nl.item(i);
-                if (e.getAttribute("day").equalsIgnoreCase(weekday))
-                    return e;
-            }
-            return null;
-        }
-
-        private Calendar evaluate_time_weekday(Element e, Calendar calendar) {
-            if (e == null)
-                return null;
-            Calendar cal = (Calendar) calendar.clone();
-            NodeList nl = e.getChildNodes();
-            for (int i = 0; i < nl.getLength(); i++) {
-                if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                    Calendar c = evaluate_time((Element) nl.item(i));
-                    cal.set(Calendar.HOUR_OF_DAY, c.get(GregorianCalendar.HOUR_OF_DAY));
-                    cal.set(Calendar.MINUTE, c.get(GregorianCalendar.MINUTE));
-                    cal.set(Calendar.SECOND, c.get(GregorianCalendar.SECOND));
-                    return cal;
-                }
-            }
-            return null;
-        }
-
-        private Calendar evaluate_time(Element e) {
-            Calendar cal = new GregorianCalendar();
-            if (e.getTagName().equals("absolute-time")) {
-                try {
-                    cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(e.getAttribute("hour")));
-                    cal.set(Calendar.MINUTE, Integer.parseInt(e.getAttribute("minute")));
-                    cal.set(Calendar.SECOND, Integer.parseInt(e.getAttribute("second")));
-                } catch (NumberFormatException expt) {
-                    expt.printStackTrace();
-                }
-
-                fix_cal(cal);
-
-            } else if (e.getTagName().equals("sunset") || e.getTagName().equals("sunrise")) {
-                try {
-                    double latitude = Double.parseDouble(e.getAttribute("latitude"));
-                    double longitude = Double.parseDouble(e.getAttribute("longitude"));
-                    double degrees = Double.parseDouble(e.getAttribute("degrees"));
-                    String timezone = e.getAttribute("tz");
-                    TimeZone tz = timezone.isEmpty() ? TimeZone.getDefault() : TimeZone.getTimeZone(timezone);
-                    Calendar c;
-                    if (e.getTagName().equals("sunrise")) {
-                        c = SunriseSunsetCalculator.getSunrise(latitude, longitude, tz, cal, degrees);
-                        if (cal.after(c)) {
-                            cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
-                            c = SunriseSunsetCalculator.getSunrise(latitude, longitude, tz, cal, degrees);
-                        }
-                    } else {
-                        c = SunriseSunsetCalculator.getSunset(latitude, longitude, tz, cal, degrees);
-                        if (cal.after(c)) {
-                            cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
-                            c = SunriseSunsetCalculator.getSunset(latitude, longitude, tz, cal, degrees);
-                        }
-                    }
-                    cal = c;
-                } catch (NumberFormatException expt) {
-                    expt.printStackTrace();
-                }
-            } else if (e.getTagName().equals("sunrise")) {
-                // FIXME
-                cal.set(Calendar.HOUR_OF_DAY, 6);
-                cal.set(Calendar.MINUTE, 42);
-                cal.set(Calendar.SECOND, 0);
-                fix_cal(cal);
-            } else if (e.getTagName().equals("last-of")) {
-                cal.set(2000, 1, 1);
-                NodeList nl = e.getChildNodes();
-                for (int i = 0; i < nl.getLength(); i++) {
-                    if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                        Calendar c = evaluate_time((Element) nl.item(i));
-                        if (cal.before(c))
-                            cal = c;
-                    }
-                }
-            } else if (e.getTagName().equals("first-of")) {
-                cal.set(2999, 1, 1);
-                NodeList nl = e.getChildNodes();
-                for (int i = 0; i < nl.getLength(); i++) {
-                    if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                        Calendar c = evaluate_time((Element) nl.item(i));
-                        if (cal.after(c))
-                            cal = c;
-                    }
-                }
-            } else if (e.getTagName().equals("weekdays")) {
-               NodeList nl = e.getElementsByTagName("weekday");
-                Element today = get_weekday(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US), nl);
-                //System.err.println(cal.getTime());
-                Calendar todays_candidate = evaluate_time_weekday(today, cal);
-                //System.err.println(cal.getTime() + " " + todays_candidate.getTime() + "  " + cal.before(todays_candidate));
-                if (todays_candidate != null && cal.before(todays_candidate)) {
-                    cal = evaluate_time_weekday(today, cal);
-                } else {
-                    Element next_day = null;
-                    for (int i = 1; next_day == null && i < 7; i++) {
-                        cal.add(Calendar.DAY_OF_WEEK, 1);
-                        next_day = get_weekday(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US), nl);
-                    }
-                    cal = next_day != null ? evaluate_time_weekday(next_day, cal) : null;
-                }
-            } else {
-                System.err.println("silly tag: " + e.getTagName());
-                cal = null;
-            }
-            return cal;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                //System.out.println("\"" + name + "\" ");
-                Calendar next = evaluate_time(ele);
-                Main.getInstance().timertable.put(name, next); // FIXME?
-                long towait = next.getTimeInMillis() - System.currentTimeMillis();
-                if (towait > 10) {
-                long hours = towait / 3600000L;
-                    long minutes = (towait - hours * 3600000L) / 60000L;
-                    // TODO: This should, at least optionally, to a logfile instead.
-                    System.out.println("Now is " + formatdate(new GregorianCalendar())
-                            + ", preparing to sleep until " + formatdate(next)
-                            + ", which is for " + String.format("%d:%02d", hours, minutes) + ".");
-                    try {
-                        Thread.sleep(towait);
-                    } catch (InterruptedException ex) {
-                        System.err.println("interrupted");
-                    }
-                }
-                for (String cmd : cmds) {
-                    // TODO: This should, at least optionally, to a logfile instead.
-                    System.out.print("Thread \"" + name + "\" woke up, trying to execute " + cmd + ": ");
-                    try {
-                        String result = process_line(cmd, false);
-                    }catch (EOFException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                // Prevent from triggering again immediately.
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    System.err.println("interrupted");
-                }
-            }
         }
     }
 
@@ -794,23 +590,6 @@ public class Main {
         return IrpUtils.EXIT_SUCCESS;
     }
 
-    private class udp_thread extends Thread {
-
-        private final int socket_no;
-        private final jython_engine jython;
-
-        udp_thread(int socket_no, jython_engine jython) {
-            super("udp_thread");
-            this.socket_no = socket_no;
-            this.jython = jython;
-        }
-
-        @Override
-        public void run() {
-            udp_work(socket_no, jython);
-        }
-    }
-
     // This is very experimental and unfinished stuff. It does not give any sensible
     // information back to the client (most important for get_* commands).
     private int socket_execute(int socketno, boolean use_python) {
@@ -846,105 +625,11 @@ public class Main {
         return IrpUtils.EXIT_SUCCESS;
     }
 
-    // Each socket_thread has its own jython engine, operating on the same home.
-    private class socket_thread extends Thread {
-
-        private Socket sock = null;
-        private jython_engine jython = null;
-        private final String clientname;
-
-
-        socket_thread(Socket sock, boolean use_python) {
-            super("socket_thread");
-            Main.no_threads++;
-            this.sock = sock;
-            clientname = sock.getInetAddress().getHostName();
-            jython = use_python ? new jython_engine(hm, false) : null;
-        }
-
-        @Override
-        public void run() {
-
-            boolean kill_prog  = false;
-            boolean restart_prog = false;
-            //go_on = true;
-            try (PrintStream out = new PrintStream(sock.getOutputStream(), false, charset);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream(), charset))) {
-                //out.println("HARC server @ your service!");
-                //out.println("HARC server für dich!");
-
-                boolean go_on = true;
-
-                while (go_on) {
-                    String commandline = in.readLine();
-                    System.err.println("[" + clientname + "," + Main.no_threads + "]"
-                            + (commandline != null ? (">" + commandline + "<") : "EOF"));
-                    if (null == commandline) {
-                        go_on = false;
-                        out.println("BYE");
-                    } else switch (commandline) {
-                        case "--quit":
-                            go_on = false;
-                            out.println("BYE");
-                            break;
-                        case "--die":
-                            // Kills the program
-                            go_on = false;
-                            spawn_new_socketthreads = false;
-                            kill_prog = true;
-                            out.println("BYE");
-                            System.err.println("die received");
-                            break;
-                        case "--restart":
-                            // Same as --die but with different exit code
-                            go_on = false;
-                            spawn_new_socketthreads = false;
-                            kill_prog = true;
-                            restart_prog = true;
-                            out.println("BYE FOR NOW");
-                            System.err.println("restart received");
-                            break;
-                        case "--exit":
-                            // Lets the threads finish
-                            go_on = false;
-                            spawn_new_socketthreads = false;
-                            out.println("BYE");
-                            System.err.println("exit received");
-                            break;
-                        case "--foo":
-                            System.err.println("foo received");
-                            out.println("bar!");
-                            break;
-                        default:
-                            // process this line
-                            String result = jython == null ? process_line(commandline, false) : jython.eval(commandline);
-                            out.println(result != null ? "OK: " + harcutils.no_lines(result) + "\n" + result : "ERROR");
-                            System.err.println("--|" + (result == null ? "" : result.length() < 70 ? result : (result.substring(0, 69) + "...")) + "|--");
-                            break;
-                    }
-                }
-            } catch (IOException e) {
-                System.err.println("IOException caught in sockettread.run(): " + e.getMessage());
-            } finally {
-                try {
-                    sock.close();
-                    socket_storage.dispose_sockets(true);
-                    Main.no_threads--;
-                    if (kill_prog) {
-                        doExit(restart_prog ? IrpUtils.EXIT_RESTART : IrpUtils.EXIT_SUCCESS);
-                    }
-                } catch (IOException ex) {
-                    System.err.println("IOException when closing " + ex.getMessage());
-                }
-            }
-        }
-    }
-
-    public Calendar get_timer_next(String name) {
+    private Calendar get_timer_next(String name) {
         return timertable != null ? timertable.get(name) : null;
     }
 
-    public String get_timer_next_as_string(String name) {
+    private String get_timer_next_as_string(String name) {
         return timertable != null ? formatdate(timertable.get(name)) : null;
     }
 
@@ -1097,36 +782,6 @@ public class Main {
         return IrpUtils.EXIT_SUCCESS;
     }
 
-    private class readline_thread extends Thread {
-
-        readline_thread() {
-            super("readline_thread");
-        }
-
-        @Override
-        public void run() {
-            try {
-                String line = Readline.readline(harcprops.get_instance().get_rl_prompt());
-                //Thread.sleep(100);
-                String result = process_line(line, true);
-                //Thread.sleep(100);
-                Main.readline_go_on = result != null;
-            //if (isInterrupted())
-            //    System.err.println("rrrrrrrrrrrrrrr");
-            //if (interrupted())
-            //    System.err.println("interrupted******rrrrrrrrrrrrrrr");
-            } catch (EOFException e) {
-                System.err.println("EOF " + e.getMessage());
-                Main.readline_go_on = false;
-            } catch (IOException e) {
-                System.err.println("io " + e.toString() + e.getMessage());
-                Main.readline_go_on = false;
-            //} catch (InterruptedException e) {
-            //    System.err.println("aaaaaaaaaaaarrg");
-            }
-        }
-    }
-
     /**
      *
      * @param line
@@ -1169,8 +824,8 @@ public class Main {
                     throw new EOFException("As you requested");
                 case "--version":
                     if (verbose)
-                        System.out.println(harcutils.version_string);
-                    result = harcutils.version_string;
+                        System.out.println(HarcUtils.version_string);
+                    result = HarcUtils.version_string;
                     break;
                 case "--help":
                     if (verbose)
@@ -1179,8 +834,8 @@ public class Main {
                     break;
                 case "--license":
                     if (verbose)
-                        System.out.println(harcutils.license_string);
-                    result = harcutils.license_string;
+                        System.out.println(HarcUtils.license_string);
+                    result = HarcUtils.license_string;
                     break;
                 case "--verbose":
                     /*boolean v = true;
@@ -1279,7 +934,7 @@ public class Main {
                     if (hm.get_arguments(arguments[0], cmd, commandtype_t.any) == 1) {
                         if (debugargs.dbg_decode_args())
                             System.err.println("Concatenating arguments");
-                        aux_args[0] = harcutils.join(arguments, 2);
+                        aux_args[0] = join(arguments, 2);
                     }
 
                     try {
@@ -1316,6 +971,7 @@ public class Main {
 
         return 0;
     }
+
     /**
      *
      * @param noninteractive_args
@@ -1336,7 +992,7 @@ public class Main {
             }
             if (src_device.equals("?")) {
                 if (hm.has_device(dst_device)) {
-                    harcutils.printtable("Valid inputs for " + dst_device + (zone != null ? (" in zone " + zone) : "") + ":",
+                    HarcUtils.printtable("Valid inputs for " + dst_device + (zone != null ? (" in zone " + zone) : "") + ":",
                             hm.get_sources(dst_device, zone));
                 } else {
                     doExit(IrpUtils.EXIT_IO_ERROR, "No such device `" + dst_device + "'");
@@ -1345,8 +1001,7 @@ public class Main {
                 try {
                     hm.select(dst_device, src_device, type, zone, the_mediatype, connection_type);
                 } catch (InterruptedException e) {
-                    System.err.println(e.getMessage());
-                    System.exit(IrpUtils.EXIT_INTERRUPTED);
+                    doExit(IrpUtils.EXIT_INTERRUPTED, e.getMessage());
                 }
             }
 
@@ -1355,7 +1010,7 @@ public class Main {
             harcutils.printtable("Available macros: ", engine.get_macros(true));
         }*/ else if (first_arg.equals("?")) {
             // List devices
-            harcutils.printtable("Available devices:", hm.get_devices());
+            HarcUtils.printtable("Available devices:", hm.get_devices());
         }/* else if (engine != null && engine.has_macro(first_arg)) {
             // Macro execution
             if (db.decode_args()) {
@@ -1382,7 +1037,7 @@ public class Main {
                     if (debugargs.dbg_decode_args()) {
                         System.out.println("Try to list possible device commands");
                     }
-                    harcutils.printtable("Valid commands for " + first_arg + " of type " + type + ":",
+                    HarcUtils.printtable("Valid commands for " + first_arg + " of type " + type + ":",
                             hm.get_commands(first_arg, type));
                 } else {
                     // Command expected
@@ -1426,5 +1081,370 @@ public class Main {
             System.err.println(e.getMessage());
         }
         return IrpUtils.EXIT_SUCCESS;
+    }
+    /*private void do_periodic_task(int secs, String name, String[] cmds) {
+    if (secs <= 0)
+    return;
+    System.err.println(secs);
+    System.err.println(name);
+    for (int i = 0; i < cmds.length; i++) {
+    System.err.print(cmds[i] + ": ");
+    try {
+    String result = process_line(cmds[i], false);
+    } catch (EOFException ex) {
+    ex.printStackTrace();
+    }
+    }
+    }*/
+
+    private class periodic_thread extends Thread {
+        int secs;
+        String name;
+        String[] cmds;
+
+        periodic_thread(int secs, String name, String[] cmds) {
+            super(name);
+            this.secs = secs;
+            //this.name = name;
+            this.cmds = cmds;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                long starttime = System.currentTimeMillis();
+                for (String cmd : cmds) {
+                    System.out.print(cmd + ": ");
+                    try {
+                        String result = process_line(cmd, false);
+                    } catch (EOFException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                long towait = 1000L * secs - (System.currentTimeMillis() - starttime);
+                if (towait > 10) {
+                    try {
+                        Thread.sleep(towait);
+                    } catch (InterruptedException ex) {
+                        System.err.println("interrupted");
+                    }
+                }
+            }
+        }
+    }
+
+    private class nonperiodic_thread extends Thread {
+        Element ele;
+        String name;
+        String[] cmds;
+
+        nonperiodic_thread(Element ele, String name, String[] cmds) {
+            super(name);
+            this.ele = ele;
+            this.name = name;
+            this.cmds = cmds;
+        }
+
+        private void fix_cal(Calendar cal) {
+            if (cal != null) {
+                Calendar now = new GregorianCalendar();
+                //System.out.println(cal.getTime() + "*****" + now.getTime() + now.before(cal) + now.after(cal));
+                if (now.after(cal)) {
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
+                    //System.out.println("Fixing: " + cal.getTime() + "*****" + now.getTime() + now.before(cal) + now.after(cal));
+                }
+            }
+        }
+
+        private Element get_weekday(String weekday, NodeList nl) {
+            for (int i = 0; i < nl.getLength(); i++) {
+                Element e = (Element) nl.item(i);
+                if (e.getAttribute("day").equalsIgnoreCase(weekday))
+                    return e;
+            }
+            return null;
+        }
+
+        private Calendar evaluate_time_weekday(Element e, Calendar calendar) {
+            if (e == null)
+                return null;
+            Calendar cal = (Calendar) calendar.clone();
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Calendar c = evaluate_time((Element) nl.item(i));
+                    cal.set(Calendar.HOUR_OF_DAY, c.get(GregorianCalendar.HOUR_OF_DAY));
+                    cal.set(Calendar.MINUTE, c.get(GregorianCalendar.MINUTE));
+                    cal.set(Calendar.SECOND, c.get(GregorianCalendar.SECOND));
+                    return cal;
+                }
+            }
+            return null;
+        }
+
+        private Calendar evaluate_time(Element e) {
+            Calendar cal = new GregorianCalendar();
+            if (e.getTagName().equals("absolute-time")) {
+                try {
+                    cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(e.getAttribute("hour")));
+                    cal.set(Calendar.MINUTE, Integer.parseInt(e.getAttribute("minute")));
+                    cal.set(Calendar.SECOND, Integer.parseInt(e.getAttribute("second")));
+                } catch (NumberFormatException expt) {
+                    expt.printStackTrace();
+                }
+
+                fix_cal(cal);
+
+            } else if (e.getTagName().equals("sunset") || e.getTagName().equals("sunrise")) {
+                try {
+                    double latitude = Double.parseDouble(e.getAttribute("latitude"));
+                    double longitude = Double.parseDouble(e.getAttribute("longitude"));
+                    double degrees = Double.parseDouble(e.getAttribute("degrees"));
+                    String timezone = e.getAttribute("tz");
+                    TimeZone tz = timezone.isEmpty() ? TimeZone.getDefault() : TimeZone.getTimeZone(timezone);
+                    Calendar c;
+                    if (e.getTagName().equals("sunrise")) {
+                        c = SunriseSunsetCalculator.getSunrise(latitude, longitude, tz, cal, degrees);
+                        if (cal.after(c)) {
+                            cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
+                            c = SunriseSunsetCalculator.getSunrise(latitude, longitude, tz, cal, degrees);
+                        }
+                    } else {
+                        c = SunriseSunsetCalculator.getSunset(latitude, longitude, tz, cal, degrees);
+                        if (cal.after(c)) {
+                            cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
+                            c = SunriseSunsetCalculator.getSunset(latitude, longitude, tz, cal, degrees);
+                        }
+                    }
+                    cal = c;
+                } catch (NumberFormatException expt) {
+                    expt.printStackTrace();
+                }
+            } else if (e.getTagName().equals("sunrise")) {
+                // FIXME
+                cal.set(Calendar.HOUR_OF_DAY, 6);
+                cal.set(Calendar.MINUTE, 42);
+                cal.set(Calendar.SECOND, 0);
+                fix_cal(cal);
+            } else if (e.getTagName().equals("last-of")) {
+                cal.set(2000, 1, 1);
+                NodeList nl = e.getChildNodes();
+                for (int i = 0; i < nl.getLength(); i++) {
+                    if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                        Calendar c = evaluate_time((Element) nl.item(i));
+                        if (cal.before(c))
+                            cal = c;
+                    }
+                }
+            } else if (e.getTagName().equals("first-of")) {
+                cal.set(2999, 1, 1);
+                NodeList nl = e.getChildNodes();
+                for (int i = 0; i < nl.getLength(); i++) {
+                    if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                        Calendar c = evaluate_time((Element) nl.item(i));
+                        if (cal.after(c))
+                            cal = c;
+                    }
+                }
+            } else if (e.getTagName().equals("weekdays")) {
+                NodeList nl = e.getElementsByTagName("weekday");
+                Element today = get_weekday(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US), nl);
+                //System.err.println(cal.getTime());
+                Calendar todays_candidate = evaluate_time_weekday(today, cal);
+                //System.err.println(cal.getTime() + " " + todays_candidate.getTime() + "  " + cal.before(todays_candidate));
+                if (todays_candidate != null && cal.before(todays_candidate)) {
+                    cal = evaluate_time_weekday(today, cal);
+                } else {
+                    Element next_day = null;
+                    for (int i = 1; next_day == null && i < 7; i++) {
+                        cal.add(Calendar.DAY_OF_WEEK, 1);
+                        next_day = get_weekday(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US), nl);
+                    }
+                    cal = next_day != null ? evaluate_time_weekday(next_day, cal) : null;
+                }
+            } else {
+                System.err.println("silly tag: " + e.getTagName());
+                cal = null;
+            }
+            return cal;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                //System.out.println("\"" + name + "\" ");
+                Calendar next = evaluate_time(ele);
+                the_instance.timertable.put(name, next); // FIXME?
+                long towait = next.getTimeInMillis() - System.currentTimeMillis();
+                if (towait > 10) {
+                    long hours = towait / 3600000L;
+                    long minutes = (towait - hours * 3600000L) / 60000L;
+                    // TODO: This should, at least optionally, to a logfile instead.
+                    System.out.println("Now is " + formatdate(new GregorianCalendar())
+                            + ", preparing to sleep until " + formatdate(next)
+                            + ", which is for " + String.format("%d:%02d", hours, minutes) + ".");
+                    try {
+                        Thread.sleep(towait);
+                    } catch (InterruptedException ex) {
+                        System.err.println("interrupted");
+                    }
+                }
+                for (String cmd : cmds) {
+                    // TODO: This should, at least optionally, to a logfile instead.
+                    System.out.print("Thread \"" + name + "\" woke up, trying to execute " + cmd + ": ");
+                    try {
+                        String result = process_line(cmd, false);
+                    }catch (EOFException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                // Prevent from triggering again immediately.
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    System.err.println("interrupted");
+                }
+            }
+        }
+    }
+
+    private class udp_thread extends Thread {
+
+        private final int socket_no;
+        private final jython_engine jython;
+
+        udp_thread(int socket_no, jython_engine jython) {
+            super("udp_thread");
+            this.socket_no = socket_no;
+            this.jython = jython;
+        }
+
+        @Override
+        public void run() {
+            udp_work(socket_no, jython);
+        }
+    }
+
+    // Each socket_thread has its own jython engine, operating on the same home.
+    private class socket_thread extends Thread {
+
+        private Socket sock = null;
+        private jython_engine jython = null;
+        private final String clientname;
+
+
+        socket_thread(Socket sock, boolean use_python) {
+            super("socket_thread");
+            Main.no_threads++;
+            this.sock = sock;
+            clientname = sock.getInetAddress().getHostName();
+            jython = use_python ? new jython_engine(hm, false) : null;
+        }
+
+        @Override
+        public void run() {
+
+            boolean kill_prog  = false;
+            boolean restart_prog = false;
+            //go_on = true;
+            try (PrintStream out = new PrintStream(sock.getOutputStream(), false, charset);
+                    BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream(), charset))) {
+                //out.println("HARC server @ your service!");
+                //out.println("HARC server für dich!");
+
+                boolean go_on = true;
+
+                while (go_on) {
+                    String commandline = in.readLine();
+                    System.err.println("[" + clientname + "," + Main.no_threads + "]"
+                            + (commandline != null ? (">" + commandline + "<") : "EOF"));
+                    if (null == commandline) {
+                        go_on = false;
+                        out.println("BYE");
+                    } else switch (commandline) {
+                        case "--quit":
+                            go_on = false;
+                            out.println("BYE");
+                            break;
+                        case "--die":
+                            // Kills the program
+                            go_on = false;
+                            spawn_new_socketthreads = false;
+                            kill_prog = true;
+                            out.println("BYE");
+                            System.err.println("die received");
+                            break;
+                        case "--restart":
+                            // Same as --die but with different exit code
+                            go_on = false;
+                            spawn_new_socketthreads = false;
+                            kill_prog = true;
+                            restart_prog = true;
+                            out.println("BYE FOR NOW");
+                            System.err.println("restart received");
+                            break;
+                        case "--exit":
+                            // Lets the threads finish
+                            go_on = false;
+                            spawn_new_socketthreads = false;
+                            out.println("BYE");
+                            System.err.println("exit received");
+                            break;
+                        case "--foo":
+                            System.err.println("foo received");
+                            out.println("bar!");
+                            break;
+                        default:
+                            // process this line
+                            String result = jython == null ? process_line(commandline, false) : jython.eval(commandline);
+                            out.println(result != null ? "OK: " + no_lines(result) + "\n" + result : "ERROR");
+                            System.err.println("--|" + (result == null ? "" : result.length() < 70 ? result : (result.substring(0, 69) + "...")) + "|--");
+                            break;
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("IOException caught in sockettread.run(): " + e.getMessage());
+            } finally {
+                try {
+                    sock.close();
+                    socket_storage.dispose_sockets(true);
+                    Main.no_threads--;
+                    if (kill_prog) {
+                        doExit(restart_prog ? IrpUtils.EXIT_RESTART : IrpUtils.EXIT_SUCCESS);
+                    }
+                } catch (IOException ex) {
+                    System.err.println("IOException when closing " + ex.getMessage());
+                }
+            }
+        }
+    }
+    private class readline_thread extends Thread {
+
+        readline_thread() {
+            super("readline_thread");
+        }
+
+        @Override
+        public void run() {
+            try {
+                String line = Readline.readline(harcprops.get_instance().get_rl_prompt());
+                //Thread.sleep(100);
+                String result = process_line(line, true);
+                //Thread.sleep(100);
+                Main.readline_go_on = result != null;
+                //if (isInterrupted())
+                //    System.err.println("rrrrrrrrrrrrrrr");
+                //if (interrupted())
+                //    System.err.println("interrupted******rrrrrrrrrrrrrrr");
+            } catch (EOFException e) {
+                System.err.println("EOF " + e.getMessage());
+                Main.readline_go_on = false;
+            } catch (IOException e) {
+                System.err.println("io " + e.toString() + e.getMessage());
+                Main.readline_go_on = false;
+                //} catch (InterruptedException e) {
+                //    System.err.println("aaaaaaaaaaaarrg");
+            }
+        }
     }
 }

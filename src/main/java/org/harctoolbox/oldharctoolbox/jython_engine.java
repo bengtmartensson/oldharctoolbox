@@ -169,7 +169,7 @@ public class jython_engine {
 
         if (args.length > 0)
             if (args[0].equals("-a"))
-                harcutils.printtable("Macros with no or all defaulted arguments are:", jython.get_argumentless_macros());
+                HarcUtils.printtable("Macros with no or all defaulted arguments are:", jython.get_argumentless_macros());
             else
                 for (int i = 0; i < args.length; i++) {
                     jython.exec(args[i]);

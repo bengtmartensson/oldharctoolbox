@@ -302,9 +302,9 @@ public class lirc {
             // 	dump_array(l.get_ccf_remote("panasonic_dvd"));
             System.out.println(l.get_version());
             String[] remotes = l.get_remotes();
-            harcutils.printtable("Remotes: ", remotes);
+            HarcUtils.printtable("Remotes: ", remotes);
             String[] commands = l.get_commands(remotes[0]);
-            harcutils.printtable("Commands for " + remotes[0] + ": ", commands);
+            HarcUtils.printtable("Commands for " + remotes[0] + ": ", commands);
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to: " + l.lirc_host);
             System.exit(1);

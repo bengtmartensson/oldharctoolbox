@@ -17,6 +17,8 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
+import org.harctoolbox.ircore.IrCoreUtils;
+
 public class commandset {
 
     private commandtype_t type;
@@ -114,6 +116,15 @@ public class commandset {
         return close;
     }
 
+    private static int safe_parse_portnumber(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+        }
+
+        return (int) IrCoreUtils.INVALID;
+    }
+
     public String get_info() {
         String s =
                 "*** Commandset\n" +
@@ -192,6 +203,6 @@ public class commandset {
                 subdevice.equals("") ? -1 : Short.parseShort(subdevice),
                 toggle.equals("yes"), additional_parameters, name, remotename, pseudo_power_on,
                 prefix, suffix, Integer.parseInt(delay_between_reps),
-                open, close, harcutils.safe_parse_portnumber(portnumber), charset, flavor);
+                open, close, safe_parse_portnumber(portnumber), charset, flavor);
     }
 }

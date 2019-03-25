@@ -161,7 +161,7 @@ public class gui_main extends javax.swing.JFrame {
         selecting_devices_dcbm = new DefaultComboBoxModel(hm.get_selecting_devices());
         src_devices_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
         zones_dcbm = new DefaultComboBoxModel(new String[]{"--"});
-        deviceclasses_dcbm = new DefaultComboBoxModel(harcutils.sort_unique(device.get_devices()));
+        deviceclasses_dcbm = new DefaultComboBoxModel(HarcUtils.sort_unique(device.get_devices()));
         device_commands_dcbm = new DefaultComboBoxModel(new String[]{"--"});
         connection_types_dcbm = new DefaultComboBoxModel(new String[]{"--"});
         gc_modules_dcbm = new DefaultComboBoxModel(new String[]{"2"}); // ?
@@ -2167,7 +2167,7 @@ public class gui_main extends javax.swing.JFrame {
             for (int i = 0; i < s.length; i++)
                 s[i] = dvs[i].endsWith("IR") ? dvs[i].substring(7,8) : null;
 
-            String[] modules = harcutils.nonnulls(s);
+            String[] modules = HarcUtils.nonnulls(s);
             gc_modules_dcbm = new DefaultComboBoxModel(modules != null ? modules : new String[]{"-"});
             gc_module_ComboBox.setModel(gc_modules_dcbm);
             gc_module_ComboBox.setEnabled(modules != null);
@@ -2188,11 +2188,11 @@ public class gui_main extends javax.swing.JFrame {
     }//GEN-LAST:event_device_remote_ComboBoxActionPerformed
 
     private void t10_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_browse_ButtonActionPerformed
-        harcutils.browse(t10_address_TextField.getText());
+        HarcUtils.browse(t10_address_TextField.getText());
     }//GEN-LAST:event_t10_browse_ButtonActionPerformed
 
     private void gc_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_browse_ButtonActionPerformed
-        harcutils.browse(gc_address_TextField.getText());
+        HarcUtils.browse(gc_address_TextField.getText());
     }//GEN-LAST:event_gc_browse_ButtonActionPerformed
 
     private void deviceclass_stop_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deviceclass_stop_ButtonActionPerformed
@@ -2219,7 +2219,7 @@ public class gui_main extends javax.swing.JFrame {
 }//GEN-LAST:event_home_select_ButtonActionPerformed
 
     private void home_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_home_browse_ButtonActionPerformed
-        harcutils.browse(homeconf_TextField.getText());
+        HarcUtils.browse(homeconf_TextField.getText());
     }//GEN-LAST:event_home_browse_ButtonActionPerformed
 
     private void debug_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debug_TextFieldActionPerformed
@@ -2267,11 +2267,11 @@ public class gui_main extends javax.swing.JFrame {
 }//GEN-LAST:event_browser_select_ButtonActionPerformed
 
     private void macro_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_browse_ButtonActionPerformed
-        harcutils.browse(macro_TextField.getText());
+        HarcUtils.browse(macro_TextField.getText());
 }//GEN-LAST:event_macro_browse_ButtonActionPerformed
 
     private void alias_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alias_browse_ButtonActionPerformed
-        harcutils.browse(aliases_TextField.getText());
+        HarcUtils.browse(aliases_TextField.getText());
 }//GEN-LAST:event_alias_browse_ButtonActionPerformed
 
     private void macro_load_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_load_ButtonActionPerformed

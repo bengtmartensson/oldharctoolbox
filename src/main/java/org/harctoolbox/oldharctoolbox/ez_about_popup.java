@@ -63,7 +63,7 @@ public class ez_about_popup extends javax.swing.JDialog {
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField1.setText("HARCtoolbox: Home Automation and Remote Control");
 
-        version_label.setText(harcutils.version_string);
+        version_label.setText(HarcUtils.version_string);
 
         author_label.setFont(new java.awt.Font("Lucida Bright", 2, 14));
         author_label.setText("Author: Bengt Martensson");
@@ -73,12 +73,12 @@ public class ez_about_popup extends javax.swing.JDialog {
         license_text.setFont(new java.awt.Font("Lucida Bright", 0, 14));
         license_text.setLineWrap(true);
         license_text.setRows(4);
-        license_text.setText(harcutils.license_string);
+        license_text.setText(HarcUtils.license_string);
         license_text.setWrapStyleWord(true);
         license_text.setFocusable(false);
         jScrollPane1.setViewportView(license_text);
 
-        homepage_button.setText(harcutils.homepage_url);
+        homepage_button.setText(HarcUtils.homepage_url);
         homepage_button.setToolTipText("Visit project's home page");
         homepage_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -131,7 +131,7 @@ public class ez_about_popup extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
 private void homepage_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homepage_buttonActionPerformed
-        harcutils.browse(harcutils.homepage_url);
+        HarcUtils.browse(HarcUtils.homepage_url);
 }//GEN-LAST:event_homepage_buttonActionPerformed
 
     /**

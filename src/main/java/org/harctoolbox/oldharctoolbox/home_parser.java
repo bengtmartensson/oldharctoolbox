@@ -17,12 +17,14 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import org.harctoolbox.ircore.XmlUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -497,12 +499,9 @@ public class home_parser {
         org.w3c.dom.Document dom = null;
 
        try {
-            dom = harcutils.open_xmlfile(filename);
-        } catch (IOException ex) {
+            dom = XmlUtils.openXmlFile(new File(filename));
+        } catch (IOException | SAXException ex) {
 
-        } catch (SAXParseException ex) {
-
-        } catch (SAXException ex) {
         }
         home_parser p = new home_parser(dom);
         //p.print_aliases();

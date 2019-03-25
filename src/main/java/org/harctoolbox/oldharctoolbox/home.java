@@ -44,6 +44,7 @@ import org.harctoolbox.ircore.InvalidArgumentException;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
 import org.harctoolbox.ircore.Pronto;
+import org.harctoolbox.ircore.XmlUtils;
 import org.harctoolbox.irp.IrpException;
 import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
@@ -65,7 +66,7 @@ public final class home {
     private final HashMap<String, gateway> gateway_table;
 
     public home(String home_filename/*, boolean verbose, int debug*/) throws IOException, SAXParseException, SAXException {
-        Document doc = harcutils.open_xmlfile(home_filename);
+        Document doc = XmlUtils.openXmlFile(new File(home_filename));
         if (debugargs.dbg_dom())
             System.err.println("Home configuration " + home_filename + " parsed.");
 
@@ -156,7 +157,7 @@ public final class home {
             result[i] = cmds[i].toString();
         }
 
-        return harcutils.sort_unique(result);
+        return HarcUtils.sort_unique(result);
     }
 
     public String[] get_commands(String devname) {
@@ -288,7 +289,7 @@ public final class home {
         } catch (IOException e) {
             // May be ok, e.g. when using Intertechno and T-10.
             if (debugargs.dbg_transmit())
-                System.err.println("Could not open file " + harcprops.get_instance().get_devicesdir() + File.separator + dev_class + harcutils.devicefile_extension + ".");
+                System.err.println("Could not open file " + harcprops.get_instance().get_devicesdir() + File.separator + dev_class + HarcUtils.devicefile_extension + ".");
         } catch (SAXParseException e) {
             System.err.println(e.getMessage());
         } catch (SAXException e) {
@@ -482,7 +483,7 @@ public final class home {
                     }
                     break;
                 case tcp:
-                    if (portnumber == harcutils.portnumber_invalid)
+                    if (portnumber == IrCoreUtils.INVALID)
                         portnumber = dev.get_portnumber(cmd, commandtype_t.tcp);
                     subst_transmitstring = dev.get_command(cmd, commandtype_t.tcp).get_transmitstring(true);
                     subst_transmitstring_printable = dev.get_command(cmd, commandtype_t.tcp).get_transmitstring(false);
@@ -879,13 +880,13 @@ public final class home {
                                 if (userprefs.get_instance().get_verbose())
                                     System.err.print("Pinging hostname " + fgw.get_hostname() + "... ");
 
-                                success = InetAddress.getByName(fgw.get_hostname()).isReachable(harcutils.ping_timeout);
+                                success = InetAddress.getByName(fgw.get_hostname()).isReachable(HarcUtils.ping_timeout);
                                 if (!success) {
                                     // Java's isReachable may fail due to insufficient privileges;
                                     // the OSs ping command may be more successful (is suid on Unix).
                                     if (userprefs.get_instance().get_verbose())
                                         System.err.print("isReachable() failed, trying the ping program...");
-                                    String[] args = {"ping", "-w", Integer.toString((int) (harcutils.ping_timeout / 1000)), fgw.get_hostname()};
+                                    String[] args = {"ping", "-w", Integer.toString((int) (HarcUtils.ping_timeout / 1000)), fgw.get_hostname()};
                                     Process proc = Runtime.getRuntime().exec(args);
                                     proc.waitFor();
                                     success = proc.exitValue() == 0;
@@ -936,7 +937,7 @@ public final class home {
                         Method m = cl.getMethod(cmd.toString(), args_class);
                         Object something = m.invoke(d, (Object[])arguments);
                         output = something == null ? ""
-                                : something.getClass().isArray() ? harcutils.join((String[]) something)
+                                : something.getClass().isArray() ? String.join(" ", (String[]) something)
                                 : (String) something;
                         success = true;
                     } catch (NoSuchMethodException e) {
@@ -1508,16 +1509,16 @@ public final class home {
             if (select_mode) {
                 //harcutils.printtable("blaa", hm.get_selecting_devices());
                 if (src_device.equals("?")) {
-                    harcutils.printtable("Valid inputs for " + devname + (zone != null ? (" in zone " + zone) : "") + ":", hm.get_sources(devname, zone));
+                    HarcUtils.printtable("Valid inputs for " + devname + (zone != null ? (" in zone " + zone) : "") + ":", hm.get_sources(devname, zone));
                 } else {
                     hm.select(devname, src_device, type, zone, the_mediatype, connection_type);
                 }
             } else if (devname.equals("?")) {
-                harcutils.printtable("Valid devices:", hm.get_devices());
+                HarcUtils.printtable("Valid devices:", hm.get_devices());
             } else if (list_commands) // FIXME1: if devname is nonexisting, should produce an
             // error message instead of just returning nothing.
             {
-                harcutils.printtable("Valid commands for " + devname + " of type " + type + ":", hm.get_commands(devname, type));
+                HarcUtils.printtable("Valid commands for " + devname + " of type " + type + ":", hm.get_commands(devname, type));
             } else {
                 //harcutils.printtable("blubb", hm.get_zones(devname));
                 String output = hm.do_command(devname, cmd, arguments, type, count, toggle, smart_memory);

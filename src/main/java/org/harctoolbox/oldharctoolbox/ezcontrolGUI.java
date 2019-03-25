@@ -613,7 +613,7 @@ public class ezcontrolGUI extends javax.swing.JFrame {
 }//GEN-LAST:event_t10_update_ButtonActionPerformed
 
     private void t10_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_browse_ButtonActionPerformed
-        harcutils.browse(t10_address_TextField.getText());
+        HarcUtils.browse(t10_address_TextField.getText());
     }//GEN-LAST:event_t10_browse_ButtonActionPerformed
 
     private void ezcontrol_house_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_house_TextFieldActionPerformed

@@ -106,7 +106,7 @@ public class harc_readline_jythonconsole extends org.python.util.InteractiveCons
 
     public static String getDefaultBanner() {
         //return String.format("%s, Jython %s on %s", harcutils.version_string, PySystemState.version, PySystemState.platform);
-        return String.format("%s, Jython %s", harcutils.version_string, PySystemState.version);
+        return String.format("%s, Jython %s", HarcUtils.version_string, PySystemState.version);
     }
 
     @Override

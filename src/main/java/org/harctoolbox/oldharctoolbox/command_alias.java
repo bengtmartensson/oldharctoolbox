@@ -17,8 +17,10 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import org.harctoolbox.ircore.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -41,7 +43,7 @@ public class command_alias {
         aliastable = new HashMap<String, command_t>();
         Document doc = null;
         try {
-            doc = harcutils.open_xmlfile(filename);
+            doc = XmlUtils.openXmlFile(new File(filename));
         } catch (IOException e) {
             System.err.println(e.getMessage());
             is_valid = false;
