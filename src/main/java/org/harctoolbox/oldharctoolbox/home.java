@@ -40,7 +40,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.harctoolbox.harchardware.HarcHardwareException;
 import org.harctoolbox.harchardware.comm.Wol;
+import org.harctoolbox.harchardware.ir.GlobalCache;
+import org.harctoolbox.harchardware.ir.NoSuchTransmitterException;
 import org.harctoolbox.harchardware.misc.EzControlT10;
+import org.harctoolbox.harchardware.misc.SonySerialCommand;
 import org.harctoolbox.ircore.InvalidArgumentException;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
@@ -65,6 +68,7 @@ public final class home {
     private final LinkedHashMap<String, dev> device_table;
     private final LinkedHashMap<String, device_group> device_groups_table; // indexed by name, not id
     private final HashMap<String, gateway> gateway_table;
+    private static final Logger logger = Logger.getLogger(home.class.getName());
 
     public home(String home_filename/*, boolean verbose, int debug*/) throws IOException, SAXParseException, SAXException {
         Document doc = XmlUtils.openXmlFile(new File(home_filename));
@@ -354,10 +358,11 @@ public final class home {
                                 failure = true;
                             } else {
                                 String raw_ccf = Pronto.toString(code);
-                                globalcache gc = new globalcache(gw.get_hostname(), gw.get_model(), userprefs.get_instance().get_verbose());
+                                GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ userprefs.get_instance().get_verbose());
                                 if (gc != null) {
                                     //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
-                                    success = gc.send_ir(raw_ccf, fgw.get_connectorno(), count);
+                                    GlobalCache.GlobalCacheIrTransmitter transmitter = gc.newTransmitter(fgw.get_connectorno());
+                                    success = gc.sendCcf(raw_ccf, count, transmitter);
                                     if (debugargs.dbg_transmit()) {
                                         System.err.println("Globalcache " + (success ? "succeeded" : "failed"));
                                     }
@@ -415,9 +420,7 @@ public final class home {
                         System.err.println("No route to " + gw.get_hostname());
                     } catch (IOException e) {
                         System.err.println("IOException with host " + gw.get_hostname() + ": " + e.getMessage());
-                    } catch (Pronto.NonProntoFormatException ex) {
-                        Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InvalidArgumentException ex) {
+                    } catch (Pronto.NonProntoFormatException | InvalidArgumentException | NoSuchTransmitterException ex) {
                         Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
@@ -713,43 +716,55 @@ public final class home {
                     break;
 
                 case serial:
-                    // TODO: handle cases expected_lines < 0 (loop forever) senisble, (if possible).
-                    if (gw.get_class().equals("globalcache")) {
-                        globalcache gc = new globalcache(gw.get_hostname(), gw.get_model(), userprefs.get_instance().get_verbose());
-                        subst_transmitstring = dev.get_command(cmd, commandtype_t.serial).get_transmitstring(true);
-                        subst_transmitstring_printable = dev.get_command(cmd, commandtype_t.serial).get_transmitstring(false);
-                        if (flavor.equals("SonySerialCommand")) {
-                            try {
+                    try {
+                        // TODO: handle cases expected_lines < 0 (loop forever) senisble, (if possible).
+                        if (gw.get_class().equals("globalcache")) {
+                            GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ userprefs.get_instance().get_verbose());
+                            GlobalCache.SerialPort gcSerialPort = gc.getSerialPort(fgw.get_connectorno());
+                            subst_transmitstring = dev.get_command(cmd, commandtype_t.serial).get_transmitstring(true);
+                            subst_transmitstring_printable = dev.get_command(cmd, commandtype_t.serial).get_transmitstring(false);
+                            if (flavor.equals("SonySerialCommand")) {
+
                                 //gc.setserial(1, "38400,FLOW_NONE,PARITY_EVEN");
                                 String[] cmds = subst_transmitstring_printable.split(",");
                                 byte[] bytes = SonySerialCommand.bytes(Integer.parseInt(cmds[1]), Integer.parseInt(cmds[2]), cmds[0]);
-                                byte[] answer = gc.send_read_serial(bytes, fgw.get_connectorno(),
-                                        the_command.get_response_lines() > 0 ? SonySerialCommand.size : 0);
-                                output = the_command.get_response_lines() > 0
-                                        ? Integer.toString(SonySerialCommand.interpret(answer).getData())
-                                        : "";
+//                                byte[] answer = gc.send_read_serial(bytes, fgw.get_connectorno(),
+//                                        the_command.get_response_lines() > 0 ? SonySerialCommand.size : 0);
+                                gcSerialPort.sendBytes(bytes);
+//                                output = the_command.get_response_lines() > 0
+//                                        ? Integer.toString(SonySerialCommand.interpret(answer).getData())
+//                                        : "";
+                                if (the_command.get_response_lines() > 0) {
+                                    byte[] answer = gcSerialPort.readBytes(SonySerialCommand.size);
+                                    output = Integer.toString(SonySerialCommand.interpret(answer).getData());
+                                } else
+                                    output = "";
+                            } else {
+                                // TODO: expand expected_response similarly.
+                                for (int i = 0; i < arguments_length; i++) {
+                                    subst_transmitstring = subst_transmitstring.replaceAll("\\$" + (i + 1), arguments[i]);
+                                    subst_transmitstring_printable = subst_transmitstring_printable.replaceAll("\\$" + (i + 1), arguments[i]);
+                                }
 
-                            } catch (IOException ex) {
-                                Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        } else {
-                            // TODO: expand expected_response similarly.
-                            for (int i = 0; i < arguments_length; i++) {
-                                subst_transmitstring = subst_transmitstring.replaceAll("\\$" + (i + 1), arguments[i]);
-                                subst_transmitstring_printable = subst_transmitstring_printable.replaceAll("\\$" + (i + 1), arguments[i]);
-                            }
-
-                            try {
+                                //try {
                                 if (debugargs.dbg_transmit() || userprefs.get_instance().get_verbose())
                                     System.err.println("Trying Globalcache (" + gw.get_hostname() + ") for serial using " + fgw.get_connectorno() + ", \"" + subst_transmitstring_printable + "\"");
 
                                 int delay_between_reps = the_command.get_delay_between_reps();
                                 int no_read_lines = the_command.get_response_lines();
 
-                                result = gc.send_serial(subst_transmitstring, fgw.get_connectorno(), no_read_lines == 0 ? 0 : 1, count, delay_between_reps);
-                                if (no_read_lines > 0)
-                                    no_read_lines--;
-                                Thread.sleep(10);
+                                //result = gc.send_serial(subst_transmitstring, fgw.get_connectorno(), no_read_lines == 0 ? 0 : 1, count, delay_between_reps);
+                                gcSerialPort.sendString(subst_transmitstring);
+                                if (no_read_lines > 0) {
+                                    if (delay_between_reps > 0)
+                                        Thread.sleep(delay_between_reps);
+                                    result = gcSerialPort.readString(true);
+                                     no_read_lines--;
+                                } else
+                                    result = "";
+//                                if (no_read_lines > 0)
+//                                    no_read_lines--;
+//                                Thread.sleep(10);
 
                                 if (!the_command.get_expected_response().equals("")) {
                                     if (result.equals(the_command.get_expected_response())) {
@@ -767,30 +782,36 @@ public final class home {
                                 if (no_read_lines != 0)
                                     System.err.println(">>> " + result);
                                 for (int i = 0; i < no_read_lines; i++) {
-                                    String answ = gc.send_serial(null, fgw.get_connectorno(), 1, count, delay_between_reps);
+                                    //String answ = gc.send_serial(null, fgw.get_connectorno(), 1, count, delay_between_reps);
+                                    String answ = gcSerialPort.readString(true);
                                     System.err.println(">>> " + answ);
                                     result = result.isEmpty() ? answ : (result + "\n" + answ);
                                 }
                                 if (no_read_lines < 0)
                                     for (;;) {
-                                        result = gc.send_serial(null, fgw.get_connectorno(), 1, count, delay_between_reps);
+                                        //result = gc.send_serial(null, fgw.get_connectorno(), 1, count, delay_between_reps);
+                                        result = gcSerialPort.readString(true);
                                         System.err.println(">>> " + result);
                                     }
                                 //success = result != null;
                                 if (the_command.get_response_lines() > 0)
                                     output = result;
-                            } catch (Exception e) {
-                                System.err.println("Silly exception: " + e.getClass().getName() + e.getMessage());
-                                e.printStackTrace();
-                        //} catch (NoRouteToHostException e) {
+//                            } catch (Exception e) {
+//                                System.err.println("Silly exception: " + e.getClass().getName() + e.getMessage());
+//                                e.printStackTrace();
+                                //} catch (NoRouteToHostException e) {
                                 //    System.err.println("No route to " + gw.get_hostname());
                                 //} catch (IOException e) {
                                 //    System.err.println("IOException with host " + gw.get_hostname());
                             }
+                        } else {
+                            System.err.println("Not implemented.");
+                            failure = true;
                         }
-                    } else {
-                        System.err.println("Not implemented.");
-                        failure = true;
+                    } catch (IOException ex) {
+                        logger.log(Level.SEVERE, null, ex);
+                    } catch (NoSuchTransmitterException ex) {
+                        Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
 
@@ -822,16 +843,17 @@ public final class home {
                         System.err.println("Nonappropriate command for on_off");
                         failure = true;
                     } else if (gw.get_class().equals("globalcache")) {
-                        globalcache gc = new globalcache(gw.get_hostname(), gw.get_model(), userprefs.get_instance().get_verbose());
-                        int con = fgw.get_connectorno();
                         try {
+                            GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ userprefs.get_instance().get_verbose());
+                            int con = fgw.get_connectorno();
+
                             if (cmd == command_t.get_state) {
                                 //if (gw_connector.startsWith("sensor_")) {
                                 if (fgw.get_connectortype() == commandtype_t.sensor) {
                                     if (debugargs.dbg_transmit()) {
                                         System.err.print("Trying to inquiry Globalcache sensor " + fgw.get_connectorno() + " ");
                                     }
-                                    output = gc.getstate(con) == 1 ? "on" : "off";
+                                    output = gc.getState(con) == 1 ? "on" : "off";
                                 } else {
                                     failure = true;
                                 }
@@ -846,18 +868,18 @@ public final class home {
                                         if (debugargs.dbg_transmit()) {
                                             System.err.println("TOGGLE");
                                         }
-                                        success = gc.togglestate(con);
+                                        success = gc.toggleState(con);
                                     } else if (cmd == command_t.power_pulse) {
                                         if (debugargs.dbg_transmit())
                                             System.err.println("PULSE");
 
-                                        success = gc.pulsestate(con);
+                                        success = gc.pulseState(con);
 
                                     } else {
                                         if (debugargs.dbg_transmit()) {
                                             System.err.println(cmd == command_t.power_on ? "ON" : "OFF");
                                         }
-                                        success = gc.setstate(con, cmd == command_t.power_on);
+                                        success = gc.setState(con, cmd == command_t.power_on);
                                     }
                                 } else {
                                     failure = true;
@@ -869,7 +891,9 @@ public final class home {
                             System.err.println("Unknown host " + gw.get_hostname());
                         } catch (IOException e) {
                             System.err.println("IOException with host " + gw.get_hostname());
-                        }
+                        } catch (NoSuchTransmitterException ex) {
+                    Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
+                }
                     } else {
                         System.err.println("Not implemented.");
                         failure = true;

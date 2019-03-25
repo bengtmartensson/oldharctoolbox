@@ -42,6 +42,8 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.harctoolbox.harchardware.HarcHardwareException;
+import org.harctoolbox.harchardware.ir.GlobalCache;
+import org.harctoolbox.harchardware.ir.NoSuchTransmitterException;
 import org.harctoolbox.harchardware.misc.EzControlT10;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
@@ -82,7 +84,7 @@ public class gui_main extends javax.swing.JFrame {
     private command_thread the_command_thread = null;
     private globalcache_thread the_globalcache_device_thread = null;
 
-    private globalcache gc = null;
+    private GlobalCache gc = null;
 
     private HashMap<String, String> filechooserdirs = new HashMap<>(8);
 
@@ -199,7 +201,11 @@ public class gui_main extends javax.swing.JFrame {
         verbose_CheckBox.setSelected(verbose);
         browse_device_MenuItem.setEnabled(hm.has_command((String)devices_dcbm.getSelectedItem(), commandtype_t.www, command_t.browse));
 
-        gc = new globalcache("globalcache", globalcache.gc_model.gc_unknown, verbose);
+        try {
+            gc = new GlobalCache("globalcache", verbose);
+        } catch (IOException ex) {
+            Logger.getLogger(gui_main.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         homeconf_TextField.setText(homefilename);
         //macro_TextField.setText(macrofilename);
@@ -1637,14 +1643,13 @@ public class gui_main extends javax.swing.JFrame {
             stop_button.setEnabled(true);
             boolean success = false;
             try {
-                success = gc.send_ir(code, module, connector, count);
+                success = gc.sendIr(code, module, connector, count);
             } catch (UnknownHostException ex) {
                 System.err.println("Globalcache hostname is not found.");
             } catch (IOException e) {
                 System.err.println(e);
-            } catch (InterruptedException e) {
-                System.err.println("*** Interrupted *** ");
-                success = true;
+            } catch (NoSuchTransmitterException ex) {
+                Logger.getLogger(gui_main.class.getName()).log(Level.SEVERE, ex.getMessage());
             }
 
             if (!success)
@@ -1804,7 +1809,7 @@ public class gui_main extends javax.swing.JFrame {
 
     private void update_verbosity() {
         userprefs.get_instance().set_verbose(verbose);
-        gc.set_verbosity(verbose);
+        gc.setVerbose(verbose);
         verbose_CheckBoxMenuItem.setSelected(verbose);
         verbose_CheckBox.setSelected(verbose);
     }
@@ -2168,15 +2173,15 @@ public class gui_main extends javax.swing.JFrame {
 }//GEN-LAST:event_t10_update_ButtonActionPerformed
 
     private void gc_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_address_TextFieldActionPerformed
-        gc = new globalcache(gc_address_TextField.getText(), verbose_CheckBoxMenuItem.getState());
         try {
+            gc = new GlobalCache(gc_address_TextField.getText(), verbose_CheckBoxMenuItem.getState());
             gc_module_ComboBox.setEnabled(false);
             gc_connector_ComboBox.setEnabled(false);
-            String devs = gc.getdevices();
-            String[] dvs = devs.split("\n");
+            String[] dvs = gc.getDevices();
+            //String[] dvs = devs.split("\n");
             String[] s = new String[dvs.length];
             for (int i = 0; i < s.length; i++)
-                s[i] = dvs[i].endsWith("IR") ? dvs[i].substring(7,8) : null;
+                s[i] = dvs[i].endsWith("IR") ? dvs[i].substring(7, 8) : null;
 
             String[] modules = HarcUtils.nonnulls(s);
             gc_modules_dcbm = new DefaultComboBoxModel(modules != null ? modules : new String[]{"-"});
@@ -2186,7 +2191,7 @@ public class gui_main extends javax.swing.JFrame {
         } catch (UnknownHostException e) {
             gc = null;
             System.err.println(e.getMessage());
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             gc = null;
             System.err.println(e.getMessage());
         }
@@ -2212,9 +2217,9 @@ public class gui_main extends javax.swing.JFrame {
                 the_globalcache_device_thread.interrupt();
 
             if (this.output_deviceComboBox.getSelectedIndex() == 0)
-                gc.stop_ir(this.get_gc_module(), this.get_gc_connector());
-        } catch (IOException | InterruptedException e) {
-            System.err.println(e);
+                gc.stopIr(this.get_gc_module(), this.get_gc_connector());
+        } catch (IOException | NoSuchTransmitterException ex) {
+            Logger.getLogger(gui_main.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
     }//GEN-LAST:event_deviceclass_stop_ButtonActionPerformed
 
@@ -2361,9 +2366,9 @@ public class gui_main extends javax.swing.JFrame {
 
     private void gc_stop_ir_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_stop_ir_ActionPerformed
         try {
-            gc.stop_ir(get_gc_module(), get_gc_connector());
-        } catch (IOException | InterruptedException ex) {
-            System.err.println(ex.getMessage());
+            gc.stopIr(get_gc_module(), get_gc_connector());
+        } catch (IOException | NoSuchTransmitterException ex) {
+            Logger.getLogger(gui_main.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
     }//GEN-LAST:event_gc_stop_ir_ActionPerformed
 
