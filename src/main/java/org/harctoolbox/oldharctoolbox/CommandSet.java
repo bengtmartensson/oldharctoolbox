@@ -21,6 +21,15 @@ import org.harctoolbox.ircore.IrCoreUtils;
 
 public final class CommandSet {
 
+    private static int safe_parse_portnumber(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+        }
+
+        return (int) IrCoreUtils.INVALID;
+    }
+
     private CommandType_t type;
     private String protocol;
     private short deviceno;
@@ -39,6 +48,42 @@ public final class CommandSet {
     private CommandSetEntry[] entries;
     private String charset;
     private String flavor;
+
+    public CommandSet(CommandSetEntry[] commands, CommandType_t type, String protocol,
+            short deviceno, short subdevice, boolean has_toggle, String additional_parameters, String name,
+            String remotename, String pseudo_power_on, String prefix,
+            String suffix, int delay_between_reps, String open, String close, int portnumber, String charset, String flavor) {
+        this.entries = commands;
+        this.type = type;
+        this.deviceno = deviceno;
+        this.subdevice = subdevice;
+        this.protocol = protocol;
+        this.has_toggle = has_toggle;
+        this.additional_parameters = additional_parameters;
+        this.name = name;
+        this.remotename = remotename;
+        this.pseudo_power_on = pseudo_power_on;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        this.delay_between_reps = delay_between_reps;
+        this.open = open;
+        this.close = close;
+        this.portnumber = portnumber;
+        this.charset = charset;
+        this.flavor = flavor;
+    }
+    public CommandSet(CommandSetEntry[] commands, String type,
+            String protocol, String deviceno, String subdevice, String toggle,
+            String additional_parameters, String name, String remotename, String pseudo_power_on,
+            String prefix, String suffix, String delay_between_reps,
+            String open, String close, String portnumber, String charset, String flavor) {
+        this(commands, CommandType_t.valueOf(type), protocol,
+                deviceno.isEmpty() ? -1 : Short.parseShort(deviceno),
+                subdevice.isEmpty() ? -1 : Short.parseShort(subdevice),
+                toggle.equals("yes"), additional_parameters, name, remotename, pseudo_power_on,
+                prefix, suffix, Integer.parseInt(delay_between_reps),
+                open, close, safe_parse_portnumber(portnumber), charset, flavor);
+    }
 
     public int get_no_commands() {
         return entries.length;
@@ -116,15 +161,6 @@ public final class CommandSet {
         return close;
     }
 
-    private static int safe_parse_portnumber(String str) {
-        try {
-            return Integer.parseInt(str);
-        } catch (NumberFormatException e) {
-        }
-
-        return (int) IrCoreUtils.INVALID;
-    }
-
     public String get_info() {
         StringBuilder s = new StringBuilder(
                 "*** Commandset\n" +
@@ -166,42 +202,5 @@ public final class CommandSet {
             result[i] = new Command(this, i);
 
         return result;
-    }
-
-    public CommandSet(CommandSetEntry[] commands, CommandType_t type, String protocol,
-            short deviceno, short subdevice, boolean has_toggle, String additional_parameters, String name,
-            String remotename, String pseudo_power_on, String prefix,
-            String suffix, int delay_between_reps, String open, String close, int portnumber, String charset, String flavor) {
-        this.entries = commands;
-        this.type = type;
-        this.deviceno = deviceno;
-        this.subdevice = subdevice;
-        this.protocol = protocol;
-        this.has_toggle = has_toggle;
-        this.additional_parameters = additional_parameters;
-        this.name = name;
-        this.remotename = remotename;
-        this.pseudo_power_on = pseudo_power_on;
-        this.prefix = prefix;
-        this.suffix = suffix;
-        this.delay_between_reps = delay_between_reps;
-        this.open = open;
-        this.close = close;
-        this.portnumber = portnumber;
-        this.charset = charset;
-        this.flavor = flavor;
-    }
-
-    public CommandSet(CommandSetEntry[] commands, String type,
-            String protocol, String deviceno, String subdevice, String toggle,
-            String additional_parameters, String name, String remotename, String pseudo_power_on,
-            String prefix, String suffix, String delay_between_reps,
-            String open, String close, String portnumber, String charset, String flavor) {
-        this(commands, CommandType_t.valueOf(type), protocol,
-                deviceno.isEmpty() ? -1 : Short.parseShort(deviceno),
-                subdevice.isEmpty() ? -1 : Short.parseShort(subdevice),
-                toggle.equals("yes"), additional_parameters, name, remotename, pseudo_power_on,
-                prefix, suffix, Integer.parseInt(delay_between_reps),
-                open, close, safe_parse_portnumber(portnumber), charset, flavor);
     }
 }

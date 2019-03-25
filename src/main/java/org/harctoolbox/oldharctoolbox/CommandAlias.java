@@ -32,6 +32,11 @@ import org.xml.sax.SAXException;
 
 public final class CommandAlias {
 
+    public static void main(String[] args) {
+        CommandAlias ca = new CommandAlias(args[0]);
+        System.out.println(ca.canonicalize(args[1]));
+    }
+
     private HashMap<String, command_t> aliastable = null;
     private boolean is_valid = false;
 
@@ -73,10 +78,5 @@ public final class CommandAlias {
 
     public command_t canonicalize(String alias) {
         return command_t.is_valid(alias) ? command_t.valueOf(alias) : is_valid ? expand(alias) : command_t.invalid;
-    }
-
-    public static void main(String[] args) {
-        CommandAlias ca = new CommandAlias(args[0]);
-        System.out.println(ca.canonicalize(args[1]));
     }
 }

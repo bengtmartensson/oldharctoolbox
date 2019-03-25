@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009-2011 Bengt Martensson.
+Copyright (C) 2009-2011, 2019 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,6 +49,33 @@ public final class Command {
     private final String ccf_toggle_1;
     private final String charset;
     private final String flavor;
+
+    public Command(CommandSet cmdset, int index) {
+        CommandSetEntry c = cmdset.get_entry(index);
+        this.cmd = c.get_cmd();
+        this.cmdno = c.get_cmdno();
+        this.name = c.get_name();
+        this.transmit = c.get_transmit();
+        this.response_lines = c.get_response_lines();
+        this.response_ending = c.get_response_ending();
+        this.expected_response = c.get_expected_response();
+        this.remark = c.get_remark();
+        this.arguments = c.get_arguments();
+        this.ccf_toggle_0 = c.get_ccf_toggle_0();
+        this.ccf_toggle_1 = c.get_ccf_toggle_1();
+        this.type = cmdset.get_type();
+        this.remotename = cmdset.get_remotename();
+        this.protocol_name = cmdset.get_protocol();
+        this.deviceno = cmdset.get_deviceno();
+        this.subdevice = cmdset.get_subdevice();
+        this.toggle = cmdset.get_toggle();
+        this.additional_parameters = cmdset.get_additional_parameters();
+        this.prefix = cmdset.get_prefix();
+        this.suffix = cmdset.get_suffix();
+        this.delay_between_reps = cmdset.get_delay_between_reps();
+        this.charset = cmdset.get_charset();
+        this.flavor = cmdset.get_flavor();
+    }
 
     @Override
     public String toString() {
@@ -183,32 +210,5 @@ public final class Command {
             s = s.replaceAll("\\\\r", "\r").replaceAll("\\\\n", "\n");
         }
         return s;
-    }
-
-    public Command(CommandSet cmdset, int index) {
-        CommandSetEntry c = cmdset.get_entry(index);
-        this.cmd = c.get_cmd();
-        this.cmdno = c.get_cmdno();
-        this.name = c.get_name();
-        this.transmit = c.get_transmit();
-        this.response_lines = c.get_response_lines();
-        this.response_ending = c.get_response_ending();
-        this.expected_response = c.get_expected_response();
-        this.remark = c.get_remark();
-        this.arguments = c.get_arguments();
-        this.ccf_toggle_0 = c.get_ccf_toggle_0();
-        this.ccf_toggle_1 = c.get_ccf_toggle_1();
-        this.type = cmdset.get_type();
-        this.remotename = cmdset.get_remotename();
-        this.protocol_name = cmdset.get_protocol();
-        this.deviceno = cmdset.get_deviceno();
-        this.subdevice = cmdset.get_subdevice();
-        this.toggle = cmdset.get_toggle();
-        this.additional_parameters = cmdset.get_additional_parameters();
-        this.prefix = cmdset.get_prefix();
-        this.suffix = cmdset.get_suffix();
-        this.delay_between_reps = cmdset.get_delay_between_reps();
-        this.charset = cmdset.get_charset();
-        this.flavor = cmdset.get_flavor();
     }
 }

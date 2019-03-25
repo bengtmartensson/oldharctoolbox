@@ -23,6 +23,11 @@ import org.python.core.PySystemState;
  */
 public final class HarcReadlineJythonConsole extends org.python.util.InteractiveConsole {
 
+    public static String getDefaultBanner() {
+        //return String.format("%s, Jython %s on %s", harcutils.version_string, PySystemState.version, PySystemState.platform);
+        return String.format("%s, Jython %s", HarcUtils.version_string, PySystemState.version);
+    }
+
     //public String filename;
     private String history_pathname;
     private JythonRlCompleter completer = null;
@@ -100,11 +105,6 @@ public final class HarcReadlineJythonConsole extends org.python.util.Interactive
 
         //systemState.ps1 = new PyString("[pharc> "); // FIXME
         //systemState.ps2 = new PyString("....... ");
-    }
-
-    public static String getDefaultBanner() {
-        //return String.format("%s, Jython %s on %s", harcutils.version_string, PySystemState.version, PySystemState.platform);
-        return String.format("%s, Jython %s", HarcUtils.version_string, PySystemState.version);
     }
 
     @Override

@@ -60,13 +60,230 @@ import org.xml.sax.SAXParseException;
 public final class Home {
 
     private final static int max_hops = 10;
+    private static final Logger logger = Logger.getLogger(Home.class.getName());
+
+    private static void usage(int errorcode) {
+        System.err.println("Usage:\n"
+                + "home [<options>] <device_instancename> <command> [<command_args>]*"
+                + "\nwhere options=-h <filename>,-t "
+                + CommandType_t.valid_types('|')
+                + ",-m,-T 0|1,-# <count>,-v,-d <debugcode>,-b <browserpath>, -p <propsfile>\n"
+                        + "or\n"
+                        + "home -s [-z zone][-A,-V][-c connection_type] <device_instancename> <src_device>");
+        System.exit(errorcode);
+    }
+
+    private static void usage() {
+        usage(IrpUtils.EXIT_USAGE_ERROR);
+    }
+
+    public static void main(String[] args) {
+        CommandType_t type = CommandType_t.any;
+        String home_filename = null;
+        int debug = 0;
+        boolean verbose = false;
+        int count = 1;
+        MediaType the_mediatype = MediaType.audio_video;
+        boolean smart_memory = false;
+        boolean select_mode = false;
+        boolean list_commands = false;
+        String devname = "";
+        String src_device = "";
+        String zone = null;
+        ConnectionType connection_type = ConnectionType.any;
+        command_t cmd = command_t.invalid;
+        ToggleType toggle = ToggleType.dont_care;
+        String browser = null;
+        String[] arguments = null;
+        String propsfilename = null;
+        DebugArgs db = null;
+
+        int arg_i = 0;
+        try {
+            while (arg_i < args.length && (args[arg_i].length() > 0) && args[arg_i].charAt(0) == '-') {
+
+                switch (args[arg_i]) {
+                    case "-#":
+                        arg_i++;
+                        count = Integer.parseInt(args[arg_i++]);
+                        break;
+                    case "-b":
+                        arg_i++;
+                        browser = args[arg_i++];
+                        HarcProps.get_instance().set_browser(browser);
+                        break;
+                    case "-c":
+                        arg_i++;
+                        connection_type = ConnectionType.valueOf(args[arg_i++]);
+                        break;
+                    case "-d":
+                        arg_i++;
+                        debug = Integer.parseInt(args[arg_i++]);
+                        break;
+                    case "-h":
+                        arg_i++;
+                        home_filename = args[arg_i++];
+                        break;
+                    case "-m":
+                        arg_i++;
+                        smart_memory = true;
+                        break;
+                    case "-p":
+                        arg_i++;
+                        propsfilename = args[arg_i++];
+                        break;
+                    case "-s":
+                        arg_i++;
+                        select_mode = true;
+                        break;
+                    case "-t":
+                        arg_i++;
+                        String typename = args[arg_i++];
+                        if (!CommandType_t.is_valid(typename)) {
+                            usage();
+                        }   type = CommandType_t.valueOf(typename);
+                        break;
+                    case "-v":
+                        arg_i++;
+                        verbose = true;
+                        break;
+                    case "-z":
+                        arg_i++;
+                        zone = args[arg_i++];
+                        break;
+                    case "-A":
+                        arg_i++;
+                        the_mediatype = MediaType.audio_only;
+                        break;
+                    case "-V":
+                        arg_i++;
+                        the_mediatype = MediaType.video_only;
+                        break;
+                    case "-T":
+                        arg_i++;
+                        toggle = ToggleType.decode_toggle(args[arg_i++]);
+                        break;
+                    default:
+                        usage();
+                        break;
+                }
+            }
+
+            db = new DebugArgs(debug);
+            devname = args[arg_i];
+
+            // Setup properites
+            if (propsfilename != null)
+                HarcProps.initialize(propsfilename);
+            else
+                HarcProps.initialize();
+
+            if (home_filename == null)
+                home_filename = HarcProps.get_instance().get_homefilename();
+            //if (browser == null)
+            //    browser = harcprops.get_instance().get_browser();
+
+            if (select_mode) {
+                src_device = args[arg_i + 1];
+                if (DebugArgs.dbg_decode_args()) {
+                    System.err.println("Select mode: devname = " + devname
+                            + ", src_device = " + src_device
+                            + " (connection_type = " + connection_type + ").");
+                }
+            } else if (!devname.equals("?")) {
+                String cmdname = args[arg_i + 1];
+                list_commands = cmdname.equals("?");
+                cmd = command_t.parse(cmdname);
+                // Compatibility with old command names. Or simply silly?
+                //if (cmd == command_t.invalid) {
+                //    System.err.println("Warning: Substituting non-existing commands " + cmdname + " by cmd_" + cmdname);
+                //    cmd = ir_code.decode_command("cmd_" + cmdname);
+                //}
+                if (DebugArgs.dbg_decode_args()) {
+                    System.err.println("devname = " + devname + ", commandname = " + args[arg_i + 1] + "(#" + cmd + ")");
+                }
+
+                if (!list_commands && cmd == command_t.invalid) {
+                    System.err.println("Command \"" + args[arg_i + 1] + "\" not recognized, aborting.");
+                    System.exit(7);
+                }
+
+                int no_arguments = args.length - arg_i - 2;
+                arguments = new String[no_arguments];
+
+                if (DebugArgs.dbg_decode_args() && no_arguments > 0) {
+                    System.err.print("Command arguments: ");
+                }
+
+                for (int i = 0; i < no_arguments; i++) {
+                    arguments[i] = args[arg_i + 2 + i];
+                    if (DebugArgs.dbg_decode_args()) {
+                        System.err.print("arguments[" + i + "] = " + arguments[i] + (i == no_arguments - 1 ? ".\n" : ", "));
+                    }
+                }
+            }
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            if (DebugArgs.dbg_decode_args()) {
+                System.err.println("ArrayIndexOutOfBoundsException");
+            }
+            usage();
+        } catch (NumberFormatException e) {
+            if (DebugArgs.dbg_decode_args()) {
+                System.err.println("NumberFormatException");
+            }
+            usage();
+        }
+
+        UserPrefs.get_instance().set_verbose(verbose);
+        UserPrefs.get_instance().set_debug(debug);
+        try {
+            Home hm = new Home(home_filename/*, verbose, debug*/);
+            //harcutils.printtable("xxx", hm.gateway_client_classes("irtrans"));
+            //harcutils.printtable("remotes", device.devices2remotes(hm.gateway_client_classes("irtrans")));
+            if (select_mode) {
+                //harcutils.printtable("blaa", hm.get_selecting_devices());
+                if (src_device.equals("?")) {
+                    HarcUtils.printtable("Valid inputs for " + devname + (zone != null ? (" in zone " + zone) : "") + ":", hm.get_sources(devname, zone));
+                } else {
+                    hm.select(devname, src_device, type, zone, the_mediatype, connection_type);
+                }
+            } else if (devname.equals("?")) {
+                HarcUtils.printtable("Valid devices:", hm.get_devices());
+            } else if (list_commands) // FIXME1: if devname is nonexisting, should produce an
+                // error message instead of just returning nothing.
+            {
+                HarcUtils.printtable("Valid commands for " + devname + " of type " + type + ":", hm.get_commands(devname, type));
+            } else {
+                //harcutils.printtable("blubb", hm.get_zones(devname));
+                String output = hm.do_command(devname, cmd, arguments, type, count, toggle, smart_memory);
+                if (output == null) {
+                    System.out.println("** Failure **");
+                    System.exit(1);
+                } else if (!output.isEmpty()) {
+                    System.out.println("Command output: \"" + output + "\"");
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Cannot read file " + home_filename + " (" + e.getMessage() + ").");
+            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
+        } catch (SAXParseException e) {
+            System.err.println("Parse error in " + home_filename + " (" + e.getMessage() + ").");
+            System.exit(IrpUtils.EXIT_XML_ERROR);
+        } catch (SAXException e) {
+            System.err.println("Parse error in " + home_filename + " (" + e.getMessage() + ").");
+            System.exit(IrpUtils.EXIT_XML_ERROR);
+        } catch (InterruptedException e) {
+            System.err.println("** Interrupted **");
+            System.exit(18);
+        }
+    }
 
     private final HashMap<String, String> alias_table;
     // The get method of device_table should not be used, use get_dev(String) instead.
     private final LinkedHashMap<String, Dev> device_table;
     private final LinkedHashMap<String, DeviceGroup> device_groups_table; // indexed by name, not id
     private final HashMap<String, Gateway> gateway_table;
-    private static final Logger logger = Logger.getLogger(Home.class.getName());
 
     public Home(String home_filename/*, boolean verbose, int debug*/) throws IOException, SAXParseException, SAXException {
         Document doc = XmlUtils.openXmlFile(new File(home_filename));
@@ -1364,222 +1581,5 @@ public final class Home {
             }*/
         }
         return success;
-    }
-
-    private static void usage(int errorcode) {
-        System.err.println("Usage:\n"
-                + "home [<options>] <device_instancename> <command> [<command_args>]*"
-                + "\nwhere options=-h <filename>,-t "
-                + CommandType_t.valid_types('|')
-                + ",-m,-T 0|1,-# <count>,-v,-d <debugcode>,-b <browserpath>, -p <propsfile>\n"
-                + "or\n"
-                + "home -s [-z zone][-A,-V][-c connection_type] <device_instancename> <src_device>");
-        System.exit(errorcode);
-    }
-
-    private static void usage() {
-        usage(IrpUtils.EXIT_USAGE_ERROR);
-    }
-
-    public static void main(String[] args) {
-        CommandType_t type = CommandType_t.any;
-        String home_filename = null;
-        int debug = 0;
-        boolean verbose = false;
-        int count = 1;
-        MediaType the_mediatype = MediaType.audio_video;
-        boolean smart_memory = false;
-        boolean select_mode = false;
-        boolean list_commands = false;
-        String devname = "";
-        String src_device = "";
-        String zone = null;
-        ConnectionType connection_type = ConnectionType.any;
-        command_t cmd = command_t.invalid;
-        ToggleType toggle = ToggleType.dont_care;
-        String browser = null;
-        String[] arguments = null;
-        String propsfilename = null;
-        DebugArgs db = null;
-
-        int arg_i = 0;
-        try {
-            while (arg_i < args.length && (args[arg_i].length() > 0) && args[arg_i].charAt(0) == '-') {
-
-                switch (args[arg_i]) {
-                    case "-#":
-                        arg_i++;
-                        count = Integer.parseInt(args[arg_i++]);
-                        break;
-                    case "-b":
-                        arg_i++;
-                        browser = args[arg_i++];
-                        HarcProps.get_instance().set_browser(browser);
-                        break;
-                    case "-c":
-                        arg_i++;
-                        connection_type = ConnectionType.valueOf(args[arg_i++]);
-                        break;
-                    case "-d":
-                        arg_i++;
-                        debug = Integer.parseInt(args[arg_i++]);
-                        break;
-                    case "-h":
-                        arg_i++;
-                        home_filename = args[arg_i++];
-                        break;
-                    case "-m":
-                        arg_i++;
-                        smart_memory = true;
-                        break;
-                    case "-p":
-                        arg_i++;
-                        propsfilename = args[arg_i++];
-                        break;
-                    case "-s":
-                        arg_i++;
-                        select_mode = true;
-                        break;
-                    case "-t":
-                        arg_i++;
-                        String typename = args[arg_i++];
-                        if (!CommandType_t.is_valid(typename)) {
-                            usage();
-                        }   type = CommandType_t.valueOf(typename);
-                        break;
-                    case "-v":
-                        arg_i++;
-                        verbose = true;
-                        break;
-                    case "-z":
-                        arg_i++;
-                        zone = args[arg_i++];
-                        break;
-                    case "-A":
-                        arg_i++;
-                        the_mediatype = MediaType.audio_only;
-                        break;
-                    case "-V":
-                        arg_i++;
-                        the_mediatype = MediaType.video_only;
-                        break;
-                    case "-T":
-                        arg_i++;
-                        toggle = ToggleType.decode_toggle(args[arg_i++]);
-                        break;
-                    default:
-                        usage();
-                        break;
-                }
-            }
-
-            db = new DebugArgs(debug);
-            devname = args[arg_i];
-
-            // Setup properites
-            if (propsfilename != null)
-                HarcProps.initialize(propsfilename);
-            else
-                HarcProps.initialize();
-
-            if (home_filename == null)
-                home_filename = HarcProps.get_instance().get_homefilename();
-            //if (browser == null)
-            //    browser = harcprops.get_instance().get_browser();
-
-            if (select_mode) {
-                src_device = args[arg_i + 1];
-                if (DebugArgs.dbg_decode_args()) {
-                    System.err.println("Select mode: devname = " + devname
-                            + ", src_device = " + src_device
-                            + " (connection_type = " + connection_type + ").");
-                }
-            } else if (!devname.equals("?")) {
-                String cmdname = args[arg_i + 1];
-                list_commands = cmdname.equals("?");
-                cmd = command_t.parse(cmdname);
-                // Compatibility with old command names. Or simply silly?
-                //if (cmd == command_t.invalid) {
-                //    System.err.println("Warning: Substituting non-existing commands " + cmdname + " by cmd_" + cmdname);
-                //    cmd = ir_code.decode_command("cmd_" + cmdname);
-                //}
-                if (DebugArgs.dbg_decode_args()) {
-                    System.err.println("devname = " + devname + ", commandname = " + args[arg_i + 1] + "(#" + cmd + ")");
-                }
-
-                if (!list_commands && cmd == command_t.invalid) {
-                    System.err.println("Command \"" + args[arg_i + 1] + "\" not recognized, aborting.");
-                    System.exit(7);
-                }
-
-                int no_arguments = args.length - arg_i - 2;
-                arguments = new String[no_arguments];
-
-                if (DebugArgs.dbg_decode_args() && no_arguments > 0) {
-                    System.err.print("Command arguments: ");
-                }
-
-                for (int i = 0; i < no_arguments; i++) {
-                    arguments[i] = args[arg_i + 2 + i];
-                    if (DebugArgs.dbg_decode_args()) {
-                        System.err.print("arguments[" + i + "] = " + arguments[i] + (i == no_arguments - 1 ? ".\n" : ", "));
-                    }
-                }
-            }
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            if (DebugArgs.dbg_decode_args()) {
-                System.err.println("ArrayIndexOutOfBoundsException");
-            }
-            usage();
-        } catch (NumberFormatException e) {
-            if (DebugArgs.dbg_decode_args()) {
-                System.err.println("NumberFormatException");
-            }
-            usage();
-        }
-
-        UserPrefs.get_instance().set_verbose(verbose);
-        UserPrefs.get_instance().set_debug(debug);
-        try {
-            Home hm = new Home(home_filename/*, verbose, debug*/);
-            //harcutils.printtable("xxx", hm.gateway_client_classes("irtrans"));
-            //harcutils.printtable("remotes", device.devices2remotes(hm.gateway_client_classes("irtrans")));
-            if (select_mode) {
-                //harcutils.printtable("blaa", hm.get_selecting_devices());
-                if (src_device.equals("?")) {
-                    HarcUtils.printtable("Valid inputs for " + devname + (zone != null ? (" in zone " + zone) : "") + ":", hm.get_sources(devname, zone));
-                } else {
-                    hm.select(devname, src_device, type, zone, the_mediatype, connection_type);
-                }
-            } else if (devname.equals("?")) {
-                HarcUtils.printtable("Valid devices:", hm.get_devices());
-            } else if (list_commands) // FIXME1: if devname is nonexisting, should produce an
-            // error message instead of just returning nothing.
-            {
-                HarcUtils.printtable("Valid commands for " + devname + " of type " + type + ":", hm.get_commands(devname, type));
-            } else {
-                //harcutils.printtable("blubb", hm.get_zones(devname));
-                String output = hm.do_command(devname, cmd, arguments, type, count, toggle, smart_memory);
-                if (output == null) {
-                    System.out.println("** Failure **");
-                    System.exit(1);
-                } else if (!output.isEmpty()) {
-                    System.out.println("Command output: \"" + output + "\"");
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Cannot read file " + home_filename + " (" + e.getMessage() + ").");
-            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
-        } catch (SAXParseException e) {
-            System.err.println("Parse error in " + home_filename + " (" + e.getMessage() + ").");
-            System.exit(IrpUtils.EXIT_XML_ERROR);
-        } catch (SAXException e) {
-            System.err.println("Parse error in " + home_filename + " (" + e.getMessage() + ").");
-            System.exit(IrpUtils.EXIT_XML_ERROR);
-        } catch (InterruptedException e) {
-            System.err.println("** Interrupted **");
-            System.exit(18);
-        }
     }
 }

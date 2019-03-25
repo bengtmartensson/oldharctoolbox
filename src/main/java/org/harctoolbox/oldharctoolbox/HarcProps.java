@@ -35,11 +35,63 @@ import java.util.Properties;
 
 public final class HarcProps {
 
+    private final static boolean use_xml = true;
+    public static final String default_propsfilename = "harctoolbox.properties.xml";
+    private static HarcProps instance = null;
+
+    public static void initialize(String filename) {
+        if (filename == null)
+            filename = default_propsfilename;
+        if (instance == null)
+            instance = new HarcProps(filename);
+    }
+
+    public static void initialize() {
+        initialize(null);
+    }
+
+    public static void finish() throws IOException {
+        instance.save();
+    }
+
+    public static HarcProps get_instance() {
+        initialize();
+        return instance;
+    }
+
+    public static void main(String[] args) {
+        String filename = args.length > 0 ? args[0] : null;
+        HarcProps p = new HarcProps(filename);
+        p.list();
+        try {
+            p.save();
+        } catch (IOException e) {
+        }
+    }
+
     private Properties props;
     private String filename;
-    private final static boolean use_xml = true;
     private boolean need_save;
-    public static final String default_propsfilename = "harctoolbox.properties.xml";
+    public HarcProps(String filename) {
+        this.filename = filename;
+        need_save = false;
+        props = new Properties();
+        try (FileInputStream f = new FileInputStream(filename)) {
+            if (use_xml)
+                props.loadFromXML(f);
+            else
+                props.load(f);
+        } catch (FileNotFoundException e) {
+            System.err.println("Property File " + filename + " not found, using builtin defaults.");
+            setup_defaults();
+            need_save = true;
+        } catch (IOException e) {
+            System.err.println("Property File " + filename + " could not be read, using builtin defaults.");
+            setup_defaults();
+            need_save = true;
+        }
+        setup_defaults();
+    }
 
     private String appendable(String env) {
         String str = System.getenv(env);
@@ -81,27 +133,6 @@ public final class HarcProps {
 
     public Properties get_props() {
         return props;
-    }
-
-    public HarcProps(String filename) {
-        this.filename = filename;
-        need_save = false;
-        props = new Properties();
-        try (FileInputStream f = new FileInputStream(filename)) {
-            if (use_xml)
-                props.loadFromXML(f);
-            else
-                props.load(f);
-        } catch (FileNotFoundException e) {
-            System.err.println("Property File " + filename + " not found, using builtin defaults.");
-            setup_defaults();
-            need_save = true;
-        } catch (IOException e) {
-            System.err.println("Property File " + filename + " could not be read, using builtin defaults.");
-            setup_defaults();
-            need_save = true;
-        }
-        setup_defaults();
     }
 
     public boolean save(String filename) throws IOException,FileNotFoundException {
@@ -261,37 +292,5 @@ public final class HarcProps {
     public void set_harcmacros(String s) {
         props.setProperty("harcmacros", s);
         need_save = true;
-    }
-
-    private static HarcProps instance = null;
-
-    public static void initialize(String filename) {
-        if (filename == null)
-            filename = default_propsfilename;
-        if (instance == null)
-            instance = new HarcProps(filename);
-    }
-
-    public static void initialize() {
-        initialize(null);
-    }
-
-    public static void finish() throws IOException {
-        instance.save();
-    }
-
-    public static HarcProps get_instance() {
-        initialize();
-        return instance;
-    }
-
-    public static void main(String[] args) {
-        String filename = args.length > 0 ? args[0] : null;
-        HarcProps p = new HarcProps(filename);
-        p.list();
-        try {
-            p.save();
-        } catch (IOException e) {
-        }
     }
 }

@@ -31,6 +31,22 @@ public final class CommandSetEntry {
     private String ccf_toggle_0;
     private String ccf_toggle_1;
 
+    public CommandSetEntry(String cmdname, String cmdno, String name,
+            String transmit, String response_lines,
+            String response_end,
+            String expected_response, String remark, String[] arguments,
+            String ccf_toggle_0, String ccf_toggle_1) {
+        short cmdnumber =
+                cmdno.isEmpty()
+                ? -1
+                : ((cmdno.length() > 2 && cmdno.startsWith("0x")) ? Short.parseShort(cmdno.substring(2), 16)
+                : Short.parseShort(cmdno));
+
+        setup(command_t.parse(cmdname), cmdnumber, name, transmit,
+                response_lines.isEmpty() ? 0 : Integer.parseInt(response_lines),
+                response_end, expected_response, remark, arguments, ccf_toggle_0, ccf_toggle_1);
+    }
+
     @Override
     public String toString() {
         return "commandset_entry: " + cmd + ", " + cmdno + ", '" + transmit + "'";
@@ -139,21 +155,5 @@ public final class CommandSetEntry {
         this.arguments = arguments;
         this.ccf_toggle_0 = ccf_toggle_0;
         this.ccf_toggle_1 = ccf_toggle_1;
-    }
-
-    public CommandSetEntry(String cmdname, String cmdno, String name,
-            String transmit, String response_lines,
-            String response_end,
-            String expected_response, String remark, String[] arguments,
-            String ccf_toggle_0, String ccf_toggle_1) {
-        short cmdnumber =
-                cmdno.isEmpty()
-                ? -1
-                : ((cmdno.length() > 2 && cmdno.startsWith("0x")) ? Short.parseShort(cmdno.substring(2), 16)
-                : Short.parseShort(cmdno));
-
-        setup(command_t.parse(cmdname), cmdnumber, name, transmit,
-                response_lines.isEmpty() ? 0 : Integer.parseInt(response_lines),
-                response_end, expected_response, remark, arguments, ccf_toggle_0, ccf_toggle_1);
     }
 }

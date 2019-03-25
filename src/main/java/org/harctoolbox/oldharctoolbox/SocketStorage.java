@@ -29,12 +29,12 @@ import java.util.HashMap;
 public final class SocketStorage {
 
     private static boolean enable = true;
+    private static boolean debug = false;
+    private static HashMap<String, socket_stat> sockettable = new HashMap<String, socket_stat>(16);
 
     public static void enable_storage(boolean en) {
         enable = en;
     }
-
-    private static boolean debug = false;
 
     public static void debug_enable(boolean d) {
         debug = d;
@@ -45,41 +45,6 @@ public final class SocketStorage {
             System.err.println(s);
     }
 
-    private static class addr_portno {
-        private String hostname = null;
-        private int portno = 0;
-
-        addr_portno(String addr, int p) throws UnknownHostException {
-            hostname = canonicalize(addr);
-            portno = p;
-        }
-        addr_portno(Socket sock) {
-            hostname = sock.getInetAddress().getHostAddress();
-            portno = sock.getPort();
-        }
-
-        @Override
-        public String toString() {
-            return hostname + ":" + portno;
-        }
-    }
-
-    private static class socket_stat {
-        public Socket sock = null;
-        public boolean checked_out = false;
-
-        socket_stat(Socket s, boolean state) {
-            sock = s;
-            checked_out = state;
-        }
-
-        @Override
-        public String toString() {
-            return sock.toString() + (checked_out ? " (out)" : " (in)");
-        }
-    }
-
-    private static HashMap<String, socket_stat> sockettable = new HashMap<String, socket_stat>(16);
 
     private static String canonicalize(String host) throws UnknownHostException {
         return InetAddress.getByName(host).getHostAddress();
@@ -218,6 +183,38 @@ public final class SocketStorage {
 
         } catch (IOException | InterruptedException | NumberFormatException e) {
             e.printStackTrace();
+        }
+    }
+    private static class addr_portno {
+        private String hostname = null;
+        private int portno = 0;
+
+        addr_portno(String addr, int p) throws UnknownHostException {
+            hostname = canonicalize(addr);
+            portno = p;
+        }
+        addr_portno(Socket sock) {
+            hostname = sock.getInetAddress().getHostAddress();
+            portno = sock.getPort();
+        }
+
+        @Override
+        public String toString() {
+            return hostname + ":" + portno;
+        }
+    }
+    private static class socket_stat {
+        public Socket sock = null;
+        public boolean checked_out = false;
+
+        socket_stat(Socket s, boolean state) {
+            sock = s;
+            checked_out = state;
+        }
+
+        @Override
+        public String toString() {
+            return sock.toString() + (checked_out ? " (out)" : " (in)");
         }
     }
 }

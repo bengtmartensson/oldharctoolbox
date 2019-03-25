@@ -21,6 +21,12 @@ package org.harctoolbox.oldharctoolbox;
  *
  */
 public final class UserPrefs {
+    private static final UserPrefs the_instance = new UserPrefs();
+
+    public static UserPrefs get_instance() {
+        return the_instance;
+    }
+
     private boolean verbose = false;
     private int debug = 0;
      // Can be annoying with unwanted and unexpected browsers popping up
@@ -29,12 +35,6 @@ public final class UserPrefs {
     //private String browser = "firefox";
 
     private String propsfilename;
-
-    private static final UserPrefs the_instance = new UserPrefs();
-
-    public static UserPrefs get_instance() {
-        return the_instance;
-    }
 
     public String get_propsfilename() {
        return propsfilename;

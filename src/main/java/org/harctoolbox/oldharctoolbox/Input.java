@@ -27,91 +27,6 @@ import java.util.HashSet;
  */
 public final class Input {
 
-    public static class QueryCommand {
-
-        private final command_t cmd;
-        private final String val;
-        private final MediaType type;
-
-        public QueryCommand(command_t cmd, String val, MediaType type) {
-            this.cmd = cmd;
-            this.val = val;
-            this.type = type;
-        }
-
-        public command_t get_command() {
-            return cmd;
-        }
-
-        public String get_response() {
-            return val;
-        }
-
-        public MediaType get_type() {
-            return type;
-        }
-    }
-
-    public static class Zone {
-
-        private final String name;
-        private final EnumMap<MediaType, command_t> selectcommands;
-        private final EnumMap<MediaType, QueryCommand> querycommands;
-
-        public Zone(String name, EnumMap<MediaType, command_t> selectcommands,
-                EnumMap<MediaType, QueryCommand> querycommands) {
-            this.name = name;
-            this.selectcommands = selectcommands;
-            this.querycommands = querycommands;
-        }
-
-        public String get_name() {
-            return name;
-        }
-
-        public boolean has_separate_av_commands() {
-            return selectcommands.size() > 1;
-        }
-    }
-
-    public static class Connector {
-          private final ConnectionType  type;
-          private final String hardware;
-          private final int number;
-          private final String version;
-          private final String remark;
-          private final HashSet<String> deviceref;
-
-          public Connector(ConnectionType type, String hardware, int number, String version, String remark, HashSet<String> deviceref) {
-              this.type = type;
-              this.hardware = hardware;
-              this.number = number;
-              this.version = version;
-              this.remark = remark;
-              this.deviceref = deviceref;
-          }
-
-          public ConnectionType get_type() {
-              return type;
-          }
-
-          public String get_hardware() {
-              return hardware;
-          }
-
-          public int get_number() {
-              return number;
-          }
-
-          public String get_remark() {
-              return remark;
-          }
-
-          public HashSet<String> get_deviceref() {
-              return deviceref;
-          }
-    }
-
     private final String name;
     private final String myname;
     private final boolean audio;
@@ -247,5 +162,90 @@ public final class Input {
             table = z.querycommands;
         }
         return table == null ? null : table.get(type);
+    }
+
+    public static class QueryCommand {
+
+        private final command_t cmd;
+        private final String val;
+        private final MediaType type;
+
+        public QueryCommand(command_t cmd, String val, MediaType type) {
+            this.cmd = cmd;
+            this.val = val;
+            this.type = type;
+        }
+
+        public command_t get_command() {
+            return cmd;
+        }
+
+        public String get_response() {
+            return val;
+        }
+
+        public MediaType get_type() {
+            return type;
+        }
+    }
+
+    public static class Zone {
+
+        private final String name;
+        private final EnumMap<MediaType, command_t> selectcommands;
+        private final EnumMap<MediaType, QueryCommand> querycommands;
+
+        public Zone(String name, EnumMap<MediaType, command_t> selectcommands,
+                EnumMap<MediaType, QueryCommand> querycommands) {
+            this.name = name;
+            this.selectcommands = selectcommands;
+            this.querycommands = querycommands;
+        }
+
+        public String get_name() {
+            return name;
+        }
+
+        public boolean has_separate_av_commands() {
+            return selectcommands.size() > 1;
+        }
+    }
+
+    public static class Connector {
+        private final ConnectionType  type;
+        private final String hardware;
+        private final int number;
+        private final String version;
+        private final String remark;
+        private final HashSet<String> deviceref;
+
+        public Connector(ConnectionType type, String hardware, int number, String version, String remark, HashSet<String> deviceref) {
+            this.type = type;
+            this.hardware = hardware;
+            this.number = number;
+            this.version = version;
+            this.remark = remark;
+            this.deviceref = deviceref;
+        }
+
+        public ConnectionType get_type() {
+            return type;
+        }
+
+        public String get_hardware() {
+            return hardware;
+        }
+
+        public int get_number() {
+            return number;
+        }
+
+        public String get_remark() {
+            return remark;
+        }
+
+        public HashSet<String> get_deviceref() {
+            return deviceref;
+        }
     }
 }

@@ -53,35 +53,7 @@ public final class Device {
 
     public static final String doctype_systemid_filename = "devices.dtd";
     public static final String doctype_publicid = "-//bengt-martensson.de//devices//en";
-    private String vendor;
-    private String device_name;
-    private String id;
-    private String model;
-    private DeviceType type;
-    private Document doc = null;
-    private Element device_el = null;
-    private CommandSet[] commandsets;
-    private HashMap<String, String> attributes;
-    private String[][] aliases;
-    private int no_aliases = 0;
     private static int debug = 0;
-    private int jp1_setupcode = -1;
-    private boolean pingable_on;
-    private boolean pingable_standby;
-
-    private static class device_with_attributes {
-        String device_classname;
-        HashMap<String, String> attributes;
-        device_with_attributes(String device_classname, HashMap<String, String>attributes) {
-            this.device_classname = device_classname;
-            this.attributes = attributes;
-        }
-        @Override
-        public String toString() {
-            return device_classname + attributes.toString(); // May not be portable, i.e. work with all implementations
-        }
-    }
-
     private static HashMap<String, Device> device_storage = new HashMap<String, Device>(16);
 
     public static Device new_device(String devicename, HashMap<String, String>attributes)
@@ -97,6 +69,487 @@ public final class Device {
 
     public static void flush_storage() {
         device_storage.clear();
+    }
+
+    public static String[] devices2remotes(String[] devices) throws IOException, SAXParseException, SAXException {
+        ArrayList<String> v = new ArrayList<>(8);
+        for (String device : devices) {
+            String[] remotes = (new Device(device)).get_remotenames();
+            v.addAll(Arrays.asList(remotes));
+        }
+        return v.toArray(new String[v.size()]);
+    }
+
+    private static Element find_thing_el(Document doc, String thing_tagname,
+            String thing_name) {
+        if (doc == null)
+            return null;
+        Element root = doc.getDocumentElement();
+        Element el = null;
+        if (root.getTagName().equals(thing_tagname))
+            el = root;
+        else {
+            NodeList things = root.getElementsByTagName(thing_tagname);
+            if (thing_name == null)
+                el = (Element) things.item(0);
+            else
+                for (int i = 0; i < things.getLength(); i++) {
+                    if (((Element) things.item(i)).getAttribute("id").equals(thing_name))
+                        el = (Element) things.item(i);
+                }
+        }
+        return el;
+    }
+
+    private static Element find_device_el(Document doc, String dev_name) {
+        return find_thing_el(doc, "device", dev_name);
+    }
+
+    private static Element find_commandgroup_el(Document doc, String id) {
+        return find_thing_el(doc, "commandgroup", id);
+    }
+
+    /**
+     * Returns the names of the devices available to us. For this, just look at the file names
+     * in the device directory. This is not absolutely fool proof, in particular
+     * on systems with case insensitive file system.
+     *
+     * @return Array of strings of the device names.
+     */
+    public static String[] get_devices() {
+        return get_basenames(HarcProps.get_instance().get_devicesdir(), HarcUtils.devicefile_extension, false);
+    }
+
+    private static String[] get_basenames(String dirname, String extension, boolean toLowercase) {
+        File dir = new File(dirname);
+        if (!dir.isDirectory())
+            return null;
+
+        if (extension.charAt(0) != '.')
+            extension = "." + extension;
+        String[] files = dir.list(new extension_filter(extension));
+        String[] result = new String[files.length];
+        for (int i =0; i < files.length; i++)
+            result[i] = toLowercase ? files[i].toLowerCase().substring(0, files[i].lastIndexOf(extension))
+                    : files[i].substring(0, files[i].lastIndexOf(extension));
+        return result;
+    }
+
+    public static boolean export_device(String export_dir, String devname) {
+        String out_filename = export_dir + File.separator + devname + HarcUtils.devicefile_extension;
+        System.err.println("Exporting " + devname + " to " + out_filename + ".");
+        Device dev = null;
+        try {
+            dev = new Device(devname, null, true);
+        } catch (IOException e) {
+            System.err.println("IOException with " + devname);
+            return false;
+        } catch (SAXParseException e) {
+            System.err.println(e.getMessage());
+            return false;
+        } catch (SAXException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+
+        if (!dev.is_valid()) {
+            System.err.println("Failure!");
+            return false;
+        }
+
+        if (debug != 0)
+            System.out.println(dev.info());
+
+        dev.augment_dom(false);
+        dev.print(out_filename);
+
+        return true;
+    }
+
+    public static boolean export_all_devices(String export_dir) {
+        File dir = new File(export_dir);
+        if (dir.isFile()) {
+            System.err.println("Error: File " + export_dir + " exists, but is not a directory.");
+            return false;
+        } else if (!dir.exists()) {
+            System.err.println("Directory " + export_dir + " does not exist, creating.");
+            boolean stat = dir.mkdir();
+            if (!stat) {
+                System.err.println("Directory creation failed.");
+                return false;
+            }
+        }
+        String[] devs = get_devices();
+        // Ignore errors, just continue
+        for (String dev : devs)
+            export_device(export_dir, dev);
+
+        return true;
+    }
+
+    private static void usage(int exitcode) {
+        System.err.println("Usage:");
+        System.err.println("device [<options>] -f <input_filename> [<cmd_name>]");
+        System.err.println("or");
+        System.err.println("device -x <export_directory>");
+        System.err.println("where options=-o <filename>,-@ <attributename>,-a aliasname,-l,-d,-c,-t "
+                + CommandType_t.valid_types('|'));
+        if (exitcode >= 0)
+            System.exit(exitcode);
+    }
+
+    private static void usage() {
+        usage(IrpUtils.EXIT_USAGE_ERROR);
+    }
+
+    public static void main(String args[]) {
+        CommandType_t type = CommandType_t.any;
+        boolean get_code = false;
+        boolean list_commands = false;
+        String in_filename = null;
+        String out_filename = null;
+        String attribute_name = null;
+        String alias_name = null;
+        String export_dir = null;
+
+        short deviceno = -1;
+        short subdevice = 0;
+
+        int arg_i = 0;
+        try {
+            while (arg_i < args.length && (args[arg_i].length() > 0) // ???
+                    && args[arg_i].charAt(0) == '-') {
+
+                switch (args[arg_i]) {
+                    case "-@":
+                        arg_i++;
+                        attribute_name = args[arg_i++];
+                        break;
+                    case "-D":
+                        arg_i++;
+                        deviceno = Short.parseShort(args[arg_i++]);
+                        break;
+                    case "-S":
+                        arg_i++;
+                        subdevice = Short.parseShort(args[arg_i++]);
+                        break;
+                    case "-a":
+                        arg_i++;
+                        alias_name = args[arg_i++];
+                        break;
+                    case "-c":
+                        arg_i++;
+                        get_code = true;
+                        break;
+                    case "-d":
+                        arg_i++;
+                        debug++;
+                        break;
+                    case "-l":
+                        arg_i++;
+                        list_commands = true;
+                        break;
+                    case "-f":
+                        arg_i++;
+                        in_filename = args[arg_i++];
+                        break;
+                    case "-o":
+                        arg_i++;
+                        out_filename = args[arg_i++];
+                        break;
+                    case "-t":
+                        arg_i++;
+                        String typename = args[arg_i++];
+                        if (!CommandType_t.is_valid(typename))
+                            usage();
+                        type = CommandType_t.valueOf(typename);
+                        break;
+                    case "-x":
+                        arg_i++;
+                        export_dir = args[arg_i++];
+                        break;
+                    default:
+                        usage(IrpUtils.EXIT_USAGE_ERROR);
+                        break;
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            usage();
+        }
+
+        if (export_dir != null) {
+            boolean success = export_all_devices(export_dir);
+            System.exit(success ? IrpUtils.EXIT_SUCCESS : IrpUtils.EXIT_CONFIG_WRITE_ERROR);
+        } else if (in_filename == null) {
+            usage(-1);
+            HarcUtils.printtable("Known devices:", get_devices());
+            System.exit(IrpUtils.EXIT_SUCCESS);
+        } else if ((args.length != arg_i) && (args.length != arg_i + 1))
+            usage();
+
+        Device dev = null;
+        try {
+            dev = new Device(in_filename, null, true);
+        } catch (IOException e) {
+            System.err.println("IOException with " + in_filename);
+            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
+        } catch (SAXParseException e) {
+            System.err.println(e.getMessage());
+        } catch (SAXException e) {
+            System.err.println(e.getMessage());
+        }
+
+        if (!dev.is_valid()) {
+            System.err.println("Failure!");
+            System.exit(2);
+        }
+
+        if (debug != 0)
+            System.out.println(dev.info());
+
+        if (out_filename != null) {
+            dev.augment_dom(false);
+            dev.print(out_filename);
+        }
+
+        if (list_commands) {
+            command_t[] cmds = dev.get_commands(type);
+            for (command_t cmd : cmds) {
+                System.out.println(cmd);
+            }
+        }
+
+        if (attribute_name != null)
+            System.out.println("@" + attribute_name + "=" + dev.get_attribute(attribute_name));
+
+        if (alias_name != null)
+            System.out.println("alias: " + alias_name + "->" + dev.get_alias(alias_name));
+        if (args.length == arg_i + 1) {
+            String cmdname = args[arg_i];
+            Command c = dev.get_command(command_t.parse(cmdname), type);
+            if (c == null)
+                System.out.println("No such command with specified type");
+            else {
+                System.out.println(c.toString());
+                if (get_code) {
+                    IrSignal ircode = (deviceno == -1) ? c.get_ir_code(ToggleType.toggle_0, true)
+                            : c.get_ir_code(ToggleType.toggle_0, true, deviceno, subdevice);
+                    if (ircode == null) {
+                        System.err.println("No such IR command: " + cmdname);
+                        System.exit(2);
+                    } else {
+                        System.out.println(ircode);
+                        if (c.get_toggle())
+                            System.out.println(c.get_ir_code(ToggleType.toggle_1, true));
+                    }
+                }
+            }
+        }
+    }
+
+    private String vendor;
+    private String device_name;
+    private String id;
+    private String model;
+    private DeviceType type;
+    private Document doc = null;
+    private Element device_el = null;
+    private CommandSet[] commandsets;
+    private HashMap<String, String> attributes;
+    private String[][] aliases;
+    private int no_aliases = 0;
+    private int jp1_setupcode = -1;
+    private boolean pingable_on;
+    private boolean pingable_standby;
+
+    private Device(String filename, HashMap<String, String>attributes, boolean barf_for_invalid)
+            throws IOException, SAXParseException, SAXException {
+        this( (filename.contains(File.separator) ? "" : HarcProps.get_instance().get_devicesdir() + File.separator)
+                + filename
+                + ((filename.endsWith(HarcUtils.devicefile_extension)) ? "" : HarcUtils.devicefile_extension),
+                null, attributes, barf_for_invalid);
+    }
+
+    private Device(String filename, String devicename, HashMap<String, String> attributes, boolean barf_for_invalid)
+            throws IOException, SAXParseException, SAXException {
+        this(XmlUtils.openXmlFile(new File(filename)), devicename, attributes, barf_for_invalid);
+    }
+
+    private Device(Document doc, HashMap<String, String>attributes, boolean barf_for_invalid) {
+        this(doc, (String) null, attributes, barf_for_invalid);
+    }
+
+    //public device(Document doc, String dev_name, boolean barf_for_invalid) {
+    //    this(doc, find_device_el(doc, dev_name), barf_for_invalid);
+    //}
+
+    /**
+     *
+     * @param name Either file name or device name.
+     * @param attributes
+     * @throws java.io.IOException
+     * @throws org.xml.sax.SAXParseException
+     */
+    public Device(String name, HashMap<String, String>attributes) throws IOException, SAXParseException, SAXException {
+        this(name, attributes, true);
+    }
+
+    public Device(String name) throws IOException, SAXParseException, SAXException {
+        this(name, null);
+    }
+
+    private Device(Document doc, String dev_name, HashMap<String, String>instance_attributes, boolean barf_for_invalid) {
+        this.doc = doc;
+        if (doc == null)
+            return;
+
+        Element device_el = find_device_el(doc, dev_name);
+        this.device_el = device_el;
+        device_name = device_el.getAttribute("name");
+        vendor = device_el.getAttribute("vendor");
+        id = device_el.getAttribute("id");
+        model = device_el.getAttribute("model");
+        type = DeviceType.valueOf(device_el.getAttribute("type"));
+        pingable_on = device_el.getAttribute("pingable_on").equals("yes"); // i.e. default false
+        pingable_standby = device_el.getAttribute("pingable_standby").equals("yes"); // i.e. default false
+
+        NodeList nl = device_el.getElementsByTagName("jp1data");
+        if (nl.getLength() > 0) {
+            nl = ((Element)nl.item(0)).getElementsByTagName("setupcode");
+            jp1_setupcode = Integer.parseInt(((Element)nl.item(0)).getAttribute("value"));
+        }
+
+        // First read the attributes of the device file, considered as defaults...
+        NodeList attributes_nodes = device_el.getElementsByTagName("attribute");
+        int no_attributes = attributes_nodes.getLength();
+        attributes = new HashMap<>(no_attributes);
+        for (int i = 0; i < no_attributes; i++) {
+            Element attr = (Element) attributes_nodes.item(i);
+            String val =
+                    attributes.put(
+                            attr.getAttribute("name"),
+                            attr.getAttribute("defaultvalue").isEmpty() ? "no" : attr.getAttribute("defaultvalue"));
+        }
+        // ... then, to the extent applicable, overwrite with actual instance values
+        // if instance_attributes == null I am exporting, set everything to true.
+        if (instance_attributes == null) {
+            attributes.clear();
+            //for (String attributeName : attributes.keySet())
+            //    attributes.put(attributeName, "export");
+        } else {
+            instance_attributes.entrySet().forEach((kvp) -> {
+                if (attributes.containsKey(kvp.getKey()))
+                    attributes.put(kvp.getValue(), instance_attributes.get(kvp.getKey()));
+                else
+                    System.err.println("WARNING: Attribute named `" + kvp.getKey() + "' does not exist in device `" + device_name + "', ignored.");
+            });
+        }
+
+        NodeList aliases_nodes = device_el.getElementsByTagName("alias");
+        no_aliases = aliases_nodes.getLength();
+        aliases = new String[no_aliases][2];
+        for (int i = 0; i < no_aliases; i++) {
+            Element ali = (Element) aliases_nodes.item(i);
+            aliases[i][0] = ali.getAttribute("name");
+            aliases[i][1] = ali.getAttribute("command");
+        }
+
+        NodeList commandsets_nodes = device_el.getElementsByTagName("commandset");
+        int no_commandsets = commandsets_nodes.getLength();
+        commandsets = new CommandSet[no_commandsets];
+        // TODO: evaluate ifattribute for commandsets
+        for (int i = 0; i < no_commandsets; i++) {
+            Element cs = (Element) commandsets_nodes.item(i);
+            //if (cs.getAttribute("toggle") != null && cs.getAttribute("toggle").equals("yes"))
+            //    has_toggle = true;
+
+            // This does not work for hierarchical commandgrouprefs
+            NodeList cgrs = cs.getElementsByTagName("commandgroupref");
+            for (int j = 0; j < cgrs.getLength(); j++) {
+                Element cgr = (Element) cgrs.item(j);
+                Element cg = find_commandgroup_el(doc, cgr.getAttribute("commandgroup"));
+                Element par = (Element) cgr.getParentNode();
+                par.replaceChild(cg.cloneNode(true), cgr);
+            }
+
+            NodeList cmd_nodes = cs.getElementsByTagName("command");
+            int no_valids = 0;
+            for (int j = 0; j < cmd_nodes.getLength(); j++) {
+                Element e = (Element) cmd_nodes.item(j);
+                if (command_t.is_valid(e.getAttribute("cmdref"))
+                        && evaluate_ifattribute(e))
+                    no_valids++;
+            }
+            CommandSetEntry[] cmds = new CommandSetEntry[no_valids];
+            int pos = 0;
+            for (int j = 0; j < cmd_nodes.getLength(); j++) {
+                Element cmd_el = (Element) cmd_nodes.item(j);
+                String commandname = cmd_el.getAttribute("cmdref");
+                String ifattr = cmd_el.getAttribute("ifattribute");
+                if (ifattr.startsWith("!"))
+                    ifattr = ifattr.substring(1).trim();
+                if (!ifattr.isEmpty() && !attributes.isEmpty() && !attributes.containsKey(ifattr))
+                    System.err.println("WARNING: command " + commandname + " has undeclared attribute " + ifattr);
+                if (!command_t.is_valid(commandname)) {
+                    if (barf_for_invalid)
+                        System.err.println("Warning: Command " + commandname + " is invalid.");
+                } else if (evaluate_ifattribute(cmd_el)) {
+                    NodeList al = cmd_el.getElementsByTagName("argument");
+                    String[] arguments = new String[al.getLength()];
+                    for (int a = 0; a < arguments.length; a++) {
+                        arguments[a] = ((Element) al.item(a)).getAttribute("name");
+                    }
+                    String ccf_toggle_0 = null;
+                    String ccf_toggle_1 = null;
+                    NodeList ccfs = cmd_el.getElementsByTagName("ccf");
+                    for (int k = 0; k < ccfs.getLength(); k++) {
+                        Element ccf = (Element)ccfs.item(k);
+                        if (ccf.getAttribute("toggle").equals("1"))
+                            ccf_toggle_1 = ccf.getTextContent();
+                        else
+                            ccf_toggle_0 = ccf.getTextContent();
+                    }
+                    cmds[pos++] = new CommandSetEntry(cmd_el.getAttribute("cmdref"),
+                            cmd_el.getAttribute("cmdno"),
+                            cmd_el.getAttribute("name"),
+                            cmd_el.getAttribute("transmit"),
+                            cmd_el.getAttribute("response_lines"),
+                            cmd_el.getAttribute("response_ending"),
+                            cmd_el.getAttribute("expected_response"),
+                            cmd_el.getAttribute("remark"),
+                            arguments,
+                            ccf_toggle_0,
+                            ccf_toggle_1);
+                }
+            }
+            /*
+            NodeList cmdgrouprefs_nodes = cs.getElementsByTagName("commandgroupref");
+            for (int k = 0; k < cmdgrouprefs_nodes.length; k++) {
+            Element cmdgroupref = (Element)cmdgrouprefs_nodes.item[k];
+            Element cmdgroup = find_commandgroup_el(doc, cmdgroupref.getAttribute("commandgroup"));
+            NodeList cmds = cmdgroup
+
+            }
+            */
+            commandsets[i] = new CommandSet(cmds,
+                    cs.getAttribute("type"),
+                    cs.getAttribute("protocol"),
+                    cs.getAttribute("deviceno"),
+                    cs.getAttribute("subdevice"),
+                    cs.getAttribute("toggle"),
+                    cs.getAttribute("additional_parameters"),
+                    cs.getAttribute("name"),
+                    cs.getAttribute("remotename"),
+                    cs.getAttribute("pseudo_power_on"),
+                    cs.getAttribute("prefix"),
+                    cs.getAttribute("suffix"),
+                    cs.getAttribute("delay_between_reps"),
+                    cs.getAttribute("open"),
+                    cs.getAttribute("close"),
+                    cs.getAttribute("portnumber"),
+                    cs.getAttribute("charset"),
+                    cs.getAttribute("flavor"));
+        }
     }
 
     public command_t[] get_commands(CommandType_t type) {
@@ -341,15 +794,6 @@ public final class Device {
         return -1;
     }
 
-    public static String[] devices2remotes(String[] devices) throws IOException, SAXParseException, SAXException {
-        ArrayList<String> v = new ArrayList<>(8);
-        for (String device : devices) {
-            String[] remotes = (new Device(device)).get_remotenames();
-            v.addAll(Arrays.asList(remotes));
-        }
-        return v.toArray(new String[v.size()]);
-    }
-
     /*
      public String getirremotename(String cmdname) {
         for (int i = 0; i < commandsets.length; i++) {
@@ -424,35 +868,6 @@ public final class Device {
         return this.jp1_setupcode;
     }
 
-    private static Element find_thing_el(Document doc, String thing_tagname,
-            String thing_name) {
-        if (doc == null)
-            return null;
-        Element root = doc.getDocumentElement();
-        Element el = null;
-        if (root.getTagName().equals(thing_tagname))
-            el = root;
-        else {
-            NodeList things = root.getElementsByTagName(thing_tagname);
-            if (thing_name == null)
-                el = (Element) things.item(0);
-            else
-                for (int i = 0; i < things.getLength(); i++) {
-                    if (((Element) things.item(i)).getAttribute("id").equals(thing_name))
-                        el = (Element) things.item(i);
-                }
-        }
-        return el;
-    }
-
-    private static Element find_device_el(Document doc, String dev_name) {
-        return find_thing_el(doc, "device", dev_name);
-    }
-
-    private static Element find_commandgroup_el(Document doc, String id) {
-        return find_thing_el(doc, "commandgroup", id);
-    }
-
     // TODO: Implement conjunctions, disjunctions, equalitytest.
     private boolean evaluate_ifattribute(String expr) {
         String s = expr.trim();
@@ -475,235 +890,6 @@ public final class Device {
 
     private boolean evaluate_ifattribute(Element e) {
         return evaluate_ifattribute(e.getAttribute("ifattribute"));
-    }
-
-    /**
-     * Returns the names of the devices available to us. For this, just look at the file names
-     * in the device directory. This is not absolutely fool proof, in particular
-     * on systems with case insensitive file system.
-     *
-     * @return Array of strings of the device names.
-     */
-    public static String[] get_devices() {
-        return get_basenames(HarcProps.get_instance().get_devicesdir(), HarcUtils.devicefile_extension, false);
-    }
-
-    private static String[] get_basenames(String dirname, String extension, boolean toLowercase) {
-        File dir = new File(dirname);
-        if (!dir.isDirectory())
-            return null;
-
-        if (extension.charAt(0) != '.')
-            extension = "." + extension;
-        String[] files = dir.list(new extension_filter(extension));
-        String[] result = new String[files.length];
-        for (int i =0; i < files.length; i++)
-            result[i] = toLowercase ? files[i].toLowerCase().substring(0, files[i].lastIndexOf(extension))
-                    : files[i].substring(0, files[i].lastIndexOf(extension));
-        return result;
-    }
-
-    private static class extension_filter implements FilenameFilter {
-
-        protected String extension;
-
-        extension_filter(String extension) {
-            this.extension = extension;
-        }
-
-        @Override
-        public boolean accept(File directory, String name) {
-            return name.toLowerCase().endsWith(extension.toLowerCase());
-        }
-    }
-
-    private Device(String filename, HashMap<String, String>attributes, boolean barf_for_invalid)
-            throws IOException, SAXParseException, SAXException {
-         this( (filename.contains(File.separator) ? "" : HarcProps.get_instance().get_devicesdir() + File.separator)
-                 + filename
-                 + ((filename.endsWith(HarcUtils.devicefile_extension)) ? "" : HarcUtils.devicefile_extension),
-                 null, attributes, barf_for_invalid);
-    }
-
-    private Device(String filename, String devicename, HashMap<String, String> attributes, boolean barf_for_invalid)
-            throws IOException, SAXParseException, SAXException {
-        this(XmlUtils.openXmlFile(new File(filename)), devicename, attributes, barf_for_invalid);
-    }
-
-    private Device(Document doc, HashMap<String, String>attributes, boolean barf_for_invalid) {
-        this(doc, (String) null, attributes, barf_for_invalid);
-    }
-
-    //public device(Document doc, String dev_name, boolean barf_for_invalid) {
-    //    this(doc, find_device_el(doc, dev_name), barf_for_invalid);
-    //}
-
-    /**
-     *
-     * @param name Either file name or device name.
-     * @param attributes
-     * @throws java.io.IOException
-     * @throws org.xml.sax.SAXParseException
-     */
-    public Device(String name, HashMap<String, String>attributes) throws IOException, SAXParseException, SAXException {
-        this(name, attributes, true);
-    }
-
-    public Device(String name) throws IOException, SAXParseException, SAXException {
-        this(name, null);
-    }
-    private Device(Document doc, String dev_name, HashMap<String, String>instance_attributes, boolean barf_for_invalid) {
-        this.doc = doc;
-        if (doc == null)
-            return;
-
-        Element device_el = find_device_el(doc, dev_name);
-        this.device_el = device_el;
-        device_name = device_el.getAttribute("name");
-        vendor = device_el.getAttribute("vendor");
-        id = device_el.getAttribute("id");
-        model = device_el.getAttribute("model");
-        type = DeviceType.valueOf(device_el.getAttribute("type"));
-        pingable_on = device_el.getAttribute("pingable_on").equals("yes"); // i.e. default false
-        pingable_standby = device_el.getAttribute("pingable_standby").equals("yes"); // i.e. default false
-
-        NodeList nl = device_el.getElementsByTagName("jp1data");
-        if (nl.getLength() > 0) {
-            nl = ((Element)nl.item(0)).getElementsByTagName("setupcode");
-            jp1_setupcode = Integer.parseInt(((Element)nl.item(0)).getAttribute("value"));
-        }
-
-        // First read the attributes of the device file, considered as defaults...
-        NodeList attributes_nodes = device_el.getElementsByTagName("attribute");
-        int no_attributes = attributes_nodes.getLength();
-        attributes = new HashMap<>(no_attributes);
-        for (int i = 0; i < no_attributes; i++) {
-            Element attr = (Element) attributes_nodes.item(i);
-            String val =
-            attributes.put(
-                    attr.getAttribute("name"),
-                    attr.getAttribute("defaultvalue").isEmpty() ? "no" : attr.getAttribute("defaultvalue"));
-        }
-        // ... then, to the extent applicable, overwrite with actual instance values
-        // if instance_attributes == null I am exporting, set everything to true.
-        if (instance_attributes == null) {
-            attributes.clear();
-            //for (String attributeName : attributes.keySet())
-            //    attributes.put(attributeName, "export");
-        } else {
-            instance_attributes.entrySet().forEach((kvp) -> {
-                if (attributes.containsKey(kvp.getKey()))
-                    attributes.put(kvp.getValue(), instance_attributes.get(kvp.getKey()));
-                else
-                    System.err.println("WARNING: Attribute named `" + kvp.getKey() + "' does not exist in device `" + device_name + "', ignored.");
-            });
-        }
-
-        NodeList aliases_nodes = device_el.getElementsByTagName("alias");
-        no_aliases = aliases_nodes.getLength();
-        aliases = new String[no_aliases][2];
-        for (int i = 0; i < no_aliases; i++) {
-            Element ali = (Element) aliases_nodes.item(i);
-            aliases[i][0] = ali.getAttribute("name");
-            aliases[i][1] = ali.getAttribute("command");
-        }
-
-        NodeList commandsets_nodes = device_el.getElementsByTagName("commandset");
-        int no_commandsets = commandsets_nodes.getLength();
-        commandsets = new CommandSet[no_commandsets];
-        // TODO: evaluate ifattribute for commandsets
-        for (int i = 0; i < no_commandsets; i++) {
-            Element cs = (Element) commandsets_nodes.item(i);
-            //if (cs.getAttribute("toggle") != null && cs.getAttribute("toggle").equals("yes"))
-            //    has_toggle = true;
-
-            // This does not work for hierarchical commandgrouprefs
-            NodeList cgrs = cs.getElementsByTagName("commandgroupref");
-            for (int j = 0; j < cgrs.getLength(); j++) {
-                Element cgr = (Element) cgrs.item(j);
-                Element cg = find_commandgroup_el(doc, cgr.getAttribute("commandgroup"));
-                Element par = (Element) cgr.getParentNode();
-                par.replaceChild(cg.cloneNode(true), cgr);
-            }
-
-            NodeList cmd_nodes = cs.getElementsByTagName("command");
-            int no_valids = 0;
-            for (int j = 0; j < cmd_nodes.getLength(); j++) {
-                Element e = (Element) cmd_nodes.item(j);
-                if (command_t.is_valid(e.getAttribute("cmdref"))
-                       && evaluate_ifattribute(e))
-                   no_valids++;
-            }
-            CommandSetEntry[] cmds = new CommandSetEntry[no_valids];
-            int pos = 0;
-            for (int j = 0; j < cmd_nodes.getLength(); j++) {
-                Element cmd_el = (Element) cmd_nodes.item(j);
-                String commandname = cmd_el.getAttribute("cmdref");
-                String ifattr = cmd_el.getAttribute("ifattribute");
-                if (ifattr.startsWith("!"))
-                    ifattr = ifattr.substring(1).trim();
-                if (!ifattr.isEmpty() && !attributes.isEmpty() && !attributes.containsKey(ifattr))
-                    System.err.println("WARNING: command " + commandname + " has undeclared attribute " + ifattr);
-                if (!command_t.is_valid(commandname)) {
-                    if (barf_for_invalid)
-                        System.err.println("Warning: Command " + commandname + " is invalid.");
-                } else if (evaluate_ifattribute(cmd_el)) {
-                    NodeList al = cmd_el.getElementsByTagName("argument");
-                    String[] arguments = new String[al.getLength()];
-                    for (int a = 0; a < arguments.length; a++) {
-                        arguments[a] = ((Element) al.item(a)).getAttribute("name");
-                    }
-                    String ccf_toggle_0 = null;
-                    String ccf_toggle_1 = null;
-                    NodeList ccfs = cmd_el.getElementsByTagName("ccf");
-                    for (int k = 0; k < ccfs.getLength(); k++) {
-                        Element ccf = (Element)ccfs.item(k);
-                        if (ccf.getAttribute("toggle").equals("1"))
-                            ccf_toggle_1 = ccf.getTextContent();
-                        else
-                            ccf_toggle_0 = ccf.getTextContent();
-                    }
-                    cmds[pos++] = new CommandSetEntry(cmd_el.getAttribute("cmdref"),
-                            cmd_el.getAttribute("cmdno"),
-                            cmd_el.getAttribute("name"),
-                            cmd_el.getAttribute("transmit"),
-                            cmd_el.getAttribute("response_lines"),
-                            cmd_el.getAttribute("response_ending"),
-                            cmd_el.getAttribute("expected_response"),
-                            cmd_el.getAttribute("remark"),
-                            arguments,
-                            ccf_toggle_0,
-                            ccf_toggle_1);
-                }
-            }
-            /*
-            NodeList cmdgrouprefs_nodes = cs.getElementsByTagName("commandgroupref");
-            for (int k = 0; k < cmdgrouprefs_nodes.length; k++) {
-            Element cmdgroupref = (Element)cmdgrouprefs_nodes.item[k];
-            Element cmdgroup = find_commandgroup_el(doc, cmdgroupref.getAttribute("commandgroup"));
-            NodeList cmds = cmdgroup
-
-            }
-             */
-            commandsets[i] = new CommandSet(cmds,
-                    cs.getAttribute("type"),
-                    cs.getAttribute("protocol"),
-                    cs.getAttribute("deviceno"),
-                    cs.getAttribute("subdevice"),
-                    cs.getAttribute("toggle"),
-                    cs.getAttribute("additional_parameters"),
-                    cs.getAttribute("name"),
-                    cs.getAttribute("remotename"),
-                    cs.getAttribute("pseudo_power_on"),
-                    cs.getAttribute("prefix"),
-                    cs.getAttribute("suffix"),
-                    cs.getAttribute("delay_between_reps"),
-                    cs.getAttribute("open"),
-                    cs.getAttribute("close"),
-                    cs.getAttribute("portnumber"),
-                    cs.getAttribute("charset"),
-                    cs.getAttribute("flavor"));
-        }
     }
 
     private void print(String filename) {
@@ -808,215 +994,29 @@ public final class Device {
         return true;
     }
 
-    public static boolean export_device(String export_dir, String devname) {
-        String out_filename = export_dir + File.separator + devname + HarcUtils.devicefile_extension;
-        System.err.println("Exporting " + devname + " to " + out_filename + ".");
-        Device dev = null;
-        try {
-            dev = new Device(devname, null, true);
-        } catch (IOException e) {
-            System.err.println("IOException with " + devname);
-            return false;
-        } catch (SAXParseException e) {
-            System.err.println(e.getMessage());
-            return false;
-        } catch (SAXException e) {
-            System.err.println(e.getMessage());
-            return false;
+    private static class device_with_attributes {
+        String device_classname;
+        HashMap<String, String> attributes;
+        device_with_attributes(String device_classname, HashMap<String, String>attributes) {
+            this.device_classname = device_classname;
+            this.attributes = attributes;
         }
-
-        if (!dev.is_valid()) {
-            System.err.println("Failure!");
-            return false;
+        @Override
+        public String toString() {
+            return device_classname + attributes.toString(); // May not be portable, i.e. work with all implementations
         }
-
-        if (debug != 0)
-            System.out.println(dev.info());
-
-        dev.augment_dom(false);
-        dev.print(out_filename);
-
-        return true;
     }
+    private static class extension_filter implements FilenameFilter {
 
-    public static boolean export_all_devices(String export_dir) {
-        File dir = new File(export_dir);
-        if (dir.isFile()) {
-            System.err.println("Error: File " + export_dir + " exists, but is not a directory.");
-            return false;
-        } else if (!dir.exists()) {
-            System.err.println("Directory " + export_dir + " does not exist, creating.");
-            boolean stat = dir.mkdir();
-            if (!stat) {
-                System.err.println("Directory creation failed.");
-                return false;
-            }
-        }
-        String[] devs = get_devices();
-        // Ignore errors, just continue
-        for (String dev : devs)
-            export_device(export_dir, dev);
+        protected String extension;
 
-        return true;
-    }
-
-    private static void usage(int exitcode) {
-        System.err.println("Usage:");
-        System.err.println("device [<options>] -f <input_filename> [<cmd_name>]");
-        System.err.println("or");
-        System.err.println("device -x <export_directory>");
-        System.err.println("where options=-o <filename>,-@ <attributename>,-a aliasname,-l,-d,-c,-t "
-                + CommandType_t.valid_types('|'));
-        if (exitcode >= 0)
-            System.exit(exitcode);
-    }
-
-    private static void usage() {
-        usage(IrpUtils.EXIT_USAGE_ERROR);
-    }
-
-    public static void main(String args[]) {
-        CommandType_t type = CommandType_t.any;
-        boolean get_code = false;
-        boolean list_commands = false;
-        String in_filename = null;
-        String out_filename = null;
-        String attribute_name = null;
-        String alias_name = null;
-        String export_dir = null;
-
-        short deviceno = -1;
-        short subdevice = 0;
-
-        int arg_i = 0;
-        try {
-            while (arg_i < args.length && (args[arg_i].length() > 0) // ???
-                    && args[arg_i].charAt(0) == '-') {
-
-                switch (args[arg_i]) {
-                    case "-@":
-                        arg_i++;
-                        attribute_name = args[arg_i++];
-                        break;
-                    case "-D":
-                        arg_i++;
-                        deviceno = Short.parseShort(args[arg_i++]);
-                        break;
-                    case "-S":
-                        arg_i++;
-                        subdevice = Short.parseShort(args[arg_i++]);
-                        break;
-                    case "-a":
-                        arg_i++;
-                        alias_name = args[arg_i++];
-                        break;
-                    case "-c":
-                        arg_i++;
-                        get_code = true;
-                        break;
-                    case "-d":
-                        arg_i++;
-                        debug++;
-                        break;
-                    case "-l":
-                        arg_i++;
-                        list_commands = true;
-                        break;
-                    case "-f":
-                        arg_i++;
-                        in_filename = args[arg_i++];
-                        break;
-                    case "-o":
-                        arg_i++;
-                        out_filename = args[arg_i++];
-                        break;
-                    case "-t":
-                        arg_i++;
-                        String typename = args[arg_i++];
-                        if (!CommandType_t.is_valid(typename))
-                            usage();
-                        type = CommandType_t.valueOf(typename);
-                        break;
-                    case "-x":
-                        arg_i++;
-                        export_dir = args[arg_i++];
-                        break;
-                    default:
-                        usage(IrpUtils.EXIT_USAGE_ERROR);
-                        break;
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            usage();
+        extension_filter(String extension) {
+            this.extension = extension;
         }
 
-        if (export_dir != null) {
-            boolean success = export_all_devices(export_dir);
-            System.exit(success ? IrpUtils.EXIT_SUCCESS : IrpUtils.EXIT_CONFIG_WRITE_ERROR);
-        } else if (in_filename == null) {
-            usage(-1);
-            HarcUtils.printtable("Known devices:", get_devices());
-            System.exit(IrpUtils.EXIT_SUCCESS);
-        } else if ((args.length != arg_i) && (args.length != arg_i + 1))
-            usage();
-
-        Device dev = null;
-        try {
-            dev = new Device(in_filename, null, true);
-        } catch (IOException e) {
-            System.err.println("IOException with " + in_filename);
-            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
-        } catch (SAXParseException e) {
-            System.err.println(e.getMessage());
-        } catch (SAXException e) {
-            System.err.println(e.getMessage());
-        }
-
-        if (!dev.is_valid()) {
-            System.err.println("Failure!");
-            System.exit(2);
-        }
-
-        if (debug != 0)
-            System.out.println(dev.info());
-
-        if (out_filename != null) {
-            dev.augment_dom(false);
-            dev.print(out_filename);
-        }
-
-        if (list_commands) {
-            command_t[] cmds = dev.get_commands(type);
-            for (command_t cmd : cmds) {
-                System.out.println(cmd);
-            }
-        }
-
-        if (attribute_name != null)
-            System.out.println("@" + attribute_name + "=" + dev.get_attribute(attribute_name));
-
-        if (alias_name != null)
-            System.out.println("alias: " + alias_name + "->" + dev.get_alias(alias_name));
-        if (args.length == arg_i + 1) {
-            String cmdname = args[arg_i];
-            Command c = dev.get_command(command_t.parse(cmdname), type);
-            if (c == null)
-                System.out.println("No such command with specified type");
-            else {
-                System.out.println(c.toString());
-                if (get_code) {
-                    IrSignal ircode = (deviceno == -1) ? c.get_ir_code(ToggleType.toggle_0, true)
-                            : c.get_ir_code(ToggleType.toggle_0, true, deviceno, subdevice);
-                    if (ircode == null) {
-                        System.err.println("No such IR command: " + cmdname);
-                        System.exit(2);
-                    } else {
-                        System.out.println(ircode);
-                        if (c.get_toggle())
-                            System.out.println(c.get_ir_code(ToggleType.toggle_1, true));
-                    }
-                }
-            }
+        @Override
+        public boolean accept(File directory, String name) {
+            return name.toLowerCase().endsWith(extension.toLowerCase());
         }
     }
 }

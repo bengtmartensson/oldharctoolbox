@@ -32,6 +32,23 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public final class HomeParser {
+
+    public static void main(String[] args) {
+        String filename = args[0];
+        org.w3c.dom.Document dom = null;
+
+        try {
+            dom = XmlUtils.openXmlFile(new File(filename));
+        } catch (IOException | SAXException ex) {
+
+        }
+        HomeParser p = new HomeParser(dom);
+        //p.print_aliases();
+        //p.print_device_groups();
+        //p.print_gateways();
+        p.print_gateway_port_by_id();
+    }
+
     private LinkedHashMap<String, Dev> device_table = new LinkedHashMap<>(64);
     private HashMap<String, String> alias_table = new HashMap<>(64);
     private LinkedHashMap<String, DeviceGroup> device_groups_table = new LinkedHashMap<>(16);
@@ -40,6 +57,18 @@ public final class HomeParser {
     private HashMap<String, GatewayPort> gateway_port_by_id = new HashMap<>(16);
 
     private final Document document;
+
+    public HomeParser(org.w3c.dom.Document document) {
+        this.document = document;
+        if (document == null)
+            return;
+
+        init_alias_table();
+        init_device_groups();
+        init_gateway_port_by_id();
+        init_gateways();
+        init_devices();
+    }
 
     private boolean parse_yes_no(String s) {
         return s.equalsIgnoreCase("yes");
@@ -53,18 +82,6 @@ public final class HomeParser {
         } catch (NumberFormatException e) {
         }
         return x;
-    }
-
-    public HomeParser(org.w3c.dom.Document document) {
-        this.document = document;
-        if (document == null)
-            return;
-
-        init_alias_table();
-        init_device_groups();
-        init_gateway_port_by_id();
-        init_gateways();
-        init_devices();
     }
 
     private void init_devices() {
@@ -486,21 +503,4 @@ public final class HomeParser {
                 parse_yes_no(element.getAttribute("wol")),
                 parse_int(element.getAttribute("timeout"),10000));
     }
-
-    public static void main(String[] args) {
-        String filename = args[0];
-        org.w3c.dom.Document dom = null;
-
-       try {
-            dom = XmlUtils.openXmlFile(new File(filename));
-        } catch (IOException | SAXException ex) {
-
-        }
-        HomeParser p = new HomeParser(dom);
-        //p.print_aliases();
-        //p.print_device_groups();
-        //p.print_gateways();
-        p.print_gateway_port_by_id();
-    }
-
 }

@@ -25,7 +25,51 @@ package org.harctoolbox.oldharctoolbox;
  */
 public final class DebugArgs {
 
+    public static boolean dbg_decode_args() {
+        return (UserPrefs.get_instance().get_debug() & 1) != 0;
+    }
+    public static boolean dbg_dom() {
+        return (UserPrefs.get_instance().get_debug() & 2) != 0;
+    }
+    public static boolean dbg_dispatch() {
+        return (UserPrefs.get_instance().get_debug() & 4) != 0;
+    }
+    public static boolean dbg_transmit() {
+        return (UserPrefs.get_instance().get_debug() & 8) != 0;
+    }
+    public static boolean dbg_socket_storage() {
+        return (UserPrefs.get_instance().get_debug() & 16) != 0;
+    }
+    public static boolean dbg_trace_commands() {
+        return (UserPrefs.get_instance().get_debug() & 32) != 0;
+    }
+    public static boolean dbg_misc() {
+        return (UserPrefs.get_instance().get_debug() & 64) != 0;
+    }
+    public static boolean dbg_open_files() {
+        return (UserPrefs.get_instance().get_debug() & 128) != 0;
+    }
+    public static boolean dbg_verbose_execution() {
+        return (UserPrefs.get_instance().get_debug() & 256) != 0;
+    }
+    public static boolean dbg_execute() {
+        return (UserPrefs.get_instance().get_debug() & 512) != 0;
+    }
+    public static boolean dbg_ir_protocols() {
+        return (UserPrefs.get_instance().get_debug() & 1024) != 0;
+    }
+    public static void main(String[] args) {
+        DebugArgs db = new DebugArgs(Integer.parseInt(args[0]));
+        HarcUtils.printtable("things:", db.help());
+        System.out.println(db.decode_args());
+        System.out.println(db.execute());
+    }
+
     private int state;
+
+    public DebugArgs(int arg) {
+        state = arg;
+    }
 
     private boolean debug_aux(int n) {
         return ((state >> n) & 1) == 1;
@@ -36,17 +80,9 @@ public final class DebugArgs {
         return debug_aux(0);
     }
 
-    public static boolean dbg_decode_args() {
-        return (UserPrefs.get_instance().get_debug() & 1) != 0;
-    }
-
     // debug 2
     public boolean dom() {
         return debug_aux(1);
-    }
-
-    public static boolean dbg_dom() {
-        return (UserPrefs.get_instance().get_debug() & 2) != 0;
     }
 
     // debug 4
@@ -54,17 +90,9 @@ public final class DebugArgs {
         return debug_aux(2);
     }
 
-    public static boolean dbg_dispatch() {
-        return (UserPrefs.get_instance().get_debug() & 4) != 0;
-    }
-
     // debug 8
     public boolean transmit() {
         return debug_aux(3);
-    }
-
-    public static boolean dbg_transmit() {
-        return (UserPrefs.get_instance().get_debug() & 8) != 0;
     }
 
     // debug 16
@@ -72,17 +100,9 @@ public final class DebugArgs {
         return debug_aux(4);
     }
 
-    public static boolean dbg_socket_storage() {
-        return (UserPrefs.get_instance().get_debug() & 16) != 0;
-    }
-
     // debug 32
     public boolean trace_commands() {
         return debug_aux(5);
-    }
-
-    public static boolean dbg_trace_commands() {
-        return (UserPrefs.get_instance().get_debug() & 32) != 0;
     }
 
     // debug 64
@@ -90,17 +110,9 @@ public final class DebugArgs {
         return debug_aux(6);
     }
 
-    public static boolean dbg_misc() {
-        return (UserPrefs.get_instance().get_debug() & 64) != 0;
-    }
-
     // debug 128
     public boolean open_files() {
         return debug_aux(7);
-    }
-
-    public static boolean dbg_open_files() {
-        return (UserPrefs.get_instance().get_debug() & 128) != 0;
     }
 
     // debug 256
@@ -108,26 +120,14 @@ public final class DebugArgs {
         return debug_aux(8);
     }
 
-    public static boolean dbg_verbose_execution() {
-        return (UserPrefs.get_instance().get_debug() & 256) != 0;
-    }
-
     // debug 512
     public boolean execute() {
         return debug_aux(9);
     }
 
-    public static boolean dbg_execute() {
-        return (UserPrefs.get_instance().get_debug() & 512) != 0;
-    }
-
     // debug 1024
     public boolean ir_protocols() {
         return debug_aux(10);
-    }
-
-    public static boolean dbg_ir_protocols() {
-        return (UserPrefs.get_instance().get_debug() & 1024) != 0;
     }
 
     public String[] help() {
@@ -146,19 +146,7 @@ public final class DebugArgs {
         return str;
     }
 
-    public DebugArgs(int arg) {
-        state = arg;
-    }
-
     public void set_state(int arg) {
         state = arg;
     }
-
-    public static void main(String[] args) {
-        DebugArgs db = new DebugArgs(Integer.parseInt(args[0]));
-        HarcUtils.printtable("things:", db.help());
-        System.out.println(db.decode_args());
-        System.out.println(db.execute());
-    }
-
 }

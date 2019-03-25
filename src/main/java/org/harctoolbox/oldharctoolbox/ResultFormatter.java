@@ -24,6 +24,12 @@ import java.util.GregorianCalendar;
  */
 public final class ResultFormatter {
 
+    // Just for testing...
+    public static void main(String[] args) {
+        ResultFormatter formatter = new ResultFormatter(args[0]);
+        System.out.println(formatter.format(args[1]));
+    }
+
     private String format;
 
     public ResultFormatter(String format) {
@@ -43,11 +49,5 @@ public final class ResultFormatter {
             System.err.println("Erroneous format string `" + format + "'.");
         }
         return s;
-    }
-
-    // Just for testing...
-    public static void main(String[] args) {
-        ResultFormatter formatter = new ResultFormatter(args[0]);
-        System.out.println(formatter.format(args[1]));
     }
 }

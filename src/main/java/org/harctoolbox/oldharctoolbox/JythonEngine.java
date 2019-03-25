@@ -32,24 +32,46 @@ import org.xml.sax.SAXParseException;
  */
 public final class JythonEngine {
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Home hm = null;
+        try {
+            hm = new Home(HarcProps.get_instance().get_homefilename());
+        } catch (SAXParseException ex) {
+            System.err.println("XML problem in home file");
+        } catch (SAXException ex) {
+            System.err.println("XML problem in home file");
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        if (hm == null)
+            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
+        JythonEngine jython;
+        try {
+            jython = new JythonEngine(hm, args.length == 0);
+
+            if (args.length > 0)
+                if (args[0].equals("-a"))
+                    HarcUtils.printtable("Macros with no or all defaulted arguments are:", jython.get_argumentless_macros());
+                else
+                    for (String arg : args) {
+                        jython.exec(arg);
+                    }
+            else
+                jython.interact();
+        } catch (PyException e) {
+            System.err.println("Could not create jython engine.");
+            System.err.println(e.getMessage());
+            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
+        }
+    }
+
     private PythonInterpreter python;
     private int debug;
     private Home hm;
     private JythonRlCompleter completer;
-
-    private String[] getstuff(String cmd, String prefix) {
-        String[] s = null;
-        try {
-            s = (String[]) python.eval(cmd).__tojava__(Class.forName("[Ljava.lang.String;"));
-        } catch (ClassNotFoundException ex) {
-            // This cannot happen
-        }
-        if (prefix != null)
-            for (int i = 0; i < s.length; i++) {
-                s[i] = prefix + s[i];
-            }
-        return s;
-    }
 
     public JythonEngine(Home hm, boolean interactive) throws PyException {
         this.hm = hm;
@@ -86,6 +108,20 @@ public final class JythonEngine {
             //e.printStackTrace();
             throw (e);
         }
+    }
+
+    private String[] getstuff(String cmd, String prefix) {
+        String[] s = null;
+        try {
+            s = (String[]) python.eval(cmd).__tojava__(Class.forName("[Ljava.lang.String;"));
+        } catch (ClassNotFoundException ex) {
+            // This cannot happen
+        }
+        if (prefix != null)
+            for (int i = 0; i < s.length; i++) {
+                s[i] = prefix + s[i];
+            }
+        return s;
     }
 
     public boolean exec(String macro) {
@@ -141,41 +177,5 @@ public final class JythonEngine {
     // TODO: should probably be more general
     public String[] get_argumentless_macros() {
         return getstuff("_harcfuncs_0_args_ok()", null);
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        Home hm = null;
-        try {
-            hm = new Home(HarcProps.get_instance().get_homefilename());
-        } catch (SAXParseException ex) {
-            System.err.println("XML problem in home file");
-        } catch (SAXException ex) {
-            System.err.println("XML problem in home file");
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-        if (hm == null)
-            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
-        JythonEngine jython;
-        try {
-            jython = new JythonEngine(hm, args.length == 0);
-
-            if (args.length > 0)
-                if (args[0].equals("-a"))
-                    HarcUtils.printtable("Macros with no or all defaulted arguments are:", jython.get_argumentless_macros());
-                else
-                    for (String arg : args) {
-                        jython.exec(arg);
-                    }
-            else
-                jython.interact();
-        } catch (PyException e) {
-            System.err.println("Could not create jython engine.");
-            System.err.println(e.getMessage());
-            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
-        }
     }
 }
