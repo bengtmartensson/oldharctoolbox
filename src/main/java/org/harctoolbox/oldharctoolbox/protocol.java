@@ -29,25 +29,27 @@ import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
 import org.harctoolbox.irp.IrpDatabase;
 import org.harctoolbox.irp.IrpException;
+import org.harctoolbox.irp.IrpParseException;
 import org.harctoolbox.irp.Protocol;
 
 public class protocol {
 
     private static IrpDatabase irpDatabase = null;
-    //private static HashMap<String, Protocol> protocols = null;
+    private static HashMap<String, Protocol> protocols = null;
 
     private final static short invalid_parameter = -1;
 
-    public static void initialize(String irp_database) throws IOException {
+    public static void initialize(String irp_database) throws IOException, IrpParseException {
         irpDatabase = new IrpDatabase(irp_database);
-        //protocols = new HashMap<String, Protocol>();
+        irpDatabase.expand();
+        protocols = new HashMap<>(8);
     }
 
-    public static void initialize() throws IOException {
-        //initialize(harcprops.get_instance().get_irpmaster_configfile());
-        irpDatabase = new IrpDatabase();
-        //protocols = new HashMap<String, Protocol>();
-    }
+//    public static void initialize() throws IOException {
+//        //initialize(harcprops.get_instance().get_irpmaster_configfile());
+//        irpDatabase = new IrpDatabase();
+//        //protocols = new HashMap<String, Protocol>();
+//    }
 
     // States for toggles, one per protocol
     //private static Hashtable<String, Integer> toggle_state = new Hashtable<String, Integer>();

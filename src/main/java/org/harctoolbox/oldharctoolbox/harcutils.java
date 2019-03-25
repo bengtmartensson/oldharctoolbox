@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009-2011 Bengt Martensson.
+Copyright (C) 2009-2011, 2019 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,30 +40,12 @@ import org.xml.sax.SAXParseException;
 public class harcutils {
 
     public final static String license_string
-            = "Copyright (C) 2009, 2010, 2011 Bengt Martensson.\n\n"
+            = "Copyright (C) 2009, 2010, 2011, 2019 Bengt Martensson.\n\n"
             + "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\n"
             + "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\n"
             + "You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.";
 
     public final static String homepage_url = "http://www.harctoolbox.org";
-
-    public final static int exit_success = 0;
-    public final static int exit_usage_error = 1;
-    public final static int exit_semantic_usage_error = 2;
-
-    public final static int exit_fatal_program_failure = 3;
-    public final static int exit_internal_failure = 4;
-    public final static int exit_config_read_error = 5;
-    public final static int exit_config_write_error = 6;
-    public final static int exit_ioerror = 7;
-    public final static int exit_no_bock = 8;
-    public final static int exit_nonexisting_device = 9;
-    public final static int exit_nonexisting_command = 10;
-    public final static int exit_interrupted = 11;
-    public final static int exit_xml_error = 12;
-    public final static int exit_dynamic_link_error = 13;
-    public final static int exit_this_cannot_happen = 14;
-    public final static int exit_restart = 99; // An invoking script is supposed to restart the program
 
     public final static int main_version = 0;
     public final static int sub_version = 7;

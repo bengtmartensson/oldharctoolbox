@@ -23,12 +23,14 @@ import java.nio.charset.Charset;
 import java.util.*;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;
+import org.harctoolbox.ircore.IrCoreUtils;
+import org.harctoolbox.irp.IrpParseException;
+import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  * This class starts the program in GUI mode, interactive command line mode, port listening mode,
@@ -44,46 +46,44 @@ public class Main {
     //String macrofilename = null;
     //String browser = null;
     //String propsfilename = null;
-    String aliasfilename = null;
-    resultformatter formatter = null;
+    private String aliasfilename = null;
+    private resultformatter formatter = null;
     //debugargs db = null;
-    boolean no_execute = false;
-    boolean select_mode = false;
+    //private boolean no_execute = false;
+    private boolean select_mode = false;
     //int debug = 0;
     //boolean verbose = false;
-    home hm = null;
+    private home hm = null;
     //macro_engine engine = null;
-    HashMap< String, Calendar> timertable = new HashMap<String, Calendar>();
+    private HashMap< String, Calendar> timertable = new HashMap<>(16);
     //jython_engine jython = null;
-    command_alias alias_expander = null;
-    commandtype_t type = commandtype_t.any;
-    mediatype the_mediatype = mediatype.audio_video;
-    connectiontype connection_type = connectiontype.any;
-    String charset = null;
-    String zone = null;
-    int count = 1;
-    toggletype toggle = toggletype.dont_care;
-    boolean smart_memory = false;
+    private command_alias alias_expander = null;
+    private commandtype_t type = commandtype_t.any;
+    private mediatype the_mediatype = mediatype.audio_video;
+    private connectiontype connection_type = connectiontype.any;
+    private String charset = null;
+    private String zone = null;
+    private int count = 1;
+    private toggletype toggle = toggletype.dont_care;
+    private boolean smart_memory = false;
     private static volatile boolean spawn_new_socketthreads = false;
     private static boolean readline_go_on = true; // FIXME
     //private static volatile boolean go_on;
 
     // Experimental
-    protected static int no_threads = 0;
+    private static int no_threads = 0;
 
     private static Main the_instance = null;
-    public static Main get_instance() {
+    public static Main getInstance() {
         return the_instance;
     }
 
     private static void usage(int exitstatus) {
-        System.err.println("Usage: one of");
-        System.err.println(helptext);
-        System.exit(exitstatus);
+        doExit(exitstatus, "Usage: one of" + IrCoreUtils.LINE_SEPARATOR + helptext);
     }
 
     private static void usage() {
-        usage(harcutils.exit_usage_error);
+        usage(IrpUtils.EXIT_USAGE_ERROR);
     }
     private static final String helptext =
             "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + commandtype_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -b <browserpath>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
@@ -131,98 +131,117 @@ public class Main {
             while (arg_i < args.length && (args[arg_i].length() > 0) && args[arg_i].charAt(0) == '-') {
 
                 if (args[arg_i].equals("--help")) {
-                    usage(harcutils.exit_success);
+                    usage(IrpUtils.EXIT_SUCCESS);
                 }
                 if (args[arg_i].equals("--version")) {
                     //System.out.println("JVM: "+ System.getProperty("java.vendor") + " " + System.getProperty("java.version"));
-                    System.out.println(harcutils.version_string);
-                    System.out.println(harcutils.license_string);
-                    System.exit(harcutils.exit_success);
+                    doExit(IrpUtils.EXIT_SUCCESS, harcutils.version_string + IrCoreUtils.LINE_SEPARATOR + harcutils.license_string);
                 }
-                if (args[arg_i].equals("-#")) {
-                    arg_i++;
-                    count = Integer.parseInt(args[arg_i++]);
-                } else if (args[arg_i].equals("-A")) {
-                    arg_i++;
-                    the_mediatype = mediatype.audio_only;
-                } else if (args[arg_i].equals("-C")) {
-                    arg_i++;
-                    charset = args[arg_i++];
-                    if (!Charset.isSupported(charset)) {
-                        System.out.println("Unsupported charset " + charset + ", aborting.");
-                        System.exit(harcutils.exit_usage_error);
-                    }
-                } else if (args[arg_i].equals("-M")) {
-                    arg_i++;
-                    smart_memory = true;
-                } else if (args[arg_i].equals("-P")) {
-                    arg_i++;
-                    use_python = true;
-                 } else if (args[arg_i].equals("-V")) {
-                    arg_i++;
-                    the_mediatype = mediatype.video_only;
-                } else if (args[arg_i].equals("-T")) {
-                    arg_i++;
-                    toggle = toggletype.decode_toggle(args[arg_i++]);
-                } else if (args[arg_i].equals("-a")) {
-                    arg_i++;
-                    aliasfilename = args[arg_i++];
-                } else if (args[arg_i].equals("-b")) {
-                    arg_i++;
-                    browser = args[arg_i++];
-                } else if (args[arg_i].equals("-c")) {
-                    arg_i++;
-                    connection_type = connectiontype.parse(args[arg_i++]);
-                } else if (args[arg_i].equals("-d")) {
-                    arg_i++;
-                    debug = Integer.parseInt(args[arg_i++]);
-                } else if (args[arg_i].equals("-g")) {
-                    arg_i++;
-                    gui_mode = true;
-                } else if (args[arg_i].equals("-h")) {
-                    arg_i++;
-                    homefilename = args[arg_i++];
-                } else if (args[arg_i].equals("-l")) {
-                    arg_i++;
-                    daemon_mode = true;
-                    if (arg_i < args.length && args[arg_i].charAt(0) != '-')
-                        socketno = Integer.parseInt(args[arg_i++]);
-                //} else if (args[arg_i].equals("-m")) {
-                //    arg_i++;
-                //    macrofilename = args[arg_i++];
-                } else if (args[arg_i].equals("-n")) {
-                    arg_i++;
-                    no_execute = true;
-                } else if (args[arg_i].equals("-p")) {
-                    arg_i++;
-                    propsfilename = args[arg_i++];
-                } else if (args[arg_i].equals("-s")) {
-                    arg_i++;
-                    select_mode = true;
-                } else if (args[arg_i].equals("-r")) {
-                    arg_i++;
-                    readline_mode = true;
-                } else if (args[arg_i].equals("-t")) {
-                    arg_i++;
-                    String typename = args[arg_i++];
-                    if (!commandtype_t.is_valid(typename)) {
+                switch (args[arg_i]) {
+                    case "-#":
+                        arg_i++;
+                        count = Integer.parseInt(args[arg_i++]);
+                        break;
+                    case "-A":
+                        arg_i++;
+                        the_mediatype = mediatype.audio_only;
+                        break;
+                    case "-C":
+                        arg_i++;
+                        charset = args[arg_i++];
+                        if (!Charset.isSupported(charset))
+                            doExit(IrpUtils.EXIT_USAGE_ERROR, "Unsupported charset " + charset + ", aborting.");
+                        break;
+                    case "-M":
+                        arg_i++;
+                        smart_memory = true;
+                        break;
+                    case "-P":
+                        arg_i++;
+                        use_python = true;
+                        break;
+                    case "-V":
+                        arg_i++;
+                        the_mediatype = mediatype.video_only;
+                        break;
+                    case "-T":
+                        arg_i++;
+                        toggle = toggletype.decode_toggle(args[arg_i++]);
+                        break;
+                    case "-a":
+                        arg_i++;
+                        aliasfilename = args[arg_i++];
+                        break;
+                    case "-b":
+                        arg_i++;
+                        browser = args[arg_i++];
+                        break;
+                    case "-c":
+                        arg_i++;
+                        connection_type = connectiontype.parse(args[arg_i++]);
+                        break;
+                    case "-d":
+                        arg_i++;
+                        debug = Integer.parseInt(args[arg_i++]);
+                        break;
+                    case "-g":
+                        arg_i++;
+                        gui_mode = true;
+                        break;
+                    case "-h":
+                        arg_i++;
+                        homefilename = args[arg_i++];
+                        break;
+                    case "-l":
+                        arg_i++;
+                        daemon_mode = true;
+                        if (arg_i < args.length && args[arg_i].charAt(0) != '-')
+                            socketno = Integer.parseInt(args[arg_i++]);
+                        //} else if (args[arg_i].equals("-m")) {
+                        //    arg_i++;
+                        //    macrofilename = args[arg_i++];
+                        break;
+                    case "-n":
+                        arg_i++;
+                        no_execute = true;
+                        break;
+                    case "-p":
+                        arg_i++;
+                        propsfilename = args[arg_i++];
+                        break;
+                    case "-s":
+                        arg_i++;
+                        select_mode = true;
+                        break;
+                    case "-r":
+                        arg_i++;
+                        readline_mode = true;
+                        break;
+                    case "-t":
+                        arg_i++;
+                        String typename = args[arg_i++];
+                        if (!commandtype_t.is_valid(typename)) {
+                            usage();
+                        }   type = commandtype_t.valueOf(typename);
+                        break;
+                    case "-v":
+                        arg_i++;
+                        verbose = true;
+                        break;
+                    case "-w":
+                        arg_i++;
+                        tasksfilename = args[arg_i++];
+                        break;
+                    case "-z":
+                        arg_i++;
+                        zone = args[arg_i++];
+                        // Just an idiot check
+                        if (zone.startsWith("-"))
+                            usage();
+                        break;
+                    default:
                         usage();
-                    }
-                    type = commandtype_t.valueOf(typename);
-                } else if (args[arg_i].equals("-v")) {
-                    arg_i++;
-                    verbose = true;
-                } else if (args[arg_i].equals("-w")) {
-                    arg_i++;
-                    tasksfilename = args[arg_i++];
-                } else if (args[arg_i].equals("-z")) {
-                    arg_i++;
-                    zone = args[arg_i++];
-                    // Just an idiot check
-                    if (zone.startsWith("-"))
-                        usage();
-                } else {
-                    usage();
+                        break;
                 }
             }
 
@@ -250,8 +269,8 @@ public class Main {
         userprefs.get_instance().set_verbose(verbose);
 
         try {
-            protocol.initialize();
-        } catch (IOException ex) {
+            protocol.initialize("/usr/local/share/irptransmogrifier/IrpProtocols.xml"); // FIXME
+        } catch (IOException | IrpParseException ex) {
             System.out.println(ex.getMessage());
             System.exit(1);
         }
@@ -268,10 +287,10 @@ public class Main {
                     aliasfilename,
                     no_execute, select_mode, smart_memory, count, type, toggle,
                     the_mediatype, zone, connection_type, charset);
-            if (m == null)
-                System.exit(harcutils.exit_fatal_program_failure);
+//            if (m == null)
+//                System.exit(IrpUtils.exit_fatal_program_failure);
 
-            int status = harcutils.exit_success;
+            int status = IrpUtils.EXIT_SUCCESS;
             if (readline_mode) {
                 if (tasksfilename != null)
                     m.do_tasks(tasksfilename);
@@ -299,9 +318,9 @@ public class Main {
 
             m.shutdown();
 
-            if (status == harcutils.exit_success)
-                System.err.println("Program exited normally.");
-            System.exit(status);
+//            if (status == IrpUtils.EXIT_SUCCESS)
+//                System.err.println("Program exited normally.");
+            doExit(status);
         }
     }
 
@@ -324,7 +343,7 @@ public class Main {
         this.aliasfilename = aliasfilename;
         //this.debug = debug;
         //this.verbose = verbose;
-        this.no_execute = no_execute;
+        //this.no_execute = no_execute;
         this.select_mode = select_mode;
         this.smart_memory = smart_memory;
         this.count = count;
@@ -368,14 +387,9 @@ public class Main {
         try {
             hm = new home(homefilename/*, this.verbose, this.debug*/);
         } catch (IOException e) {
-            System.err.println(e.getMessage());
-            System.exit(harcutils.exit_config_read_error);
-        } catch (SAXParseException e) {
-            System.err.println(e.getMessage());
-            System.exit(harcutils.exit_xml_error);
+            doExit(IrpUtils.EXIT_CONFIG_READ_ERROR, e.getMessage());
         } catch (SAXException e) {
-            System.err.println(e.getMessage());
-            System.exit(harcutils.exit_xml_error);
+            doExit(IrpUtils.EXIT_XML_ERROR, e.getMessage());
         }
         /*try {
             engine = new macro_engine(this.macrofilename, hm, this.debug);
@@ -395,9 +409,18 @@ public class Main {
         try {
             harcprops.get_instance().save();
         } catch (IOException e) {
-            System.err.println(e.getMessage());
-            System.exit(harcutils.exit_config_write_error);
+            doExit(IrpUtils.EXIT_CONFIG_WRITE_ERROR, e.getMessage());
         }
+    }
+
+    private static void doExit(int status, String message) {
+        if (message != null && !message.isEmpty())
+            (status == IrpUtils.EXIT_SUCCESS ? System.out : System.err).println(message);
+        System.exit(status);
+    }
+
+    private static void doExit(int status) {
+        doExit(status, null);
     }
 
     // GUI does not expand aliases.
@@ -430,25 +453,16 @@ public class Main {
         final String hmnam = homefilename;
         //final String macronam = macrofilename;
         //final String brwsr = browser;
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                new gui_main(hmnam/*, macronam, vrbs, dbg, brwsr*/).setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new gui_main(hmnam/*, macronam, vrbs, dbg, brwsr*/).setVisible(true);
         });
     }
 
     private void do_tasks(String tasksfilename) {
-        Document doc = null;
+        Document doc;
         try {
             doc = harcutils.open_xmlfile(tasksfilename);
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-            return;
-        } catch (SAXParseException ex) {
-            System.err.println(ex.getMessage());
-            return;
-        } catch (SAXException ex) {
+        } catch (IOException | SAXException ex) {
             System.err.println(ex.getMessage());
             return;
         }
@@ -484,7 +498,7 @@ public class Main {
     private String[] evaluate_cmds(NodeList nl) {
         String[] s = new String[nl.getLength()];
         for (int i = 0; i < nl.getLength(); i++)
-            s[i] = ((Element)nl.item(i)).getTextContent();
+            s[i] = nl.item(i).getTextContent();
         return s;
     }
 
@@ -521,10 +535,10 @@ public class Main {
         String name;
         String[] cmds;
 
-        public periodic_thread(int secs, String name, String[] cmds) {
+        periodic_thread(int secs, String name, String[] cmds) {
             super(name);
             this.secs = secs;
-            this.name = name;
+            //this.name = name;
             this.cmds = cmds;
         }
 
@@ -532,15 +546,15 @@ public class Main {
         public void run() {
             while (true) {
                 long starttime = System.currentTimeMillis();
-                for (int i = 0; i < cmds.length; i++) {
-                    System.out.print(cmds[i] + ": ");
+                for (String cmd : cmds) {
+                    System.out.print(cmd + ": ");
                     try {
-                        String result = process_line(cmds[i], false);
+                        String result = process_line(cmd, false);
                     } catch (EOFException ex) {
                         ex.printStackTrace();
                     }
                 }
-                long towait = 1000 * secs - (System.currentTimeMillis() - starttime);
+                long towait = 1000L * secs - (System.currentTimeMillis() - starttime);
                 if (towait > 10) {
                     try {
                         Thread.sleep(towait);
@@ -557,7 +571,7 @@ public class Main {
         String name;
         String[] cmds;
 
-        public nonperiodic_thread(Element ele, String name, String[] cmds) {
+        nonperiodic_thread(Element ele, String name, String[] cmds) {
             super(name);
             this.ele = ele;
             this.name = name;
@@ -693,11 +707,11 @@ public class Main {
             while (true) {
                 //System.out.println("\"" + name + "\" ");
                 Calendar next = evaluate_time(ele);
-                Main.get_instance().timertable.put(name, next); // FIXME?
+                Main.getInstance().timertable.put(name, next); // FIXME?
                 long towait = next.getTimeInMillis() - System.currentTimeMillis();
                 if (towait > 10) {
-                long hours = towait / (long) 3600000;
-                    long minutes = (towait - hours * 3600000) / (long) 60000;
+                long hours = towait / 3600000L;
+                    long minutes = (towait - hours * 3600000L) / 60000L;
                     // TODO: This should, at least optionally, to a logfile instead.
                     System.out.println("Now is " + formatdate(new GregorianCalendar())
                             + ", preparing to sleep until " + formatdate(next)
@@ -708,12 +722,12 @@ public class Main {
                         System.err.println("interrupted");
                     }
                 }
-                for (int i = 0; i < cmds.length; i++) {
+                for (String cmd : cmds) {
                     // TODO: This should, at least optionally, to a logfile instead.
-                    System.out.print("Thread \"" + name + "\" woke up, trying to execute "+ cmds[i] + ": ");
+                    System.out.print("Thread \"" + name + "\" woke up, trying to execute " + cmd + ": ");
                     try {
-                        String result = process_line(cmds[i], false);
-                    } catch (EOFException ex) {
+                        String result = process_line(cmd, false);
+                    }catch (EOFException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -731,7 +745,7 @@ public class Main {
     private int udp_execute(int socketno, boolean use_python, boolean create_thread) {
         System.err.println("Trying to listen to UDP socket " + socketno + (use_python ? " (Using Python)" : ""));
         jython_engine jython = use_python ? new jython_engine(hm, false) : null;
-        int success = harcutils.exit_success;
+        int success = IrpUtils.EXIT_SUCCESS;
         if (create_thread)
             new udp_thread(socketno, jython).start();
         else
@@ -745,49 +759,47 @@ public class Main {
         boolean go_on = true;
         try {
             while (go_on) {
-                DatagramSocket sock = new java.net.DatagramSocket(socketno);
-                DatagramPacket pack = new DatagramPacket(buf, buf.length);
-                sock.receive(pack);
-                commandline = (new String(pack.getData(), 0, pack.getLength())).trim();
-                InetAddress addr = pack.getAddress();
-                int port = pack.getPort();
-                System.out.println("Got >" + commandline + "< from " + addr.getHostName() + ":" + port);
-
-                if (commandline.isEmpty() || commandline.equals("--quit"))
-                    go_on = false;
-                else {
-                    String result = jython != null ? jython.eval(commandline) : process_line(commandline, false);
-                    System.out.println(result != null ? "OK: " + result : "ERROR");
+                try (DatagramSocket sock = new java.net.DatagramSocket(socketno)) {
+                    DatagramPacket pack = new DatagramPacket(buf, buf.length);
+                    sock.receive(pack);
+                    commandline = (new String(pack.getData(), 0, pack.getLength())).trim();
+                    InetAddress addr = pack.getAddress();
+                    int port = pack.getPort();
+                    System.out.println("Got >" + commandline + "< from " + addr.getHostName() + ":" + port);
+                    if (commandline.isEmpty() || commandline.equals("--quit"))
+                        go_on = false;
+                    else {
+                        String result = jython != null ? jython.eval(commandline) : process_line(commandline, false);
+                        System.out.println(result != null ? "OK: " + result : "ERROR");
+                    }
+                    pack = new DatagramPacket(buf, 0, addr, port);
+                    sock.send(pack);
+                    //sock.disconnect();
                 }
-
-                pack = new DatagramPacket(buf, 0, addr, port);
-                sock.send(pack);
-                //sock.disconnect();
-                sock.close();
             }
 
        } catch (BindException e) {
             System.err.println("Got Bindexception: " + e.getMessage());
             //e.printStackTrace();
-            return harcutils.exit_ioerror;
+            return IrpUtils.EXIT_IO_ERROR;
        } catch (SocketException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            return harcutils.exit_ioerror;
+            return IrpUtils.EXIT_IO_ERROR;
         } catch (IOException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            return harcutils.exit_ioerror;
+            return IrpUtils.EXIT_IO_ERROR;
         }
-        return harcutils.exit_success;
+        return IrpUtils.EXIT_SUCCESS;
     }
 
     private class udp_thread extends Thread {
 
-        private int socket_no;
-        private jython_engine jython;
+        private final int socket_no;
+        private final jython_engine jython;
 
-        public udp_thread(int socket_no, jython_engine jython) {
+        udp_thread(int socket_no, jython_engine jython) {
             super("udp_thread");
             this.socket_no = socket_no;
             this.jython = jython;
@@ -804,12 +816,12 @@ public class Main {
     private int socket_execute(int socketno, boolean use_python) {
         System.err.println("Trying to listen to TCP socket " + socketno + (use_python ? " (Using Python)" : "")
                 + ", Output encoding: " + charset);
-        ServerSocket srv_sock = null;
+        ServerSocket srv_sock;
         try {
             srv_sock = new java.net.ServerSocket(socketno);
         } catch (IOException e) {
             System.out.println("Could not listen on port " + socketno);
-            return harcutils.exit_ioerror;
+            return IrpUtils.EXIT_IO_ERROR;
         }
 
         spawn_new_socketthreads = true;
@@ -821,17 +833,17 @@ public class Main {
             }
         } catch (IOException e) {
             System.out.println("Could not listen on port " + socketno);
-            return harcutils.exit_ioerror;
+            return IrpUtils.EXIT_IO_ERROR;
         }
 
         try {
             srv_sock.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());
-            return harcutils.exit_ioerror;
+            return IrpUtils.EXIT_IO_ERROR;
         }
 
-        return harcutils.exit_success;
+        return IrpUtils.EXIT_SUCCESS;
     }
 
     // Each socket_thread has its own jython engine, operating on the same home.
@@ -839,10 +851,10 @@ public class Main {
 
         private Socket sock = null;
         private jython_engine jython = null;
-        private String clientname;
+        private final String clientname;
 
 
-        public socket_thread(Socket sock, boolean use_python) {
+        socket_thread(Socket sock, boolean use_python) {
             super("socket_thread");
             Main.no_threads++;
             this.sock = sock;
@@ -853,14 +865,11 @@ public class Main {
         @Override
         public void run() {
 
-            PrintStream out = null;
-            BufferedReader in = null;
             boolean kill_prog  = false;
             boolean restart_prog = false;
             //go_on = true;
-            try {
-                out = new PrintStream(sock.getOutputStream(), false, charset);
-                in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+            try (PrintStream out = new PrintStream(sock.getOutputStream(), false, charset);
+                    BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream(), charset))) {
                 //out.println("HARC server @ your service!");
                 //out.println("HARC server für dich!");
 
@@ -870,53 +879,63 @@ public class Main {
                     String commandline = in.readLine();
                     System.err.println("[" + clientname + "," + Main.no_threads + "]"
                             + (commandline != null ? (">" + commandline + "<") : "EOF"));
-                    if (commandline == null || commandline.equals("--quit")) {
+                    if (null == commandline) {
                         go_on = false;
                         out.println("BYE");
-                    } else if (commandline.equals("--die")) { // Kills the program
-                        go_on = false;
-                        spawn_new_socketthreads = false;
-                        kill_prog = true;
-                        out.println("BYE");
-                        System.err.println("die received");
-                    } else if (commandline.equals("--restart")) { // Same as --die but with different exit code
-                        go_on = false;
-                        spawn_new_socketthreads = false;
-                        kill_prog = true;
-                        restart_prog = true;
-                        out.println("BYE FOR NOW");
-                        System.err.println("restart received");
-                    } else if (commandline.equals("--exit")) { // Lets the threads finish
-                        go_on = false;
-                        spawn_new_socketthreads = false;
-                        out.println("BYE");
-                        System.err.println("exit received");
-                     } else if (commandline.equals("--foo")) {
-                        System.err.println("foo received");
-                        out.println("bar!");
-                     } else {
-                        // process this line
-                        String result = jython == null ? process_line(commandline, false) : jython.eval(commandline);
-                        out.println(result != null ? "OK: " + harcutils.no_lines(result) + "\n" + result : "ERROR");
-                        System.err.println("--|" + (result == null ? "" : result.length() < 70 ? result : (result.substring(0, 69) + "...")) + "|--");
+                    } else switch (commandline) {
+                        case "--quit":
+                            go_on = false;
+                            out.println("BYE");
+                            break;
+                        case "--die":
+                            // Kills the program
+                            go_on = false;
+                            spawn_new_socketthreads = false;
+                            kill_prog = true;
+                            out.println("BYE");
+                            System.err.println("die received");
+                            break;
+                        case "--restart":
+                            // Same as --die but with different exit code
+                            go_on = false;
+                            spawn_new_socketthreads = false;
+                            kill_prog = true;
+                            restart_prog = true;
+                            out.println("BYE FOR NOW");
+                            System.err.println("restart received");
+                            break;
+                        case "--exit":
+                            // Lets the threads finish
+                            go_on = false;
+                            spawn_new_socketthreads = false;
+                            out.println("BYE");
+                            System.err.println("exit received");
+                            break;
+                        case "--foo":
+                            System.err.println("foo received");
+                            out.println("bar!");
+                            break;
+                        default:
+                            // process this line
+                            String result = jython == null ? process_line(commandline, false) : jython.eval(commandline);
+                            out.println(result != null ? "OK: " + harcutils.no_lines(result) + "\n" + result : "ERROR");
+                            System.err.println("--|" + (result == null ? "" : result.length() < 70 ? result : (result.substring(0, 69) + "...")) + "|--");
+                            break;
                     }
                 }
             } catch (IOException e) {
                 System.err.println("IOException caught in sockettread.run(): " + e.getMessage());
             } finally {
                 try {
-                    out.close();
-                    in.close();
                     sock.close();
                     socket_storage.dispose_sockets(true);
                     Main.no_threads--;
                     if (kill_prog) {
-                        System.exit(restart_prog ? harcutils.exit_restart : harcutils.exit_success);
+                        doExit(restart_prog ? IrpUtils.EXIT_RESTART : IrpUtils.EXIT_SUCCESS);
                     }
                 } catch (IOException ex) {
                     System.err.println("IOException when closing " + ex.getMessage());
                 }
-
             }
         }
     }
@@ -944,7 +963,7 @@ public class Main {
     private int interactive_jython_execute() /*throws InterruptedException*/ {
         jython_engine interactive_jython = new jython_engine(hm, true);
         interactive_jython.interact();
-        return harcutils.exit_success;
+        return IrpUtils.EXIT_SUCCESS;
     }
 
     // Recognizes aliases, however, readline does not know them
@@ -955,10 +974,10 @@ public class Main {
         engine = new macro_engine(macrofilename, hm, debug);
         } catch (IOException e) {
         System.err.println(e.getMessage());
-        return harcutils.exit_config_read_error;
+        return IrpUtils.exit_config_read_error;
         } catch (SAXParseException e) {
         System.err.println(e.getMessage());
-        return harcutils.exit_xml_error;
+        return IrpUtils.exit_xml_error;
         }
          */
 
@@ -981,10 +1000,11 @@ public class Main {
             "--video-only"
         };
 
-        File history = null;
+        File history;
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
 
+            @Override
             public void run() {
                 try {
                     Readline.writeHistoryFile(harcprops.get_instance().get_rl_historyfile());
@@ -1022,7 +1042,7 @@ public class Main {
         try {
             if (history.exists())
                 Readline.readHistoryFile(harcprops.get_instance().get_rl_historyfile());
-        } catch (Exception e) {
+        } catch (EOFException | UnsupportedEncodingException e) {
             System.err.println("Could not read rl history " + e.getMessage());
         }
 
@@ -1032,7 +1052,7 @@ public class Main {
             // FIXME
             System.err.println(enc.getMessage() + "Could not set word break characters");
             System.err.println("Try touching " + harcprops.get_instance().get_rl_historyfile());
-            return harcutils.exit_this_cannot_happen;
+            return IrpUtils.EXIT_THIS_CANNOT_HAPPEN;
         }
 
         Readline.setCompleter(new rl_completer(cl_commands, /*engine,*/ hm));
@@ -1074,12 +1094,12 @@ public class Main {
         // NOTE: Readline.writeHistoryFile and Readline.cleanup is done in
         // the shutdown hook; do not add it here too.
 
-        return harcutils.exit_success;
+        return IrpUtils.EXIT_SUCCESS;
     }
 
     private class readline_thread extends Thread {
 
-        public readline_thread() {
+        readline_thread() {
             super("readline_thread");
         }
 
@@ -1137,65 +1157,76 @@ public class Main {
                         result = "";
                 } catch (InterruptedException e) {
                     System.err.println(e.getMessage());
-                //System.exit(harcutils.exit_interrupted);
+                //System.exit(IrpUtils.exit_interrupted);
                 }
             }
         } else if (line.startsWith("--")) {
             // Decode commands
-            if (arguments[0].equals("--quit") || arguments[0].equals("--exit")) {
-                result = null;
-                throw new EOFException("As you requested");
-            } else if (arguments[0].equals("--version")) {
-                if (verbose)
-                    System.out.println(harcutils.version_string);
-                result = harcutils.version_string;
-            } else if (arguments[0].equals("--help")) {
-                if (verbose)
-                    System.out.println(readline_help);
-                result = readline_help;
-            } else if (arguments[0].equals("--license")) {
-                if (verbose)
-                    System.out.println(harcutils.license_string);
-                result = harcutils.license_string;
-            } else if (arguments[0].equals("--verbose")) {
-                /*boolean v = true;
-                try {
-                v = Integer.parseInt(arguments[1]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("+++ Argument missing, assuming 1.");
-                } catch (NumberFormatException e) {
-                System.out.println("+++ Parse error, assuming 1.");
-                }*/
-                //hm.set_verbosity(true);
-                userprefs.get_instance().set_verbose(true);
-                result = "Verbosity set";
-            } else if (arguments[0].equals("--debug")) {
-                int v = 0;
-                try {
+            switch (arguments[0]) {
+                case "--quit":
+                case "--exit":
+                    //result = null;
+                    throw new EOFException("As you requested");
+                case "--version":
+                    if (verbose)
+                        System.out.println(harcutils.version_string);
+                    result = harcutils.version_string;
+                    break;
+                case "--help":
+                    if (verbose)
+                        System.out.println(readline_help);
+                    result = readline_help;
+                    break;
+                case "--license":
+                    if (verbose)
+                        System.out.println(harcutils.license_string);
+                    result = harcutils.license_string;
+                    break;
+                case "--verbose":
+                    /*boolean v = true;
+                    try {
                     v = Integer.parseInt(arguments[1]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("+++ Argument missing, assuming 0.");
-                } catch (NumberFormatException e) {
-                    System.out.println("+++ Parse error, assuming 0.");
-                }
-                //hm.set_debug(v);
-                //engine.set_debug(v);
-                userprefs.get_instance().set_debug(v);
-                result = "debug set to " + v;
-            } else if (arguments[0].equals("--zone")) {
-                zone = (arguments.length > 1) ? arguments[1] : null;
-                if (debugargs.dbg_decode_args())
-                    System.out.println("%%% Zone is now " + zone);
-            } else if (arguments[0].equals("--audio-video")) {
-                the_mediatype = mediatype.audio_video;
-            } else if (arguments[0].equals("--audio-only")) {
-                the_mediatype = mediatype.audio_only;
-            } else if (arguments[0].equals("--video-only")) {
-                the_mediatype = mediatype.video_only;
-            } else {
-                if (verbose)
-                    System.out.println(bell + "*** Unrecognized command ***");
-                result = null;
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("+++ Argument missing, assuming 1.");
+                    } catch (NumberFormatException e) {
+                    System.out.println("+++ Parse error, assuming 1.");
+                    }*/
+                    //hm.set_verbosity(true);
+                    userprefs.get_instance().set_verbose(true);
+                    result = "Verbosity set";
+                    break;
+                case "--debug":
+                    int v = 0;
+                    try {
+                        v = Integer.parseInt(arguments[1]);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("+++ Argument missing, assuming 0.");
+                    } catch (NumberFormatException e) {
+                        System.out.println("+++ Parse error, assuming 0.");
+                    }   //hm.set_debug(v);
+                    //engine.set_debug(v);
+                    userprefs.get_instance().set_debug(v);
+                    result = "debug set to " + v;
+                    break;
+                case "--zone":
+                    zone = (arguments.length > 1) ? arguments[1] : null;
+                    if (debugargs.dbg_decode_args())
+                        System.out.println("%%% Zone is now " + zone);
+                    break;
+                case "--audio-video":
+                    the_mediatype = mediatype.audio_video;
+                    break;
+                case "--audio-only":
+                    the_mediatype = mediatype.audio_only;
+                    break;
+                case "--video-only":
+                    the_mediatype = mediatype.video_only;
+                    break;
+                default:
+                    if (verbose)
+                        System.out.println(bell + "*** Unrecognized command ***");
+                    result = null;
+                    break;
             }
         }/* else if (engine != null && engine.has_macro(arguments[0])) {
             // NO-FIXME: not implemented: macro arguments,
@@ -1280,8 +1311,8 @@ public class Main {
 
     private int jython_noninteractive_execute(String[] noninteractive_args) {
         jython_engine jython = new jython_engine(hm, false);
-        for (int i = 0; i < noninteractive_args.length; i++)
-            jython.exec(noninteractive_args[i]);
+        for (String noninteractive_arg : noninteractive_args)
+            jython.exec(noninteractive_arg);
 
         return 0;
     }
@@ -1295,7 +1326,7 @@ public class Main {
         if (select_mode) {
             if (noninteractive_args.length < 2) {
                 System.err.println("Source device missing");
-                return harcutils.exit_usage_error;
+                return IrpUtils.EXIT_USAGE_ERROR;
             }
             String dst_device = noninteractive_args[0];
             String src_device = noninteractive_args[1];
@@ -1308,15 +1339,14 @@ public class Main {
                     harcutils.printtable("Valid inputs for " + dst_device + (zone != null ? (" in zone " + zone) : "") + ":",
                             hm.get_sources(dst_device, zone));
                 } else {
-                    System.err.println("No such device `" + dst_device + "'");
-                    System.exit(harcutils.exit_nonexisting_device);
+                    doExit(IrpUtils.EXIT_IO_ERROR, "No such device `" + dst_device + "'");
                 }
             } else {
                 try {
                     hm.select(dst_device, src_device, type, zone, the_mediatype, connection_type);
                 } catch (InterruptedException e) {
                     System.err.println(e.getMessage());
-                    System.exit(harcutils.exit_interrupted);
+                    System.exit(IrpUtils.EXIT_INTERRUPTED);
                 }
             }
 
@@ -1341,7 +1371,7 @@ public class Main {
                     ;
             } catch (non_existing_command_exception e) {
                 System.err.println(e.getMessage());
-                System.exit(harcutils.exit_nonexisting_command);
+                System.exit(IrpUtils.exit_nonexisting_command);
             } catch (InterruptedException e) {
                 System.err.println(e.getMessage());
             }
@@ -1378,8 +1408,8 @@ public class Main {
                     }
                     if (output == null) {
                         System.out.println("** Failure **");
-                        return harcutils.exit_fatal_program_failure;
-                    } else if (!output.equals("")) {
+                        return IrpUtils.EXIT_FATAL_PROGRAM_FAILURE;
+                    } else if (!output.isEmpty()) {
                         System.out.println(formatter.format(output));
                     }
                 }
@@ -1388,13 +1418,13 @@ public class Main {
             }
         } else {
             System.err.println("No device `" + first_arg + "' known, issue `harctoolbox ?' for a list of known devices.");
-            return harcutils.exit_nonexisting_device;
+            return IrpUtils.EXIT_IO_ERROR;
         }
         try {
             socket_storage.dispose_sockets(true);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
-        return harcutils.exit_success;
+        return IrpUtils.EXIT_SUCCESS;
     }
 }

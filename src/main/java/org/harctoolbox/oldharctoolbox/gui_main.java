@@ -41,6 +41,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
+import org.harctoolbox.irp.IrpUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -128,13 +129,13 @@ public class gui_main extends javax.swing.JFrame {
             hm = new home(homefilename);
         } catch (IOException e) {
             System.err.println("Cannot open home file");
-            System.exit(harcutils.exit_config_read_error);
+            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         } catch (SAXParseException e) {
             System.err.println("home file parse error" + e.getMessage());
-            System.exit(harcutils.exit_xml_error);
+            System.exit(IrpUtils.EXIT_XML_ERROR);
         } catch (SAXException e) {
             System.err.println("home file parse error" + e.getMessage());
-            System.exit(harcutils.exit_xml_error);
+            System.exit(IrpUtils.EXIT_XML_ERROR);
         }
 
         engine = new jython_engine(hm, false);

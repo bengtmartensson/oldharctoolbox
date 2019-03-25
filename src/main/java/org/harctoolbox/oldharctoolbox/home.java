@@ -41,9 +41,11 @@ import java.util.logging.Logger;
 import org.harctoolbox.harchardware.HarcHardwareException;
 import org.harctoolbox.harchardware.comm.Wol;
 import org.harctoolbox.ircore.InvalidArgumentException;
+import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
 import org.harctoolbox.ircore.Pronto;
 import org.harctoolbox.irp.IrpException;
+import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -1351,7 +1353,7 @@ public final class home {
     }
 
     private static void usage() {
-        usage(harcutils.exit_usage_error);
+        usage(IrpUtils.EXIT_USAGE_ERROR);
     }
 
     public static void main(String[] args) {
@@ -1528,13 +1530,13 @@ public final class home {
             }
         } catch (IOException e) {
             System.err.println("Cannot read file " + home_filename + " (" + e.getMessage() + ").");
-            System.exit(harcutils.exit_config_read_error);
+            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         } catch (SAXParseException e) {
             System.err.println("Parse error in " + home_filename + " (" + e.getMessage() + ").");
-            System.exit(harcutils.exit_xml_error);
+            System.exit(IrpUtils.EXIT_XML_ERROR);
         } catch (SAXException e) {
             System.err.println("Parse error in " + home_filename + " (" + e.getMessage() + ").");
-            System.exit(harcutils.exit_xml_error);
+            System.exit(IrpUtils.EXIT_XML_ERROR);
         } catch (InterruptedException e) {
             System.err.println("** Interrupted **");
             System.exit(18);

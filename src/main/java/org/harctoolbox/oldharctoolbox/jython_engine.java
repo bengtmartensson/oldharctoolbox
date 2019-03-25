@@ -19,6 +19,7 @@ package org.harctoolbox.oldharctoolbox;
 
 import java.io.File;
 import java.io.IOException;
+import org.harctoolbox.irp.IrpUtils;
 import org.python.core.PyException;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
@@ -156,14 +157,14 @@ public class jython_engine {
             System.err.println(e.getMessage());
         }
         if (hm == null)
-            System.exit(harcutils.exit_config_read_error);
+            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         jython_engine jython = null;
         try {
             jython = new jython_engine(hm, args.length == 0);
         } catch (Exception e) {
             System.err.println("Could not create jython engine.");
             System.err.println(e.getMessage());
-            System.exit(harcutils.exit_config_read_error);
+            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         }
 
         if (args.length > 0)

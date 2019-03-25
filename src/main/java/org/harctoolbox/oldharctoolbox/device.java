@@ -33,6 +33,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.harctoolbox.ircore.IrSignal;
 import org.harctoolbox.ircore.Pronto;
+import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -841,7 +842,7 @@ public class device {
     }
 
     private static void usage() {
-        usage(harcutils.exit_usage_error);
+        usage(IrpUtils.EXIT_USAGE_ERROR);
     }
 
     public static void main(String args[]) {
@@ -899,7 +900,7 @@ public class device {
                     arg_i++;
                     export_dir = args[arg_i++];
                 } else
-                    usage(harcutils.exit_usage_error);
+                    usage(IrpUtils.EXIT_USAGE_ERROR);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             usage();
@@ -907,11 +908,11 @@ public class device {
 
         if (export_dir != null) {
             boolean success = export_all_devices(export_dir);
-            System.exit(success ? harcutils.exit_success : harcutils.exit_config_write_error);
+            System.exit(success ? IrpUtils.EXIT_SUCCESS : IrpUtils.EXIT_CONFIG_WRITE_ERROR);
         } else if (in_filename == null) {
             usage(-1);
             harcutils.printtable("Known devices:", get_devices());
-            System.exit(harcutils.exit_success);
+            System.exit(IrpUtils.EXIT_SUCCESS);
         } else if ((args.length != arg_i) && (args.length != arg_i + 1))
             usage();
 
@@ -920,7 +921,7 @@ public class device {
             dev = new device(in_filename, null, true);
         } catch (IOException e) {
             System.err.println("IOException with " + in_filename);
-            System.exit(harcutils.exit_config_read_error);
+            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         } catch (SAXParseException e) {
             System.err.println(e.getMessage());
         } catch (SAXException e) {
