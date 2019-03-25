@@ -35,10 +35,14 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.harctoolbox.harchardware.HarcHardwareException;
+import org.harctoolbox.harchardware.misc.EzControlT10;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
 import org.harctoolbox.irp.IrpUtils;
@@ -2100,30 +2104,37 @@ public class gui_main extends javax.swing.JFrame {
 }//GEN-LAST:event_t10_address_TextFieldActionPerformed
 
     private void t10_get_timers_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_get_timers_ButtonActionPerformed
-        System.err.println(ezcontrol_t10.get_timers(t10_address_TextField.getText()));
+        System.err.println(EzControlT10.getTimers(t10_address_TextField.getText()));
 }//GEN-LAST:event_t10_get_timers_ButtonActionPerformed
 
     private void t10_get_status_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_get_status_ButtonActionPerformed
-        System.err.println(ezcontrol_t10.get_status(t10_address_TextField.getText()));
+        System.err.println(EzControlT10.getStatus(t10_address_TextField.getText()));
 }//GEN-LAST:event_t10_get_status_ButtonActionPerformed
 
     private void t10_send_manual_command(command_t cmd) {
-    try {
-            (new ezcontrol_t10(t10_address_TextField.getText())).send_manual(
-                    (String) ezcontrol_system_ComboBox.getModel().getSelectedItem(),
+        try {
+            EzControlT10.Command t10cmd = EzControlT10.Command.valueOf(cmd.toString());
+            EzControlT10.EZSystem system = EzControlT10.EZSystem.valueOf((String) ezcontrol_system_ComboBox.getModel().getSelectedItem());
+            (new EzControlT10(t10_address_TextField.getText())).sendManual(
+                    system,
                     (String) ezcontrol_house_ComboBox.getModel().getSelectedItem(),
                     Integer.parseInt((String) ezcontrol_deviceno_ComboBox.getModel().getSelectedItem()),
-                    cmd, -1,
+                    t10cmd, -1,
                     Integer.parseInt((String) this.n_ezcontrol_ComboBox.getModel().getSelectedItem()));
-        } catch (non_existing_command_exception ex) {
+        } catch (IllegalArgumentException ex) {
             System.err.println("This cannot happen.");
+        } catch (HarcHardwareException ex) {
+            Logger.getLogger(gui_main.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
     }
 
     private void t10_send_preset_command(command_t cmd) {
         try {
-            (new ezcontrol_t10(t10_address_TextField.getText())).send_preset(Integer.parseInt((String) ezcontrol_preset_no_ComboBox.getModel().getSelectedItem()), cmd);
-        } catch (non_existing_command_exception ex) {
+            EzControlT10.Command t10cmd = EzControlT10.Command.valueOf(cmd.toString());
+            (new EzControlT10(t10_address_TextField.getText())).sendPreset(Integer.parseInt((String) ezcontrol_preset_no_ComboBox.getModel().getSelectedItem()),
+                    t10cmd);
+        } catch (IllegalArgumentException | HarcHardwareException ex) {
+            Logger.getLogger(gui_main.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
     }
 
@@ -2146,10 +2157,10 @@ public class gui_main extends javax.swing.JFrame {
 }//GEN-LAST:event_ezcontrol_preset_off_ButtonActionPerformed
 
     private void ezcontrol_preset_no_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_preset_no_ComboBoxActionPerformed
-        ezcontrol_t10 ez = new ezcontrol_t10(this.t10_address_TextField.getText());
+        EzControlT10 ez = new EzControlT10(this.t10_address_TextField.getText());
         int preset_number = Integer.parseInt((String)ezcontrol_preset_no_ComboBox.getModel().getSelectedItem());
-        ezcontrol_preset_name_TextField.setText(ez.get_preset_name(preset_number));
-        this.ezcontrol_preset_state_TextField.setText(ez.get_preset_status(preset_number));
+        ezcontrol_preset_name_TextField.setText(ez.getPresetName(preset_number));
+        this.ezcontrol_preset_state_TextField.setText(ez.getPresetStatus(preset_number));
     }//GEN-LAST:event_ezcontrol_preset_no_ComboBoxActionPerformed
 
     private void t10_update_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_update_ButtonActionPerformed

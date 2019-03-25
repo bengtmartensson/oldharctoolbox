@@ -40,6 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.harctoolbox.harchardware.HarcHardwareException;
 import org.harctoolbox.harchardware.comm.Wol;
+import org.harctoolbox.harchardware.misc.EzControlT10;
 import org.harctoolbox.ircore.InvalidArgumentException;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
@@ -440,7 +441,7 @@ public final class home {
                             System.err.println("Invalid power argument.");
                             failure = true;
                         } else {
-                            ezcontrol_t10 t10 = new ezcontrol_t10(gw.get_hostname(), userprefs.get_instance().get_verbose());
+                            EzControlT10 t10 = new EzControlT10(gw.get_hostname(), userprefs.get_instance().get_verbose());
                             int preset = -1;
                             try {
                                 //preset = Integer.parseInt(gw_connector.substring(7));
@@ -456,28 +457,33 @@ public final class home {
                             }
 
                             try {
-                                if (preset != -1 && ezcontrol_t10.is_preset_command(cmd))
+                                EzControlT10.Command t10cmd = EzControlT10.Command.valueOf(cmd.toString());
+                                if (preset != -1 && t10cmd.isPresetCommand())
                                     switch (cmd) {
                                         case get_status:
-                                            output = t10.get_preset_status(preset);
+                                            output = t10.getPresetStatus(preset);
                                             break;
                                         case set_power:
-                                            success = t10.send_preset(preset, power, count);
+                                            success = t10.sendPreset(preset, EzControlT10.Command.power_on, count);
                                             break;
                                         default:
-                                            success = t10.send_preset(preset, cmd, count);
+                                            success = t10.sendPreset(preset, t10cmd, count);
                                             break;
                                     }
                                 else {
                                     if (cmd == command_t.get_status || cmd == command_t.power_toggle) {
                                         System.err.println("This command only implemented for presets.");
                                         failure = true;
-                                    } else
-                                        success = t10.send_manual(dev_class, house, deviceno, cmd, power, arg, count);
+                                    } else {
+                                        EzControlT10.EZSystem system = EzControlT10.EZSystem.valueOf(dev_class);
+                                        success = t10.sendManual(system, house, deviceno, t10cmd, power, arg, count);
+                                    }
                                 }
-                            } catch (non_existing_command_exception e) {
+                            } catch (IllegalArgumentException e) {
                                 System.err.println("Command not implemented");
                                 failure = true;
+                            } catch (HarcHardwareException ex) {
+                                Logger.getLogger(home.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                     }
