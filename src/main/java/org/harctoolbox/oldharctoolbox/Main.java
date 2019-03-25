@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
 final public class Main {
 
     private final static String bell = "\007";
-    private final static String formfeed = "\014";
+    //private final static String formfeed = "\014";
     private final static int socketno_default = 9999;
     private final static int python_socketno_default = 9998;
     private static volatile boolean spawn_new_socketthreads = false;
@@ -50,12 +50,8 @@ final public class Main {
     private static int no_threads = 0;
     private static Main the_instance = null;
     private static final String helptext =
-            "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + commandtype_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -b <browserpath>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
+            "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + CommandType_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -b <browserpath>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
     private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<macro>\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
-
-//    public static Main getInstance() {
-//        return the_instance;
-//    }
 
     private static void usage(int exitstatus) {
         doExit(exitstatus, "Usage: one of" + IrCoreUtils.LINE_SEPARATOR + helptext);
@@ -94,12 +90,12 @@ final public class Main {
         int debug = 0;
         boolean verbose = false;
         int socketno = -1;
-        commandtype_t type = commandtype_t.any;
-        toggletype toggle = toggletype.dont_care;
-        mediatype the_mediatype = mediatype.audio_video;
+        CommandType_t type = CommandType_t.any;
+        ToggleType toggle = ToggleType.dont_care;
+        MediaType the_mediatype = MediaType.audio_video;
         String charset = "iso-8859-1";
         String zone = null;
-        connectiontype connection_type = null;
+        ConnectionType connection_type = null;
         String[] noninteractive_args;
         int arg_i = 0;
 
@@ -120,7 +116,7 @@ final public class Main {
                         break;
                     case "-A":
                         arg_i++;
-                        the_mediatype = mediatype.audio_only;
+                        the_mediatype = MediaType.audio_only;
                         break;
                     case "-C":
                         arg_i++;
@@ -138,11 +134,11 @@ final public class Main {
                         break;
                     case "-V":
                         arg_i++;
-                        the_mediatype = mediatype.video_only;
+                        the_mediatype = MediaType.video_only;
                         break;
                     case "-T":
                         arg_i++;
-                        toggle = toggletype.decode_toggle(args[arg_i++]);
+                        toggle = ToggleType.decode_toggle(args[arg_i++]);
                         break;
                     case "-a":
                         arg_i++;
@@ -154,7 +150,7 @@ final public class Main {
                         break;
                     case "-c":
                         arg_i++;
-                        connection_type = connectiontype.parse(args[arg_i++]);
+                        connection_type = ConnectionType.parse(args[arg_i++]);
                         break;
                     case "-d":
                         arg_i++;
@@ -196,9 +192,9 @@ final public class Main {
                     case "-t":
                         arg_i++;
                         String typename = args[arg_i++];
-                        if (!commandtype_t.is_valid(typename)) {
+                        if (!CommandType_t.is_valid(typename)) {
                             usage();
-                        }   type = commandtype_t.valueOf(typename);
+                        }   type = CommandType_t.valueOf(typename);
                         break;
                     case "-v":
                         arg_i++;
@@ -237,15 +233,15 @@ final public class Main {
             usage();
         }
 
-        harcprops.initialize(propsfilename);
+        HarcProps.initialize(propsfilename);
         if (browser != null)
-            harcprops.get_instance().set_browser(browser);
-        userprefs.get_instance().set_propsfilename(propsfilename);
-        userprefs.get_instance().set_debug(debug);
-        userprefs.get_instance().set_verbose(verbose);
+            HarcProps.get_instance().set_browser(browser);
+        UserPrefs.get_instance().set_propsfilename(propsfilename);
+        UserPrefs.get_instance().set_debug(debug);
+        UserPrefs.get_instance().set_verbose(verbose);
 
         try {
-            protocol.initialize("/usr/local/share/irptransmogrifier/IrpProtocols.xml"); // FIXME
+            ProtocolDataBase.initialize("/usr/local/share/irptransmogrifier/IrpProtocols.xml"); // FIXME
         } catch (IOException | IrpParseException ex) {
             System.out.println(ex.getMessage());
             System.exit(1);
@@ -263,8 +259,6 @@ final public class Main {
                     aliasfilename,
                     no_execute, select_mode, smart_memory, count, type, toggle,
                     the_mediatype, zone, connection_type, charset);
-//            if (m == null)
-//                System.exit(IrpUtils.exit_fatal_program_failure);
 
             int status = IrpUtils.EXIT_SUCCESS;
             if (readline_mode) {
@@ -318,9 +312,9 @@ final public class Main {
         harcprops.initialize();*/
 
         if (homefilename != null)
-            harcprops.get_instance().set_homefilename(homefilename);
+            HarcProps.get_instance().set_homefilename(homefilename);
         else
-            homefilename = harcprops.get_instance().get_homefilename();
+            homefilename = HarcProps.get_instance().get_homefilename();
 
         /*if (macrofilename != null)
         harcprops.get_instance().set_macrofilename(macrofilename);
@@ -340,7 +334,7 @@ final public class Main {
         //final String macronam = macrofilename;
         //final String brwsr = browser;
         java.awt.EventQueue.invokeLater(() -> {
-            new gui_main(hmnam/*, macronam, vrbs, dbg, brwsr*/).setVisible(true);
+            new GuiMain(hmnam/*, macronam, vrbs, dbg, brwsr*/).setVisible(true);
         });
     }
 
@@ -371,31 +365,31 @@ final public class Main {
     //String browser = null;
     //String propsfilename = null;
     private String aliasfilename = null;
-    private resultformatter formatter = null;
+    private ResultFormatter formatter = null;
     //debugargs db = null;
     //private boolean no_execute = false;
     private boolean select_mode = false;
     //int debug = 0;
     //boolean verbose = false;
-    private home hm = null;
+    private Home hm = null;
     //macro_engine engine = null;
     private HashMap< String, Calendar> timertable = new HashMap<>(16);
     //jython_engine jython = null;
-    private command_alias alias_expander = null;
-    private commandtype_t type = commandtype_t.any;
-    private mediatype the_mediatype = mediatype.audio_video;
-    private connectiontype connection_type = connectiontype.any;
+    private CommandAlias alias_expander = null;
+    private CommandType_t type = CommandType_t.any;
+    private MediaType the_mediatype = MediaType.audio_video;
+    private ConnectionType connection_type = ConnectionType.any;
     private String charset = null;
     private String zone = null;
     private int count = 1;
-    private toggletype toggle = toggletype.dont_care;
+    private ToggleType toggle = ToggleType.dont_care;
     private boolean smart_memory = false;
 
     private Main(String homefilename, /*String macrofilename, String browser,*/
             /*String propsfilename,*/ String aliasfilename, //int debug, boolean verbose,
             boolean no_execute, boolean select_mode, boolean smart_memory,
-            int count, commandtype_t type, toggletype toggle,
-            mediatype the_mediatype, String zone, connectiontype connection_type, String charset) {
+            int count, CommandType_t type, ToggleType toggle,
+            MediaType the_mediatype, String zone, ConnectionType connection_type, String charset) {
 
         if (the_instance != null) {
             System.err.println("This class can be instantiated only once!!");
@@ -428,9 +422,9 @@ final public class Main {
             harcprops.initialize();*/
 
         if (homefilename != null)
-            harcprops.get_instance().set_homefilename(homefilename);
+            HarcProps.get_instance().set_homefilename(homefilename);
         else
-            homefilename = harcprops.get_instance().get_homefilename();
+            homefilename = HarcProps.get_instance().get_homefilename();
 
         /*if (macrofilename != null)
             harcprops.get_instance().set_macrofilename(macrofilename);
@@ -443,16 +437,16 @@ final public class Main {
             this.browser = harcprops.get_instance().get_browser();
 */
         if (aliasfilename != null)
-            harcprops.get_instance().set_aliasfilename(aliasfilename);
+            HarcProps.get_instance().set_aliasfilename(aliasfilename);
         else
-            this.aliasfilename = harcprops.get_instance().get_aliasfilename();
+            this.aliasfilename = HarcProps.get_instance().get_aliasfilename();
 
-        this.alias_expander = new command_alias(this.aliasfilename);
+        this.alias_expander = new CommandAlias(this.aliasfilename);
         //db = new debugargs(debug);
-        formatter = new resultformatter();
+        formatter = new ResultFormatter();
 
         try {
-            hm = new home(homefilename/*, this.verbose, this.debug*/);
+            hm = new Home(homefilename/*, this.verbose, this.debug*/);
         } catch (IOException e) {
             doExit(IrpUtils.EXIT_CONFIG_READ_ERROR, e.getMessage());
         } catch (SAXException e) {
@@ -474,7 +468,7 @@ final public class Main {
 
     private void shutdown() {
         try {
-            harcprops.get_instance().save();
+            HarcProps.get_instance().save();
         } catch (IOException e) {
             doExit(IrpUtils.EXIT_CONFIG_WRITE_ERROR, e.getMessage());
         }
@@ -540,7 +534,7 @@ final public class Main {
     // VERY experimental
     private int udp_execute(int socketno, boolean use_python, boolean create_thread) {
         System.err.println("Trying to listen to UDP socket " + socketno + (use_python ? " (Using Python)" : ""));
-        jython_engine jython = use_python ? new jython_engine(hm, false) : null;
+        JythonEngine jython = use_python ? new JythonEngine(hm, false) : null;
         int success = IrpUtils.EXIT_SUCCESS;
         if (create_thread)
             new udp_thread(socketno, jython).start();
@@ -549,7 +543,7 @@ final public class Main {
         return success;
     }
 
-    private int udp_work(int socketno, jython_engine jython) {
+    private int udp_work(int socketno, JythonEngine jython) {
         byte buf[] = new byte[1000];
         String commandline;
         boolean go_on = true;
@@ -646,7 +640,7 @@ final public class Main {
     }*/
 
     private int interactive_jython_execute() /*throws InterruptedException*/ {
-        jython_engine interactive_jython = new jython_engine(hm, true);
+        JythonEngine interactive_jython = new JythonEngine(hm, true);
         interactive_jython.interact();
         return IrpUtils.EXIT_SUCCESS;
     }
@@ -666,7 +660,7 @@ final public class Main {
         }
          */
 
-        if (debugargs.dbg_decode_args()) {
+        if (DebugArgs.dbg_decode_args()) {
             System.err.println("Entering readline mode");
         }
 
@@ -692,17 +686,17 @@ final public class Main {
             @Override
             public void run() {
                 try {
-                    Readline.writeHistoryFile(harcprops.get_instance().get_rl_historyfile());
+                    Readline.writeHistoryFile(HarcProps.get_instance().get_rl_historyfile());
                 } catch (IOException e) {
                     System.err.println(e.getMessage());
                 }
                 Readline.cleanup();
                 try {
-                    socket_storage.dispose_sockets(true);
+                    SocketStorage.dispose_sockets(true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (debugargs.dbg_misc())
+                if (DebugArgs.dbg_misc())
                     System.err.println("*************** This is Readline shutdown **********");
             }
         });
@@ -713,9 +707,9 @@ final public class Main {
             System.err.println("Warning: GNU readline not found.");
         }
 
-        Readline.initReadline(harcprops.get_instance().get_appname());
+        Readline.initReadline(HarcProps.get_instance().get_appname());
 
-        history = new File(harcprops.get_instance().get_rl_historyfile());
+        history = new File(HarcProps.get_instance().get_rl_historyfile());
 
         // I become funny errors (UnsupportedEncodingException below) if historyfile
         // does not exist. Therefore create it if not there already.
@@ -726,7 +720,7 @@ final public class Main {
         }
         try {
             if (history.exists())
-                Readline.readHistoryFile(harcprops.get_instance().get_rl_historyfile());
+                Readline.readHistoryFile(HarcProps.get_instance().get_rl_historyfile());
         } catch (EOFException | UnsupportedEncodingException e) {
             System.err.println("Could not read rl history " + e.getMessage());
         }
@@ -736,11 +730,11 @@ final public class Main {
         } catch (UnsupportedEncodingException enc) {
             // FIXME
             System.err.println(enc.getMessage() + "Could not set word break characters");
-            System.err.println("Try touching " + harcprops.get_instance().get_rl_historyfile());
+            System.err.println("Try touching " + HarcProps.get_instance().get_rl_historyfile());
             return IrpUtils.EXIT_THIS_CANNOT_HAPPEN;
         }
 
-        Readline.setCompleter(new rl_completer(cl_commands, /*engine,*/ hm));
+        Readline.setCompleter(new RlCompleter(cl_commands, /*engine,*/ hm));
 
         // FIXME
         boolean use_readline_thread = false;
@@ -752,7 +746,7 @@ final public class Main {
                         thr.start();
                         thr.join();
                     } else {
-                        String line = Readline.readline(harcprops.get_instance().get_rl_prompt(), false);
+                        String line = Readline.readline(HarcProps.get_instance().get_rl_prompt(), false);
                         if (line != null && !line.isEmpty()) {
                             line = line.trim();
                             int history_size = Readline.getHistorySize();
@@ -800,7 +794,7 @@ final public class Main {
                 if (verbose)
                     System.out.println(bell + "***--select takes at least two arguments***.");
             } else {
-                if (debugargs.dbg_decode_args()) {
+                if (DebugArgs.dbg_decode_args()) {
                     System.out.println("Select mode: devname = " + arguments[1] + ", src_device = " + arguments[2] + " (connection_type = " + (connection_type == null ? "any" : connection_type) + ").");
                 }
 
@@ -847,7 +841,7 @@ final public class Main {
                     System.out.println("+++ Parse error, assuming 1.");
                     }*/
                     //hm.set_verbosity(true);
-                    userprefs.get_instance().set_verbose(true);
+                    UserPrefs.get_instance().set_verbose(true);
                     result = "Verbosity set";
                     break;
                 case "--debug":
@@ -860,22 +854,22 @@ final public class Main {
                         System.out.println("+++ Parse error, assuming 0.");
                     }   //hm.set_debug(v);
                     //engine.set_debug(v);
-                    userprefs.get_instance().set_debug(v);
+                    UserPrefs.get_instance().set_debug(v);
                     result = "debug set to " + v;
                     break;
                 case "--zone":
                     zone = (arguments.length > 1) ? arguments[1] : null;
-                    if (debugargs.dbg_decode_args())
+                    if (DebugArgs.dbg_decode_args())
                         System.out.println("%%% Zone is now " + zone);
                     break;
                 case "--audio-video":
-                    the_mediatype = mediatype.audio_video;
+                    the_mediatype = MediaType.audio_video;
                     break;
                 case "--audio-only":
-                    the_mediatype = mediatype.audio_only;
+                    the_mediatype = MediaType.audio_only;
                     break;
                 case "--video-only":
-                    the_mediatype = mediatype.video_only;
+                    the_mediatype = MediaType.video_only;
                     break;
                 default:
                     if (verbose)
@@ -905,7 +899,7 @@ final public class Main {
             }
         }*/ else if (hm.has_device(arguments[0])) {
             // TODO: not implemented: type, count, toggle, smart_memory
-            if (debugargs.dbg_decode_args())
+            if (DebugArgs.dbg_decode_args())
                 System.out.println("%%% Trying to execute `" + line + "'");
 
             String cmd_name = arguments[0];
@@ -916,7 +910,7 @@ final public class Main {
                 command_t cmd = alias_expander.canonicalize(arguments[1]);
                 String[] aux_args = new String[arguments.length - 2];
 
-                if (aux_args.length < hm.get_arguments(arguments[0], cmd, commandtype_t.any)) {
+                if (aux_args.length < hm.get_arguments(arguments[0], cmd, CommandType_t.any)) {
                     System.err.println(bell + "*** Too few arguments ***");
                 } else {
                     //if (aux_args.length > hm.get_arguments(arguments[0], cmd, commandtype_t.any))
@@ -924,15 +918,15 @@ final public class Main {
 
                     for (int i = 0; i < arguments.length - 2; i++) {
                         aux_args[i] = arguments[i + 2];
-                        if (debugargs.dbg_decode_args()) {
+                        if (DebugArgs.dbg_decode_args()) {
                             System.err.println("Aux arg[" + i + "] = " + aux_args[i]);
                         }
                     }
                     // Heuristic: If exactly one argument is needed,
                     // and several given, tuck the given ones together.
                     // (e.g. for selecting TV channels with names containing spaces.)
-                    if (hm.get_arguments(arguments[0], cmd, commandtype_t.any) == 1) {
-                        if (debugargs.dbg_decode_args())
+                    if (hm.get_arguments(arguments[0], cmd, CommandType_t.any) == 1) {
+                        if (DebugArgs.dbg_decode_args())
                             System.err.println("Concatenating arguments");
                         aux_args[0] = join(arguments, 2);
                     }
@@ -965,7 +959,7 @@ final public class Main {
     }
 
     private int jython_noninteractive_execute(String[] noninteractive_args) {
-        jython_engine jython = new jython_engine(hm, false);
+        JythonEngine jython = new JythonEngine(hm, false);
         for (String noninteractive_arg : noninteractive_args)
             jython.exec(noninteractive_arg);
 
@@ -987,7 +981,7 @@ final public class Main {
             String dst_device = noninteractive_args[0];
             String src_device = noninteractive_args[1];
             System.err.println("select mode ...");
-            if (debugargs.dbg_decode_args()) {
+            if (DebugArgs.dbg_decode_args()) {
                 System.err.println("Select mode: devname = " + dst_device + ", src_device = " + src_device + " (connection_type = " + (connection_type == null ? "any" : connection_type) + ").");
             }
             if (src_device.equals("?")) {
@@ -1034,14 +1028,14 @@ final public class Main {
             try {
                 if ((noninteractive_args.length < 2) || noninteractive_args[1].equals("?")) {
                     // No command given, list possible
-                    if (debugargs.dbg_decode_args()) {
+                    if (DebugArgs.dbg_decode_args()) {
                         System.out.println("Try to list possible device commands");
                     }
                     HarcUtils.printtable("Valid commands for " + first_arg + " of type " + type + ":",
                             hm.get_commands(first_arg, type));
                 } else {
                     // Command expected
-                    if (debugargs.dbg_decode_args()) {
+                    if (DebugArgs.dbg_decode_args()) {
                         System.out.println("Try to execute as device command");
                     }
 
@@ -1055,7 +1049,7 @@ final public class Main {
                         String[] aux_args = new String[no_args];
                         for (int i = 0; i < no_args; i++) {
                             aux_args[i] = noninteractive_args[i + 2];
-                            if (debugargs.dbg_decode_args())
+                            if (DebugArgs.dbg_decode_args())
                                 System.err.println("Aux arg[" + i + "] = " + aux_args[i]);
                         }
 
@@ -1076,7 +1070,7 @@ final public class Main {
             return IrpUtils.EXIT_IO_ERROR;
         }
         try {
-            socket_storage.dispose_sockets(true);
+            SocketStorage.dispose_sockets(true);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -1311,9 +1305,9 @@ final public class Main {
     private class udp_thread extends Thread {
 
         private final int socket_no;
-        private final jython_engine jython;
+        private final JythonEngine jython;
 
-        udp_thread(int socket_no, jython_engine jython) {
+        udp_thread(int socket_no, JythonEngine jython) {
             super("udp_thread");
             this.socket_no = socket_no;
             this.jython = jython;
@@ -1329,7 +1323,7 @@ final public class Main {
     private class socket_thread extends Thread {
 
         private Socket sock = null;
-        private jython_engine jython = null;
+        private JythonEngine jython = null;
         private final String clientname;
 
 
@@ -1338,7 +1332,7 @@ final public class Main {
             Main.no_threads++;
             this.sock = sock;
             clientname = sock.getInetAddress().getHostName();
-            jython = use_python ? new jython_engine(hm, false) : null;
+            jython = use_python ? new JythonEngine(hm, false) : null;
         }
 
         @Override
@@ -1407,7 +1401,7 @@ final public class Main {
             } finally {
                 try {
                     sock.close();
-                    socket_storage.dispose_sockets(true);
+                    SocketStorage.dispose_sockets(true);
                     Main.no_threads--;
                     if (kill_prog) {
                         doExit(restart_prog ? IrpUtils.EXIT_RESTART : IrpUtils.EXIT_SUCCESS);
@@ -1427,7 +1421,7 @@ final public class Main {
         @Override
         public void run() {
             try {
-                String line = Readline.readline(harcprops.get_instance().get_rl_prompt());
+                String line = Readline.readline(HarcProps.get_instance().get_rl_prompt());
                 //Thread.sleep(100);
                 String result = process_line(line, true);
                 //Thread.sleep(100);

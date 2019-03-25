@@ -100,7 +100,7 @@ final public class HarcUtils {
 
     public static void browse(String address) {
         String[] cmd = new String[2];
-        cmd[0] = harcprops.get_instance().get_browser();
+        cmd[0] = HarcProps.get_instance().get_browser();
         if (cmd[0] == null || cmd[0].isEmpty()) {
             System.err.println("No browser.");
             return;
