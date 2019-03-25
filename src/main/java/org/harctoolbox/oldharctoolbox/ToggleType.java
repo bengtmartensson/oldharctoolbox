@@ -37,14 +37,14 @@ public enum ToggleType {
      */
     dont_care;
 
-    /**
-     * Do not generate toggle codes
-     */
-    //no_toggle,
-    /**
-     * Generate toggle codes
-     */
-    //do_toggle;
+//    /**
+//     * Do not generate toggle codes
+//     */
+//    //no_toggle,
+//    /**
+//     * Generate toggle codes
+//     */
+//    //do_toggle;
 
     public static ToggleType flip(ToggleType t) {
         return t == toggle_0 ? toggle_1 : toggle_0;

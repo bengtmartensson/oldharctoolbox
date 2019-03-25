@@ -17,7 +17,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
-public class CommandMapping {
+public final class CommandMapping {
     // Command to be mapped
     private final command_t cmd;
     private final String house;

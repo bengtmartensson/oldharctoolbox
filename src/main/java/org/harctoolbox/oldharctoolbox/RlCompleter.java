@@ -23,12 +23,12 @@ import org.gnu.readline.ReadlineCompleter;
  *
  * @author bengt
  */
-public class RlCompleter implements ReadlineCompleter {
+public final class RlCompleter implements ReadlineCompleter {
 
     //private macro_engine engine = null;
     private Home hm = null;
     private String[] commands = null;
-    private String[] macros = null;
+    private final String[] macros = null;
     private String[] devices = null;
     private String[] selecting_devices = null;
     private String[] device_commands = null;
@@ -42,11 +42,11 @@ public class RlCompleter implements ReadlineCompleter {
     private boolean is_device = false;
     private boolean select_mode = false;
 
-    private int no_words = 0;
+    private final int no_words = 0;
     private boolean between_words = false;
     private String[] tokens = null;
     private String devicename = null;
-    String dst_device = null;
+    private String dst_device = null;
 
     public RlCompleter(String[] commands, /*macro_engine engine,*/ Home hm) {
         //this.engine = engine;
@@ -83,18 +83,18 @@ public class RlCompleter implements ReadlineCompleter {
         return null;
     }
 
-    private String device_completer(String prefix, String in, int s) {
-        //if (s == 0)
-          //  System.out.println("***" + prefix + ">>>" + in );
-        for (int i = devices_p; i < devices.length; i++)
-            if (devices[i].startsWith(in)) {
-                devices_p = i + 1;
-                return prefix + " " + devices[i];
-            }
-        devices_p = devices.length;
-
-        return null;
-    }
+//    private String device_completer(String prefix, String in, int s) {
+//        //if (s == 0)
+//          //  System.out.println("***" + prefix + ">>>" + in );
+//        for (int i = devices_p; i < devices.length; i++)
+//            if (devices[i].startsWith(in)) {
+//                devices_p = i + 1;
+//                return prefix + " " + devices[i];
+//            }
+//        devices_p = devices.length;
+//
+//        return null;
+//    }
 
     private String selecting_device_completer(String prefix, String in, int s) {
         for (int i = selecting_devices_p; i < selecting_devices.length; i++)

@@ -49,7 +49,7 @@ import org.xml.sax.SAXParseException;
 // device from one another, for example a regional code. It is not implemented
 // very much of yet. Do not comfuse with attributes in XML sense.
 
-public class Device {
+public final class Device {
 
     public static final String doctype_systemid_filename = "devices.dtd";
     public static final String doctype_publicid = "-//bengt-martensson.de//devices//en";
@@ -72,7 +72,7 @@ public class Device {
     private static class device_with_attributes {
         String device_classname;
         HashMap<String, String> attributes;
-        public device_with_attributes(String device_classname, HashMap<String, String>attributes) {
+        device_with_attributes(String device_classname, HashMap<String, String>attributes) {
             this.device_classname = device_classname;
             this.attributes = attributes;
         }
@@ -82,7 +82,7 @@ public class Device {
         }
     }
 
-    private static HashMap<String, Device> device_storage = new HashMap<String, Device>();
+    private static HashMap<String, Device> device_storage = new HashMap<String, Device>(16);
 
     public static Device new_device(String devicename, HashMap<String, String>attributes)
             throws IOException, SAXParseException, SAXException {
@@ -111,26 +111,24 @@ public class Device {
         if (commandsets == null)
             return null;
         int len = 0;
-        for (int i = 0; i < commandsets.length; i++) {
-            if ((commandsets[i].get_remotename().equals(remotename) || remotename == null)
-                    && (cmdtype == CommandType_t.any || cmdtype == commandsets[i].get_type()))
-                len += commandsets[i].get_no_commands();
+        for (CommandSet commandset : commandsets) {
+            if ((commandset.get_remotename().equals(remotename) || remotename == null) && (cmdtype == CommandType_t.any || cmdtype == commandset.get_type()))
+                len += commandset.get_no_commands();
         }
         command_t[] cmds = new command_t[len];
         int index = 0;
-        for (int i = 0; i < commandsets.length; i++) {
-            if ((commandsets[i].get_remotename().equals(remotename) || remotename == null)
-                    && (cmdtype == CommandType_t.any || cmdtype == commandsets[i].get_type()))
-                for (int j = 0; j < commandsets[i].get_no_commands(); j++)
-                    cmds[index++] = commandsets[i].get_entry(j).get_cmd();
+        for (CommandSet commandset : commandsets) {
+            if ((commandset.get_remotename().equals(remotename) || remotename == null) && (cmdtype == CommandType_t.any || cmdtype == commandset.get_type()))
+                for (int j = 0; j < commandset.get_no_commands(); j++)
+                    cmds[index++] = commandset.get_entry(j).get_cmd();
         }
         return cmds;
     }
 
     public /*??*/ CommandSet get_commandset(command_t cmd, CommandType_t cmdtype) {
-        for (int i = 0; i < commandsets.length; i++)
-            if (commandsets[i].get_type() == cmdtype && commandsets[i].get_command(cmd, cmdtype) != null)
-                return commandsets[i];
+        for (CommandSet commandset : commandsets)
+            if (commandset.get_type() == cmdtype && commandset.get_command(cmd, cmdtype) != null)
+                return commandset;
 
         return null;
     }
@@ -167,7 +165,7 @@ public class Device {
     }*/
 
     public CommandSet[] get_commandsets(String remotename, CommandType_t type) {
-        ArrayList<CommandSet> vect = new ArrayList<CommandSet>();
+        ArrayList<CommandSet> vect = new ArrayList<>(8);
         //int len = 0;
         //for (int i = 0; i < commandsets.length; i++) {
         //    if (commandsets[i].get_remotename().equals(remotename))
@@ -175,25 +173,24 @@ public class Device {
         //}
         //commandset[] cmds = new commandset[len];
         //int index = 0;
-        for (int i = 0; i < commandsets.length; i++) {
-            if (commandsets[i].get_remotename().equals(remotename)
-                    && (type == CommandType_t.any || type == commandsets[i].get_type()))
-                vect.add(commandsets[i]);
+        for (CommandSet commandset : commandsets) {
+            if (commandset.get_remotename().equals(remotename) && (type == CommandType_t.any || type == commandset.get_type()))
+                vect.add(commandset);
         }
-        return (CommandSet[])vect.toArray(new CommandSet[vect.size()]);
+        return vect.toArray(new CommandSet[vect.size()]);
     }
 
     public CommandSet[] get_commandsets(CommandType_t type) {
         int len = 0;
-        for (int i = 0; i < commandsets.length; i++) {
-            if (commandsets[i].get_type() == type)
+        for (CommandSet commandset : commandsets) {
+            if (commandset.get_type() == type)
                 len++;
         }
         CommandSet[] cmds = new CommandSet[len];
         int index = 0;
-        for (int i = 0; i < commandsets.length; i++) {
-            if (commandsets[i].get_type() == type)
-                cmds[index++] = commandsets[i];
+        for (CommandSet commandset : commandsets) {
+            if (commandset.get_type() == type)
+                cmds[index++] = commandset;
         }
         return cmds;
     }
@@ -208,7 +205,7 @@ public class Device {
     }
 
     public ArrayList<CommandType_t> get_commandtypes(command_t cmd) {
-        ArrayList<CommandType_t> v = new ArrayList<CommandType_t>();
+        ArrayList<CommandType_t> v = new ArrayList<>(8);
         for (CommandType_t t : CommandType_t.values())
             if (t != CommandType_t.any && get_command(cmd, t) != null)
                 v.add(t);
@@ -221,19 +218,19 @@ public class Device {
     }
 
     public Command get_command(command_t cmd, CommandType_t type) {
-        for (int i = 0; i < commandsets.length; i++) {
-            Command c = commandsets[i].get_command(cmd, type);
+        for (CommandSet commandset : commandsets) {
+            Command c = commandset.get_command(cmd, type);
             if (c != null)
                 return c;
         }
 
         // Not found...
         if (cmd == command_t.power_on) {
-            for (int i = 0; i < commandsets.length; i++) {
-                String ppo = commandsets[i].get_pseudo_power_on();
-                if (!ppo.equals("")) {
+            for (CommandSet commandset : commandsets) {
+                String ppo = commandset.get_pseudo_power_on();
+                if (!ppo.isEmpty()) {
                     command_t ppo_cmd = command_t.parse(ppo);
-                    Command c = commandsets[i].get_command(ppo_cmd, type);
+                    Command c = commandset.get_command(ppo_cmd, type);
                     if (c != null)
                         return c;
                 }
@@ -243,9 +240,9 @@ public class Device {
     }
 
     public Command get_command(command_t cmd, CommandType_t type, String remote) {
-        for (int i = 0; i < commandsets.length; i++) {
-            if (commandsets[i].get_remotename().equals(remote)) {
-                Command c = commandsets[i].get_command(cmd, type);
+        for (CommandSet commandset : commandsets) {
+            if (commandset.get_remotename().equals(remote)) {
+                Command c = commandset.get_command(cmd, type);
                 if (c != null)
                     return c;
             }
@@ -253,13 +250,12 @@ public class Device {
 
         // Not found...
         if (cmd == command_t.power_on) {
-            for (int i = 0; i < commandsets.length; i++) {
-                if (commandsets[i].get_remotename().equals(remote)) {
-                    String ppo = commandsets[i].get_pseudo_power_on();
-
-                    if (!ppo.equals("")) {
+            for (CommandSet commandset : commandsets) {
+                if (commandset.get_remotename().equals(remote)) {
+                    String ppo = commandset.get_pseudo_power_on();
+                    if (!ppo.isEmpty()) {
                         command_t ppo_cmd = command_t.parse(ppo);
-                        Command c = commandsets[i].get_command(ppo_cmd, type);
+                        Command c = commandset.get_command(ppo_cmd, type);
                         if (c != null)
                             return c;
                     }
@@ -314,7 +310,7 @@ public class Device {
         if (c == null)
             return null;
 
-        return (house != null && !house.equals(""))
+        return (house != null && !house.isEmpty())
                 ? c.get_ir_code(toggle, verbose, (short)((int)house.charAt(0)-(short)'A'), deviceno)
         : c.get_ir_code(toggle, verbose);
     }
@@ -346,12 +342,12 @@ public class Device {
     }
 
     public static String[] devices2remotes(String[] devices) throws IOException, SAXParseException, SAXException {
-        ArrayList<String> v = new ArrayList<String>();
-        for (int i = 0; i < devices.length; i++) {
-            String[] remotes = (new Device(devices[i])).get_remotenames();
+        ArrayList<String> v = new ArrayList<>(8);
+        for (String device : devices) {
+            String[] remotes = (new Device(device)).get_remotenames();
             v.addAll(Arrays.asList(remotes));
         }
-        return (String[]) v.toArray(new String[v.size()]);
+        return v.toArray(new String[v.size()]);
     }
 
     /*
@@ -397,26 +393,27 @@ public class Device {
     }
 
     public String info() {
-        String infostr =
+        StringBuilder infostr = new StringBuilder(
                 "id = " + id + "\n" +
                 "name = " + device_name + "\n" +
                 "vendor = " + vendor + "\n" +
                 "model = " + model + "\n" +
-                "type = " + type + "\n";
+                "type = " + type + "\n");
 
-        for (String s : attributes.keySet())
-            infostr = infostr + "@" + s + "=" + attributes.get(s) + "\n";
+        attributes.keySet().forEach((s) -> {
+            infostr.append("@").append(s).append("=").append(attributes.get(s)).append("\n");
+        });
 
         for (int i = 0; i < no_aliases; i++)
-            infostr = infostr + "alias: " + aliases[i][0] + "->" + aliases[i][1] + "\n";
+            infostr.append("alias: ").append(aliases[i][0]).append("->").append(aliases[i][1]).append("\n");
 
-        infostr = infostr + "Remotenames: " + String.join(",", get_remotenames()) + "\n";
+        infostr.append("Remotenames: ").append(String.join(",", get_remotenames())).append("\n");
 
-        infostr = infostr + "# commandsets = " + commandsets.length;
+        infostr.append("# commandsets = ").append(commandsets.length);
 
-        for (int i = 0; i < commandsets.length; i++)
-            infostr = infostr + "\n" + commandsets[i].get_info();
-        return infostr;
+        for (CommandSet commandset : commandsets)
+            infostr.append("\n").append(commandset.get_info());
+        return infostr.toString();
     }
 
     public boolean is_valid() {
@@ -544,6 +541,7 @@ public class Device {
     /**
      *
      * @param name Either file name or device name.
+     * @param attributes
      * @throws java.io.IOException
      * @throws org.xml.sax.SAXParseException
      */
@@ -578,7 +576,7 @@ public class Device {
         // First read the attributes of the device file, considered as defaults...
         NodeList attributes_nodes = device_el.getElementsByTagName("attribute");
         int no_attributes = attributes_nodes.getLength();
-        attributes = new HashMap<String, String>(no_attributes);
+        attributes = new HashMap<>(no_attributes);
         for (int i = 0; i < no_attributes; i++) {
             Element attr = (Element) attributes_nodes.item(i);
             String val =
@@ -588,18 +586,18 @@ public class Device {
         }
         // ... then, to the extent applicable, overwrite with actual instance values
         // if instance_attributes == null I am exporting, set everything to true.
-        if (instance_attributes == null)
+        if (instance_attributes == null) {
             attributes.clear();
             //for (String attributeName : attributes.keySet())
             //    attributes.put(attributeName, "export");
-        else
-            for (String s : instance_attributes.keySet()) {
-                if (attributes.containsKey(s))
-                    attributes.put(s, instance_attributes.get(s));
+        } else {
+            instance_attributes.entrySet().forEach((kvp) -> {
+                if (attributes.containsKey(kvp.getKey()))
+                    attributes.put(kvp.getValue(), instance_attributes.get(kvp.getKey()));
                 else
-                    System.err.println("WARNING: Attribute named `" + s + "' does not exist in device `" + device_name + "', ignored.");
-            }
-
+                    System.err.println("WARNING: Attribute named `" + kvp.getKey() + "' does not exist in device `" + device_name + "', ignored.");
+            });
+        }
 
         NodeList aliases_nodes = device_el.getElementsByTagName("alias");
         no_aliases = aliases_nodes.getLength();
@@ -773,7 +771,7 @@ public class Device {
                     //}
 
 //                    try {
-                        Element code = null;
+                        Element code;
 
                     if (has_toggle) {
                         code = doc.createElement("toggle_pair");
@@ -856,8 +854,8 @@ public class Device {
         }
         String[] devs = get_devices();
         // Ignore errors, just continue
-        for (int i = 0; i < devs.length; i++)
-            export_device(export_dir, devs[i]);
+        for (String dev : devs)
+            export_device(export_dir, dev);
 
         return true;
     }
@@ -895,44 +893,58 @@ public class Device {
             while (arg_i < args.length && (args[arg_i].length() > 0) // ???
                     && args[arg_i].charAt(0) == '-') {
 
-                if (args[arg_i].equals("-@")) {
-                    arg_i++;
-                    attribute_name = args[arg_i++];
-                } else if (args[arg_i].equals("-D")) {
-                    arg_i++;
-                    deviceno = Short.parseShort(args[arg_i++]);
-                } else if (args[arg_i].equals("-S")) {
-                    arg_i++;
-                    subdevice = Short.parseShort(args[arg_i++]);
-                } else if (args[arg_i].equals("-a")) {
-                    arg_i++;
-                    alias_name = args[arg_i++];
-                } else if (args[arg_i].equals("-c")) {
-                    arg_i++;
-                    get_code = true;
-                } else if (args[arg_i].equals("-d")) {
-                    arg_i++;
-                    debug++;
-                } else if (args[arg_i].equals("-l")) {
-                    arg_i++;
-                    list_commands = true;
-                } else if (args[arg_i].equals("-f")) {
-                    arg_i++;
-                    in_filename = args[arg_i++];
-                } else if (args[arg_i].equals("-o")) {
-                    arg_i++;
-                    out_filename = args[arg_i++];
-                } else if (args[arg_i].equals("-t")) {
-                    arg_i++;
-                    String typename = args[arg_i++];
-                    if (!CommandType_t.is_valid(typename))
-                        usage();
-                    type = CommandType_t.valueOf(typename);
-                } else if (args[arg_i].equals("-x")) {
-                    arg_i++;
-                    export_dir = args[arg_i++];
-                } else
-                    usage(IrpUtils.EXIT_USAGE_ERROR);
+                switch (args[arg_i]) {
+                    case "-@":
+                        arg_i++;
+                        attribute_name = args[arg_i++];
+                        break;
+                    case "-D":
+                        arg_i++;
+                        deviceno = Short.parseShort(args[arg_i++]);
+                        break;
+                    case "-S":
+                        arg_i++;
+                        subdevice = Short.parseShort(args[arg_i++]);
+                        break;
+                    case "-a":
+                        arg_i++;
+                        alias_name = args[arg_i++];
+                        break;
+                    case "-c":
+                        arg_i++;
+                        get_code = true;
+                        break;
+                    case "-d":
+                        arg_i++;
+                        debug++;
+                        break;
+                    case "-l":
+                        arg_i++;
+                        list_commands = true;
+                        break;
+                    case "-f":
+                        arg_i++;
+                        in_filename = args[arg_i++];
+                        break;
+                    case "-o":
+                        arg_i++;
+                        out_filename = args[arg_i++];
+                        break;
+                    case "-t":
+                        arg_i++;
+                        String typename = args[arg_i++];
+                        if (!CommandType_t.is_valid(typename))
+                            usage();
+                        type = CommandType_t.valueOf(typename);
+                        break;
+                    case "-x":
+                        arg_i++;
+                        export_dir = args[arg_i++];
+                        break;
+                    default:
+                        usage(IrpUtils.EXIT_USAGE_ERROR);
+                        break;
+                }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             usage();
@@ -975,8 +987,8 @@ public class Device {
 
         if (list_commands) {
             command_t[] cmds = dev.get_commands(type);
-            for (int i = 0; i < cmds.length; i++) {
-                System.out.println(cmds[i]);
+            for (command_t cmd : cmds) {
+                System.out.println(cmd);
             }
         }
 

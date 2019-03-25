@@ -19,17 +19,12 @@ package org.harctoolbox.oldharctoolbox;
 
 import java.util.ArrayList;
 
+public final class DeviceGroup {
 
-/**
- *
- * @author bengt
- */
-public class DeviceGroup {
-
-    private String id;
-    private String name;
-    private String zone;
-    private ArrayList<String> devices;
+    private final String id;
+    private final String name;
+    private final String zone;
+    private final ArrayList<String> devices;
 
     DeviceGroup(String id, String name, String zone, ArrayList<String> devices) {
         this.id = id;

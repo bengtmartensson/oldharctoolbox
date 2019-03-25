@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  *
  */
 
-public class CommandAlias {
+public final class CommandAlias {
 
     private HashMap<String, command_t> aliastable = null;
     private boolean is_valid = false;

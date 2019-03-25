@@ -22,7 +22,7 @@ import java.util.GregorianCalendar;
 /**
  *
  */
-public class ResultFormatter {
+public final class ResultFormatter {
 
     private String format;
 

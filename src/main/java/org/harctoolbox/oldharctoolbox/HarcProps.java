@@ -33,7 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class HarcProps {
+public final class HarcProps {
 
     private Properties props;
     private String filename;
@@ -87,21 +87,17 @@ public class HarcProps {
         this.filename = filename;
         need_save = false;
         props = new Properties();
-        FileInputStream f;
-        try {
-            f = new FileInputStream(filename);
+        try (FileInputStream f = new FileInputStream(filename)) {
             if (use_xml)
                 props.loadFromXML(f);
             else
                 props.load(f);
         } catch (FileNotFoundException e) {
             System.err.println("Property File " + filename + " not found, using builtin defaults.");
-            f = null;
             setup_defaults();
             need_save = true;
         } catch (IOException e) {
             System.err.println("Property File " + filename + " could not be read, using builtin defaults.");
-            f = null;
             setup_defaults();
             need_save = true;
         }
@@ -112,12 +108,11 @@ public class HarcProps {
         if (!need_save && filename.equals(this.filename))
             return false;
 
-        FileOutputStream f = new FileOutputStream(filename);
-
-        if (use_xml) {
-            props.storeToXML(f, "Harc Properties, feel free to hand edit if desired");
-        } else {
-            props.store(f, "Harc Properties, feel free to hand edit if desired");
+        try (FileOutputStream f = new FileOutputStream(filename)) {
+            if (use_xml)
+                props.storeToXML(f, "Harc Properties, feel free to hand edit if desired");
+            else
+                props.store(f, "Harc Properties, feel free to hand edit if desired");
         }
         need_save = false;
         return true;

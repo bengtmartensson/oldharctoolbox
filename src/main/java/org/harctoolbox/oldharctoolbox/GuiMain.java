@@ -56,7 +56,7 @@ import org.xml.sax.SAXParseException;
  */
 // TODO: Implement limited functionallity without home/macro file.
 
-public class GuiMain extends javax.swing.JFrame {
+public final class GuiMain extends javax.swing.JFrame {
 
     private Home hm = null;
     private JythonEngine engine = null;

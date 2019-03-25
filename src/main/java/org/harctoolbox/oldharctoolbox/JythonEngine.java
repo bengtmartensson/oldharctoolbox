@@ -22,6 +22,7 @@ import java.io.IOException;
 import org.harctoolbox.irp.IrpUtils;
 import org.python.core.PyException;
 import org.python.core.PyObject;
+import org.python.util.InteractiveConsole;
 import org.python.util.PythonInterpreter;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -29,7 +30,7 @@ import org.xml.sax.SAXParseException;
 /**
  *
  */
-public class JythonEngine {
+public final class JythonEngine {
 
     private PythonInterpreter python;
     private int debug;
@@ -56,7 +57,7 @@ public class JythonEngine {
             completer = new JythonRlCompleter(hm);
         PythonInterpreter.initialize(System.getProperties(), HarcProps.get_instance().get_props(), new String[0]);
         python = interactive ?
-            new HarcReadlineJythonconsole(null, org.python.util.InteractiveConsole.CONSOLE_FILENAME, completer) :
+            new HarcReadlineJythonConsole(null, org.python.util.InteractiveConsole.CONSOLE_FILENAME, completer) :
             new PythonInterpreter();
         python.set("hm", hm);
         python.exec("import sys");
@@ -131,8 +132,8 @@ public class JythonEngine {
     }
 
     public void interact() {
-        if (python.getClass() == HarcReadlineJythonconsole.class)
-            ((HarcReadlineJythonconsole) python).interact();
+        if (python.getClass() == HarcReadlineJythonConsole.class)
+            ((InteractiveConsole) python).interact();
         else
             System.err.println("Not interactive, returning...");
     }
@@ -158,23 +159,23 @@ public class JythonEngine {
         }
         if (hm == null)
             System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
-        JythonEngine jython = null;
+        JythonEngine jython;
         try {
             jython = new JythonEngine(hm, args.length == 0);
-        } catch (Exception e) {
+
+            if (args.length > 0)
+                if (args[0].equals("-a"))
+                    HarcUtils.printtable("Macros with no or all defaulted arguments are:", jython.get_argumentless_macros());
+                else
+                    for (String arg : args) {
+                        jython.exec(arg);
+                    }
+            else
+                jython.interact();
+        } catch (PyException e) {
             System.err.println("Could not create jython engine.");
             System.err.println(e.getMessage());
             System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         }
-
-        if (args.length > 0)
-            if (args[0].equals("-a"))
-                HarcUtils.printtable("Macros with no or all defaulted arguments are:", jython.get_argumentless_macros());
-            else
-                for (int i = 0; i < args.length; i++) {
-                    jython.exec(args[i]);
-                }
-        else
-           jython.interact();
     }
 }

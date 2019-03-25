@@ -19,7 +19,7 @@ package org.harctoolbox.oldharctoolbox;
 
 import org.harctoolbox.ircore.IrCoreUtils;
 
-public class CommandSet {
+public final class CommandSet {
 
     private CommandType_t type;
     private String protocol;

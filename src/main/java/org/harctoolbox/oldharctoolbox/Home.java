@@ -31,7 +31,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,7 +48,6 @@ import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
 import org.harctoolbox.ircore.Pronto;
 import org.harctoolbox.ircore.XmlUtils;
-import org.harctoolbox.irp.IrpException;
 import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -61,7 +59,7 @@ import org.xml.sax.SAXParseException;
  */
 public final class Home {
 
-    private int max_hops = 10;
+    private final static int max_hops = 10;
 
     private final HashMap<String, String> alias_table;
     // The get method of device_table should not be used, use get_dev(String) instead.
@@ -90,7 +88,7 @@ public final class Home {
 
     public String[] get_zones(String device) {
         Dev d = get_dev(device);
-        return d != null ? d.get_zone_names().toArray(new String[0]) : null;
+        return d != null ? d.get_zone_names().toArray(new String[d.get_zone_names().size()]) : null;
     }
 
     public boolean has_zone(String device, String zone) {
@@ -121,23 +119,22 @@ public final class Home {
      */
     public String[] get_devices() {
         int n = device_table.size();
-        ArrayList<String> v = new ArrayList<String>(n);
+        ArrayList<String> v = new ArrayList<>(n);
         //for (Enumeration<String> e = device_table.keys(); e.hasMoreElements();) {
         //    String id = e.nextElement();
-        for (String id : device_table.keySet()) {
-            if (!device_table.get(id).get_class().equals("null"))
-                v.add(id);
-        }
-        return v.toArray(new String[0]);
+        device_table.keySet().stream().filter((id) -> (!device_table.get(id).get_class().equals("null"))).forEachOrdered((id) -> {
+            v.add(id);
+        });
+        return v.toArray(new String[v.size()]);
     }
 
     public String[] get_selecting_devices() {
-        ArrayList<String> v = new ArrayList<String>();
-        for (Dev d : device_table.values())
-            if (!d.get_inputs().isEmpty())
-                v.add(d.get_id());
+        ArrayList<String> v = new ArrayList<>(32);
+        device_table.values().stream().filter((d) -> (!d.get_inputs().isEmpty())).forEachOrdered((d) -> {
+            v.add(d.get_id());
+        });
 
-        return v.toArray(new String[0]);
+        return v.toArray(new String[v.size()]);
     }
 
     public int get_arguments(String devname, command_t cmd, CommandType_t cmdtype) {
@@ -170,12 +167,12 @@ public final class Home {
     }
 
     public String[] get_devicegroups() {
-        return device_groups_table.keySet().toArray(new String[0]);
+        return device_groups_table.keySet().toArray(new String[device_groups_table.size()]);
     }
 
     public String[] get_sources(String devname, String zone) {
         Dev d = get_dev(devname);
-        return d == null ? null : d.get_sources(zone).toArray(new String[0]);
+        return d == null ? null : d.get_sources(zone).toArray(new String[d.get_sources(zone).size()]);
     }
 
     /**
@@ -196,7 +193,7 @@ public final class Home {
             return null;
         }
         HashSet<ConnectionType> hs = d.get_connection_types(expand_alias(src_device));
-        return hs.toArray(new ConnectionType[0]);
+        return hs.toArray(new ConnectionType[hs.size()]);
     }
 
     public boolean select(String devname, String src_device, CommandType_t type,
@@ -232,10 +229,10 @@ public final class Home {
             zone = d.get_defaultzone();
 
         command_t select_command = inp.get_select_command(zone, the_mediatype);
-        Input.querycommand query_command = inp.get_query_command(zone, the_mediatype);
+        Input.QueryCommand query_command = inp.get_query_command(zone, the_mediatype);
 
         if (select_command == command_t.invalid) {
-            System.err.println("No command found for turning " + devname + " to " + src_device + ((zone != null && !zone.equals("")) ? (" in zone " + zone) : "") + (the_mediatype == MediaType.audio_only ? " (audio only)"
+            System.err.println("No command found for turning " + devname + " to " + src_device + ((zone != null && !zone.isEmpty()) ? (" in zone " + zone) : "") + (the_mediatype == MediaType.audio_only ? " (audio only)"
                     : the_mediatype == MediaType.video_only ? " (video only)"
                     : "") + (conn_type == null ? "" : " using connection_type " + conn_type) + ".");
             return false;
@@ -359,13 +356,11 @@ public final class Home {
                             } else {
                                 String raw_ccf = Pronto.toString(code);
                                 GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ UserPrefs.get_instance().get_verbose());
-                                if (gc != null) {
-                                    //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
-                                    GlobalCache.GlobalCacheIrTransmitter transmitter = gc.newTransmitter(fgw.get_connectorno());
-                                    success = gc.sendCcf(raw_ccf, count, transmitter);
-                                    if (DebugArgs.dbg_transmit()) {
-                                        System.err.println("Globalcache " + (success ? "succeeded" : "failed"));
-                                    }
+                                //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
+                                GlobalCache.GlobalCacheIrTransmitter transmitter = gc.newTransmitter(fgw.get_connectorno());
+                                success = gc.sendCcf(raw_ccf, count, transmitter);
+                                if (DebugArgs.dbg_transmit()) {
+                                    System.err.println("Globalcache " + (success ? "succeeded" : "failed"));
                                 }
                             }
 //                        } else if (gw.get_class().equals("irtrans")) {
@@ -451,10 +446,7 @@ public final class Home {
                                 preset = fgw.get_connectorno();
                                 if (DebugArgs.dbg_transmit())
                                     System.err.println("Preset no = " + preset);
-                            } catch (StringIndexOutOfBoundsException e) {
-                                System.err.println("preset number not parseable");
-                                failure = true;
-                            } catch (NumberFormatException e) {
+                            } catch (StringIndexOutOfBoundsException | NumberFormatException e) {
                                 System.err.println("preset number not parseable");
                                 failure = true;
                             }
@@ -543,7 +535,7 @@ public final class Home {
                         }
 
                         if (dev.get_command(cmd, CommandType_t.tcp).get_response_lines() < 0) {
-                            if (dev.get_command(cmd, CommandType_t.tcp).get_response_ending().equals("")) {
+                            if (dev.get_command(cmd, CommandType_t.tcp).get_response_ending().isEmpty()) {
                                 // Loop until interrupted
                                 System.err.println("*** This will loop until interrupted");
                                 for (;;) {
@@ -556,7 +548,7 @@ public final class Home {
                                 boolean found = false;
                                 do {
                                     if (i++ > 0) {
-                                        result = result + "\n";
+                                        result += "\n";
                                     }
                                     while (!inFromServer.ready())
                                         Thread.sleep(20);
@@ -564,18 +556,18 @@ public final class Home {
                                     if (DebugArgs.dbg_transmit()) {
                                         System.err.println("Got: " + l);
                                     }
-                                    result = result + l;
+                                    result += l;
                                     found = l.equals(dev.get_command(cmd, CommandType_t.tcp).get_response_ending());
                                 } while (!found);
                             }
                         } else {
                             for (int i = 0; i < dev.get_command(cmd, CommandType_t.tcp).get_response_lines(); i++) {
                                 if (i > 0) {
-                                    result = result + "\n";
+                                    result += "\n";
                                 }
                                 //while (!inFromServer.ready())
                                 //    Thread.sleep(20); // Danger of hanging
-                                result = result + inFromServer.readLine();
+                                result += inFromServer.readLine();
                             }
                         }
 
@@ -601,7 +593,7 @@ public final class Home {
                         outToServer.close();
                         inFromServer.close();
                         SocketStorage.returnsocket(sock, false);//sock.close();
-                        } catch (Exception e) {
+                        } catch (IOException e) {
                             System.err.println("Socket problem: " + e.getMessage());
                         }
                     }
@@ -619,7 +611,7 @@ public final class Home {
                         String urlstr = "http://" + fgw.get_hostname() + ":" + portnumber + "/" + subst_transmitstring;
                         try {
                             int response_lines = the_command.get_response_lines();
-                            if (response_lines == 0 && !the_command.get_expected_response().equals("")) // this is contradictory, fix
+                            if (response_lines == 0 && !the_command.get_expected_response().isEmpty()) // this is contradictory, fix
                                 response_lines = 1;
 
 
@@ -655,8 +647,8 @@ public final class Home {
                                     for (int i = 0; i < response_lines; i++) {
                                         result = inFromServer.readLine();
                                         if (result != null)
-                                            output = output.equals("") ? result : output + "\n" + result;
-                                        if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose() || (the_command.get_expected_response().equals("") && the_command.get_response_lines() == 0)) {
+                                            output = output.isEmpty() ? result : output + "\n" + result;
+                                        if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose() || (the_command.get_expected_response().isEmpty() && the_command.get_response_lines() == 0)) {
                                             System.err.println("Got: " + result);	// ??
                                         }
                                     }
@@ -672,14 +664,14 @@ public final class Home {
                                     do {
                                         result = inFromServer.readLine();
                                         if (result != null)
-                                            output = output.equals("") ? result : output + "\n" + result;
+                                            output = output.isEmpty() ? result : output + "\n" + result;
                                         if ((DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose()) && result != null) {
                                             System.out.println(result);	// ??
                                         }
                                     } while (result != null);
                                 }
 
-                                if (!the_command.get_expected_response().equals("")) {
+                                if (!the_command.get_expected_response().isEmpty()) {
                                     if (result.equals(the_command.get_expected_response())) {
                                         if (DebugArgs.dbg_transmit()) {
                                             System.err.println("response equals expected.");
@@ -766,7 +758,7 @@ public final class Home {
 //                                    no_read_lines--;
 //                                Thread.sleep(10);
 
-                                if (!the_command.get_expected_response().equals("")) {
+                                if (!the_command.get_expected_response().isEmpty()) {
                                     if (result.equals(the_command.get_expected_response())) {
                                         if (DebugArgs.dbg_transmit()) {
                                             System.err.println("response equals expected.");
@@ -864,22 +856,27 @@ public final class Home {
                                     if (DebugArgs.dbg_transmit()) {
                                         System.err.print("Trying to turn Globalcache relay #" + con + " ");
                                     }
-                                    if (cmd == command_t.power_toggle) {
-                                        if (DebugArgs.dbg_transmit()) {
-                                            System.err.println("TOGGLE");
-                                        }
-                                        success = gc.toggleState(con);
-                                    } else if (cmd == command_t.power_pulse) {
+                                    if (null == cmd) {
                                         if (DebugArgs.dbg_transmit())
-                                            System.err.println("PULSE");
-
-                                        success = gc.pulseState(con);
-
-                                    } else {
-                                        if (DebugArgs.dbg_transmit()) {
                                             System.err.println(cmd == command_t.power_on ? "ON" : "OFF");
-                                        }
+
                                         success = gc.setState(con, cmd == command_t.power_on);
+                                    } else switch (cmd) {
+                                        case power_toggle:
+                                            if (DebugArgs.dbg_transmit()) {
+                                                System.err.println("TOGGLE");
+                                            }   success = gc.toggleState(con);
+                                            break;
+                                        case power_pulse:
+                                            if (DebugArgs.dbg_transmit())
+                                                System.err.println("PULSE");
+                                            success = gc.pulseState(con);
+                                            break;
+                                        default:
+                                            if (DebugArgs.dbg_transmit()) {
+                                                System.err.println(cmd == command_t.power_on ? "ON" : "OFF");
+                                            }   success = gc.setState(con, cmd == command_t.power_on);
+                                            break;
                                     }
                                 } else {
                                     failure = true;
@@ -905,50 +902,53 @@ public final class Home {
                         System.err.println("Programming/configuration error: gateway class lan expected.");
                         failure = true;
                     } else {
-                        if (cmd == command_t.ping) {
-                            try {
-                                if (UserPrefs.get_instance().get_verbose())
-                                    System.err.print("Pinging hostname " + fgw.get_hostname() + "... ");
-
-                                success = InetAddress.getByName(fgw.get_hostname()).isReachable(HarcUtils.ping_timeout);
-                                if (!success) {
-                                    // Java's isReachable may fail due to insufficient privileges;
-                                    // the OSs ping command may be more successful (is suid on Unix).
-                                    if (UserPrefs.get_instance().get_verbose())
-                                        System.err.print("isReachable() failed, trying the ping program...");
-                                    String[] args = {"ping", "-w", Integer.toString((int) (HarcUtils.ping_timeout / 1000)), fgw.get_hostname()};
-                                    Process proc = Runtime.getRuntime().exec(args);
-                                    proc.waitFor();
-                                    success = proc.exitValue() == 0;
-                                }
-                                if (UserPrefs.get_instance().get_verbose())
-                                    System.err.println(success ? "succeded." : "failed.");
-                            } catch (IOException e) {
-                                System.err.println(e.getMessage());
-                            }
-                        } else if (cmd == command_t.wol) {
-                            String mac = fgw.get_mac();
-                            if ((mac == null) || mac.isEmpty()) {
-                                System.err.println("WOL to host " + fgw.get_hostname() + " requested, but MAC unknown.");
-                            } else {
-                                if (UserPrefs.get_instance().get_verbose()) {
-                                    System.err.println("Sending a WOL package to " + fgw.get_hostname() + " (" +  mac + ").");
-                            }
-                            try {
-                                    Wol.wol(fgw.get_mac());
-                                    success = true;
-                                } catch (NumberFormatException e) {
-                                    System.err.println(e.getMessage());
-                                } catch (IOException e) {
-                                    System.err.println(e.getMessage());
-                                } catch (HarcHardwareException ex) {
-                                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
-                        } else {
+                        if (null == cmd) {
                             System.err.println("Command " + cmd + " of type ip not implemented.");
                             failure = true;
+                        } else switch (cmd) {
+                    case ping:
+                        try {
+                            if (UserPrefs.get_instance().get_verbose())
+                                System.err.print("Pinging hostname " + fgw.get_hostname() + "... ");
+
+                            success = InetAddress.getByName(fgw.get_hostname()).isReachable(HarcUtils.ping_timeout);
+                            if (!success) {
+                                // Java's isReachable may fail due to insufficient privileges;
+                                // the OSs ping command may be more successful (is suid on Unix).
+                                if (UserPrefs.get_instance().get_verbose())
+                                    System.err.print("isReachable() failed, trying the ping program...");
+                                String[] args = {"ping", "-w", Integer.toString((int) (HarcUtils.ping_timeout / 1000)), fgw.get_hostname()};
+                                Process proc = Runtime.getRuntime().exec(args);
+                                proc.waitFor();
+                                success = proc.exitValue() == 0;
+                            }
+                            if (UserPrefs.get_instance().get_verbose())
+                                System.err.println(success ? "succeded." : "failed.");
+                        } catch (IOException e) {
+                            System.err.println(e.getMessage());
                         }
+                        break;
+                    case wol:
+                        String mac = fgw.get_mac();
+                        if ((mac == null) || mac.isEmpty()) {
+                            System.err.println("WOL to host " + fgw.get_hostname() + " requested, but MAC unknown.");
+                        } else {
+                            if (UserPrefs.get_instance().get_verbose()) {
+                                System.err.println("Sending a WOL package to " + fgw.get_hostname() + " (" +  mac + ").");
+                            }
+                            try {
+                                Wol.wol(fgw.get_mac());
+                                success = true;
+                            } catch (NumberFormatException | IOException | HarcHardwareException e) {
+                                System.err.println(e.getMessage());
+                            }
+                        }
+                        break;
+                    default:
+                        System.err.println("Command " + cmd + " of type ip not implemented.");
+                        failure = true;
+                        break;
+                }
                     }
                     break;
                 case special:
@@ -967,7 +967,7 @@ public final class Home {
                         Method m = cl.getMethod(cmd.toString(), args_class);
                         Object something = m.invoke(d, (Object[])arguments);
                         output = something == null ? ""
-                                : something.getClass().isArray() ? String.join(" ", (String[]) something)
+                                : something.getClass().isArray() ? String.join(" ", (CharSequence[]) something)
                                 : (String) something;
                         success = true;
                     } catch (NoSuchMethodException e) {
@@ -1042,13 +1042,8 @@ public final class Home {
         if (type != CommandType_t.any)
             return dv.has_commandtype(type) && d.get_command(command, type) != null;
         else {
-
             ArrayList<CommandType_t> types = d.get_commandtypes(command);
-            for (CommandType_t t : types)
-                if (dv.has_commandtype(t))
-                    return true;
-
-            return false;
+            return types.stream().anyMatch((t) -> (dv.has_commandtype(t)));
         }
     }
 
@@ -1336,37 +1331,36 @@ public final class Home {
     }
 
     public String[] gateway_instances(String gateway_class) {
-        ArrayList<String> v = new ArrayList<String>();
-        for (Gateway gw : gateway_table.values()) {
-            if (gw.get_class().equals(gateway_class))
-                v.add(gw.get_id());
-        }
-        return v.toArray(new String[0]);
+        ArrayList<String> v = new ArrayList<>(8);
+        gateway_table.values().stream().filter((gw) -> (gw.get_class().equals(gateway_class))).forEachOrdered((gw) -> {
+            v.add(gw.get_id());
+        });
+        return v.toArray(new String[v.size()]);
     }
 
     public boolean lirc_conf_export() {
         boolean success = true;
         String[] lircservers = gateway_instances("lirc_server");
-        for (int i = 0; i < lircservers.length; i++) {
-            String filename = HarcProps.get_instance().get_exportdir() + File.separatorChar + lircservers[i] + ".lirc.conf";
+        for (String lircserver : lircservers) {
+            String filename = HarcProps.get_instance().get_exportdir() + File.separatorChar + lircserver + ".lirc.conf";
             //String[] devs = this.gateway_client_classes(lircservers[i]);
-            String[] devs = device_table.keySet().toArray(new String[0]);// FIXME
+            String[] devs = device_table.keySet().toArray(new String[device_table.size()]);// FIXME
             /*try {
-                lirc_export.export(filename, devs);
-                if (userprefs.get_instance().get_verbose())
-                    System.err.println("LIRC Export: " + filename + " was successfully created.");
+            lirc_export.export(filename, devs);
+            if (userprefs.get_instance().get_verbose())
+            System.err.println("LIRC Export: " + filename + " was successfully created.");
             } catch (FileNotFoundException ex) {
-                System.err.println(ex);
-                success = false;
+            System.err.println(ex);
+            success = false;
             } catch (IOException ex) {
-                System.err.println(ex);
-                success = false;
+            System.err.println(ex);
+            success = false;
             } catch (SAXParseException ex) {
-                System.err.println(ex);
-                success = false;
+            System.err.println(ex);
+            success = false;
             } catch (SAXException ex) {
-                System.err.println(ex);
-                success = false;
+            System.err.println(ex);
+            success = false;
             }*/
         }
         return success;
@@ -1412,55 +1406,70 @@ public final class Home {
         try {
             while (arg_i < args.length && (args[arg_i].length() > 0) && args[arg_i].charAt(0) == '-') {
 
-                if (args[arg_i].equals("-#")) {
-                    arg_i++;
-                    count = Integer.parseInt(args[arg_i++]);
-                } else if (args[arg_i].equals("-b")) {
-                    arg_i++;
-                    browser = args[arg_i++];
-                    HarcProps.get_instance().set_browser(browser);
-                } else if (args[arg_i].equals("-c")) {
-                    arg_i++;
-                    connection_type = ConnectionType.valueOf(args[arg_i++]);
-                } else if (args[arg_i].equals("-d")) {
-                    arg_i++;
-                    debug = Integer.parseInt(args[arg_i++]);
-                } else if (args[arg_i].equals("-h")) {
-                    arg_i++;
-                    home_filename = args[arg_i++];
-                } else if (args[arg_i].equals("-m")) {
-                    arg_i++;
-                    smart_memory = true;
-                } else if (args[arg_i].equals("-p")) {
-                    arg_i++;
-                    propsfilename = args[arg_i++];
-                } else if (args[arg_i].equals("-s")) {
-                    arg_i++;
-                    select_mode = true;
-                } else if (args[arg_i].equals("-t")) {
-                    arg_i++;
-                    String typename = args[arg_i++];
-                    if (!CommandType_t.is_valid(typename)) {
+                switch (args[arg_i]) {
+                    case "-#":
+                        arg_i++;
+                        count = Integer.parseInt(args[arg_i++]);
+                        break;
+                    case "-b":
+                        arg_i++;
+                        browser = args[arg_i++];
+                        HarcProps.get_instance().set_browser(browser);
+                        break;
+                    case "-c":
+                        arg_i++;
+                        connection_type = ConnectionType.valueOf(args[arg_i++]);
+                        break;
+                    case "-d":
+                        arg_i++;
+                        debug = Integer.parseInt(args[arg_i++]);
+                        break;
+                    case "-h":
+                        arg_i++;
+                        home_filename = args[arg_i++];
+                        break;
+                    case "-m":
+                        arg_i++;
+                        smart_memory = true;
+                        break;
+                    case "-p":
+                        arg_i++;
+                        propsfilename = args[arg_i++];
+                        break;
+                    case "-s":
+                        arg_i++;
+                        select_mode = true;
+                        break;
+                    case "-t":
+                        arg_i++;
+                        String typename = args[arg_i++];
+                        if (!CommandType_t.is_valid(typename)) {
+                            usage();
+                        }   type = CommandType_t.valueOf(typename);
+                        break;
+                    case "-v":
+                        arg_i++;
+                        verbose = true;
+                        break;
+                    case "-z":
+                        arg_i++;
+                        zone = args[arg_i++];
+                        break;
+                    case "-A":
+                        arg_i++;
+                        the_mediatype = MediaType.audio_only;
+                        break;
+                    case "-V":
+                        arg_i++;
+                        the_mediatype = MediaType.video_only;
+                        break;
+                    case "-T":
+                        arg_i++;
+                        toggle = ToggleType.decode_toggle(args[arg_i++]);
+                        break;
+                    default:
                         usage();
-                    }
-                    type = CommandType_t.valueOf(typename);
-                } else if (args[arg_i].equals("-v")) {
-                    arg_i++;
-                    verbose = true;
-                } else if (args[arg_i].equals("-z")) {
-                    arg_i++;
-                    zone = args[arg_i++];
-                } else if (args[arg_i].equals("-A")) {
-                    arg_i++;
-                    the_mediatype = MediaType.audio_only;
-                } else if (args[arg_i].equals("-V")) {
-                    arg_i++;
-                    the_mediatype = MediaType.video_only;
-                } else if (args[arg_i].equals("-T")) {
-                    arg_i++;
-                    toggle = ToggleType.decode_toggle(args[arg_i++]);
-                } else {
-                    usage();
+                        break;
                 }
             }
 
@@ -1555,7 +1564,7 @@ public final class Home {
                 if (output == null) {
                     System.out.println("** Failure **");
                     System.exit(1);
-                } else if (!output.equals("")) {
+                } else if (!output.isEmpty()) {
                     System.out.println("Command output: \"" + output + "\"");
                 }
             }

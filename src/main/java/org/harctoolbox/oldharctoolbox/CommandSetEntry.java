@@ -17,7 +17,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
-public class CommandSetEntry {
+public final class CommandSetEntry {
 
     private command_t cmd;
     private short cmdno;

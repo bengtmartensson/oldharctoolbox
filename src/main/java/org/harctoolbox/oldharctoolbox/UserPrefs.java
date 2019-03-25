@@ -20,7 +20,7 @@ package org.harctoolbox.oldharctoolbox;
 /**
  *
  */
-public class UserPrefs {
+public final class UserPrefs {
     private boolean verbose = false;
     private int debug = 0;
      // Can be annoying with unwanted and unexpected browsers popping up
@@ -30,7 +30,7 @@ public class UserPrefs {
 
     private String propsfilename;
 
-    private static UserPrefs the_instance = new UserPrefs();
+    private static final UserPrefs the_instance = new UserPrefs();
 
     public static UserPrefs get_instance() {
         return the_instance;

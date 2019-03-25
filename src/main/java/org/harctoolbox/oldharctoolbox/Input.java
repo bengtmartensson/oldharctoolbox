@@ -25,15 +25,15 @@ import java.util.HashSet;
 /**
  *
  */
-public class Input {
+public final class Input {
 
-    public static class querycommand {
+    public static class QueryCommand {
 
-        private command_t cmd;
-        private String val;
-        private MediaType type;
+        private final command_t cmd;
+        private final String val;
+        private final MediaType type;
 
-        public querycommand(command_t cmd, String val, MediaType type) {
+        public QueryCommand(command_t cmd, String val, MediaType type) {
             this.cmd = cmd;
             this.val = val;
             this.type = type;
@@ -52,14 +52,14 @@ public class Input {
         }
     }
 
-    public static class zone {
+    public static class Zone {
 
-        private String name;
-        private EnumMap<MediaType, command_t> selectcommands;
-        private EnumMap<MediaType, querycommand> querycommands;
+        private final String name;
+        private final EnumMap<MediaType, command_t> selectcommands;
+        private final EnumMap<MediaType, QueryCommand> querycommands;
 
-        public zone(String name, EnumMap<MediaType, command_t> selectcommands,
-                EnumMap<MediaType, querycommand> querycommands) {
+        public Zone(String name, EnumMap<MediaType, command_t> selectcommands,
+                EnumMap<MediaType, QueryCommand> querycommands) {
             this.name = name;
             this.selectcommands = selectcommands;
             this.querycommands = querycommands;
@@ -74,15 +74,15 @@ public class Input {
         }
     }
 
-    public static class connector {
-          ConnectionType  type;
-          String hardware;
-          int number;
-          String version;
-          String remark;
-          HashSet<String> deviceref;
+    public static class Connector {
+          private final ConnectionType  type;
+          private final String hardware;
+          private final int number;
+          private final String version;
+          private final String remark;
+          private final HashSet<String> deviceref;
 
-          public connector(ConnectionType type, String hardware, int number, String version, String remark, HashSet<String> deviceref) {
+          public Connector(ConnectionType type, String hardware, int number, String version, String remark, HashSet<String> deviceref) {
               this.type = type;
               this.hardware = hardware;
               this.number = number;
@@ -112,26 +112,26 @@ public class Input {
           }
     }
 
-    private String name;
-    private String myname;
-    private boolean audio;
-    private boolean video;
-    private EnumMap<MediaType, command_t> selectcommands;
-    private EnumMap<MediaType, querycommand> querycommands;
-    private HashMap<String, zone> zones;
-    private ArrayList<connector> connectors;
-    private HashSet<String> devicesrc;
-    private HashSet<String> internalsrc;
-    private HashSet<String> externalsrc;
+    private final String name;
+    private final String myname;
+    private final boolean audio;
+    private final boolean video;
+    private final EnumMap<MediaType, command_t> selectcommands;
+    private final EnumMap<MediaType, QueryCommand> querycommands;
+    private final HashMap<String, Zone> zones;
+    private final ArrayList<Connector> connectors;
+    //private HashSet<String> devicesrc;
+    private final HashSet<String> internalsrc;
+    private final HashSet<String> externalsrc;
 
     public Input(String name,
             String myname,
             boolean audio,
             boolean video,
             EnumMap<MediaType, command_t> selectcommands,
-            EnumMap<MediaType, querycommand> querycommands,
-            HashMap<String, zone> zones,
-            ArrayList<connector> connectors,
+            EnumMap<MediaType, QueryCommand> querycommands,
+            HashMap<String, Zone> zones,
+            ArrayList<Connector> connectors,
             HashSet<String> internalsrc,
             HashSet<String> externalsrc) {
 
@@ -152,17 +152,18 @@ public class Input {
     }
 
     public ArrayList<String> get_zone_names() {
-        ArrayList<String> v = new ArrayList<String>();
-        for (zone z : zones.values())
+        ArrayList<String> v = new ArrayList<>(4);
+        zones.values().forEach((z) -> {
             v.add(z.name);
+        });
         return v;
     }
 
     public HashSet<ConnectionType> get_connection_types() {
-        HashSet<ConnectionType> hs = new HashSet<ConnectionType>();
-        for (connector c : connectors) {
+        HashSet<ConnectionType> hs = new HashSet<>(8);
+        connectors.forEach((c) -> {
             hs.add(c.get_type());
-        }
+        });
         return hs;
 
     }
@@ -171,28 +172,28 @@ public class Input {
     //    return deviceref;
     //}
 
-    public ArrayList<connector> get_connectors() {
+    public ArrayList<Connector> get_connectors() {
         return connectors;
     }
 
     public HashSet<String> get_sources(String zonename) {
-        HashSet<String> v = new HashSet<String>();
+        HashSet<String> v = new HashSet<>(8);
         if (zonename != null && zones.get(zonename) == null)
             return null;
 
         //for (Enumeration<connector> el = connectors.elements(); el.hasMoreElements();) {
         //    connector c = el.nextElement();
-        for (connector c : connectors) {
+        for (Connector c : connectors) {
             HashSet<String> s = c.get_deviceref();
-            for (String ss : s) {
+            s.forEach((ss) -> {
                 v.add(ss);
-            }
-            for (String e : internalsrc) {
+            });
+            internalsrc.forEach((e) -> {
                 v.add(e);
-            }
-            for (String e : externalsrc) {
+            });
+            externalsrc.forEach((e) -> {
                 v.add(e);
-            }
+            });
         }
         return v;
     }
@@ -202,11 +203,7 @@ public class Input {
             return true;
         //for (Enumeration<connector> el = connectors.elements(); el.hasMoreElements();) {
         //    connector c = el.nextElement();
-        for (connector c : connectors) {
-            if (c.get_deviceref().contains(device) && c.type.is_ok(type))
-                return true;
-        }
-        return false;
+        return connectors.stream().anyMatch((c) -> (c.get_deviceref().contains(device) && c.type.is_ok(type)));
     }
 
     public boolean connects_to(String device) {
@@ -216,21 +213,14 @@ public class Input {
     private boolean is_connected_device(String device) {
         //for (Enumeration<connector> el = connectors.elements(); el.hasMoreElements(); ) {
         //    connector c = el.nextElement();
-        for (connector c : connectors) {
-            if (c.deviceref.contains(device))
-                return true;
-        }
-        return false;
+
+        return connectors.stream().anyMatch((c) -> (c.deviceref.contains(device)));
     }
 
     public boolean has_separate_av_commands() {
         if (selectcommands.size() > 1)
             return true;
-        for (zone z : zones.values())
-            if (z.has_separate_av_commands())
-                return true;
-
-        return false;
+        return zones.values().stream().anyMatch((z) -> (z.has_separate_av_commands()));
     }
 
     public command_t get_select_command(String zonename, MediaType type) {
@@ -238,7 +228,7 @@ public class Input {
         if (zonename == null || zonename.isEmpty()) {
             c = selectcommands.get(type);
         } else {
-            zone z = zones.get(zonename);
+            Zone z = zones.get(zonename);
             if (z == null)
                 return command_t.invalid;
             c = z.selectcommands.get(type);
@@ -246,12 +236,12 @@ public class Input {
         return c != null ? c : command_t.invalid;
     }
 
-    public querycommand get_query_command(String zonename, MediaType type) {
-        EnumMap<MediaType, querycommand> table;
+    public QueryCommand get_query_command(String zonename, MediaType type) {
+        EnumMap<MediaType, QueryCommand> table;
         if (zonename == null || zonename.isEmpty()) {
             table = querycommands;
         } else {
-            zone z = zones.get(zonename);
+            Zone z = zones.get(zonename);
             if (z == null)
                 return null;
             table = z.querycommands;

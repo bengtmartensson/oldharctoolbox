@@ -5,39 +5,37 @@ import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
-
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineCompleter;
 import org.gnu.readline.ReadlineLibrary;
-
 import org.python.core.Py;
 import org.python.core.PyException;
 import org.python.core.PyObject;
 import org.python.core.PySystemState;
 
 /**
- * Uses: <a href="http://java-readline.sourceforge.net/">Java Readline</a> <p/>
+ * Uses: <a href="http://java-readline.sourceforge.net">Java Readline</a>
  *
  * Based on CPython-1.5.2's code module
  *
  */
-public class HarcReadlineJythonconsole extends org.python.util.InteractiveConsole {
+public final class HarcReadlineJythonConsole extends org.python.util.InteractiveConsole {
 
     //public String filename;
     private String history_pathname;
     private JythonRlCompleter completer = null;
 
-    public HarcReadlineJythonconsole() {
+    public HarcReadlineJythonConsole() {
         this(null, CONSOLE_FILENAME, null);
     }
 
-    public HarcReadlineJythonconsole(PyObject locals) {
+    public HarcReadlineJythonConsole(PyObject locals) {
         this(locals, CONSOLE_FILENAME, null);
     }
 
-    public HarcReadlineJythonconsole(PyObject locals, String filename, ReadlineCompleter completer) {
+    public HarcReadlineJythonConsole(PyObject locals, String filename, ReadlineCompleter completer) {
         super(locals, filename, true);
 
         history_pathname = HarcProps.get_instance().get_rl_historyfile() + ".python";
@@ -78,7 +76,7 @@ public class HarcReadlineJythonconsole extends org.python.util.InteractiveConsol
         try {
             if (history.exists())
                 Readline.readHistoryFile(history_pathname);
-        } catch (Exception e) {
+        } catch (EOFException | UnsupportedEncodingException e) {
             System.err.println("Could not read rl history " + e.getMessage());
         }
 
@@ -143,7 +141,7 @@ public class HarcReadlineJythonconsole extends org.python.util.InteractiveConsol
                     Process proc = Runtime.getRuntime().exec(line.substring(1));
                     BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
                     BufferedReader err = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-                    String l = null;
+                    String l;
                     while ((l = out.readLine()) != null)
                         System.out.println(l);
                     while ((l = err.readLine()) != null)
@@ -164,6 +162,8 @@ public class HarcReadlineJythonconsole extends org.python.util.InteractiveConsol
      * enters the EOF key sequence, EOFError is raised.
      *
      * This subclass implements the functionality using JavaReadline.
+     * @param prompt
+     * @return
      */
 
     @Override

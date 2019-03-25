@@ -25,21 +25,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import org.harctoolbox.ircore.XmlUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
-public class HomeParser {
-    private LinkedHashMap<String, Dev> device_table = new LinkedHashMap<String, Dev>();
-    private HashMap<String, String> alias_table = new HashMap<String, String>();
-    private LinkedHashMap<String, DeviceGroup> device_groups_table = new LinkedHashMap<String, DeviceGroup>();
-    private HashMap<String, Gateway> gateway_table = new HashMap<String, Gateway>();
+public final class HomeParser {
+    private LinkedHashMap<String, Dev> device_table = new LinkedHashMap<>(64);
+    private HashMap<String, String> alias_table = new HashMap<>(64);
+    private LinkedHashMap<String, DeviceGroup> device_groups_table = new LinkedHashMap<>(16);
+    private HashMap<String, Gateway> gateway_table = new HashMap<>(16);
 
-    private HashMap<String, GatewayPort> gateway_port_by_id = new HashMap<String, GatewayPort>();
+    private HashMap<String, GatewayPort> gateway_port_by_id = new HashMap<>(16);
 
-    private org.w3c.dom.Document document;
+    private final Document document;
 
     private boolean parse_yes_no(String s) {
         return s.equalsIgnoreCase("yes");
@@ -86,9 +86,9 @@ public class HomeParser {
         String notes = "";
         String powered_through = "";
         String defaultzone = "";
-        HashMap <String, String> attributes = new HashMap <String, String>();
-        ArrayList<GatewayPort> gateway_ports = new ArrayList<GatewayPort>();
-        HashMap<String, Input> inputs = new HashMap<String, Input>();
+        HashMap <String, String> attributes = new HashMap <>(16);
+        ArrayList<GatewayPort> gateway_ports = new ArrayList<>(16);
+        HashMap<String, Input> inputs = new HashMap<>(16);
 
         org.w3c.dom.NodeList nodes = element.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -160,10 +160,10 @@ public class HomeParser {
     private void print_gateway_port_by_id() {
         //for (Enumeration e = gateway_port_by_id.keys(); e.hasMoreElements(); ) {
         //    String k = (String)e.nextElement();
-        for (String k : gateway_port_by_id.keySet()) {
+        gateway_port_by_id.keySet().forEach((k) -> {
             GatewayPort gwp = gateway_port_by_id.get(k);
             System.out.println(k + "\t" + gwp.get_gateway() + "\t" + gwp.get_connectortype() + gwp.get_connectorno());
-        }
+        });
     }
 
     public HashMap<String, GatewayPort> get_gateway_port_by_id() {
@@ -183,21 +183,13 @@ public class HomeParser {
         }
     }
 
-    private void print_aliases() {
-        //for (Enumeration e = alias_table.keys(); e.hasMoreElements(); ) {
-        //    String k = (String)e.nextElement();
-        for (String k : alias_table.keySet()) {
-            System.out.println(k + "\t" + alias_table.get(k));
-        }
-    }
-
     private void init_device_groups() {
         device_groups_table.clear();
         NodeList nl = document.getElementsByTagName("device-group");
         for (int i = 0; i < nl.getLength(); i++) {
             Element el = (Element) nl.item(i);
             NodeList dnl = el.getElementsByTagName("deviceref");
-            ArrayList<String> devs = new ArrayList<String>();
+            ArrayList<String> devs = new ArrayList<>(16);
             for (int j = 0; j < dnl.getLength(); j++) {
                 Element dev = (Element) dnl.item(j);
                 devs.add(dev.getAttribute("device"));
@@ -209,19 +201,20 @@ public class HomeParser {
         }
     }
 
-    private void print_device_groups() {
-        //for (Enumeration e = device_groups_table.keys(); e.hasMoreElements();) {
-        //    String id = (String) e.nextElement();
-        for (String id : device_groups_table.keySet()) {
-            System.out.println(id);
-            DeviceGroup dg = device_groups_table.get(id);
-            //for (Enumeration f = dg.get_devices().elements(); f.hasMoreElements();) {
-            //    String dev = (String) f.nextElement();
-            for (String dev : dg.get_devices()) {
-                System.out.println("\t" + dev);
-            }
-        }
-    }
+//    private void print_device_groups() {
+//        //for (Enumeration e = device_groups_table.keys(); e.hasMoreElements();) {
+//        //    String id = (String) e.nextElement();
+//        device_groups_table.keySet().stream().map((id) -> {
+//            System.out.println(id);
+//            return id;
+//        }).map((id) -> device_groups_table.get(id)).forEachOrdered((DeviceGroup dg) -> {
+//            //for (Enumeration f = dg.get_devices().elements(); f.hasMoreElements();) {
+//            //    String dev = (String) f.nextElement();
+//            dg.get_devices().forEach((dev) -> {
+//                System.out.println("\t" + dev);
+//            });
+//        });
+//    }
 
     public LinkedHashMap<String, DeviceGroup> get_device_groups_table() {
         return device_groups_table;
@@ -232,9 +225,9 @@ public class HomeParser {
         NodeList nl = document.getElementsByTagName("gateway");
         for (int i = 0; i < nl.getLength(); i++) {
             //String hostname = "";
-            HashMap<command_t, CommandMapping> commandmappings = new HashMap<command_t, CommandMapping>();
-            EnumMap<CommandType_t, HashMap<Integer, Port>> ports_table = new EnumMap<CommandType_t, HashMap<Integer, Port>>(CommandType_t.class);
-            ArrayList<GatewayPort> gateway_ports = new ArrayList<GatewayPort>();
+            HashMap<command_t, CommandMapping> commandmappings = new HashMap<>(16);
+            EnumMap<CommandType_t, HashMap<Integer, Port>> ports_table = new EnumMap<>(CommandType_t.class);
+            ArrayList<GatewayPort> gateway_ports = new ArrayList<>(16);
             Element gw_el = (Element) nl.item(i);
             NodeList nodes = gw_el.getChildNodes();
             for (int j = 0; j < nodes.getLength(); j++) {
@@ -259,18 +252,18 @@ public class HomeParser {
                     if (nodeElement.getTagName().equals("ports")) {
                         //Vector<port> ports = parse_ports(nodeElement);
                         CommandType_t type = CommandType_t.valueOf(nodeElement.getAttribute("type"));
-                        HashMap<Integer, Port> port_table = new HashMap<Integer, Port>();
+                        HashMap<Integer, Port> port_table = new HashMap<>(16);
                         NodeList portlist = nodeElement.getElementsByTagName("port");
                         for (int k = 0; k < portlist.getLength(); k++) {
                             Element el = (Element) portlist.item(k);
-                            HashMap<command_t, CommandMapping> cmdmaps = new HashMap<command_t, CommandMapping>();
+                            HashMap<command_t, CommandMapping> cmdmaps = new HashMap<>(64);
                             //commandmappings cm = null;
                             NodeList cmdmapsnodes = el.getElementsByTagName("commandmappings");
                             if (cmdmapsnodes.getLength() > 0)
                                 cmdmaps = parse_commandmappings((Element) cmdmapsnodes.item(0));
                             Port p = new Port(parse_int(el.getAttribute("number"), -1),
                                     parse_int(el.getAttribute("baud"), -1), cmdmaps);
-                            port_table.put(Integer.valueOf(p.get_number()), p);
+                            port_table.put(p.get_number(), p);
                         }
                         ports_table.put(type, port_table);
                     }
@@ -315,7 +308,7 @@ public class HomeParser {
     }
 
     HashMap<String, Input> parse_inputs(Element element) {
-        HashMap<String, Input> inputs = new HashMap<String, Input>();
+        HashMap<String, Input> inputs = new HashMap<>(8);
         NodeList nl = element.getElementsByTagName("input");
         for (int i = 0; i < nl.getLength(); i++) {
             Input inp = parse_input((Element)nl.item(i));
@@ -325,14 +318,14 @@ public class HomeParser {
     }
 
     Input parse_input(Element element) {
-        ArrayList<String> devicerefs = new ArrayList<String>();
+        ArrayList<String> devicerefs = new ArrayList<>(32);
         //HashSet<String> connectiontypes = new HashSet<String>();
-        HashSet<String> internalsrc = new HashSet<String>();
-        HashSet<String> externalsrc = new HashSet<String>();
-        EnumMap<MediaType, command_t> selectcommands = new EnumMap<MediaType, command_t>(MediaType.class);
-        EnumMap<MediaType, Input.querycommand> querycommands = new EnumMap<MediaType, Input.querycommand>(MediaType.class);
-        HashMap<String, Input.zone> zones = new HashMap<String, Input.zone>();
-        ArrayList<Input.connector> connectors = new ArrayList<Input.connector>();
+        HashSet<String> internalsrc = new HashSet<>(8);
+        HashSet<String> externalsrc = new HashSet<>(8);
+        EnumMap<MediaType, command_t> selectcommands = new EnumMap<>(MediaType.class);
+        EnumMap<MediaType, Input.QueryCommand> querycommands = new EnumMap<>(MediaType.class);
+        HashMap<String, Input.Zone> zones = new HashMap<>(4);
+        ArrayList<Input.Connector> connectors = new ArrayList<>(8);
 
         org.w3c.dom.NodeList nodes = element.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -349,7 +342,7 @@ public class HomeParser {
                     //    connectiontypes.add(nodeElement.getAttribute("type"));
                     //}
                     if (nodeElement.getTagName().equals("connector")) {
-                       Input.connector c = parse_connector(nodeElement);
+                       Input.Connector c = parse_connector(nodeElement);
                        connectors.add(c);
                     }
                     if (nodeElement.getTagName().equals("internalsrc")) {
@@ -362,11 +355,11 @@ public class HomeParser {
                         selectcommands = parse_selectcommand(nodeElement);
                     }
                     if (nodeElement.getTagName().equals("querycommand")) {
-                        Input.querycommand qc = parse_querycommand(nodeElement);
+                        Input.QueryCommand qc = parse_querycommand(nodeElement);
                         querycommands.put(qc.get_type(), qc);
                     }
                     if (nodeElement.getTagName().equals("zone")) {
-                        Input.zone z = parse_zone(nodeElement);
+                        Input.Zone z = parse_zone(nodeElement);
                         zones.put(z.get_name(), z);
                     }
                     break;
@@ -390,7 +383,7 @@ public class HomeParser {
     }
 
     EnumMap<MediaType, command_t> parse_selectcommand(Element el) {
-        EnumMap<MediaType, command_t> cmd = new EnumMap<MediaType, command_t>(MediaType.class);
+        EnumMap<MediaType, command_t> cmd = new EnumMap<>(MediaType.class);
         String av = el.getAttribute("audio_video");
             cmd.put(MediaType.audio_video, command_t.parse(av));
         String a = el.getAttribute("audio_only");
@@ -402,8 +395,8 @@ public class HomeParser {
         return cmd;
     }
 
-    Input.connector parse_connector(Element el) {
-        HashSet<String> deviceref = new HashSet<String>();
+    Input.Connector parse_connector(Element el) {
+        HashSet<String> deviceref = new HashSet<>(8);
         NodeList nl = el.getElementsByTagName("deviceref");
         for (int i = 0; i < nl.getLength(); i++)
             deviceref.add(((Element) nl.item(i)).getAttribute("device"));
@@ -413,7 +406,7 @@ public class HomeParser {
             number = Integer.parseInt(n_string);
         } catch (NumberFormatException e) {
         }
-        return new Input.connector(ConnectionType.parse(el.getAttribute("connectiontype")),
+        return new Input.Connector(ConnectionType.parse(el.getAttribute("connectiontype")),
                 el.getAttribute("hardware"),
                 number,
                 el.getAttribute("version"),
@@ -422,9 +415,9 @@ public class HomeParser {
 
     }
 
-    Input.zone parse_zone(Element element) {
-        EnumMap<MediaType, command_t> selectcommands = new EnumMap<MediaType, command_t>(MediaType.class);
-        EnumMap<MediaType, Input.querycommand> querycommands = new EnumMap<MediaType, Input.querycommand>(MediaType.class);
+    Input.Zone parse_zone(Element element) {
+        EnumMap<MediaType, command_t> selectcommands = new EnumMap<>(MediaType.class);
+        EnumMap<MediaType, Input.QueryCommand> querycommands = new EnumMap<>(MediaType.class);
         org.w3c.dom.NodeList nodes = element.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node node = nodes.item(i);
@@ -438,7 +431,7 @@ public class HomeParser {
                     }
                     if (nodeElement.getTagName().equals("querycommand")) {
                         //mediatype type = mediatype.valueOf(nodeElement.getAttribute("mediatype"));
-                        Input.querycommand qc = parse_querycommand(nodeElement);
+                        Input.QueryCommand qc = parse_querycommand(nodeElement);
                         //new input.querycommand(command_t.parse(nodeElement.getAttribute("cmd")),nodeElement.getAttribute("val"));
                         querycommands.put(qc.get_type(), qc);
                     }
@@ -447,17 +440,17 @@ public class HomeParser {
                     break;
             }
         }
-        return new Input.zone(element.getAttribute("name"), selectcommands, querycommands);
+        return new Input.Zone(element.getAttribute("name"), selectcommands, querycommands);
     }
 
-    Input.querycommand parse_querycommand(Element element) {
+    Input.QueryCommand parse_querycommand(Element element) {
         MediaType type = MediaType.valueOf(element.getAttribute("mediatype"));
-        return new Input.querycommand(command_t.parse(element.getAttribute("cmd")),
+        return new Input.QueryCommand(command_t.parse(element.getAttribute("cmd")),
                                 element.getAttribute("val"), type);
     }
 
     HashMap<command_t, CommandMapping> parse_commandmappings(org.w3c.dom.Element element) {
-        HashMap<command_t, CommandMapping> cmdmappings = new HashMap<command_t, CommandMapping>();
+        HashMap<command_t, CommandMapping> cmdmappings = new HashMap<>(16);
         org.w3c.dom.NodeList nodes = element.getElementsByTagName("commandmapping");
         for (int i = 0; i < nodes.getLength(); i++) {
             Element el = (Element) nodes.item(i);

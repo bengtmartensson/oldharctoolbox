@@ -28,7 +28,7 @@ import java.util.HashSet;
 
 /** For the device in the home (the name device was already taken...) */
 
-public class Dev {
+public final class Dev {
 
     //private final String name;
     private final String id;
@@ -38,7 +38,7 @@ public class Dev {
     //private final String firmware;
     private final int pin;
     //private final String description;
-    private final String notes;
+    //private final String notes;
     private final String defaultzone;
     private final HashMap<String, String> attributes;
     private final String powered_through;
@@ -68,7 +68,7 @@ public class Dev {
         this.pin = pin;
         this.defaultzone = defaultzone;
         //this.description = description;
-        this.notes = notes;
+        //this.notes = notes;
         this.attributes = attributes;
         this.powered_through = powered_through;
         this.gateway_ports = gateway_ports;
@@ -140,11 +140,7 @@ public class Dev {
         if (type == CommandType_t.any)
             return ! gateway_ports.isEmpty();
 
-        for (GatewayPort g : gateway_ports)
-            if (g.get_connectortype() == type)
-                return true;
-
-        return false;
+        return gateway_ports.stream().anyMatch((g) -> (g.get_connectortype() == type));
     }
 
     public HashMap<String, Input> get_inputs() {

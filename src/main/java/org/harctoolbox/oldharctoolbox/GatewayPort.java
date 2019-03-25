@@ -23,16 +23,16 @@ import org.harctoolbox.harchardware.misc.Ethers;
  *
  * @author bengt
  */
-public class GatewayPort {
-   private String id;
-   private String gateway;
-   private int connectorno;
-   private CommandType_t connectortype;
-   private String hostname;
-   private int portnumber;
-   private String mac;
-   private boolean wol;
-   private int timeout;
+public final class GatewayPort {
+   private final String id;
+   private final String gateway;
+   private final int connectorno;
+   private final CommandType_t connectortype;
+   private final String hostname;
+   private final int portnumber;
+   private final String mac;
+   private final boolean wol;
+   private final int timeout;
 
    public GatewayPort(String id, String gateway, int connectorno,
 		       CommandType_t connectortype, String hostname,

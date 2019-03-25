@@ -26,7 +26,7 @@ import java.util.HashMap;
 /**
  *
  */
-public class SocketStorage {
+public final class SocketStorage {
 
     private static boolean enable = true;
 
@@ -49,11 +49,11 @@ public class SocketStorage {
         private String hostname = null;
         private int portno = 0;
 
-        public addr_portno(String addr, int p) throws UnknownHostException {
+        addr_portno(String addr, int p) throws UnknownHostException {
             hostname = canonicalize(addr);
             portno = p;
         }
-        public addr_portno(Socket sock) {
+        addr_portno(Socket sock) {
             hostname = sock.getInetAddress().getHostAddress();
             portno = sock.getPort();
         }
@@ -68,7 +68,7 @@ public class SocketStorage {
         public Socket sock = null;
         public boolean checked_out = false;
 
-        public socket_stat(Socket s, boolean state) {
+        socket_stat(Socket s, boolean state) {
             sock = s;
             checked_out = state;
         }
@@ -79,7 +79,7 @@ public class SocketStorage {
         }
     }
 
-    private static HashMap<String, socket_stat> sockettable = new HashMap<String, socket_stat>();
+    private static HashMap<String, socket_stat> sockettable = new HashMap<String, socket_stat>(16);
 
     private static String canonicalize(String host) throws UnknownHostException {
         return InetAddress.getByName(host).getHostAddress();
@@ -188,10 +188,10 @@ public class SocketStorage {
             int port = Integer.parseInt(args[1]);
             boolean unique = Boolean.parseBoolean(args[2]);
 
-            Socket sock1 = null;
-            Socket sock2 = null;
-            Socket sock3 = null;
-            Socket sock4 = null;
+            Socket sock1;
+            Socket sock2;
+            Socket sock3;
+            Socket sock4;
 
             sock1 = getsocket(host, port, unique);
             sock2 = getsocket(host, port, unique);
@@ -216,7 +216,7 @@ public class SocketStorage {
             sock1 = getsocket(host, port, unique);
 
 
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException | NumberFormatException e) {
             e.printStackTrace();
         }
     }

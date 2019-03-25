@@ -32,7 +32,7 @@ import org.harctoolbox.irp.IrpException;
 import org.harctoolbox.irp.IrpParseException;
 import org.harctoolbox.irp.Protocol;
 
-public class ProtocolDataBase {
+public final class ProtocolDataBase {
 
     private static IrpDatabase irpDatabase = null;
     private static HashMap<String, Protocol> protocols = null;

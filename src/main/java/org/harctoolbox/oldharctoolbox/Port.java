@@ -22,13 +22,13 @@ import java.util.HashMap;
 /**
  *
  */
-public class Port {
-    private int number;
-    private int baud;
-    private HashMap<command_t, CommandMapping> commandmappings;
+public final class Port {
+    private final int number;
+    //private final int baud;
+    private final HashMap<command_t, CommandMapping> commandmappings;
     public Port(int number, int baud, HashMap<command_t, CommandMapping> commandmappings) {
         this.number = number;
-        this.baud = baud;
+        //this.baud = baud;
         this.commandmappings = commandmappings;
     }
 

@@ -39,7 +39,11 @@ public enum DeviceType {
     dumb,
     undefined;
 
-    /** Safe version of valueOf */
+    /**
+     * Safe version of valueOf
+     * @param s
+     * @return
+     */
     public static DeviceType parse(String s) {
         try {
             return valueOf(s.toLowerCase());

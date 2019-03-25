@@ -25,23 +25,23 @@ import java.util.HashMap;
  *
  * @author bengt
  */
-public class Gateway {
+public final class Gateway {
 
-    private String hostname;
-    private ArrayList<GatewayPort> gateway_ports;
-    private EnumMap<CommandType_t, HashMap<Integer, Port>> ports_table;
-    private HashMap<command_t, CommandMapping> commandmappings;
-    private String clazz;
-    private String model;
-    private String interfaze;
-    private String deviceclass;
-    private String firmware;
+    private final String hostname;
+    private final ArrayList<GatewayPort> gateway_ports;
+    private final EnumMap<CommandType_t, HashMap<Integer, Port>> ports_table;
+    private final HashMap<command_t, CommandMapping> commandmappings;
+    private final String clazz;
+    private final String model;
+    private final String interfaze;
+    private final String deviceclass;
+    private final String firmware;
     private boolean www = false;
     private boolean web_api = false;
     private int web_api_portnumber = 80;
-    private String name;
-    private String id;
-    private int timeout;
+    private final String name;
+    private final String id;
+    private final int timeout;
 
     public Gateway(String hostname,
             ArrayList<GatewayPort> gateway_ports,

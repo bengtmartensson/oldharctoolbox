@@ -23,7 +23,8 @@ import org.gnu.readline.ReadlineCompleter;
  *
  * @author bengt
  */
-public class JythonRlCompleter implements ReadlineCompleter {
+public final class JythonRlCompleter implements ReadlineCompleter {
+    private final static int no_commandsets = 5;
 
     private Home hm = null;
     private String[] devices = null;
@@ -38,47 +39,14 @@ public class JythonRlCompleter implements ReadlineCompleter {
     //private boolean select_mode = false;
     //private boolean devicecommand_mode = false;
 
-    private int no_words = 0;
+    private final int no_words = 0;
     private boolean between_words = false;
     private String[] tokens = null;
     private String devicename = null;
     //private String dst_device = null;
 
-    private final static int no_commandsets = 5;
-
-    private rl_commands[] commands;
+    private final rl_commands[] commands;
     private String[] commands4device;// Macros with first arg called 'device'
-
-    private class rl_commands {
-        public String[] cmds = null;
-        public int ptr;
-        private int no_args;
-
-        public void set(String[] cmds, int no_args) {
-            this.cmds = cmds;
-            this.no_args = no_args;
-            ptr = 0;
-        }
-
-        public rl_commands() {
-            no_args = -1;
-            ptr = 0;
-        }
-
-        public String paramlist() {
-            return no_args < 0 ? "" : no_args == 0 ? "()" : "(";
-        }
-    }
-
-    public void set_commands(String[] stdcommands, String[] func0, String[] func1,
-            String[] func2, String[] func2plus, String[] funcs_devices) {
-        commands[0].set(stdcommands, -1);
-        commands[1].set(func0, 0);
-        commands[2].set(func1, 1);
-        commands[3].set(func2, 2);
-        commands[4].set(func2plus, 3);
-        commands4device = funcs_devices;
-    }
 
     public JythonRlCompleter(/*String[] commands,*/ Home hm) {
         commands = new rl_commands[no_commandsets];
@@ -87,6 +55,15 @@ public class JythonRlCompleter implements ReadlineCompleter {
         this.hm = hm;
         devices = hm.get_devices();
         //selecting_devices = hm.get_selecting_devices();
+    }
+    public void set_commands(String[] stdcommands, String[] func0, String[] func1,
+            String[] func2, String[] func2plus, String[] funcs_devices) {
+        commands[0].set(stdcommands, -1);
+        commands[1].set(func0, 0);
+        commands[2].set(func1, 1);
+        commands[3].set(func2, 2);
+        commands[4].set(func2plus, 3);
+        commands4device = funcs_devices;
     }
 
     private String first_token_completer(String in, int s) {
@@ -152,8 +129,8 @@ public class JythonRlCompleter implements ReadlineCompleter {
     }
 
     private boolean is_command_contained(String cmd, String[] cmds) {
-        for (int i = 0; i < cmds.length; i++)
-            if (cmd.equals(cmds[i]))
+        for (String cmd1 : cmds)
+            if (cmd.equals(cmd1))
                 return true;
 
         return false;
@@ -244,5 +221,25 @@ public class JythonRlCompleter implements ReadlineCompleter {
         }
 
         return null;
+    }
+    private class rl_commands {
+        public String[] cmds = null;
+        public int ptr;
+        private int no_args;
+
+        public void set(String[] cmds, int no_args) {
+            this.cmds = cmds;
+            this.no_args = no_args;
+            ptr = 0;
+        }
+
+        rl_commands() {
+            no_args = -1;
+            ptr = 0;
+        }
+
+        public String paramlist() {
+            return no_args < 0 ? "" : no_args == 0 ? "()" : "(";
+        }
     }
 }

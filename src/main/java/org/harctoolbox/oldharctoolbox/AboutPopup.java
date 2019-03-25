@@ -21,7 +21,7 @@ package org.harctoolbox.oldharctoolbox;
  * The mandatory about popup ;-).
  *
  */
-public class AboutPopup extends javax.swing.JDialog {
+public final class AboutPopup extends javax.swing.JDialog {
 
     /** Creates new form about_popup
      * @param parent

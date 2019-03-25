@@ -22,10 +22,8 @@ package org.harctoolbox.oldharctoolbox;
  *
  * There are several options that only made sense with the macros, remove.
  * Possibly remove all the non-static stuff.
- *
- * @author Bengt Martensson
  */
-public class DebugArgs {
+public final class DebugArgs {
 
     private int state;
 
