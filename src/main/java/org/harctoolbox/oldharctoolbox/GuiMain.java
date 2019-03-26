@@ -77,7 +77,7 @@ public final class GuiMain extends javax.swing.JFrame {
     private DefaultComboBoxModel device_remotes_dcbm;
     private DefaultComboBoxModel gc_modules_dcbm;
     private ResultFormatter formatter = new ResultFormatter();
-    private ResultFormatter cmd_formatter = new ResultFormatter(HarcProps.get_instance().get_commandformat());
+    private ResultFormatter cmd_formatter = new ResultFormatter(Main.getProperties().getCommandformat());
     private static final String dummy_no_selection = "--------";
 
     private macro_thread the_macro_thread = null;
@@ -180,7 +180,7 @@ public final class GuiMain extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    HarcProps.get_instance().save();
+                    Main.getProperties().save();
                     SocketStorage.dispose_sockets(true);
                 } catch (IOException e) {
                     System.out.println("Problems saving properties; " + e.getMessage());
@@ -209,13 +209,13 @@ public final class GuiMain extends javax.swing.JFrame {
 
         //homeconf_TextField.setText(homefilename);
         //macro_TextField.setText(macrofilename);
-        //aliases_TextField.setText(HarcProps.get_instance().get_aliasfilename());
-        //exportdir_TextField.setText(HarcProps.get_instance().get_exportdir());
+        //aliases_TextField.setText(Main.getProperties().getaliasfilename());
+        //exportdir_TextField.setText(Main.getProperties().getexportdir());
         //System.setOut(console_PrintStream);
     }
 
     public GuiMain() {
-        this(HarcProps.get_instance().get_homefilename());
+        this(Main.getProperties().getHomeConf());
     }
 
     // From Real Gagnon
@@ -1329,7 +1329,7 @@ public final class GuiMain extends javax.swing.JFrame {
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         try {
-            String result = HarcProps.get_instance().save();
+            String result = Main.getProperties().save();
             System.err.println(result == null ? "No need to save properties." : ("Property file written to " + result + "."));
         } catch (IOException e) {
             warning("Problems saving properties: " + e.getMessage());
@@ -1348,7 +1348,7 @@ public final class GuiMain extends javax.swing.JFrame {
     private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
         try {
             String props = select_file("Select properties save", "xml", "XML Files", true, null).getAbsolutePath();
-            HarcProps.get_instance().save(props);
+            Main.getProperties().save(new File(props));
             System.err.println("Property file written to " + props + ".");
         } catch (IOException e) {
             System.err.println(e);
@@ -1465,7 +1465,7 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_sort_macros_CheckBoxMenuItemActionPerformed
 
     private void update_verbosity() {
-        UserPrefs.get_instance().set_verbose(verbose);
+        Main.getProperties().setVerbose(verbose);
         gc.setVerbose(verbose);
         verbose_CheckBoxMenuItem.setSelected(verbose);
         //verbose_CheckBox.setSelected(verbose);
@@ -1745,7 +1745,7 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_consoletext_save_MenuItemActionPerformed
 
     private void export_all_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_all_MenuItemActionPerformed
-        Device.export_all_devices(HarcProps.get_instance().get_exportdir());
+        Device.export_all_devices(Main.getProperties().getExportDir());
 }//GEN-LAST:event_export_all_MenuItemActionPerformed
 
     private void stop_macro_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_macro_ButtonActionPerformed
@@ -1758,7 +1758,7 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_stop_macro_ButtonActionPerformed
 
     private void export_device_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_device_MenuItemActionPerformed
-        Device.export_device(HarcProps.get_instance().get_exportdir(), (String) deviceclasses_dcbm.getSelectedItem());
+        Device.export_device(Main.getProperties().getExportDir(), (String) deviceclasses_dcbm.getSelectedItem());
     }//GEN-LAST:event_export_device_MenuItemActionPerformed
 
     private void t10_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_address_TextFieldActionPerformed
@@ -1893,11 +1893,11 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_gc_stop_ir_ActionPerformed
 
 private void xmlDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlDeviceExportButtonActionPerformed
-    Device.export_device(HarcProps.get_instance().get_exportdir(), (String) deviceclasses_dcbm.getSelectedItem());
+    Device.export_device(Main.getProperties().getExportDir(), (String) deviceclasses_dcbm.getSelectedItem());
 }//GEN-LAST:event_xmlDeviceExportButtonActionPerformed
 
 private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlAllDevicesExportButtonActionPerformed
-    Device.export_all_devices(HarcProps.get_instance().get_exportdir());
+    Device.export_all_devices(Main.getProperties().getExportDir());
 }//GEN-LAST:event_xmlAllDevicesExportButtonActionPerformed
 
     private int get_gc_module() {

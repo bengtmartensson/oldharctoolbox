@@ -67,24 +67,24 @@ public final class AboutPopup extends javax.swing.JDialog {
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField1.setText("HARCtoolbox: Home Automation and Remote Control");
 
-        version_label.setText(org.harctoolbox.oldharctoolbox.HarcUtils.version_string);
+        version_label.setText(org.harctoolbox.oldharctoolbox.Version.versionString);
 
         author_label.setFont(new java.awt.Font("Lucida Bright", 2, 14)); // NOI18N
         author_label.setText("Author: Bengt Martensson");
 
-        license_text.setColumns(20);
         license_text.setEditable(false);
+        license_text.setColumns(20);
         license_text.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
         license_text.setLineWrap(true);
         license_text.setRows(4);
-        license_text.setText(org.harctoolbox.oldharctoolbox.HarcUtils.license_string);
+        license_text.setText(org.harctoolbox.oldharctoolbox.Version.licenseString);
         license_text.setWrapStyleWord(true);
         license_text.setFocusable(false);
         jScrollPane1.setViewportView(license_text);
 
         version_label2.setText(org.harctoolbox.irp.Version.versionString);
 
-        homepage_button.setText(org.harctoolbox.oldharctoolbox.HarcUtils.homepage_url);
+        homepage_button.setText("Site Home Page");
         homepage_button.setToolTipText("Visit project's home page");
         homepage_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,7 +105,7 @@ public final class AboutPopup extends javax.swing.JDialog {
                         .addComponent(jButton1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(version_label, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
                         .addComponent(homepage_button))
                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 566, Short.MAX_VALUE)
@@ -140,7 +140,7 @@ public final class AboutPopup extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
 private void homepage_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homepage_buttonActionPerformed
-        HarcUtils.browse(HarcUtils.homepage_url);
+        HarcUtils.browse(Version.homepageUrl);
 }//GEN-LAST:event_homepage_buttonActionPerformed
 
     /**

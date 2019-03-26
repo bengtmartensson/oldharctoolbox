@@ -37,7 +37,7 @@ public final class ResultFormatter {
     }
 
     public ResultFormatter() {
-        this(HarcProps.get_instance().get_resultformat());
+        this(Main.getProperties().getResultformat());
     }
 
     public String format(String str) {

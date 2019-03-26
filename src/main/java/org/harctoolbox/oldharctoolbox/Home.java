@@ -29,8 +29,6 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -97,7 +95,6 @@ public final class Home {
         ToggleType toggle = ToggleType.dont_care;
         String[] arguments = null;
         String propsfilename = null;
-        DebugArgs db = null;
 
         int arg_i = 0;
         try {
@@ -165,17 +162,18 @@ public final class Home {
                 }
             }
 
-            db = new DebugArgs(debug);
+            DebugArgs.setState(debug);
             devname = args[arg_i];
 
             // Setup properites
-            if (propsfilename != null)
-                HarcProps.initialize(propsfilename);
-            else
-                HarcProps.initialize();
+            Props props = new Props(propsfilename, "oldharctoolbox");
+//            if (propsfilename != null)
+//                HarcProps.initialize(propsfilename);
+//            else
+//                HarcProps.initialize();
 
             if (home_filename == null)
-                home_filename = HarcProps.get_instance().get_homefilename();
+                home_filename = Main.getProperties().getHomeConf();
 
             if (select_mode) {
                 src_device = args[arg_i + 1];
@@ -229,8 +227,8 @@ public final class Home {
             usage();
         }
 
-        UserPrefs.get_instance().set_verbose(verbose);
-        UserPrefs.get_instance().set_debug(debug);
+        Main.getProperties().setVerbose(verbose);
+        Main.getProperties().setDebug(debug);
         try {
             Home hm = new Home(home_filename/*, verbose, debug*/);
             //harcutils.printtable("xxx", hm.gateway_client_classes("irtrans"));
@@ -502,7 +500,7 @@ public final class Home {
         } catch (IOException e) {
             // May be ok, e.g. when using Intertechno and T-10.
             if (DebugArgs.dbg_transmit())
-                System.err.println("Could not open file " + HarcProps.get_instance().get_devicesdir() + File.separator + dev_class + HarcUtils.devicefile_extension + ".");
+                System.err.println("Could not open file " + Main.getProperties().getDevicesDir()+ File.separator + dev_class + HarcUtils.devicefile_extension + ".");
         } catch (SAXParseException e) {
             System.err.println(e.getMessage());
         } catch (SAXException e) {
@@ -514,8 +512,8 @@ public final class Home {
         String subst_transmitstring_printable;
 
         if (type == CommandType_t.www) {
-            if (cmd != command_t.browse && !UserPrefs.get_instance().get_use_www_for_commands()) {
-                if (UserPrefs.get_instance().get_verbose())
+            if (cmd != command_t.browse && !Main.getProperties().getUseWwwForCommands()) {
+                if (Main.getProperties().getVerbose())
                     System.err.println("Command of type www ignored.");
 
                 failure = true;
@@ -560,13 +558,13 @@ public final class Home {
                             }
                             IrSignal code = dev.get_code(cmd, CommandType_t.ir, toggle, DebugArgs.dbg_ir_protocols(), house, (short) (deviceno - 1));
                             if (code == null) {
-                                if (UserPrefs.get_instance().get_verbose())
+                                if (Main.getProperties().getVerbose())
                                     System.err.println("Command " + cmd + " exists, but has no ir code.");
 
                                 failure = true;
                             } else {
                                 String raw_ccf = Pronto.toString(code);
-                                GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ UserPrefs.get_instance().get_verbose());
+                                GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose());
                                 //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
                                 GlobalCache.GlobalCacheIrTransmitter transmitter = gc.newTransmitter(fgw.get_connectorno());
                                 success = gc.sendCcf(raw_ccf, count, transmitter);
@@ -578,10 +576,10 @@ public final class Home {
 //                            if (debugargs.dbg_transmit()) {
 //                                System.err.println("Trying an Irtrans (" + gw.get_hostname() + ")...");
 //                            }
-//                            irtrans irt = new irtrans(gw.get_hostname(), userprefs.get_instance().get_verbose());
+//                            irtrans irt = new irtrans(gw.get_hostname(), userprefs.get_instance().getVerbose());
 //                            command c = dev.get_command(cmd, commandtype_t.ir);
 //                            if (c == null) {
-//                                if (userprefs.get_instance().get_verbose()) {
+//                                if (userprefs.get_instance().getVerbose()) {
 //                                    System.err.println("Command " + cmd + " exists, but has no ir code.");
 //                                }
 //                                failure = true;
@@ -593,7 +591,7 @@ public final class Home {
 //                                        System.err.println("** Warning: count > 1 (= " + count + ") ignored.");
 //
 //                                    String url = irtrans.make_url(gw.get_hostname(), the_command.get_remotename(), cmd/*c.getcmd().toString()*/, fgw.get_connectorno());
-//                                    if (debugargs.dbg_transmit() || userprefs.get_instance().get_verbose())
+//                                    if (debugargs.dbg_transmit() || userprefs.get_instance().getVerbose())
 //                                        System.err.println("Getting URL " + url);
 //
 //                                    success = (new URL(url)).getContent() != null;
@@ -611,12 +609,12 @@ public final class Home {
 //
 //                            command c = dev.get_command(cmd, commandtype_t.ir);
 //                            if (c == null) {
-//                                if (userprefs.get_instance().get_verbose())
+//                                if (userprefs.get_instance().getVerbose())
 //                                    System.err.println("Command " + cmd + " exists, but has no ir code.");
 //
 //                                failure = true;
 //                            } else {
-//                                lirc lirc_client = new lirc(gw.get_hostname(), userprefs.get_instance().get_verbose());
+//                                lirc lirc_client = new lirc(gw.get_hostname(), userprefs.get_instance().getVerbose());
 //                                if (lirc_client != null)
 //                                    // TODO: evaluate connector
 //                                    success = lirc_client.send_ir(the_command.get_remotename(), c.get_cmd(), count);
@@ -650,7 +648,7 @@ public final class Home {
                             System.err.println("Invalid power argument.");
                             failure = true;
                         } else {
-                            EzControlT10 t10 = new EzControlT10(gw.get_hostname(), UserPrefs.get_instance().get_verbose());
+                            EzControlT10 t10 = new EzControlT10(gw.get_hostname(), Main.getProperties().getVerbose());
                             int preset = -1;
                             try {
                                 //preset = Integer.parseInt(gw_connector.substring(7));
@@ -725,18 +723,18 @@ public final class Home {
 
                         String opener = dev.get_open(cmd, CommandType_t.tcp);
                         if (opener != null && !opener.isEmpty()) {
-                            if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose())
+                            if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
                                 System.err.println("Sending opening command \"" + opener + "\" to socket " + fgw.get_hostname() + ":" + portnumber);
                             outToServer.print(opener);
                         }
 
-                        if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose()) {
+                        if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose()) {
                             System.err.println("Sending command \"" + subst_transmitstring_printable + "\" to socket " + fgw.get_hostname() + ":" + portnumber + (count == 1 ? " (one time)" : (" (" + count + " times)")));
                         }
                         for (int c = 0; c < count; c++) {
                             int delay_between_reps = the_command.get_delay_between_reps();
                             if (delay_between_reps > 0 && c > 0) {
-                                if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose())
+                                if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
                                     System.err.println("Waiting for " + delay_between_reps + "ms, then sending.");
 
                                 Thread.sleep(delay_between_reps);
@@ -784,7 +782,7 @@ public final class Home {
 
                         String closer = dev.get_close(cmd, CommandType_t.tcp);
                         if (closer != null && !closer.isEmpty()) { // This code is not tested
-                            if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose())
+                            if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
                                 System.err.println("Sending closing command \"" + closer + "\" to socket " + gw.get_hostname() + ":" + portnumber);
                             outToServer.print(closer);
                         }
@@ -838,14 +836,14 @@ public final class Home {
                                 if (c > 0) {
                                     int delay_between_reps = the_command.get_delay_between_reps();
                                     if (delay_between_reps > 0) {
-                                        if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose()) {
+                                        if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose()) {
                                             System.err.println("Waiting for " + delay_between_reps + "ms.");
                                         }
                                         Thread.sleep(delay_between_reps);
                                     }
                                 }
 
-                                if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose())
+                                if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
                                     System.err.println("Getting URL " + urlstr + ".");
 
                                 if (response_lines == 0) {
@@ -859,7 +857,7 @@ public final class Home {
                                         result = inFromServer.readLine();
                                         if (result != null)
                                             output = output.isEmpty() ? result : output + "\n" + result;
-                                        if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose() || (the_command.get_expected_response().isEmpty() && the_command.get_response_lines() == 0)) {
+                                        if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose() || (the_command.get_expected_response().isEmpty() && the_command.get_response_lines() == 0)) {
                                             System.err.println("Got: " + result);	// ??
                                         }
                                     }
@@ -876,7 +874,7 @@ public final class Home {
                                         result = inFromServer.readLine();
                                         if (result != null)
                                             output = output.isEmpty() ? result : output + "\n" + result;
-                                        if ((DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose()) && result != null) {
+                                        if ((DebugArgs.dbg_transmit() || Main.getProperties().getVerbose()) && result != null) {
                                             System.out.println(result);	// ??
                                         }
                                     } while (result != null);
@@ -922,7 +920,7 @@ public final class Home {
                     try {
                         // TODO: handle cases expected_lines < 0 (loop forever) senisble, (if possible).
                         if (gw.get_class().equals("globalcache")) {
-                            GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ UserPrefs.get_instance().get_verbose());
+                            GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose());
                             GlobalCache.SerialPort gcSerialPort = gc.getSerialPort(fgw.get_connectorno());
                             subst_transmitstring = dev.get_command(cmd, CommandType_t.serial).get_transmitstring(true);
                             subst_transmitstring_printable = dev.get_command(cmd, CommandType_t.serial).get_transmitstring(false);
@@ -950,7 +948,7 @@ public final class Home {
                                 }
 
                                 //try {
-                                if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose())
+                                if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
                                     System.err.println("Trying Globalcache (" + gw.get_hostname() + ") for serial using " + fgw.get_connectorno() + ", \"" + subst_transmitstring_printable + "\"");
 
                                 int delay_between_reps = the_command.get_delay_between_reps();
@@ -1034,7 +1032,7 @@ public final class Home {
                         failure = true;
                     } else if (gw.get_class().equals("globalcache")) {
                         try {
-                            GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ UserPrefs.get_instance().get_verbose());
+                            GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose());
                             int con = fgw.get_connectorno();
 
                             if (cmd == command_t.get_state) {
@@ -1106,21 +1104,21 @@ public final class Home {
                         } else switch (cmd) {
                     case ping:
                         try {
-                            if (UserPrefs.get_instance().get_verbose())
+                            if (Main.getProperties().getVerbose())
                                 System.err.print("Pinging hostname " + fgw.get_hostname() + "... ");
 
                             success = InetAddress.getByName(fgw.get_hostname()).isReachable(HarcUtils.ping_timeout);
                             if (!success) {
                                 // Java's isReachable may fail due to insufficient privileges;
                                 // the OSs ping command may be more successful (is suid on Unix).
-                                if (UserPrefs.get_instance().get_verbose())
+                                if (Main.getProperties().getVerbose())
                                     System.err.print("isReachable() failed, trying the ping program...");
                                 String[] args = {"ping", "-w", Integer.toString((int) (HarcUtils.ping_timeout / 1000)), fgw.get_hostname()};
                                 Process proc = Runtime.getRuntime().exec(args);
                                 proc.waitFor();
                                 success = proc.exitValue() == 0;
                             }
-                            if (UserPrefs.get_instance().get_verbose())
+                            if (Main.getProperties().getVerbose())
                                 System.err.println(success ? "succeded." : "failed.");
                         } catch (IOException e) {
                             System.err.println(e.getMessage());
@@ -1131,7 +1129,7 @@ public final class Home {
                         if ((mac == null) || mac.isEmpty()) {
                             System.err.println("WOL to host " + fgw.get_hostname() + " requested, but MAC unknown.");
                         } else {
-                            if (UserPrefs.get_instance().get_verbose()) {
+                            if (Main.getProperties().getVerbose()) {
                                 System.err.println("Sending a WOL package to " + fgw.get_hostname() + " (" +  mac + ").");
                             }
                             try {
@@ -1151,7 +1149,7 @@ public final class Home {
                     break;
                 case special:
                     try {
-                        if (DebugArgs.dbg_transmit() || UserPrefs.get_instance().get_verbose())
+                        if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
                             System.err.println("Trying special with class = " + dev_class + ", method = " + cmd + ", hostname = " + fgw.get_hostname());
 
                         // ???????????????????????
@@ -1353,7 +1351,7 @@ public final class Home {
 
         String alias = the_device.get_alias(cmd);
         if (alias != null) {
-            if (UserPrefs.get_instance().get_verbose() || DebugArgs.dbg_dispatch()) {
+            if (Main.getProperties().getVerbose() || DebugArgs.dbg_dispatch()) {
                 System.err.println("Command " + cmd + " aliased to " + alias);
             }
             cmd = command_t.parse(alias);
@@ -1540,12 +1538,12 @@ public final class Home {
         boolean success = true;
         String[] lircservers = gateway_instances("lirc_server");
         for (String lircserver : lircservers) {
-            String filename = HarcProps.get_instance().get_exportdir() + File.separatorChar + lircserver + ".lirc.conf";
+            String filename = Main.getProperties().getExportDir()+ File.separatorChar + lircserver + ".lirc.conf";
             //String[] devs = this.gateway_client_classes(lircservers[i]);
             String[] devs = device_table.keySet().toArray(new String[device_table.size()]);// FIXME
             /*try {
             lirc_export.export(filename, devs);
-            if (userprefs.get_instance().get_verbose())
+            if (userprefs.get_instance().getVerbose())
             System.err.println("LIRC Export: " + filename + " was successfully created.");
             } catch (FileNotFoundException ex) {
             System.err.println(ex);

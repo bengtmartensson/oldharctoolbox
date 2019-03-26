@@ -21,6 +21,8 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;
 import org.harctoolbox.ircore.IrCoreUtils;
@@ -43,6 +45,7 @@ final public class Main {
     //private final static String formfeed = "\014";
     private final static int socketno_default = 9999;
     private final static int python_socketno_default = 9998;
+    private final static int NO_VALUE = -9999;
     private static volatile boolean spawn_new_socketthreads = false;
     private static boolean readline_go_on = true; // FIXME
     //private static volatile boolean go_on;
@@ -52,6 +55,8 @@ final public class Main {
     private static final String helptext =
             "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + CommandType_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
     private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<macro>\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
+    private static Main instance;
+    private static Props properties;
 
     private static void usage(int exitstatus) {
         doExit(exitstatus, "Usage: one of" + IrCoreUtils.LINE_SEPARATOR + helptext);
@@ -63,6 +68,14 @@ final public class Main {
 
     private static String formatdate(Calendar c) {
         return c != null ? String.format("%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)) : "";
+    }
+
+    public static Main getInstance() {
+        return instance;
+    }
+
+    public static Props getProperties() {
+        return instance.properties;
     }
 
     /**
@@ -86,7 +99,7 @@ final public class Main {
         boolean smart_memory = false;
         boolean use_python = false;
         int count = 1;
-        int debug = 0;
+        int debug = NO_VALUE;
         boolean verbose = false;
         int socketno = -1;
         CommandType_t type = CommandType_t.any;
@@ -106,7 +119,7 @@ final public class Main {
                 }
                 if (args[arg_i].equals("--version")) {
                     //System.out.println("JVM: "+ System.getProperty("java.vendor") + " " + System.getProperty("java.version"));
-                    doExit(IrpUtils.EXIT_SUCCESS, HarcUtils.version_string + IrCoreUtils.LINE_SEPARATOR + HarcUtils.license_string);
+                    doExit(IrpUtils.EXIT_SUCCESS, Version.versionString + IrCoreUtils.LINE_SEPARATOR + Version.licenseString);
                 }
                 switch (args[arg_i]) {
                     case "-#":
@@ -228,16 +241,19 @@ final public class Main {
             usage();
         }
 
-        HarcProps.initialize(propsfilename);
-        UserPrefs.get_instance().set_propsfilename(propsfilename);
-        UserPrefs.get_instance().set_debug(debug);
-        UserPrefs.get_instance().set_verbose(verbose);
+        String appHome = findApplicationHome(homefilename);
+        properties = new Props(propsfilename, appHome);
+        //HarcProps.initialize(propsfilename);
+        //properties.set_propsfilename(propsfilename);
+        if (debug != NO_VALUE)
+            properties.setDebug(debug);
+        if (verbose)
+            properties.setVerbose(verbose);
 
         try {
-            ProtocolDataBase.initialize("/usr/local/share/irptransmogrifier/IrpProtocols.xml"); // FIXME
+            ProtocolDataBase.initialize(properties.getIrpProtocolsPath());
         } catch (IOException | IrpParseException ex) {
-            System.out.println(ex.getMessage());
-            System.exit(1);
+            doExit(IrpUtils.EXIT_CONFIG_READ_ERROR, ex.getMessage());
         }
 
         if (gui_mode) {
@@ -248,7 +264,7 @@ final public class Main {
             if ((args.length != arg_i) && (gui_mode || readline_mode || daemon_mode))
                 System.err.println("Warning: extra arguments ignored: " + String.join(", ", noninteractive_args));
 
-            Main m = new Main(homefilename, //propsfilename,
+            instance = new Main(homefilename, //propsfilename,
                     aliasfilename,
                     no_execute, select_mode, smart_memory, count, type, toggle,
                     the_mediatype, zone, connection_type, charset);
@@ -256,34 +272,53 @@ final public class Main {
             int status = IrpUtils.EXIT_SUCCESS;
             if (readline_mode) {
                 if (tasksfilename != null)
-                    m.do_tasks(tasksfilename);
+                    instance.do_tasks(tasksfilename);
                 try {
                     if (use_python)
-                        status = m.interactive_jython_execute();
+                        status = instance.interactive_jython_execute();
                     else
-                        status = m.readline_execute();
+                        status = instance.readline_execute();
                 } catch (InterruptedException e) {
                     System.err.println("Interrupted: " + e.getMessage());
                 }
             } else if (daemon_mode) {
                 if (tasksfilename != null)
-                    m.do_tasks(tasksfilename);
+                    instance.do_tasks(tasksfilename);
                 // start threads for tcp and udp.
                 if (socketno == -1)
                     socketno = use_python ? python_socketno_default : socketno_default;
-                m.udp_execute(socketno, use_python, true);
-                status = m.socket_execute(socketno, use_python);
+                instance.udp_execute(socketno, use_python, true);
+                status = instance.socket_execute(socketno, use_python);
             } else if (use_python)
-                status = m.jython_noninteractive_execute(noninteractive_args);
+                status = instance.jython_noninteractive_execute(noninteractive_args);
             else
-                status = m.noninteractive_execute(noninteractive_args);
+                status = instance.noninteractive_execute(noninteractive_args);
 
-            m.shutdown();
+            instance.shutdown();
 
 //            if (status == IrpUtils.EXIT_SUCCESS)
 //                System.err.println("Program exited normally.");
             doExit(status);
         }
+    }
+
+    private static String findApplicationHome(String appHome) {
+        String applicationHome = appHome != null ? appHome : System.getenv("HARCTOOLBOXHOME");
+        try {
+            if (applicationHome == null) {
+                URL url = Main.class.getProtectionDomain().getCodeSource().getLocation();
+                File dir = new File(url.toURI()).getParentFile();
+                applicationHome = (dir.getName().equals("target") || dir.getName().equals("dist"))
+                        ? dir.getParent() : dir.getPath();
+            }
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            doExit(IrpUtils.EXIT_FATAL_PROGRAM_FAILURE);
+        }
+        if (applicationHome != null && !applicationHome.endsWith(File.separator))
+            applicationHome += File.separator;
+
+        return applicationHome;
     }
 
     private static void doExit(int status, String message) {
@@ -305,9 +340,9 @@ final public class Main {
         harcprops.initialize();*/
 
         if (homefilename != null)
-            HarcProps.get_instance().set_homefilename(homefilename);
+            Main.getProperties().setHomeConf(homefilename);
         else
-            homefilename = HarcProps.get_instance().get_homefilename();
+            homefilename = Main.getProperties().getHomeConf();
 
         /*if (macrofilename != null)
         harcprops.get_instance().set_macrofilename(macrofilename);
@@ -415,9 +450,9 @@ final public class Main {
             harcprops.initialize();*/
 
         if (homefilename != null)
-            HarcProps.get_instance().set_homefilename(homefilename);
+            Main.getProperties().setHomeConf(homefilename);
         else
-            homefilename = HarcProps.get_instance().get_homefilename();
+            homefilename = Main.getProperties().getHomeConf();
 
         /*if (macrofilename != null)
             harcprops.get_instance().set_macrofilename(macrofilename);
@@ -430,9 +465,9 @@ final public class Main {
             this.browser = harcprops.get_instance().get_browser();
 */
         if (aliasfilename != null)
-            HarcProps.get_instance().set_aliasfilename(aliasfilename);
+            Main.getProperties().setAliasfilename(aliasfilename);
         else
-            this.aliasfilename = HarcProps.get_instance().get_aliasfilename();
+            this.aliasfilename = Main.getProperties().getAliasfilename();
 
         this.alias_expander = new CommandAlias(this.aliasfilename);
         //db = new debugargs(debug);
@@ -461,7 +496,7 @@ final public class Main {
 
     private void shutdown() {
         try {
-            HarcProps.get_instance().save();
+            Main.getProperties().save();
         } catch (IOException e) {
             doExit(IrpUtils.EXIT_CONFIG_WRITE_ERROR, e.getMessage());
         }
@@ -679,7 +714,7 @@ final public class Main {
             @Override
             public void run() {
                 try {
-                    Readline.writeHistoryFile(HarcProps.get_instance().get_rl_historyfile());
+                    Readline.writeHistoryFile(Main.getProperties().getRlHistoryfile());
                 } catch (IOException e) {
                     System.err.println(e.getMessage());
                 }
@@ -700,9 +735,9 @@ final public class Main {
             System.err.println("Warning: GNU readline not found.");
         }
 
-        Readline.initReadline(HarcProps.get_instance().get_appname());
+        Readline.initReadline(Main.getProperties().getAppname());
 
-        history = new File(HarcProps.get_instance().get_rl_historyfile());
+        history = new File(Main.getProperties().getRlHistoryfile());
 
         // I become funny errors (UnsupportedEncodingException below) if historyfile
         // does not exist. Therefore create it if not there already.
@@ -713,7 +748,7 @@ final public class Main {
         }
         try {
             if (history.exists())
-                Readline.readHistoryFile(HarcProps.get_instance().get_rl_historyfile());
+                Readline.readHistoryFile(Main.getProperties().getRlHistoryfile());
         } catch (EOFException | UnsupportedEncodingException e) {
             System.err.println("Could not read rl history " + e.getMessage());
         }
@@ -723,7 +758,7 @@ final public class Main {
         } catch (UnsupportedEncodingException enc) {
             // FIXME
             System.err.println(enc.getMessage() + "Could not set word break characters");
-            System.err.println("Try touching " + HarcProps.get_instance().get_rl_historyfile());
+            System.err.println("Try touching " + Main.getProperties().getRlHistoryfile());
             return IrpUtils.EXIT_THIS_CANNOT_HAPPEN;
         }
 
@@ -739,7 +774,7 @@ final public class Main {
                         thr.start();
                         thr.join();
                     } else {
-                        String line = Readline.readline(HarcProps.get_instance().get_rl_prompt(), false);
+                        String line = Readline.readline(Main.getProperties().getRlPrompt(), false);
                         if (line != null && !line.isEmpty()) {
                             line = line.trim();
                             int history_size = Readline.getHistorySize();
@@ -811,8 +846,8 @@ final public class Main {
                     throw new EOFException("As you requested");
                 case "--version":
                     if (verbose)
-                        System.out.println(HarcUtils.version_string);
-                    result = HarcUtils.version_string;
+                        System.out.println(Version.versionString);
+                    result = Version.versionString;
                     break;
                 case "--help":
                     if (verbose)
@@ -821,8 +856,8 @@ final public class Main {
                     break;
                 case "--license":
                     if (verbose)
-                        System.out.println(HarcUtils.license_string);
-                    result = HarcUtils.license_string;
+                        System.out.println(Version.licenseString);
+                    result = Version.licenseString;
                     break;
                 case "--verbose":
                     /*boolean v = true;
@@ -834,7 +869,7 @@ final public class Main {
                     System.out.println("+++ Parse error, assuming 1.");
                     }*/
                     //hm.set_verbosity(true);
-                    UserPrefs.get_instance().set_verbose(true);
+                    properties.setVerbose(true);
                     result = "Verbosity set";
                     break;
                 case "--debug":
@@ -847,7 +882,7 @@ final public class Main {
                         System.out.println("+++ Parse error, assuming 0.");
                     }   //hm.set_debug(v);
                     //engine.set_debug(v);
-                    UserPrefs.get_instance().set_debug(v);
+                    properties.setDebug(v);
                     result = "debug set to " + v;
                     break;
                 case "--zone":
@@ -1414,7 +1449,7 @@ final public class Main {
         @Override
         public void run() {
             try {
-                String line = Readline.readline(HarcProps.get_instance().get_rl_prompt());
+                String line = Readline.readline(Main.getProperties().getRlPrompt());
                 //Thread.sleep(100);
                 String result = process_line(line, true);
                 //Thread.sleep(100);

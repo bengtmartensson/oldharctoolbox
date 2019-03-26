@@ -25,7 +25,7 @@ public final class HarcReadlineJythonConsole extends org.python.util.Interactive
 
     public static String getDefaultBanner() {
         //return String.format("%s, Jython %s on %s", harcutils.version_string, PySystemState.version, PySystemState.platform);
-        return String.format("%s, Jython %s", HarcUtils.version_string, PySystemState.version);
+        return String.format("%s, Jython %s", Version.versionString, PySystemState.version);
     }
 
     //public String filename;
@@ -43,7 +43,7 @@ public final class HarcReadlineJythonConsole extends org.python.util.Interactive
     public HarcReadlineJythonConsole(PyObject locals, String filename, ReadlineCompleter completer) {
         super(locals, filename, true);
 
-        history_pathname = HarcProps.get_instance().get_rl_historyfile() + ".python";
+        history_pathname = Main.getProperties().getRlHistoryfile() + ".python";
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
 

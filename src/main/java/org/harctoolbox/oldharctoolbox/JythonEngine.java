@@ -19,6 +19,7 @@ package org.harctoolbox.oldharctoolbox;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 import org.harctoolbox.irp.IrpUtils;
 import org.python.core.PyException;
 import org.python.core.PyObject;
@@ -38,7 +39,7 @@ public final class JythonEngine {
     public static void main(String[] args) {
         Home hm = null;
         try {
-            hm = new Home(HarcProps.get_instance().get_homefilename());
+            hm = new Home(Main.getProperties().getHomeConf());
         } catch (SAXParseException ex) {
             System.err.println("XML problem in home file");
         } catch (SAXException ex) {
@@ -77,15 +78,18 @@ public final class JythonEngine {
         this.hm = hm;
         if (interactive)
             completer = new JythonRlCompleter(hm);
-        PythonInterpreter.initialize(System.getProperties(), HarcProps.get_instance().get_props(), new String[0]);
+        Properties pythonProperties = new Properties();
+        pythonProperties.setProperty("python.home", Main.getProperties().getPythonHome());
+        pythonProperties.setProperty("pythonlibdir", Main.getProperties().getPythonLibDir());
+        PythonInterpreter.initialize(System.getProperties(), pythonProperties, new String[0]);
         python = interactive ?
             new HarcReadlineJythonConsole(null, org.python.util.InteractiveConsole.CONSOLE_FILENAME, completer) :
             new PythonInterpreter();
         python.set("hm", hm);
         python.exec("import sys");
 
-        String harcinit = HarcProps.get_instance().get_harcmacros();
-        python.exec("sys.path.append('" + HarcProps.get_instance().get_pythonlibdir() + "')");
+        String harcinit = Main.getProperties().getHarcmacros();
+        python.exec("sys.path.append('" + Main.getProperties().getPythonLibDir()+ "')");
         try {
             if ((new File(harcinit)).exists())
                 python.execfile(harcinit);

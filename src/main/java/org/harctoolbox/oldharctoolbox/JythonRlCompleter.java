@@ -227,14 +227,13 @@ public final class JythonRlCompleter implements ReadlineCompleter {
         public int ptr;
         private int no_args;
 
+        rl_commands() {
+            no_args = -1;
+            ptr = 0;
+        }
         public void set(String[] cmds, int no_args) {
             this.cmds = cmds;
             this.no_args = no_args;
-            ptr = 0;
-        }
-
-        rl_commands() {
-            no_args = -1;
             ptr = 0;
         }
 
