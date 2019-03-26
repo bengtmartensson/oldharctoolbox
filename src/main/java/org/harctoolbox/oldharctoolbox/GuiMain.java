@@ -60,25 +60,26 @@ public final class GuiMain extends javax.swing.JFrame {
 
     private Home hm = null;
     private JythonEngine engine = null;
-    private int debug = 0;
-    private boolean verbose = false;
-    private DefaultComboBoxModel macros_dcbm;
-    private DefaultComboBoxModel toplevel_macrofolders_dcbm;
-    private DefaultComboBoxModel secondlevel_macrofolders_dcbm;
-    private DefaultComboBoxModel devices_dcbm;
-    private DefaultComboBoxModel commands_dcbm;
-    private DefaultComboBoxModel devicegroups_dcbm;
-    private DefaultComboBoxModel selecting_devices_dcbm;
-    private DefaultComboBoxModel src_devices_dcbm;
-    private DefaultComboBoxModel zones_dcbm;
-    private DefaultComboBoxModel deviceclasses_dcbm;
+    //private int debug = 0;
+    //private boolean verbose = false;
+    private DefaultComboBoxModel<String> macros_dcbm;
+    private DefaultComboBoxModel<String> toplevel_macrofolders_dcbm;
+    private DefaultComboBoxModel<String> secondlevel_macrofolders_dcbm;
+    private DefaultComboBoxModel<String> devices_dcbm;
+    private DefaultComboBoxModel<String> commands_dcbm;
+    private DefaultComboBoxModel<String> devicegroups_dcbm;
+    private DefaultComboBoxModel<String> selecting_devices_dcbm;
+    private DefaultComboBoxModel<String> src_devices_dcbm;
+    private DefaultComboBoxModel<String> zones_dcbm;
+    private DefaultComboBoxModel<String> deviceclasses_dcbm;
     private DefaultComboBoxModel device_commands_dcbm;
     private DefaultComboBoxModel connection_types_dcbm;
-    private DefaultComboBoxModel device_remotes_dcbm;
-    private DefaultComboBoxModel gc_modules_dcbm;
+    private DefaultComboBoxModel<String> device_remotes_dcbm;
+    private DefaultComboBoxModel<String> gc_modules_dcbm;
     private ResultFormatter formatter = new ResultFormatter();
-    private ResultFormatter cmd_formatter = new ResultFormatter(Main.getProperties().getCommandformat());
+    private ResultFormatter cmd_formatter;
     private static final String dummy_no_selection = "--------";
+    private Props properties;
 
     private macro_thread the_macro_thread = null;
     private command_thread the_command_thread = null;
@@ -130,7 +131,7 @@ public final class GuiMain extends javax.swing.JFrame {
      * Creates new form gui_main
      * @param homefilename
      */
-    public GuiMain(String homefilename/*, String macrofilename, boolean verbose, int debug, String browser*/) {
+    public GuiMain(String homefilename) {
         try {
             hm = new Home(homefilename);
         } catch (IOException e) {
@@ -144,10 +145,12 @@ public final class GuiMain extends javax.swing.JFrame {
             System.exit(IrpUtils.EXIT_XML_ERROR);
         }
 
+        properties = Main.getProperties();
+        cmd_formatter = new ResultFormatter(properties.getCommandformat());
         engine = new JythonEngine(hm, false);
         String[] macs = engine.get_argumentless_macros();
         if (macs != null) {
-            macros_dcbm = new DefaultComboBoxModel(macs);
+            macros_dcbm = new DefaultComboBoxModel<>(macs);
             //String[] toplevel_macrofolders = engine.get_folders();
             //toplevel_macrofolders_dcbm = new DefaultComboBoxModel(toplevel_macrofolders);
             //secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(
@@ -156,21 +159,21 @@ public final class GuiMain extends javax.swing.JFrame {
             //        : (new String[]{dummy_no_selection}));
         } else {
             engine = null;
-            macros_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
+            macros_dcbm = new DefaultComboBoxModel<>(new String[]{dummy_no_selection});
         }
-        // FIXME
-        toplevel_macrofolders_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
-        secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
-        devices_dcbm = new DefaultComboBoxModel(hm.get_devices());
-        devicegroups_dcbm = new DefaultComboBoxModel(hm.get_devicegroups());
-        commands_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
-        selecting_devices_dcbm = new DefaultComboBoxModel(hm.get_selecting_devices());
-        src_devices_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
-        zones_dcbm = new DefaultComboBoxModel(new String[]{"--"});
-        deviceclasses_dcbm = new DefaultComboBoxModel(HarcUtils.sort_unique(Device.get_devices()));
-        device_commands_dcbm = new DefaultComboBoxModel(new String[]{"--"});
-        connection_types_dcbm = new DefaultComboBoxModel(new String[]{"--"});
-        gc_modules_dcbm = new DefaultComboBoxModel(new String[]{"2"}); // ?
+
+        toplevel_macrofolders_dcbm = new DefaultComboBoxModel<>(new String[]{dummy_no_selection});
+        secondlevel_macrofolders_dcbm = new DefaultComboBoxModel<>(new String[]{dummy_no_selection});
+        devices_dcbm = new DefaultComboBoxModel<>(hm.get_devices());
+        devicegroups_dcbm = new DefaultComboBoxModel<>(hm.get_devicegroups());
+        commands_dcbm = new DefaultComboBoxModel<>(new String[]{dummy_no_selection});
+        selecting_devices_dcbm = new DefaultComboBoxModel<>(hm.get_selecting_devices());
+        src_devices_dcbm = new DefaultComboBoxModel<>(new String[]{dummy_no_selection});
+        zones_dcbm = new DefaultComboBoxModel<>(new String[]{"--"});
+        deviceclasses_dcbm = new DefaultComboBoxModel<>(HarcUtils.sort_unique(Device.get_devices()));
+        device_commands_dcbm = new DefaultComboBoxModel<>(new String[]{"--"});
+        connection_types_dcbm = new DefaultComboBoxModel<>(new String[]{"--"});
+        gc_modules_dcbm = new DefaultComboBoxModel<>(new String[]{"2"}); // ?
 
         initComponents();
 
@@ -180,7 +183,7 @@ public final class GuiMain extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    Main.getProperties().save();
+                    properties.save();
                     SocketStorage.dispose_sockets(true);
                 } catch (IOException e) {
                     System.out.println("Problems saving properties; " + e.getMessage());
@@ -189,7 +192,7 @@ public final class GuiMain extends javax.swing.JFrame {
             }
         });
 
-        //update_macro_menu();
+        update_macro_menu();
         update_device_menu();
         //update_command_menu();
         update_src_device_menu();
@@ -197,21 +200,21 @@ public final class GuiMain extends javax.swing.JFrame {
         update_device_commands_menu();
         //update_protocol_parameters();
         update_device_remotes_menu();
-        verbose_CheckBoxMenuItem.setSelected(verbose);
-        //verbose_CheckBox.setSelected(verbose);
+
+        enable_devicegroups_CheckBoxMenuItem.setSelected(properties.getEnableDeviceGroups());
+        immediate_execution_macros_CheckBoxMenuItem.setSelected(properties.getImmediateExecutionMacros());
+        immediate_execution_commands_CheckBoxMenuItem.setSelected(properties.getImmediateExecutionCommands());
+        sort_macros_CheckBoxMenuItem.setSelected(properties.getSortMacros());
+        sort_devices_CheckBoxMenuItem.setSelected(properties.getSortDevices());
+        sort_commands_CheckBoxMenuItem.setSelected(properties.getSortCommands());
+        verbose_CheckBoxMenuItem.setSelected(properties.getVerbose());
         browse_device_MenuItem.setEnabled(hm.has_command((String)devices_dcbm.getSelectedItem(), CommandType_t.www, command_t.browse));
 
         try {
-            gc = new GlobalCache("globalcache", verbose);
+            gc = new GlobalCache("globalcache", properties.getVerbose());
         } catch (IOException ex) {
             Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        //homeconf_TextField.setText(homefilename);
-        //macro_TextField.setText(macrofilename);
-        //aliases_TextField.setText(Main.getProperties().getaliasfilename());
-        //exportdir_TextField.setText(Main.getProperties().getexportdir());
-        //System.setOut(console_PrintStream);
     }
 
     public GuiMain() {
@@ -329,18 +332,17 @@ public final class GuiMain extends javax.swing.JFrame {
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         copy_console_to_clipboard_MenuItem = new javax.swing.JMenuItem();
+        actionsMenu = new javax.swing.JMenu();
+        clear_console_MenuItem = new javax.swing.JMenuItem();
+        browse_device_MenuItem = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         enable_devicegroups_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
-        enable_macro_folders_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
         immediate_execution_macros_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
         immediate_execution_commands_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
         sort_macros_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
         sort_devices_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
         sort_commands_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
         verbose_CheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
-        miscMenu = new javax.swing.JMenu();
-        clear_console_MenuItem = new javax.swing.JMenuItem();
-        browse_device_MenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -1077,6 +1079,28 @@ public final class GuiMain extends javax.swing.JFrame {
 
         menuBar.add(editMenu);
 
+        actionsMenu.setMnemonic('A');
+        actionsMenu.setText("Actions");
+
+        clear_console_MenuItem.setText("Clear console");
+        clear_console_MenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clear_console_MenuItemActionPerformed(evt);
+            }
+        });
+        actionsMenu.add(clear_console_MenuItem);
+
+        browse_device_MenuItem.setText("Browse selected device");
+        browse_device_MenuItem.setToolTipText("Point the browser to this device");
+        browse_device_MenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browse_device_MenuItemActionPerformed(evt);
+            }
+        });
+        actionsMenu.add(browse_device_MenuItem);
+
+        menuBar.add(actionsMenu);
+
         jMenu1.setMnemonic('O');
         jMenu1.setText("Options");
 
@@ -1088,23 +1112,22 @@ public final class GuiMain extends javax.swing.JFrame {
         });
         jMenu1.add(enable_devicegroups_CheckBoxMenuItem);
 
-        enable_macro_folders_CheckBoxMenuItem.setMnemonic('C');
-        enable_macro_folders_CheckBoxMenuItem.setText("Enable Macro Folders");
-        enable_macro_folders_CheckBoxMenuItem.setToolTipText("Presently disabled.");
-        enable_macro_folders_CheckBoxMenuItem.setEnabled(false);
-        enable_macro_folders_CheckBoxMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                enable_macro_folders_CheckBoxMenuItemActionPerformed(evt);
-            }
-        });
-        jMenu1.add(enable_macro_folders_CheckBoxMenuItem);
-
         immediate_execution_macros_CheckBoxMenuItem.setMnemonic('m');
         immediate_execution_macros_CheckBoxMenuItem.setText("Immediate execution of macros");
+        immediate_execution_macros_CheckBoxMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                immediate_execution_macros_CheckBoxMenuItemActionPerformed(evt);
+            }
+        });
         jMenu1.add(immediate_execution_macros_CheckBoxMenuItem);
 
         immediate_execution_commands_CheckBoxMenuItem.setMnemonic('c');
         immediate_execution_commands_CheckBoxMenuItem.setText("Immediate execution of (argumentless) commands");
+        immediate_execution_commands_CheckBoxMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                immediate_execution_commands_CheckBoxMenuItemActionPerformed(evt);
+            }
+        });
         jMenu1.add(immediate_execution_commands_CheckBoxMenuItem);
 
         sort_macros_CheckBoxMenuItem.setMnemonic('S');
@@ -1125,9 +1148,7 @@ public final class GuiMain extends javax.swing.JFrame {
         });
         jMenu1.add(sort_devices_CheckBoxMenuItem);
 
-        sort_commands_CheckBoxMenuItem.setSelected(true);
         sort_commands_CheckBoxMenuItem.setText("Sort Commands");
-        sort_commands_CheckBoxMenuItem.setEnabled(false);
         sort_commands_CheckBoxMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sort_commands_CheckBoxMenuItemActionPerformed(evt);
@@ -1146,28 +1167,6 @@ public final class GuiMain extends javax.swing.JFrame {
         jMenu1.add(verbose_CheckBoxMenuItem);
 
         menuBar.add(jMenu1);
-
-        miscMenu.setMnemonic('M');
-        miscMenu.setText("Misc.");
-
-        clear_console_MenuItem.setText("Clear console");
-        clear_console_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clear_console_MenuItemActionPerformed(evt);
-            }
-        });
-        miscMenu.add(clear_console_MenuItem);
-
-        browse_device_MenuItem.setText("Browse selected device");
-        browse_device_MenuItem.setToolTipText("Point the browser to this device");
-        browse_device_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browse_device_MenuItemActionPerformed(evt);
-            }
-        });
-        miscMenu.add(browse_device_MenuItem);
-
-        menuBar.add(miscMenu);
 
         helpMenu.setMnemonic('H');
         helpMenu.setText("Help");
@@ -1329,7 +1328,7 @@ public final class GuiMain extends javax.swing.JFrame {
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         try {
-            String result = Main.getProperties().save();
+            String result = properties.save();
             System.err.println(result == null ? "No need to save properties." : ("Property file written to " + result + "."));
         } catch (IOException e) {
             warning("Problems saving properties: " + e.getMessage());
@@ -1348,7 +1347,7 @@ public final class GuiMain extends javax.swing.JFrame {
     private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
         try {
             String props = select_file("Select properties save", "xml", "XML Files", true, null).getAbsolutePath();
-            Main.getProperties().save(new File(props));
+            properties.save(new File(props));
             System.err.println("Property file written to " + props + ".");
         } catch (IOException e) {
             System.err.println(e);
@@ -1358,7 +1357,7 @@ public final class GuiMain extends javax.swing.JFrame {
 
     private void macroComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macroComboBoxActionPerformed
         //macroComboBox.setToolTipText(engine.describe_macro((String) macros_dcbm.getSelectedItem()));
-        if (immediate_execution_macros_CheckBoxMenuItem.isSelected())
+        if (properties.getImmediateExecutionMacros())
             macroButtonActionPerformed(null);
 }//GEN-LAST:event_macroComboBoxActionPerformed
 
@@ -1375,7 +1374,7 @@ public final class GuiMain extends javax.swing.JFrame {
     private void update_zone_menu() {
         String device = (String) selecting_devices_dcbm.getSelectedItem();
         String[] zones = hm.get_zones(device);
-        zones_dcbm = new DefaultComboBoxModel((zones != null && zones.length > 0) ? zones : new String[] {"  "});
+        zones_dcbm = new DefaultComboBoxModel<>((zones != null && zones.length > 0) ? zones : new String[] {"  "});
         zones_ComboBox.setModel(zones_dcbm);
         zones_ComboBox.setEnabled(zones != null && zones.length > 0);
         update_src_device_menu();
@@ -1387,7 +1386,7 @@ public final class GuiMain extends javax.swing.JFrame {
             zone = null;
         String device = (String) selecting_devices_dcbm.getSelectedItem();
         String[] src_devices = hm.get_sources(device, zone);
-        src_devices_dcbm = new DefaultComboBoxModel(src_devices != null ? src_devices : (new String[]{"--"}));
+        src_devices_dcbm = new DefaultComboBoxModel<>(src_devices != null ? src_devices : (new String[]{"--"}));
         src_device_ComboBox.setModel(src_devices_dcbm);
         update_connection_types_menu();
     }
@@ -1400,9 +1399,9 @@ public final class GuiMain extends javax.swing.JFrame {
         String[] commands = hm.get_commands((String) devices_dcbm.getSelectedItem(), CommandType_t.any);
         if (commands == null)
             commands = new String[]{ dummy_no_selection };
-        if (sort_commands_CheckBoxMenuItem.isSelected())
+        if (properties.getSortCommands())
             java.util.Arrays.sort(commands, String.CASE_INSENSITIVE_ORDER);
-        commands_dcbm = new DefaultComboBoxModel(commands);
+        commands_dcbm = new DefaultComboBoxModel<>(commands);
         command_ComboBox.setModel(commands_dcbm);
         String device = (String) devices_dcbm.getSelectedItem();
         String cmdname = (String) commands_dcbm.getSelectedItem();
@@ -1412,20 +1411,22 @@ public final class GuiMain extends javax.swing.JFrame {
     }
 
     private void update_device_menu() {
-        String[] devices = enable_devicegroups_CheckBoxMenuItem.isSelected()
+        String[] devices = properties.getEnableDeviceGroups()
                 ? hm.get_devices((String) devicegroups_dcbm.getSelectedItem())
                 : hm.get_devices();
 
-        if (sort_devices_CheckBoxMenuItem.isSelected())
+        if (properties.getSortDevices())
             java.util.Arrays.sort(devices, String.CASE_INSENSITIVE_ORDER);
 
-        devices_dcbm = new DefaultComboBoxModel(devices);
+        devices_dcbm = new DefaultComboBoxModel<>(devices);
         device_ComboBox.setModel(devices_dcbm);
         //device_ComboBox.setToolTipText(...);
+        devicegroup_ComboBox.setEnabled(properties.getEnableDeviceGroups());
         update_command_menu();
     }
 
-    /*private void update_macro_menu() {
+    private void update_macro_menu() {
+    /*
         if (engine != null) {
             String[] macros = null;
             if (enable_macro_folders_CheckBoxMenuItem.isSelected())
@@ -1457,23 +1458,18 @@ public final class GuiMain extends javax.swing.JFrame {
             macroComboBox.setToolTipText("Macro file not found or erroneous.");
             toplevel_macrofolders_ComboBox.setEnabled(false);
             secondlevel_macrofolders_ComboBox.setEnabled(false);
-        }
+        }*/
     }
-*/
+
     private void sort_macros_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sort_macros_CheckBoxMenuItemActionPerformed
-        //update_macro_menu();
+        properties.setSortMacros(sort_macros_CheckBoxMenuItem.isSelected());
+        update_macro_menu();
     }//GEN-LAST:event_sort_macros_CheckBoxMenuItemActionPerformed
 
-    private void update_verbosity() {
-        Main.getProperties().setVerbose(verbose);
-        gc.setVerbose(verbose);
-        verbose_CheckBoxMenuItem.setSelected(verbose);
-        //verbose_CheckBox.setSelected(verbose);
-    }
-
     private void verbose_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verbose_CheckBoxMenuItemActionPerformed
-        verbose = verbose_CheckBoxMenuItem.isSelected();
-        update_verbosity();
+        boolean verbose = verbose_CheckBoxMenuItem.isSelected();
+        properties.setVerbose(verbose);
+        gc.setVerbose(verbose);
     }//GEN-LAST:event_verbose_CheckBoxMenuItemActionPerformed
 
     private void toplevel_macrofolders_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toplevel_macrofolders_ComboBoxActionPerformed
@@ -1499,13 +1495,9 @@ public final class GuiMain extends javax.swing.JFrame {
         //update_macro_menu();
 }//GEN-LAST:event_secondlevel_macrofolders_ComboBoxActionPerformed
 
-    private void enable_macro_folders_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enable_macro_folders_CheckBoxMenuItemActionPerformed
-        //update_macro_menu();
-}//GEN-LAST:event_enable_macro_folders_CheckBoxMenuItemActionPerformed
-
     private void enable_devicegroups_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enable_devicegroups_CheckBoxMenuItemActionPerformed
+        properties.setEnableDeviceGroups(enable_devicegroups_CheckBoxMenuItem.isSelected());
         update_device_menu();
-        devicegroup_ComboBox.setEnabled(enable_devicegroups_CheckBoxMenuItem.isSelected());
 }//GEN-LAST:event_enable_devicegroups_CheckBoxMenuItemActionPerformed
 
     private void device_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_device_ComboBoxActionPerformed
@@ -1514,6 +1506,7 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_device_ComboBoxActionPerformed
 
     private void sort_devices_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sort_devices_CheckBoxMenuItemActionPerformed
+        properties.setSortDevices(sort_devices_CheckBoxMenuItem.isSelected());
         update_device_menu();
     }//GEN-LAST:event_sort_devices_CheckBoxMenuItemActionPerformed
 
@@ -1535,7 +1528,7 @@ public final class GuiMain extends javax.swing.JFrame {
             String[] remotes = dvc.get_remotenames();
             //command_t[] commands = dvc.get_commands(commandtype_t.ir);
             java.util.Arrays.sort(remotes);
-            device_remotes_dcbm = new DefaultComboBoxModel(remotes);
+            device_remotes_dcbm = new DefaultComboBoxModel<>(remotes);
             device_remote_ComboBox.setModel(device_remotes_dcbm);
             update_device_commands_menu();
         } catch (IOException | SAXException e) {
@@ -1553,7 +1546,7 @@ public final class GuiMain extends javax.swing.JFrame {
             if (commands == null)
                 return;
             java.util.Arrays.sort(commands);
-            device_commands_dcbm = new DefaultComboBoxModel(commands);
+            device_commands_dcbm = new DefaultComboBoxModel<>(commands);
             device_command_ComboBox.setModel(device_commands_dcbm);
         } catch (IOException | SAXException e) {
             System.err.println(e.getMessage());
@@ -1563,7 +1556,7 @@ public final class GuiMain extends javax.swing.JFrame {
     private void update_connection_types_menu() {
         ConnectionType[] con_types = hm.get_connection_types((String) selecting_devices_dcbm.getSelectedItem(),
                 (String) src_devices_dcbm.getSelectedItem());
-        connection_types_dcbm =new DefaultComboBoxModel((con_types != null && con_types.length > 0)
+        connection_types_dcbm =new DefaultComboBoxModel<>((con_types != null && con_types.length > 0)
                 ? con_types : new String[]{ "    "});
         connection_type_ComboBox.setModel(connection_types_dcbm);
         connection_type_ComboBox.setEnabled(con_types != null && con_types.length > 1);
@@ -1617,6 +1610,7 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_commandButtonActionPerformed
 
     private void sort_commands_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sort_commands_CheckBoxMenuItemActionPerformed
+        properties.setSortCommands(sort_commands_CheckBoxMenuItem.isSelected());
         update_command_menu();
     }//GEN-LAST:event_sort_commands_CheckBoxMenuItemActionPerformed
 
@@ -1693,7 +1687,7 @@ public final class GuiMain extends javax.swing.JFrame {
                 if (the_globalcache_device_thread != null && the_globalcache_device_thread.isAlive())
                     System.err.println("Internal error: the_globalcache_device thread active!!?");
 
-                the_globalcache_device_thread = new globalcache_thread(c.get_ir_code(ToggleType.dont_care, verbose), get_gc_module(), get_gc_connector(), no_sends, deviceclass_send_Button, deviceclass_stop_Button);
+                the_globalcache_device_thread = new globalcache_thread(c.get_ir_code(ToggleType.dont_care, properties.getVerbose()), get_gc_module(), get_gc_connector(), no_sends, deviceclass_send_Button, deviceclass_stop_Button);
                 the_globalcache_device_thread.start();
 //            } else if (((String) output_deviceComboBox.getModel().getSelectedItem()).equalsIgnoreCase("IRTrans (preprog_ascii)")) {
 //                //irt.send_flashed_command(remote, cmd, this.get_irtrans_led(), no_sends);
@@ -1745,7 +1739,7 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_consoletext_save_MenuItemActionPerformed
 
     private void export_all_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_all_MenuItemActionPerformed
-        Device.export_all_devices(Main.getProperties().getExportDir());
+        Device.export_all_devices(properties.getExportDir());
 }//GEN-LAST:event_export_all_MenuItemActionPerformed
 
     private void stop_macro_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_macro_ButtonActionPerformed
@@ -1758,7 +1752,7 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_stop_macro_ButtonActionPerformed
 
     private void export_device_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_device_MenuItemActionPerformed
-        Device.export_device(Main.getProperties().getExportDir(), (String) deviceclasses_dcbm.getSelectedItem());
+        Device.export_device(properties.getExportDir(), (String) deviceclasses_dcbm.getSelectedItem());
     }//GEN-LAST:event_export_device_MenuItemActionPerformed
 
     private void t10_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_address_TextFieldActionPerformed
@@ -1841,7 +1835,7 @@ public final class GuiMain extends javax.swing.JFrame {
                 s[i] = dvs[i].endsWith("IR") ? dvs[i].substring(7, 8) : null;
 
             String[] modules = HarcUtils.nonnulls(s);
-            gc_modules_dcbm = new DefaultComboBoxModel(modules != null ? modules : new String[]{"-"});
+            gc_modules_dcbm = new DefaultComboBoxModel<>(modules != null ? modules : new String[]{"-"});
             gc_module_ComboBox.setModel(gc_modules_dcbm);
             gc_module_ComboBox.setEnabled(modules != null);
             gc_connector_ComboBox.setEnabled(modules != null);
@@ -1893,12 +1887,20 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_gc_stop_ir_ActionPerformed
 
 private void xmlDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlDeviceExportButtonActionPerformed
-    Device.export_device(Main.getProperties().getExportDir(), (String) deviceclasses_dcbm.getSelectedItem());
+    Device.export_device(properties.getExportDir(), (String) deviceclasses_dcbm.getSelectedItem());
 }//GEN-LAST:event_xmlDeviceExportButtonActionPerformed
 
 private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlAllDevicesExportButtonActionPerformed
-    Device.export_all_devices(Main.getProperties().getExportDir());
+    Device.export_all_devices(properties.getExportDir());
 }//GEN-LAST:event_xmlAllDevicesExportButtonActionPerformed
+
+    private void immediate_execution_macros_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_immediate_execution_macros_CheckBoxMenuItemActionPerformed
+        properties.setImmediateExecutionMacros(immediate_execution_macros_CheckBoxMenuItem.isSelected());
+    }//GEN-LAST:event_immediate_execution_macros_CheckBoxMenuItemActionPerformed
+
+    private void immediate_execution_commands_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_immediate_execution_commands_CheckBoxMenuItemActionPerformed
+        properties.setImmediateExecutionCommands(immediate_execution_commands_CheckBoxMenuItem.isSelected());
+    }//GEN-LAST:event_immediate_execution_commands_CheckBoxMenuItemActionPerformed
 
     private int get_gc_module() {
         return Integer.parseInt((String) gc_modules_dcbm.getSelectedItem());
@@ -1919,6 +1921,7 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenu actionsMenu;
     private javax.swing.JComboBox audio_video_ComboBox;
     private javax.swing.JMenuItem browse_device_MenuItem;
     private javax.swing.JMenuItem clear_console_MenuItem;
@@ -1939,7 +1942,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JComboBox devicegroup_ComboBox;
     private javax.swing.JMenu editMenu;
     private javax.swing.JCheckBoxMenuItem enable_devicegroups_CheckBoxMenuItem;
-    private javax.swing.JCheckBoxMenuItem enable_macro_folders_CheckBoxMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenuItem export_all_MenuItem;
     private javax.swing.JMenuItem export_device_MenuItem;
@@ -1980,7 +1982,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JComboBox macroComboBox;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenu miscMenu;
     private javax.swing.JComboBox n_ezcontrol_ComboBox;
     private javax.swing.JComboBox no_sends_ComboBox;
     private javax.swing.JTabbedPane outputHWTabbedPane;

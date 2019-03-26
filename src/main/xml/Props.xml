@@ -37,6 +37,13 @@ this program. If not, see http://www.gnu.org/licenses/.
     <property name="pythonLibDir" type="string" default='"pythonlib"'/>
     <property name="pythonHome" type="string" default='"/usr/local/jython2.7.0"'/>
     <property name="harcmacros" type="string" default='"pythonlib" + File.separator + "harcinit.py"'/>
+    <property name="enableDeviceGroups" type="boolean" default='"false"' />
+    <property name="sortDevices" type="boolean" default='"false"' />
+    <property name="sortCommands" type="boolean" default='"false"' />
+    <property name="sortMacros" type="boolean" default='"false"' />
+    <property name="immediateExecutionMacros" type="boolean" default='"false"' />
+    <property name="immediateExecutionCommands" type="boolean" default='"false"' />
+
 
 
 

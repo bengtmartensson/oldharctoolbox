@@ -87,6 +87,31 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="actionsMenu">
+          <Properties>
+            <Property name="mnemonic" type="int" value="65"/>
+            <Property name="text" type="java.lang.String" value="Actions"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="clear_console_MenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Clear console"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clear_console_MenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="browse_device_MenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Browse selected device"/>
+                <Property name="toolTipText" type="java.lang.String" value="Point the browser to this device"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browse_device_MenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
             <Property name="mnemonic" type="int" value="79"/>
@@ -101,28 +126,23 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enable_devicegroups_CheckBoxMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="enable_macro_folders_CheckBoxMenuItem">
-              <Properties>
-                <Property name="mnemonic" type="int" value="67"/>
-                <Property name="text" type="java.lang.String" value="Enable Macro Folders"/>
-                <Property name="toolTipText" type="java.lang.String" value="Presently disabled."/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enable_macro_folders_CheckBoxMenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="immediate_execution_macros_CheckBoxMenuItem">
               <Properties>
                 <Property name="mnemonic" type="int" value="109"/>
                 <Property name="text" type="java.lang.String" value="Immediate execution of macros"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="immediate_execution_macros_CheckBoxMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="immediate_execution_commands_CheckBoxMenuItem">
               <Properties>
                 <Property name="mnemonic" type="int" value="99"/>
                 <Property name="text" type="java.lang.String" value="Immediate execution of (argumentless) commands"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="immediate_execution_commands_CheckBoxMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="sort_macros_CheckBoxMenuItem">
               <Properties>
@@ -144,9 +164,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="sort_commands_CheckBoxMenuItem">
               <Properties>
-                <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Sort Commands"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sort_commands_CheckBoxMenuItemActionPerformed"/>
@@ -160,31 +178,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="verbose_CheckBoxMenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="miscMenu">
-          <Properties>
-            <Property name="mnemonic" type="int" value="77"/>
-            <Property name="text" type="java.lang.String" value="Misc."/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="clear_console_MenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Clear console"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clear_console_MenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="browse_device_MenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Browse selected device"/>
-                <Property name="toolTipText" type="java.lang.String" value="Point the browser to this device"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browse_device_MenuItemActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
