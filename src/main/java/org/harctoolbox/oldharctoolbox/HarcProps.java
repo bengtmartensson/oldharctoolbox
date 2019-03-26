@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009-2011 Bengt Martensson.
+Copyright (C) 2009-2011, 2019 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ public final class HarcProps {
         update("exportdir",	harc_home + "exports");
         update("aliasfilename",	harc_home + "src/org/harctoolbox/commandnames.xml");
         //update("macrofilename",	harc_home + "config/macros.xml");
-        update("browser",	"firefox");
+        //update("browser",	"firefox");
         update("rl_historyfile", home + ".harctoolbox.rl");
         update("appname",	"harctoolbox");
         update("rl_prompt",	"harctoolbox> ");
@@ -127,7 +127,7 @@ public final class HarcProps {
         // recognized are: "GnuReadline", "Editline", "Getline", "PureJava"
         //update("python.console.readlinelib", "GnuReadline");
         update("pythonlibdir", harc_home + "pythonlib");
-        update("python.home", "/usr/local/jython");
+        update("python.home", "/usr/local/jython2.7.0");
         update("harcmacros", harc_home + "pythonlib" + File.separator + "harcinit.py");
     }
 
@@ -224,15 +224,6 @@ public final class HarcProps {
     //    props.setProperty("macrofilename", s);
     //    need_save = true;
     //}
-
-    public String get_browser() {
-        return props.getProperty("browser");
-    }
-
-    public void set_browser(String s) {
-        props.setProperty("browser", s);
-        need_save = true;
-    }
 
     public String get_rl_historyfile() {
         return props.getProperty("rl_historyfile");

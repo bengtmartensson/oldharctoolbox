@@ -17,8 +17,13 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
+import java.awt.Desktop;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class consists of a collection of useful static constants and functions.
@@ -42,6 +47,7 @@ final public class HarcUtils {
     public final static String devicefile_extension = ".xml";
 
     public static final int ping_timeout = 2000; // milliseconds
+    private static final Logger logger = Logger.getLogger(HarcUtils.class.getName());
 
     public static void printtable(String title, String[] arr, PrintStream str) {
         if (arr != null) {
@@ -98,18 +104,29 @@ final public class HarcUtils {
         return result;
     }
 
-    public static void browse(String address) {
-        String[] cmd = new String[2];
-        cmd[0] = HarcProps.get_instance().get_browser();
-        if (cmd[0] == null || cmd[0].isEmpty()) {
-            System.err.println("No browser.");
+    public static void browse(URI uri) {
+        if (! Desktop.isDesktopSupported()) {
+            logger.severe("Desktop not supported");
             return;
         }
-        cmd[1] = /*"http://" +*/ address;
+        if (uri == null || uri.toString().isEmpty()) {
+            logger.severe("No URI.");
+            return;
+        }
         try {
-            Process proc = Runtime.getRuntime().exec(cmd);
+            //if (HarcProps.get_instance().getVerbose())
+                logger.log(Level.INFO, "Browsing URI \"{0}\"", uri.toString());
+            Desktop.getDesktop().browse(uri);
         } catch (IOException ex) {
-            System.err.println("Could not start browser command `" + cmd[0] + " " + cmd[1]);
+            logger.log(Level.SEVERE, "Could not start browser using uri \"{0}\".", uri.toString());
+        }
+    }
+
+    public static void browse(String address) {
+        try {
+            browse(new URI("http://" + address));
+        } catch (URISyntaxException ex) {
+            logger.log(Level.SEVERE, ex.getMessage());
         }
     }
 

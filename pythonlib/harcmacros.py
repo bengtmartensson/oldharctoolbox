@@ -4,11 +4,11 @@ import time
 import subprocess
 import string
 import socket
-import org.harctoolbox.oldharctoolbox.protocol
-import org.harctoolbox.oldharctoolbox.home
+import org.harctoolbox.oldharctoolbox.ProtocolDataBase
+import org.harctoolbox.oldharctoolbox.Home
 import org.harctoolbox.oldharctoolbox.command_t
-import org.harctoolbox.oldharctoolbox.commandtype_t
-import org.harctoolbox.oldharctoolbox.mediatype
+import org.harctoolbox.oldharctoolbox.CommandType_t
+import org.harctoolbox.oldharctoolbox.MediaType
 
 __doc__ = "Macros for cat confusing"
 

@@ -1397,7 +1397,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
@@ -1407,7 +1407,6 @@
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="jLabel10" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel17" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel18" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -1426,7 +1425,6 @@
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="aliases_TextField" min="-2" max="-2" attributes="0"/>
                                       <Component id="macro_TextField" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="browser_TextField" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -1442,11 +1440,10 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="alias_browse_Button" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="browser_select_Button" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace pref="84" max="32767" attributes="0"/>
+                          <EmptySpace pref="29" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1476,13 +1473,7 @@
                               <Component id="aliases_select_Button" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="alias_browse_Button" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="browser_TextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="browser_select_Button" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="60" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1558,23 +1549,6 @@
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="macro_TextFieldFocusLost"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JTextField" name="browser_TextField">
-                  <Properties>
-                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[300, 27]"/>
-                    </Property>
-                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[300, 27]"/>
-                    </Property>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[300, 27]"/>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browser_TextFieldActionPerformed"/>
-                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="browser_TextFieldFocusLost"/>
-                  </Events>
-                </Component>
                 <Component class="javax.swing.JTextField" name="aliases_TextField">
                   <Properties>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -1597,11 +1571,6 @@
                     <Property name="text" type="java.lang.String" value="Aliases"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel18">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Browser"/>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JButton" name="macro_select_Button">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="..."/>
@@ -1617,14 +1586,6 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aliases_select_ButtonActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="browser_select_Button">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="..."/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browser_select_ButtonActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="macro_browse_Button">

@@ -210,7 +210,6 @@ public final class GuiMain extends javax.swing.JFrame {
         homeconf_TextField.setText(homefilename);
         //macro_TextField.setText(macrofilename);
         aliases_TextField.setText(HarcProps.get_instance().get_aliasfilename());
-        browser_TextField.setText(HarcProps.get_instance().get_browser());
         exportdir_TextField.setText(HarcProps.get_instance().get_exportdir());
         //System.setOut(console_PrintStream);
     }
@@ -324,13 +323,10 @@ public final class GuiMain extends javax.swing.JFrame {
         home_load_Button = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
         macro_TextField = new javax.swing.JTextField();
-        browser_TextField = new javax.swing.JTextField();
         aliases_TextField = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
         macro_select_Button = new javax.swing.JButton();
         aliases_select_Button = new javax.swing.JButton();
-        browser_select_Button = new javax.swing.JButton();
         macro_browse_Button = new javax.swing.JButton();
         alias_browse_Button = new javax.swing.JButton();
         macro_load_Button = new javax.swing.JButton();
@@ -1079,20 +1075,6 @@ public final class GuiMain extends javax.swing.JFrame {
             }
         });
 
-        browser_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
-        browser_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
-        browser_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
-        browser_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browser_TextFieldActionPerformed(evt);
-            }
-        });
-        browser_TextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                browser_TextFieldFocusLost(evt);
-            }
-        });
-
         aliases_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
         aliases_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
         aliases_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
@@ -1109,8 +1091,6 @@ public final class GuiMain extends javax.swing.JFrame {
 
         jLabel10.setText("Aliases");
 
-        jLabel18.setText("Browser");
-
         macro_select_Button.setText("...");
         macro_select_Button.setEnabled(false);
         macro_select_Button.addActionListener(new java.awt.event.ActionListener() {
@@ -1123,13 +1103,6 @@ public final class GuiMain extends javax.swing.JFrame {
         aliases_select_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aliases_select_ButtonActionPerformed(evt);
-            }
-        });
-
-        browser_select_Button.setText("...");
-        browser_select_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browser_select_ButtonActionPerformed(evt);
             }
         });
 
@@ -1161,7 +1134,7 @@ public final class GuiMain extends javax.swing.JFrame {
         general_PanelLayout.setHorizontalGroup(
             general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(general_PanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(20, 20, 20)
                 .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(general_PanelLayout.createSequentialGroup()
                         .addComponent(jLabel16)
@@ -1169,8 +1142,7 @@ public final class GuiMain extends javax.swing.JFrame {
                     .addGroup(general_PanelLayout.createSequentialGroup()
                         .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel17)
-                            .addComponent(jLabel18))
+                            .addComponent(jLabel17))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(general_PanelLayout.createSequentialGroup()
@@ -1184,8 +1156,7 @@ public final class GuiMain extends javax.swing.JFrame {
                     .addGroup(general_PanelLayout.createSequentialGroup()
                         .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(aliases_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(macro_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(browser_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(macro_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(general_PanelLayout.createSequentialGroup()
@@ -1197,9 +1168,8 @@ public final class GuiMain extends javax.swing.JFrame {
                             .addGroup(general_PanelLayout.createSequentialGroup()
                                 .addComponent(aliases_select_Button)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(alias_browse_Button))
-                            .addComponent(browser_select_Button))))
-                .addContainerGap(84, Short.MAX_VALUE))
+                                .addComponent(alias_browse_Button)))))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         general_PanelLayout.setVerticalGroup(
             general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1224,12 +1194,7 @@ public final class GuiMain extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(aliases_select_Button)
                     .addComponent(alias_browse_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(browser_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18)
-                    .addComponent(browser_select_Button))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
 
         optsTabbedPane.addTab("General", general_Panel);
@@ -2274,14 +2239,6 @@ public final class GuiMain extends javax.swing.JFrame {
         }
 }//GEN-LAST:event_aliases_select_ButtonActionPerformed
 
-    private void browser_select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browser_select_ButtonActionPerformed
-        String filename = select_file("Select browser program", "exe", "exe-files", false, null).getAbsolutePath();
-        if (filename != null) {
-            this.browser_TextField.setText(filename);
-            HarcProps.get_instance().set_browser(filename);
-        }
-}//GEN-LAST:event_browser_select_ButtonActionPerformed
-
     private void macro_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_browse_ButtonActionPerformed
         HarcUtils.browse(macro_TextField.getText());
 }//GEN-LAST:event_macro_browse_ButtonActionPerformed
@@ -2309,14 +2266,6 @@ public final class GuiMain extends javax.swing.JFrame {
     private void homeconf_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeconf_TextFieldActionPerformed
         HarcProps.get_instance().set_homefilename(homeconf_TextField.getText());
     }//GEN-LAST:event_homeconf_TextFieldActionPerformed
-
-    private void browser_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browser_TextFieldActionPerformed
-        HarcProps.get_instance().set_browser(browser_TextField.getText());
-    }//GEN-LAST:event_browser_TextFieldActionPerformed
-
-    private void browser_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_browser_TextFieldFocusLost
-        HarcProps.get_instance().set_browser(browser_TextField.getText());
-    }//GEN-LAST:event_browser_TextFieldFocusLost
 
     private void homeconf_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_homeconf_TextFieldFocusLost
         HarcProps.get_instance().set_homefilename(homeconf_TextField.getText());
@@ -2404,8 +2353,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JButton aliases_select_Button;
     private javax.swing.JComboBox audio_video_ComboBox;
     private javax.swing.JMenuItem browse_device_MenuItem;
-    private javax.swing.JTextField browser_TextField;
-    private javax.swing.JButton browser_select_Button;
     private javax.swing.JMenuItem clear_console_MenuItem;
     private javax.swing.JButton commandButton;
     private javax.swing.JComboBox command_ComboBox;
@@ -2466,7 +2413,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel27;

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009-2011 Bengt Martensson.
+Copyright (C) 2009-2011, 2019 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,8 +31,6 @@ public final class UserPrefs {
     private int debug = 0;
      // Can be annoying with unwanted and unexpected browsers popping up
     private boolean use_www_for_commands = false;
-    // Browser is in properties
-    //private String browser = "firefox";
 
     private String propsfilename;
 

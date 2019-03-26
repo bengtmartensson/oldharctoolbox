@@ -50,7 +50,7 @@ final public class Main {
     private static int no_threads = 0;
     private static Main the_instance = null;
     private static final String helptext =
-            "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + CommandType_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -b <browserpath>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
+            "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + CommandType_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
     private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<macro>\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
 
     private static void usage(int exitstatus) {
@@ -76,7 +76,6 @@ final public class Main {
         String homefilename = null;
         //String macrofilename = null;
         String aliasfilename = null;
-        String browser = null;
         String propsfilename = null;
         String tasksfilename = null;
         boolean gui_mode = false;
@@ -143,10 +142,6 @@ final public class Main {
                     case "-a":
                         arg_i++;
                         aliasfilename = args[arg_i++];
-                        break;
-                    case "-b":
-                        arg_i++;
-                        browser = args[arg_i++];
                         break;
                     case "-c":
                         arg_i++;
@@ -234,8 +229,6 @@ final public class Main {
         }
 
         HarcProps.initialize(propsfilename);
-        if (browser != null)
-            HarcProps.get_instance().set_browser(browser);
         UserPrefs.get_instance().set_propsfilename(propsfilename);
         UserPrefs.get_instance().set_debug(debug);
         UserPrefs.get_instance().set_verbose(verbose);

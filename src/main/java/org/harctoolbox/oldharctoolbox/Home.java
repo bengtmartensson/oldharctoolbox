@@ -29,6 +29,8 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public final class Home {
                 + "home [<options>] <device_instancename> <command> [<command_args>]*"
                 + "\nwhere options=-h <filename>,-t "
                 + CommandType_t.valid_types('|')
-                + ",-m,-T 0|1,-# <count>,-v,-d <debugcode>,-b <browserpath>, -p <propsfile>\n"
+                + ",-m,-T 0|1,-# <count>,-v,-d <debugcode>, -p <propsfile>\n"
                         + "or\n"
                         + "home -s [-z zone][-A,-V][-c connection_type] <device_instancename> <src_device>");
         System.exit(errorcode);
@@ -93,7 +95,6 @@ public final class Home {
         ConnectionType connection_type = ConnectionType.any;
         command_t cmd = command_t.invalid;
         ToggleType toggle = ToggleType.dont_care;
-        String browser = null;
         String[] arguments = null;
         String propsfilename = null;
         DebugArgs db = null;
@@ -106,11 +107,6 @@ public final class Home {
                     case "-#":
                         arg_i++;
                         count = Integer.parseInt(args[arg_i++]);
-                        break;
-                    case "-b":
-                        arg_i++;
-                        browser = args[arg_i++];
-                        HarcProps.get_instance().set_browser(browser);
                         break;
                     case "-c":
                         arg_i++;
@@ -180,8 +176,6 @@ public final class Home {
 
             if (home_filename == null)
                 home_filename = HarcProps.get_instance().get_homefilename();
-            //if (browser == null)
-            //    browser = harcprops.get_instance().get_browser();
 
             if (select_mode) {
                 src_device = args[arg_i + 1];
@@ -520,7 +514,7 @@ public final class Home {
         String subst_transmitstring_printable;
 
         if (type == CommandType_t.www) {
-            if (HarcProps.get_instance().get_browser() == null || (cmd != command_t.browse && !UserPrefs.get_instance().get_use_www_for_commands())) {
+            if (cmd != command_t.browse && !UserPrefs.get_instance().get_use_www_for_commands()) {
                 if (UserPrefs.get_instance().get_verbose())
                     System.err.println("Command of type www ignored.");
 
@@ -1025,23 +1019,10 @@ public final class Home {
                     break;
 
                 case www:
-                    if (arguments_length > 0) {
+                    if (arguments_length > 0)
                         System.err.println("Warning: arguments to command igored.");
-                    }
-                    String url = "http://" + fgw.get_hostname() + ":" + portnumber + "/";
-                    if (DebugArgs.dbg_transmit()) {
-                        System.err.println("Starting " + HarcProps.get_instance().get_browser() + " " + url);
-                    }
-                    String cmd_array[] = new String[2];
-                    cmd_array[0] = HarcProps.get_instance().get_browser();
-                    cmd_array[1] = url;
-                    try {
-                        Process gc_process = java.lang.Runtime.getRuntime().exec(cmd_array);
-                        success = true;
-                    } catch (IOException e) {
-                        System.err.println("Could not exec command \"" + HarcProps.get_instance().get_browser() + " " + url + "'.");
-                    }
-
+                    HarcUtils.browse(fgw.get_hostname() + ":" + portnumber);
+                    success = true;
                     break;
                 case on_off:
                 case sensor:
