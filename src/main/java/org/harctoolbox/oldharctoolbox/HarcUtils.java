@@ -122,9 +122,9 @@ final public class HarcUtils {
         }
     }
 
-    public static void browse(String address) {
+    public static void browse(String url) {
         try {
-            browse(new URI("http://" + address));
+            browse(new URI(url));
         } catch (URISyntaxException ex) {
             logger.log(Level.SEVERE, ex.getMessage());
         }

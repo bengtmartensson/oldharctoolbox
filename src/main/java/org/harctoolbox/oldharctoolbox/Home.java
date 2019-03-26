@@ -1021,7 +1021,7 @@ public final class Home {
                 case www:
                     if (arguments_length > 0)
                         System.err.println("Warning: arguments to command igored.");
-                    HarcUtils.browse(fgw.get_hostname() + ":" + portnumber);
+                    HarcUtils.browse("http://" + fgw.get_hostname() + ":" + portnumber);
                     success = true;
                     break;
                 case on_off:

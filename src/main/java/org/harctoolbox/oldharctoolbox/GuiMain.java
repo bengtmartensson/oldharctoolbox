@@ -198,7 +198,7 @@ public final class GuiMain extends javax.swing.JFrame {
         //update_protocol_parameters();
         update_device_remotes_menu();
         verbose_CheckBoxMenuItem.setSelected(verbose);
-        verbose_CheckBox.setSelected(verbose);
+        //verbose_CheckBox.setSelected(verbose);
         browse_device_MenuItem.setEnabled(hm.has_command((String)devices_dcbm.getSelectedItem(), CommandType_t.www, command_t.browse));
 
         try {
@@ -207,10 +207,10 @@ public final class GuiMain extends javax.swing.JFrame {
             Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        homeconf_TextField.setText(homefilename);
+        //homeconf_TextField.setText(homefilename);
         //macro_TextField.setText(macrofilename);
-        aliases_TextField.setText(HarcProps.get_instance().get_aliasfilename());
-        exportdir_TextField.setText(HarcProps.get_instance().get_exportdir());
+        //aliases_TextField.setText(HarcProps.get_instance().get_aliasfilename());
+        //exportdir_TextField.setText(HarcProps.get_instance().get_exportdir());
         //System.setOut(console_PrintStream);
     }
 
@@ -314,31 +314,6 @@ public final class GuiMain extends javax.swing.JFrame {
         ezcontrol_off_Button = new javax.swing.JButton();
         n_ezcontrol_ComboBox = new javax.swing.JComboBox();
         t10_browse_Button = new javax.swing.JButton();
-        optsTabbedPane = new javax.swing.JTabbedPane();
-        general_Panel = new javax.swing.JPanel();
-        jLabel16 = new javax.swing.JLabel();
-        homeconf_TextField = new javax.swing.JTextField();
-        home_select_Button = new javax.swing.JButton();
-        home_browse_Button = new javax.swing.JButton();
-        home_load_Button = new javax.swing.JButton();
-        jLabel17 = new javax.swing.JLabel();
-        macro_TextField = new javax.swing.JTextField();
-        aliases_TextField = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        macro_select_Button = new javax.swing.JButton();
-        aliases_select_Button = new javax.swing.JButton();
-        macro_browse_Button = new javax.swing.JButton();
-        alias_browse_Button = new javax.swing.JButton();
-        macro_load_Button = new javax.swing.JButton();
-        exportopts_TabbedPane = new javax.swing.JTabbedPane();
-        general_export_opts_Panel = new javax.swing.JPanel();
-        jLabel19 = new javax.swing.JLabel();
-        exportdir_TextField = new javax.swing.JTextField();
-        exportdir_browse_Button = new javax.swing.JButton();
-        debug_Panel = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        debug_TextField = new javax.swing.JTextField();
-        verbose_CheckBox = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         console_TextArea = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
@@ -1020,289 +995,6 @@ public final class GuiMain extends javax.swing.JFrame {
 
         output_hw_TabbedPane.addTab("Output HW", outputHWTabbedPane);
 
-        jLabel16.setText("Home");
-
-        homeconf_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
-        homeconf_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
-        homeconf_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
-        homeconf_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                homeconf_TextFieldActionPerformed(evt);
-            }
-        });
-        homeconf_TextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                homeconf_TextFieldFocusLost(evt);
-            }
-        });
-
-        home_select_Button.setText("...");
-        home_select_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                home_select_ButtonActionPerformed(evt);
-            }
-        });
-
-        home_browse_Button.setText("Browse");
-        home_browse_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                home_browse_ButtonActionPerformed(evt);
-            }
-        });
-
-        home_load_Button.setText("Load");
-        home_load_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                home_load_ButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel17.setText("Macro");
-        jLabel17.setEnabled(false);
-
-        macro_TextField.setEnabled(false);
-        macro_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
-        macro_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
-        macro_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
-        macro_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                macro_TextFieldActionPerformed(evt);
-            }
-        });
-        macro_TextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                macro_TextFieldFocusLost(evt);
-            }
-        });
-
-        aliases_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
-        aliases_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
-        aliases_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
-        aliases_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aliases_TextFieldActionPerformed(evt);
-            }
-        });
-        aliases_TextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                aliases_TextFieldFocusLost(evt);
-            }
-        });
-
-        jLabel10.setText("Aliases");
-
-        macro_select_Button.setText("...");
-        macro_select_Button.setEnabled(false);
-        macro_select_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                macro_select_ButtonActionPerformed(evt);
-            }
-        });
-
-        aliases_select_Button.setText("...");
-        aliases_select_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aliases_select_ButtonActionPerformed(evt);
-            }
-        });
-
-        macro_browse_Button.setText("Browse");
-        macro_browse_Button.setEnabled(false);
-        macro_browse_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                macro_browse_ButtonActionPerformed(evt);
-            }
-        });
-
-        alias_browse_Button.setText("Browse");
-        alias_browse_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                alias_browse_ButtonActionPerformed(evt);
-            }
-        });
-
-        macro_load_Button.setText("Load");
-        macro_load_Button.setEnabled(false);
-        macro_load_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                macro_load_ButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout general_PanelLayout = new javax.swing.GroupLayout(general_Panel);
-        general_Panel.setLayout(general_PanelLayout);
-        general_PanelLayout.setHorizontalGroup(
-            general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(general_PanelLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(general_PanelLayout.createSequentialGroup()
-                        .addComponent(jLabel16)
-                        .addGap(15, 15, 15))
-                    .addGroup(general_PanelLayout.createSequentialGroup()
-                        .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel17))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(general_PanelLayout.createSequentialGroup()
-                        .addComponent(homeconf_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(home_select_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(home_browse_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(home_load_Button))
-                    .addGroup(general_PanelLayout.createSequentialGroup()
-                        .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(aliases_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(macro_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(general_PanelLayout.createSequentialGroup()
-                                .addComponent(macro_select_Button)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(macro_browse_Button)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(macro_load_Button))
-                            .addGroup(general_PanelLayout.createSequentialGroup()
-                                .addComponent(aliases_select_Button)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(alias_browse_Button)))))
-                .addContainerGap(29, Short.MAX_VALUE))
-        );
-        general_PanelLayout.setVerticalGroup(
-            general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(general_PanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel16)
-                    .addComponent(homeconf_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(home_select_Button)
-                    .addComponent(home_browse_Button)
-                    .addComponent(home_load_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(macro_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17)
-                    .addComponent(macro_select_Button)
-                    .addComponent(macro_browse_Button)
-                    .addComponent(macro_load_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(general_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(aliases_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(aliases_select_Button)
-                    .addComponent(alias_browse_Button))
-                .addContainerGap(60, Short.MAX_VALUE))
-        );
-
-        optsTabbedPane.addTab("General", general_Panel);
-
-        jLabel19.setText("Exportdir");
-
-        exportdir_TextField.setMaximumSize(new java.awt.Dimension(300, 27));
-        exportdir_TextField.setMinimumSize(new java.awt.Dimension(300, 27));
-        exportdir_TextField.setPreferredSize(new java.awt.Dimension(300, 27));
-        exportdir_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exportdir_TextFieldActionPerformed(evt);
-            }
-        });
-        exportdir_TextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                exportdir_TextFieldFocusLost(evt);
-            }
-        });
-
-        exportdir_browse_Button.setText("...");
-        exportdir_browse_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exportdir_browse_ButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout general_export_opts_PanelLayout = new javax.swing.GroupLayout(general_export_opts_Panel);
-        general_export_opts_Panel.setLayout(general_export_opts_PanelLayout);
-        general_export_opts_PanelLayout.setHorizontalGroup(
-            general_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(general_export_opts_PanelLayout.createSequentialGroup()
-                .addComponent(jLabel19)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(exportdir_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(exportdir_browse_Button)
-                .addContainerGap(192, Short.MAX_VALUE))
-        );
-        general_export_opts_PanelLayout.setVerticalGroup(
-            general_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(general_export_opts_PanelLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(general_export_opts_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel19)
-                    .addComponent(exportdir_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(exportdir_browse_Button))
-                .addContainerGap(22, Short.MAX_VALUE))
-        );
-
-        exportopts_TabbedPane.addTab("General", general_export_opts_Panel);
-
-        optsTabbedPane.addTab("Exportopts", exportopts_TabbedPane);
-
-        jLabel11.setText("Debugcode");
-
-        debug_TextField.setText("0");
-        debug_TextField.setMaximumSize(new java.awt.Dimension(50, 27));
-        debug_TextField.setMinimumSize(new java.awt.Dimension(50, 27));
-        debug_TextField.setPreferredSize(new java.awt.Dimension(50, 27));
-        debug_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                debug_TextFieldActionPerformed(evt);
-            }
-        });
-        debug_TextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                debug_TextFieldFocusLost(evt);
-            }
-        });
-
-        verbose_CheckBox.setText("Verbose");
-        verbose_CheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                verbose_CheckBoxActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout debug_PanelLayout = new javax.swing.GroupLayout(debug_Panel);
-        debug_Panel.setLayout(debug_PanelLayout);
-        debug_PanelLayout.setHorizontalGroup(
-            debug_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(debug_PanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(debug_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(debug_PanelLayout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(debug_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(verbose_CheckBox))
-                .addContainerGap(467, Short.MAX_VALUE))
-        );
-        debug_PanelLayout.setVerticalGroup(
-            debug_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(debug_PanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(debug_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(debug_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(verbose_CheckBox)
-                .addContainerGap(55, Short.MAX_VALUE))
-        );
-
-        optsTabbedPane.addTab("Debug", debug_Panel);
-
-        output_hw_TabbedPane.addTab("Options", optsTabbedPane);
-
         console_TextArea.setEditable(false);
         console_TextArea.setColumns(20);
         console_TextArea.setLineWrap(true);
@@ -1776,7 +1468,7 @@ public final class GuiMain extends javax.swing.JFrame {
         UserPrefs.get_instance().set_verbose(verbose);
         gc.setVerbose(verbose);
         verbose_CheckBoxMenuItem.setSelected(verbose);
-        verbose_CheckBox.setSelected(verbose);
+        //verbose_CheckBox.setSelected(verbose);
     }
 
     private void verbose_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verbose_CheckBoxMenuItemActionPerformed
@@ -2169,11 +1861,11 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_device_remote_ComboBoxActionPerformed
 
     private void t10_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_browse_ButtonActionPerformed
-        HarcUtils.browse(t10_address_TextField.getText());
+        HarcUtils.browse("http://" + t10_address_TextField.getText());
     }//GEN-LAST:event_t10_browse_ButtonActionPerformed
 
     private void gc_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_browse_ButtonActionPerformed
-        HarcUtils.browse(gc_address_TextField.getText());
+        HarcUtils.browse("http://" + gc_address_TextField.getText());
     }//GEN-LAST:event_gc_browse_ButtonActionPerformed
 
     private void deviceclass_stop_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deviceclass_stop_ButtonActionPerformed
@@ -2191,127 +1883,6 @@ public final class GuiMain extends javax.swing.JFrame {
     private void stop_command_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_command_ButtonActionPerformed
         the_command_thread.interrupt();
     }//GEN-LAST:event_stop_command_ButtonActionPerformed
-
-    private void home_select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_home_select_ButtonActionPerformed
-        String filename = select_file("Select home file", "xml", "XML Files", false,
-                (new File(HarcProps.get_instance().get_homefilename())).getAbsoluteFile().getParent()).getAbsolutePath();
-        homeconf_TextField.setText(filename);
-        HarcProps.get_instance().set_homefilename(filename);
-}//GEN-LAST:event_home_select_ButtonActionPerformed
-
-    private void home_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_home_browse_ButtonActionPerformed
-        HarcUtils.browse(homeconf_TextField.getText());
-    }//GEN-LAST:event_home_browse_ButtonActionPerformed
-
-    private void debug_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debug_TextFieldActionPerformed
-        debug = Integer.parseInt(debug_TextField.getText());
-        UserPrefs.get_instance().set_debug(debug);
-        //hm.set_debug(debug);
-        //engine.set_debug(debug);
-    }//GEN-LAST:event_debug_TextFieldActionPerformed
-
-    private void home_load_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_home_load_ButtonActionPerformed
-        try {
-            //hm.load(homeconf_TextField.getText());
-            hm = new Home(homeconf_TextField.getText());
-            // TODO: update GUI state
-            System.err.println("Warning: This operation should update the GUI state; this is not yet implemented");
-        } catch (IOException | SAXException ex) {
-            System.err.println(ex);
-        }
-}//GEN-LAST:event_home_load_ButtonActionPerformed
-
-    private void macro_select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_select_ButtonActionPerformed
-        /*String filename = select_file("Select macro file", "xml", "XML Files", false,
-                (new File(harcprops.get_instance().get_macrofilename())).getAbsoluteFile().getParent()).getAbsolutePath();
-        if (filename != null) {
-            macro_TextField.setText(filename);
-            harcprops.get_instance().set_macrofilename(filename);
-        }*/
-}//GEN-LAST:event_macro_select_ButtonActionPerformed
-
-    private void aliases_select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aliases_select_ButtonActionPerformed
-        String filename = select_file("Select alias file", "xml", "XML Files", false,
-                (new File(HarcProps.get_instance().get_aliasfilename())).getAbsoluteFile().getParent()).getAbsolutePath();
-        if (filename != null) {
-            aliases_TextField.setText(filename);
-            HarcProps.get_instance().set_aliasfilename(filename);
-        }
-}//GEN-LAST:event_aliases_select_ButtonActionPerformed
-
-    private void macro_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_browse_ButtonActionPerformed
-        HarcUtils.browse(macro_TextField.getText());
-}//GEN-LAST:event_macro_browse_ButtonActionPerformed
-
-    private void alias_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alias_browse_ButtonActionPerformed
-        HarcUtils.browse(aliases_TextField.getText());
-}//GEN-LAST:event_alias_browse_ButtonActionPerformed
-
-    private void macro_load_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_load_ButtonActionPerformed
- /*       try {
-            engine.load(this.macro_TextField.getText());
-            // TODO:...
-            System.err.println("Warning: this does not updaste the state of the GUI (not yet implemented).");
-        } catch (SAXParseException ex) {
-            System.err.println(ex);
-        } catch (SAXException ex) {
-            System.err.println(ex);
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-        // TODO: ...
-  * */
-}//GEN-LAST:event_macro_load_ButtonActionPerformed
-
-    private void homeconf_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeconf_TextFieldActionPerformed
-        HarcProps.get_instance().set_homefilename(homeconf_TextField.getText());
-    }//GEN-LAST:event_homeconf_TextFieldActionPerformed
-
-    private void homeconf_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_homeconf_TextFieldFocusLost
-        HarcProps.get_instance().set_homefilename(homeconf_TextField.getText());
-    }//GEN-LAST:event_homeconf_TextFieldFocusLost
-
-    private void macro_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_macro_TextFieldActionPerformed
-        //harcprops.get_instance().set_macrofilename(macro_TextField.getText());
-    }//GEN-LAST:event_macro_TextFieldActionPerformed
-
-    private void macro_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_macro_TextFieldFocusLost
-        //harcprops.get_instance().set_macrofilename(macro_TextField.getText());
-    }//GEN-LAST:event_macro_TextFieldFocusLost
-
-    private void aliases_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aliases_TextFieldActionPerformed
-        HarcProps.get_instance().set_aliasfilename(this.aliases_TextField.getText());
-    }//GEN-LAST:event_aliases_TextFieldActionPerformed
-
-    private void aliases_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_aliases_TextFieldFocusLost
-        HarcProps.get_instance().set_aliasfilename(this.aliases_TextField.getText());
-    }//GEN-LAST:event_aliases_TextFieldFocusLost
-
-    private void debug_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_debug_TextFieldFocusLost
-        debug_TextFieldActionPerformed(null);
-    }//GEN-LAST:event_debug_TextFieldFocusLost
-
-    private void verbose_CheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verbose_CheckBoxActionPerformed
-        verbose = this.verbose_CheckBox.isSelected();
-        update_verbosity();
-    }//GEN-LAST:event_verbose_CheckBoxActionPerformed
-
-    private void exportdir_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportdir_TextFieldActionPerformed
-        HarcProps.get_instance().set_exportdir(exportdir_TextField.getText());
-    }//GEN-LAST:event_exportdir_TextFieldActionPerformed
-
-    private void exportdir_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_exportdir_TextFieldFocusLost
-        HarcProps.get_instance().set_exportdir(exportdir_TextField.getText());
-    }//GEN-LAST:event_exportdir_TextFieldFocusLost
-
-    private void exportdir_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportdir_browse_ButtonActionPerformed
-        try {
-            String dir = select_file("Select export directory", null, null, false, ((new File(HarcProps.get_instance().get_exportdir())).getAbsoluteFile().getParent())).getAbsolutePath();
-            HarcProps.get_instance().set_exportdir(dir);
-            exportdir_TextField.setText(dir);
-        } catch (NullPointerException e) {
-        }
-}//GEN-LAST:event_exportdir_browse_ButtonActionPerformed
 
     private void gc_stop_ir_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_stop_ir_ActionPerformed
         try {
@@ -2348,9 +1919,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JButton alias_browse_Button;
-    private javax.swing.JTextField aliases_TextField;
-    private javax.swing.JButton aliases_select_Button;
     private javax.swing.JComboBox audio_video_ComboBox;
     private javax.swing.JMenuItem browse_device_MenuItem;
     private javax.swing.JMenuItem clear_console_MenuItem;
@@ -2361,8 +1929,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JTextArea console_TextArea;
     private javax.swing.JMenuItem consoletext_save_MenuItem;
     private javax.swing.JMenuItem copy_console_to_clipboard_MenuItem;
-    private javax.swing.JPanel debug_Panel;
-    private javax.swing.JTextField debug_TextField;
     private javax.swing.JComboBox device_ComboBox;
     private javax.swing.JComboBox device_command_ComboBox;
     private javax.swing.JComboBox device_remote_ComboBox;
@@ -2377,9 +1943,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenuItem export_all_MenuItem;
     private javax.swing.JMenuItem export_device_MenuItem;
-    private javax.swing.JTextField exportdir_TextField;
-    private javax.swing.JButton exportdir_browse_Button;
-    private javax.swing.JTabbedPane exportopts_TabbedPane;
     private javax.swing.JPanel ezcontrolPanel;
     private javax.swing.JComboBox ezcontrol_deviceno_ComboBox;
     private javax.swing.JComboBox ezcontrol_house_ComboBox;
@@ -2396,24 +1959,13 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JButton gc_browse_Button;
     private javax.swing.JComboBox gc_connector_ComboBox;
     private javax.swing.JComboBox gc_module_ComboBox;
-    private javax.swing.JPanel general_Panel;
-    private javax.swing.JPanel general_export_opts_Panel;
     private javax.swing.JPanel globalcache_Panel;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JButton home_browse_Button;
-    private javax.swing.JButton home_load_Button;
-    private javax.swing.JButton home_select_Button;
-    private javax.swing.JTextField homeconf_TextField;
     private javax.swing.JCheckBoxMenuItem immediate_execution_commands_CheckBoxMenuItem;
     private javax.swing.JCheckBoxMenuItem immediate_execution_macros_CheckBoxMenuItem;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
@@ -2426,16 +1978,11 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JButton macroButton;
     private javax.swing.JComboBox macroComboBox;
-    private javax.swing.JTextField macro_TextField;
-    private javax.swing.JButton macro_browse_Button;
-    private javax.swing.JButton macro_load_Button;
-    private javax.swing.JButton macro_select_Button;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu miscMenu;
     private javax.swing.JComboBox n_ezcontrol_ComboBox;
     private javax.swing.JComboBox no_sends_ComboBox;
-    private javax.swing.JTabbedPane optsTabbedPane;
     private javax.swing.JTabbedPane outputHWTabbedPane;
     private javax.swing.JComboBox output_deviceComboBox;
     private javax.swing.JTabbedPane output_hw_TabbedPane;
@@ -2456,7 +2003,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JButton t10_get_timers_Button;
     private javax.swing.JButton t10_update_Button;
     private javax.swing.JComboBox toplevel_macrofolders_ComboBox;
-    private javax.swing.JCheckBox verbose_CheckBox;
     private javax.swing.JCheckBoxMenuItem verbose_CheckBoxMenuItem;
     private javax.swing.JButton xmlAllDevicesExportButton;
     private javax.swing.JButton xmlDeviceExportButton;
