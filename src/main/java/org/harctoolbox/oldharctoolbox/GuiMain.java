@@ -84,26 +84,7 @@ public final class GuiMain extends javax.swing.JFrame {
     private command_thread the_command_thread = null;
     private globalcache_thread the_globalcache_device_thread = null;
 
-    private HashMap<String, String> filechooserdirs = new HashMap<>(8);
     private static final Logger logger = Logger.getLogger(GuiMain.class.getName());
-
-    private File select_file(String title, String extension, String file_type_desc, boolean save, String defaultdir) {
-        String startdir = this.filechooserdirs.containsKey(title) ? this.filechooserdirs.get(title) : defaultdir;
-        JFileChooser chooser = new JFileChooser(startdir);
-        chooser.setDialogTitle(title);
-        if (extension == null) {
-            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        } else
-            chooser.setFileFilter(new FileNameExtensionFilter(file_type_desc, extension));
-
-        int result = save ? chooser.showSaveDialog(this) : chooser.showOpenDialog(this);
-
-        if (result == JFileChooser.APPROVE_OPTION) {
-            filechooserdirs.put(title, chooser.getSelectedFile().getAbsoluteFile().getParent());
-            return chooser.getSelectedFile();
-        } else
-            return null;
-    }
 
     private static class copy_clipboard_text implements ClipboardOwner {
 
@@ -128,20 +109,22 @@ public final class GuiMain extends javax.swing.JFrame {
     /**
      * Creates new form gui_main
      * @param homefilename
+     * @throws java.io.IOException
+     * @throws org.xml.sax.SAXException
      */
-    public GuiMain(String homefilename) {
-        try {
-            hm = new Home(homefilename);
-        } catch (IOException e) {
-            System.err.println("Cannot open home file");
-            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
-        } catch (SAXParseException e) {
-            System.err.println("home file parse error" + e.getMessage());
-            System.exit(IrpUtils.EXIT_XML_ERROR);
-        } catch (SAXException e) {
-            System.err.println("home file parse error" + e.getMessage());
-            System.exit(IrpUtils.EXIT_XML_ERROR);
-        }
+    public GuiMain(String homefilename) throws IOException, SAXException {
+//        try {
+        hm = new Home(homefilename);
+//        } catch (IOException e) {
+//            System.err.println("Cannot open home file");
+//            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
+//        } catch (SAXParseException e) {
+//            System.err.println("home file parse error" + e.getMessage());
+//            System.exit(IrpUtils.EXIT_XML_ERROR);
+//        } catch (SAXException e) {
+//            System.err.println("home file parse error" + e.getMessage());
+//            System.exit(IrpUtils.EXIT_XML_ERROR);
+//        }
 
         properties = Main.getProperties();
         cmd_formatter = new ResultFormatter(properties.getCommandformat());
@@ -175,8 +158,6 @@ public final class GuiMain extends javax.swing.JFrame {
 
         initComponents();
 
-        System.setErr(console_PrintStream);
-
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -189,6 +170,25 @@ public final class GuiMain extends javax.swing.JFrame {
                 System.out.println("*************** This is GUI shutdown **********");
             }
         });
+
+        console.setErrorFunction(
+                new org.harctoolbox.oldharctoolbox.Console.IErrorFunction() {
+            @Override
+            public void err(Exception ex, String message) {
+                if (ex == null)
+                    logger.severe(message);
+                else
+                    logger.log(Level.SEVERE, "{0}{1}", new Object[]{message, ex.getMessage()});
+            }
+
+            @Override
+            public void err(String str) {
+                logger.severe(str);
+            }
+        });
+
+        console.setStdErr();
+        console.setStdOut();
 
         update_macro_menu();
         update_device_menu();
@@ -209,32 +209,9 @@ public final class GuiMain extends javax.swing.JFrame {
         browse_device_MenuItem.setEnabled(hm.has_command((String)devices_dcbm.getSelectedItem(), CommandType_t.www, command_t.browse));
     }
 
-    public GuiMain() {
+    public GuiMain() throws IOException, SAXException {
         this(Main.getProperties().getHomeConf());
     }
-
-    // From Real Gagnon
-    private class FilteredStream extends FilterOutputStream {
-
-        FilteredStream(OutputStream aStream) {
-            super(aStream);
-        }
-
-        @Override
-        public void write(byte b[]) throws IOException {
-            String aString = new String(b);
-            console_TextArea.append(aString);
-        }
-
-        @Override
-        public void write(byte b[], int off, int len) throws IOException {
-            String aString = new String(b, off, len);
-            console_TextArea.append(aString);
-            console_TextArea.setCaretPosition(console_TextArea.getDocument().getLength());
-        }
-    }
-
-    private PrintStream console_PrintStream = new PrintStream(new FilteredStream(new ByteArrayOutputStream()));
 
     private void warning(String message) {
         System.err.println("Warning: " + message);
@@ -309,8 +286,7 @@ public final class GuiMain extends javax.swing.JFrame {
         ezcontrol_off_Button = new javax.swing.JButton();
         n_ezcontrol_ComboBox = new javax.swing.JComboBox();
         t10_browse_Button = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        console_TextArea = new javax.swing.JTextArea();
+        console = new org.harctoolbox.oldharctoolbox.Console();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         saveMenuItem = new javax.swing.JMenuItem();
@@ -339,7 +315,7 @@ public final class GuiMain extends javax.swing.JFrame {
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("HARCToolbox: Home Automation and Remote Control Toolbox"); // NOI18N
+        setTitle("OldHarcToolbox"); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -593,7 +569,7 @@ public final class GuiMain extends javax.swing.JFrame {
                     .addComponent(macroComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(stop_macro_Button)
                     .addComponent(macroButton))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         output_hw_TabbedPane.addTab("Home", mainPanel);
@@ -703,13 +679,13 @@ public final class GuiMain extends javax.swing.JFrame {
                                 .addComponent(deviceclass_send_Button))
                             .addComponent(xmlAllDevicesExportButton)
                             .addComponent(jLabel28))))
-                .addContainerGap(62, Short.MAX_VALUE))
-            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
+                .addContainerGap(79, Short.MAX_VALUE))
+            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
         );
         deviceclassesPanelLayout.setVerticalGroup(
             deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(deviceclassesPanelLayout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deviceclass_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(device_remote_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -787,7 +763,7 @@ public final class GuiMain extends javax.swing.JFrame {
                 .addComponent(gc_browse_Button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addContainerGap(214, Short.MAX_VALUE))
+                .addContainerGap(231, Short.MAX_VALUE))
         );
         globalcache_PanelLayout.setVerticalGroup(
             globalcache_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -799,7 +775,7 @@ public final class GuiMain extends javax.swing.JFrame {
                     .addComponent(gc_connector_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(gc_browse_Button)
                     .addComponent(jButton1))
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
 
         outputHWTabbedPane.addTab("GlobalCache", globalcache_Panel);
@@ -989,14 +965,6 @@ public final class GuiMain extends javax.swing.JFrame {
 
         output_hw_TabbedPane.addTab("Output HW", outputHWTabbedPane);
 
-        console_TextArea.setEditable(false);
-        console_TextArea.setColumns(20);
-        console_TextArea.setLineWrap(true);
-        console_TextArea.setRows(5);
-        console_TextArea.setToolTipText("This is the console, where errors and messages go, instead of annoying you with popups.");
-        console_TextArea.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(console_TextArea);
-
         fileMenu.setMnemonic('F');
         fileMenu.setText("File");
 
@@ -1182,18 +1150,20 @@ public final class GuiMain extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(output_hw_TabbedPane, 0, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(console, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(output_hw_TabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(output_hw_TabbedPane)
+                .addGap(5, 5, 5)
+                .addComponent(output_hw_TabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(console, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                .addGap(5, 5, 5))
         );
 
         pack();
@@ -1306,13 +1276,13 @@ public final class GuiMain extends javax.swing.JFrame {
         }
     }
 
-    private void do_exit() {
+    private void doExit() {
         System.out.println("Exiting...");
         System.exit(0);
     }
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        do_exit();
+        doExit();
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
@@ -1335,7 +1305,7 @@ public final class GuiMain extends javax.swing.JFrame {
 
     private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
         try {
-            String props = select_file("Select properties save", "xml", "XML Files", true, null).getAbsolutePath();
+            String props = SelectFile.selectFile(this, "Select properties save", null, true, false, "XML Files", "xml").getAbsolutePath();
             properties.save(new File(props));
             System.err.println("Property file written to " + props + ".");
         } catch (IOException e) {
@@ -1603,11 +1573,13 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_sort_commands_CheckBoxMenuItemActionPerformed
 
     private void copy_console_to_clipboard_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copy_console_to_clipboard_MenuItemActionPerformed
-        (new copy_clipboard_text()).to_clipboard(console_TextArea.getText());
+        console.copyToClipboard();
+        //(new copy_clipboard_text()).to_clipboard(console_TextArea.getText());
     }//GEN-LAST:event_copy_console_to_clipboard_MenuItemActionPerformed
 
     private void clear_console_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clear_console_MenuItemActionPerformed
-        console_TextArea.setText(null);
+        console.clear();
+        //console_TextArea.setText(null);
     }//GEN-LAST:event_clear_console_MenuItemActionPerformed
 
     private void select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_select_ButtonActionPerformed
@@ -1718,9 +1690,9 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_audio_video_ComboBoxActionPerformed
 
     private void consoletext_save_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consoletext_save_MenuItemActionPerformed
-        String filename = select_file("Save console text as...", "txt", "Text file", true, null).getAbsolutePath();
+        String filename = SelectFile.selectFile(this, "Save console text as...", null, true, true, "Text file", "txt").getAbsolutePath();
         try (PrintStream ps = new PrintStream(new FileOutputStream(filename), false, IrCoreUtils.DEFAULT_CHARSET_NAME)) {
-            ps.println(console_TextArea.getText());
+            ps.println(console.getText());
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             System.err.println(ex);
         }
@@ -1891,7 +1863,11 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new GuiMain().setVisible(true);
+            try {
+                new GuiMain().setVisible(true);
+            } catch (IOException | SAXException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
         });
     }
 
@@ -1905,7 +1881,7 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JComboBox command_ComboBox;
     private javax.swing.JTextField command_argument_TextField;
     private javax.swing.JComboBox connection_type_ComboBox;
-    private javax.swing.JTextArea console_TextArea;
+    private org.harctoolbox.oldharctoolbox.Console console;
     private javax.swing.JMenuItem consoletext_save_MenuItem;
     private javax.swing.JMenuItem copy_console_to_clipboard_MenuItem;
     private javax.swing.JComboBox device_ComboBox;
@@ -1949,7 +1925,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;

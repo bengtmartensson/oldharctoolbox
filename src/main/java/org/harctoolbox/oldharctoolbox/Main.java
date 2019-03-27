@@ -57,6 +57,7 @@ final public class Main {
     private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<macro>\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
     private static Main instance;
     private static Props properties;
+    private final static Logger logger = Logger.getLogger(Main.class.getName());
 
     private static void usage(int exitstatus) {
         doExit(exitstatus, "Usage: one of" + IrCoreUtils.LINE_SEPARATOR + helptext);
@@ -362,7 +363,11 @@ final public class Main {
         //final String macronam = macrofilename;
         //final String brwsr = browser;
         java.awt.EventQueue.invokeLater(() -> {
-            new GuiMain(hmnam/*, macronam, vrbs, dbg, brwsr*/).setVisible(true);
+            try {
+                new GuiMain(hmnam/*, macronam, vrbs, dbg, brwsr*/).setVisible(true);
+            } catch (IOException | SAXException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
         });
     }
 
