@@ -556,20 +556,21 @@ public final class Home {
                             if (DebugArgs.dbg_transmit()) {
                                 System.err.println("Trying Globalcache (" + gw.get_hostname() + ")...");
                             }
-                            IrSignal code = dev.get_code(cmd, CommandType_t.ir, toggle, DebugArgs.dbg_ir_protocols(), house, (short) (deviceno - 1));
-                            if (code == null) {
+                            IrSignal irSignal = dev.get_code(cmd, CommandType_t.ir, toggle, DebugArgs.dbg_ir_protocols(), house, (short) (deviceno - 1));
+                            if (irSignal == null) {
                                 if (Main.getProperties().getVerbose())
                                     System.err.println("Command " + cmd + " exists, but has no ir code.");
 
                                 failure = true;
                             } else {
-                                String raw_ccf = Pronto.toString(code);
-                                GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose());
                                 //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
-                                GlobalCache.GlobalCacheIrTransmitter transmitter = gc.newTransmitter(fgw.get_connectorno());
-                                success = gc.sendCcf(raw_ccf, count, transmitter);
-                                if (DebugArgs.dbg_transmit()) {
-                                    System.err.println("Globalcache " + (success ? "succeeded" : "failed"));
+                                try (GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose())) {
+                                    //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
+                                    GlobalCache.GlobalCacheIrTransmitter transmitter = gc.newTransmitter(fgw.get_connectorno());
+                                    success = gc.sendIr(irSignal, count, transmitter);
+                                    if (DebugArgs.dbg_transmit()) {
+                                        System.err.println("Globalcache " + (success ? "succeeded" : "failed"));
+                                    }
                                 }
                             }
 //                        } else if (gw.get_class().equals("irtrans")) {
@@ -624,7 +625,7 @@ public final class Home {
                         System.err.println("No route to " + gw.get_hostname());
                     } catch (IOException e) {
                         System.err.println("IOException with host " + gw.get_hostname() + ": " + e.getMessage());
-                    } catch (Pronto.NonProntoFormatException | InvalidArgumentException | NoSuchTransmitterException ex) {
+                    } catch (NoSuchTransmitterException ex) {
                         Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;

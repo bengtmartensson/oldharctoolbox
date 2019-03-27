@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,9 +84,8 @@ public final class GuiMain extends javax.swing.JFrame {
     private command_thread the_command_thread = null;
     private globalcache_thread the_globalcache_device_thread = null;
 
-    private GlobalCache gc = null;
-
     private HashMap<String, String> filechooserdirs = new HashMap<>(8);
+    private static final Logger logger = Logger.getLogger(GuiMain.class.getName());
 
     private File select_file(String title, String extension, String file_type_desc, boolean save, String defaultdir) {
         String startdir = this.filechooserdirs.containsKey(title) ? this.filechooserdirs.get(title) : defaultdir;
@@ -209,12 +207,6 @@ public final class GuiMain extends javax.swing.JFrame {
         sort_commands_CheckBoxMenuItem.setSelected(properties.getSortCommands());
         verbose_CheckBoxMenuItem.setSelected(properties.getVerbose());
         browse_device_MenuItem.setEnabled(hm.has_command((String)devices_dcbm.getSelectedItem(), CommandType_t.www, command_t.browse));
-
-        try {
-            gc = new GlobalCache("globalcache", properties.getVerbose());
-        } catch (IOException ex) {
-            Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     public GuiMain() {
@@ -1298,14 +1290,11 @@ public final class GuiMain extends javax.swing.JFrame {
             start_button.setEnabled(false);
             stop_button.setEnabled(true);
             boolean success = false;
-            try {
-                success = gc.sendIr(code, module, connector, count);
-            } catch (UnknownHostException ex) {
-                System.err.println("Globalcache hostname is not found.");
-            } catch (IOException e) {
-                System.err.println(e);
-            } catch (NoSuchTransmitterException ex) {
-                Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, ex.getMessage());
+
+            try (GlobalCache gc = new GlobalCache(gc_address_TextField.getText(), verbose_CheckBoxMenuItem.getState())) {
+                success = gc.sendIr(code, count, module, connector);
+            } catch (IOException | NoSuchTransmitterException e) {
+                logger.severe(e.getMessage());
             }
 
             if (!success)
@@ -1469,7 +1458,6 @@ public final class GuiMain extends javax.swing.JFrame {
     private void verbose_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verbose_CheckBoxMenuItemActionPerformed
         boolean verbose = verbose_CheckBoxMenuItem.isSelected();
         properties.setVerbose(verbose);
-        gc.setVerbose(verbose);
     }//GEN-LAST:event_verbose_CheckBoxMenuItemActionPerformed
 
     private void toplevel_macrofolders_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toplevel_macrofolders_ComboBoxActionPerformed
@@ -1824,8 +1812,7 @@ public final class GuiMain extends javax.swing.JFrame {
 }//GEN-LAST:event_t10_update_ButtonActionPerformed
 
     private void gc_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_address_TextFieldActionPerformed
-        try {
-            gc = new GlobalCache(gc_address_TextField.getText(), verbose_CheckBoxMenuItem.getState());
+        try (GlobalCache gc = new GlobalCache(gc_address_TextField.getText(), verbose_CheckBoxMenuItem.getState())) {
             gc_module_ComboBox.setEnabled(false);
             gc_connector_ComboBox.setEnabled(false);
             String[] dvs = gc.getDevices();
@@ -1839,14 +1826,10 @@ public final class GuiMain extends javax.swing.JFrame {
             gc_module_ComboBox.setModel(gc_modules_dcbm);
             gc_module_ComboBox.setEnabled(modules != null);
             gc_connector_ComboBox.setEnabled(modules != null);
-        } catch (UnknownHostException e) {
-            gc = null;
-            System.err.println(e.getMessage());
         } catch (IOException e) {
-            gc = null;
-            System.err.println(e.getMessage());
+            logger.severe(e.getMessage());
         }
-        deviceclass_send_Button.setEnabled(gc != null);
+        //deviceclass_send_Button.setEnabled(gc != null);
         //protocol_send_Button.setEnabled(gc != null);
 }//GEN-LAST:event_gc_address_TextFieldActionPerformed
 
@@ -1863,15 +1846,8 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_gc_browse_ButtonActionPerformed
 
     private void deviceclass_stop_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deviceclass_stop_ButtonActionPerformed
-        try {
-            if (the_globalcache_device_thread != null)
-                the_globalcache_device_thread.interrupt();
-
-            if (this.output_deviceComboBox.getSelectedIndex() == 0)
-                gc.stopIr(this.get_gc_module(), this.get_gc_connector());
-        } catch (IOException | NoSuchTransmitterException ex) {
-            Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, ex.getMessage());
-        }
+        if (the_globalcache_device_thread != null)
+            the_globalcache_device_thread.interrupt();
     }//GEN-LAST:event_deviceclass_stop_ButtonActionPerformed
 
     private void stop_command_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_command_ButtonActionPerformed
@@ -1879,11 +1855,11 @@ public final class GuiMain extends javax.swing.JFrame {
     }//GEN-LAST:event_stop_command_ButtonActionPerformed
 
     private void gc_stop_ir_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_stop_ir_ActionPerformed
-        try {
-            gc.stopIr(get_gc_module(), get_gc_connector());
-        } catch (IOException | NoSuchTransmitterException ex) {
-            Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, ex.getMessage());
-        }
+//        try {
+//            gc.stopIr(get_gc_module(), get_gc_connector());
+//        } catch (IOException | NoSuchTransmitterException ex) {
+//            Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, ex.getMessage());
+//        }
     }//GEN-LAST:event_gc_stop_ir_ActionPerformed
 
 private void xmlDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlDeviceExportButtonActionPerformed
