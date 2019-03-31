@@ -24,31 +24,21 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilterOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import org.harctoolbox.harchardware.HarcHardwareException;
 import org.harctoolbox.harchardware.ir.GlobalCache;
 import org.harctoolbox.harchardware.ir.NoSuchTransmitterException;
-import org.harctoolbox.harchardware.misc.EzControlT10;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
-import org.harctoolbox.irp.IrpUtils;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  * This class implements a GUI for most functionality in Harc.
@@ -75,7 +65,7 @@ public final class GuiMain extends javax.swing.JFrame {
     private DefaultComboBoxModel connection_types_dcbm;
     private DefaultComboBoxModel<String> device_remotes_dcbm;
     private DefaultComboBoxModel<String> gc_modules_dcbm;
-    private ResultFormatter formatter = new ResultFormatter();
+    private final ResultFormatter formatter = new ResultFormatter();
     private ResultFormatter cmd_formatter;
     private static final String dummy_no_selection = "--------";
     private Props properties;
@@ -268,24 +258,6 @@ public final class GuiMain extends javax.swing.JFrame {
         gc_connector_ComboBox = new javax.swing.JComboBox();
         gc_browse_Button = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        ezcontrolPanel = new javax.swing.JPanel();
-        t10_address_TextField = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        ezcontrol_preset_no_ComboBox = new javax.swing.JComboBox();
-        ezcontrol_preset_name_TextField = new javax.swing.JTextField();
-        ezcontrol_preset_state_TextField = new javax.swing.JTextField();
-        ezcontrol_preset_on_Button = new javax.swing.JButton();
-        ezcontrol_preset_off_Button = new javax.swing.JButton();
-        t10_update_Button = new javax.swing.JButton();
-        t10_get_timers_Button = new javax.swing.JButton();
-        t10_get_status_Button = new javax.swing.JButton();
-        ezcontrol_system_ComboBox = new javax.swing.JComboBox();
-        ezcontrol_house_ComboBox = new javax.swing.JComboBox();
-        ezcontrol_deviceno_ComboBox = new javax.swing.JComboBox();
-        ezcontrol_onButton = new javax.swing.JButton();
-        ezcontrol_off_Button = new javax.swing.JButton();
-        n_ezcontrol_ComboBox = new javax.swing.JComboBox();
-        t10_browse_Button = new javax.swing.JButton();
         console = new org.harctoolbox.oldharctoolbox.Console();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -779,189 +751,6 @@ public final class GuiMain extends javax.swing.JFrame {
         );
 
         outputHWTabbedPane.addTab("GlobalCache", globalcache_Panel);
-
-        t10_address_TextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        t10_address_TextField.setText("192.168.1.42");
-        t10_address_TextField.setToolTipText("IP-Address of GlobalCache to use");
-        t10_address_TextField.setMinimumSize(new java.awt.Dimension(120, 27));
-        t10_address_TextField.setPreferredSize(new java.awt.Dimension(120, 27));
-        t10_address_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                t10_address_TextFieldActionPerformed(evt);
-            }
-        });
-
-        jLabel13.setText("IP-Address");
-
-        ezcontrol_preset_no_ComboBox.setMaximumRowCount(16);
-        ezcontrol_preset_no_ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32" }));
-        ezcontrol_preset_no_ComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ezcontrol_preset_no_ComboBoxActionPerformed(evt);
-            }
-        });
-
-        ezcontrol_preset_name_TextField.setEditable(false);
-        ezcontrol_preset_name_TextField.setText("?????????");
-        ezcontrol_preset_name_TextField.setToolTipText("Name of selected preset");
-        ezcontrol_preset_name_TextField.setMaximumSize(new java.awt.Dimension(150, 27));
-        ezcontrol_preset_name_TextField.setMinimumSize(new java.awt.Dimension(150, 27));
-        ezcontrol_preset_name_TextField.setPreferredSize(new java.awt.Dimension(150, 27));
-
-        ezcontrol_preset_state_TextField.setEditable(false);
-        ezcontrol_preset_state_TextField.setText("??");
-        ezcontrol_preset_state_TextField.setMaximumSize(new java.awt.Dimension(50, 2147483647));
-        ezcontrol_preset_state_TextField.setMinimumSize(new java.awt.Dimension(50, 27));
-        ezcontrol_preset_state_TextField.setPreferredSize(new java.awt.Dimension(50, 27));
-
-        ezcontrol_preset_on_Button.setText("On");
-        ezcontrol_preset_on_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ezcontrol_preset_on_ButtonActionPerformed(evt);
-            }
-        });
-
-        ezcontrol_preset_off_Button.setText("Off");
-        ezcontrol_preset_off_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ezcontrol_preset_off_ButtonActionPerformed(evt);
-            }
-        });
-
-        t10_update_Button.setText("Update");
-        t10_update_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                t10_update_ButtonActionPerformed(evt);
-            }
-        });
-
-        t10_get_timers_Button.setText("Get Timers");
-        t10_get_timers_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                t10_get_timers_ButtonActionPerformed(evt);
-            }
-        });
-
-        t10_get_status_Button.setText("Get Status");
-        t10_get_status_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                t10_get_status_ButtonActionPerformed(evt);
-            }
-        });
-
-        ezcontrol_system_ComboBox.setMaximumRowCount(16);
-        ezcontrol_system_ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FS10", "FS20", "RS200", "AB400", "AB601", "Intertechno", "REV", "BS-QU", "X10", "OA-FM", "Kopp First Control (1st gen)", "RS862" }));
-        ezcontrol_system_ComboBox.setSelectedIndex(5);
-
-        ezcontrol_house_ComboBox.setMaximumRowCount(16);
-        ezcontrol_house_ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P" }));
-        ezcontrol_house_ComboBox.setToolTipText("House");
-
-        ezcontrol_deviceno_ComboBox.setMaximumRowCount(16);
-        ezcontrol_deviceno_ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }));
-        ezcontrol_deviceno_ComboBox.setToolTipText("device address");
-
-        ezcontrol_onButton.setText("On");
-        ezcontrol_onButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ezcontrol_onButtonActionPerformed(evt);
-            }
-        });
-
-        ezcontrol_off_Button.setText("Off");
-        ezcontrol_off_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ezcontrol_off_ButtonActionPerformed(evt);
-            }
-        });
-
-        n_ezcontrol_ComboBox.setMaximumRowCount(10);
-        n_ezcontrol_ComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
-        n_ezcontrol_ComboBox.setToolTipText("Number of times to send the command.");
-
-        t10_browse_Button.setText("Browse");
-        t10_browse_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                t10_browse_ButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout ezcontrolPanelLayout = new javax.swing.GroupLayout(ezcontrolPanel);
-        ezcontrolPanel.setLayout(ezcontrolPanelLayout);
-        ezcontrolPanelLayout.setHorizontalGroup(
-            ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ezcontrolPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ezcontrolPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(t10_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(t10_browse_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(t10_get_status_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(t10_get_timers_Button)
-                        .addGap(697, 697, 697))
-                    .addGroup(ezcontrolPanelLayout.createSequentialGroup()
-                        .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(ezcontrolPanelLayout.createSequentialGroup()
-                                .addComponent(ezcontrol_system_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ezcontrol_house_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ezcontrol_deviceno_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(n_ezcontrol_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ezcontrol_onButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ezcontrol_off_Button))
-                            .addGroup(ezcontrolPanelLayout.createSequentialGroup()
-                                .addComponent(ezcontrol_preset_no_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ezcontrol_preset_name_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ezcontrol_preset_state_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ezcontrol_preset_on_Button)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ezcontrol_preset_off_Button)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(t10_update_Button)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-        ezcontrolPanelLayout.setVerticalGroup(
-            ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ezcontrolPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ezcontrol_system_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ezcontrol_house_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ezcontrol_deviceno_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(n_ezcontrol_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ezcontrol_onButton)
-                    .addComponent(ezcontrol_off_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ezcontrol_preset_no_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ezcontrol_preset_name_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ezcontrol_preset_state_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ezcontrol_preset_on_Button)
-                    .addComponent(ezcontrol_preset_off_Button)
-                    .addComponent(t10_update_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(ezcontrolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(t10_get_timers_Button)
-                    .addComponent(t10_get_status_Button)
-                    .addComponent(jLabel13)
-                    .addComponent(t10_address_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(t10_browse_Button))
-                .addContainerGap())
-        );
-
-        outputHWTabbedPane.addTab("EZControl", ezcontrolPanel);
 
         output_hw_TabbedPane.addTab("Output HW", outputHWTabbedPane);
 
@@ -1715,74 +1504,6 @@ public final class GuiMain extends javax.swing.JFrame {
         Device.export_device(properties.getExportDir(), (String) deviceclasses_dcbm.getSelectedItem());
     }//GEN-LAST:event_export_device_MenuItemActionPerformed
 
-    private void t10_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_address_TextFieldActionPerformed
-
-}//GEN-LAST:event_t10_address_TextFieldActionPerformed
-
-    private void t10_get_timers_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_get_timers_ButtonActionPerformed
-        System.err.println(EzControlT10.getTimers(t10_address_TextField.getText()));
-}//GEN-LAST:event_t10_get_timers_ButtonActionPerformed
-
-    private void t10_get_status_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_get_status_ButtonActionPerformed
-        System.err.println(EzControlT10.getStatus(t10_address_TextField.getText()));
-}//GEN-LAST:event_t10_get_status_ButtonActionPerformed
-
-    private void t10_send_manual_command(command_t cmd) {
-        try {
-            EzControlT10.Command t10cmd = EzControlT10.Command.valueOf(cmd.toString());
-            EzControlT10.EZSystem system = EzControlT10.EZSystem.valueOf((String) ezcontrol_system_ComboBox.getModel().getSelectedItem());
-            (new EzControlT10(t10_address_TextField.getText())).sendManual(
-                    system,
-                    (String) ezcontrol_house_ComboBox.getModel().getSelectedItem(),
-                    Integer.parseInt((String) ezcontrol_deviceno_ComboBox.getModel().getSelectedItem()),
-                    t10cmd, -1,
-                    Integer.parseInt((String) this.n_ezcontrol_ComboBox.getModel().getSelectedItem()));
-        } catch (IllegalArgumentException ex) {
-            System.err.println("This cannot happen.");
-        } catch (HarcHardwareException ex) {
-            Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, ex.getMessage());
-        }
-    }
-
-    private void t10_send_preset_command(command_t cmd) {
-        try {
-            EzControlT10.Command t10cmd = EzControlT10.Command.valueOf(cmd.toString());
-            (new EzControlT10(t10_address_TextField.getText())).sendPreset(Integer.parseInt((String) ezcontrol_preset_no_ComboBox.getModel().getSelectedItem()),
-                    t10cmd);
-        } catch (IllegalArgumentException | HarcHardwareException ex) {
-            Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, ex.getMessage());
-        }
-    }
-
-    private void ezcontrol_onButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_onButtonActionPerformed
-        t10_send_manual_command(command_t.power_on);
-    }//GEN-LAST:event_ezcontrol_onButtonActionPerformed
-
-    private void ezcontrol_off_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_off_ButtonActionPerformed
-        t10_send_manual_command(command_t.power_off);
-    }//GEN-LAST:event_ezcontrol_off_ButtonActionPerformed
-
-    private void ezcontrol_preset_on_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_preset_on_ButtonActionPerformed
-        t10_send_preset_command(command_t.power_on);
-        this.ezcontrol_preset_state_TextField.setText("on");
-    }//GEN-LAST:event_ezcontrol_preset_on_ButtonActionPerformed
-
-    private void ezcontrol_preset_off_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_preset_off_ButtonActionPerformed
-        t10_send_preset_command(command_t.power_off);
-        this.ezcontrol_preset_state_TextField.setText("off");
-}//GEN-LAST:event_ezcontrol_preset_off_ButtonActionPerformed
-
-    private void ezcontrol_preset_no_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ezcontrol_preset_no_ComboBoxActionPerformed
-        EzControlT10 ez = new EzControlT10(this.t10_address_TextField.getText());
-        int preset_number = Integer.parseInt((String)ezcontrol_preset_no_ComboBox.getModel().getSelectedItem());
-        ezcontrol_preset_name_TextField.setText(ez.getPresetName(preset_number));
-        this.ezcontrol_preset_state_TextField.setText(ez.getPresetStatus(preset_number));
-    }//GEN-LAST:event_ezcontrol_preset_no_ComboBoxActionPerformed
-
-    private void t10_update_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_update_ButtonActionPerformed
-        ezcontrol_preset_no_ComboBoxActionPerformed(evt);
-}//GEN-LAST:event_t10_update_ButtonActionPerformed
-
     private void gc_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_address_TextFieldActionPerformed
         try (GlobalCache gc = new GlobalCache(gc_address_TextField.getText(), verbose_CheckBoxMenuItem.getState())) {
             gc_module_ComboBox.setEnabled(false);
@@ -1808,10 +1529,6 @@ public final class GuiMain extends javax.swing.JFrame {
     private void device_remote_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_device_remote_ComboBoxActionPerformed
         update_device_commands_menu();
     }//GEN-LAST:event_device_remote_ComboBoxActionPerformed
-
-    private void t10_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_t10_browse_ButtonActionPerformed
-        HarcUtils.browse("http://" + t10_address_TextField.getText());
-    }//GEN-LAST:event_t10_browse_ButtonActionPerformed
 
     private void gc_browse_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_browse_ButtonActionPerformed
         HarcUtils.browse("http://" + gc_address_TextField.getText());
@@ -1897,17 +1614,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenuItem export_all_MenuItem;
     private javax.swing.JMenuItem export_device_MenuItem;
-    private javax.swing.JPanel ezcontrolPanel;
-    private javax.swing.JComboBox ezcontrol_deviceno_ComboBox;
-    private javax.swing.JComboBox ezcontrol_house_ComboBox;
-    private javax.swing.JButton ezcontrol_off_Button;
-    private javax.swing.JButton ezcontrol_onButton;
-    private javax.swing.JTextField ezcontrol_preset_name_TextField;
-    private javax.swing.JComboBox ezcontrol_preset_no_ComboBox;
-    private javax.swing.JButton ezcontrol_preset_off_Button;
-    private javax.swing.JButton ezcontrol_preset_on_Button;
-    private javax.swing.JTextField ezcontrol_preset_state_TextField;
-    private javax.swing.JComboBox ezcontrol_system_ComboBox;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JTextField gc_address_TextField;
     private javax.swing.JButton gc_browse_Button;
@@ -1919,7 +1625,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JCheckBoxMenuItem immediate_execution_macros_CheckBoxMenuItem;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
@@ -1933,7 +1638,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JComboBox macroComboBox;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JComboBox n_ezcontrol_ComboBox;
     private javax.swing.JComboBox no_sends_ComboBox;
     private javax.swing.JTabbedPane outputHWTabbedPane;
     private javax.swing.JComboBox output_deviceComboBox;
@@ -1949,11 +1653,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JComboBox src_device_ComboBox;
     private javax.swing.JButton stop_command_Button;
     private javax.swing.JButton stop_macro_Button;
-    private javax.swing.JTextField t10_address_TextField;
-    private javax.swing.JButton t10_browse_Button;
-    private javax.swing.JButton t10_get_status_Button;
-    private javax.swing.JButton t10_get_timers_Button;
-    private javax.swing.JButton t10_update_Button;
     private javax.swing.JComboBox toplevel_macrofolders_ComboBox;
     private javax.swing.JCheckBoxMenuItem verbose_CheckBoxMenuItem;
     private javax.swing.JButton xmlAllDevicesExportButton;
