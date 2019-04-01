@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009-2011 Bengt Martensson.
+Copyright (C) 2009-2011, 2019 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,9 +20,7 @@ package org.harctoolbox.oldharctoolbox;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,7 +28,6 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,10 +40,8 @@ import org.harctoolbox.harchardware.ir.GlobalCache;
 import org.harctoolbox.harchardware.ir.NoSuchTransmitterException;
 import org.harctoolbox.harchardware.misc.EzControlT10;
 import org.harctoolbox.harchardware.misc.SonySerialCommand;
-import org.harctoolbox.ircore.InvalidArgumentException;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
-import org.harctoolbox.ircore.Pronto;
 import org.harctoolbox.ircore.XmlUtils;
 import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
@@ -165,12 +160,7 @@ public final class Home {
             DebugArgs.setState(debug);
             devname = args[arg_i];
 
-            // Setup properites
             Props props = new Props(propsfilename, "oldharctoolbox");
-//            if (propsfilename != null)
-//                HarcProps.initialize(propsfilename);
-//            else
-//                HarcProps.initialize();
 
             if (home_filename == null)
                 home_filename = Main.getProperties().getHomeConf();
@@ -230,11 +220,8 @@ public final class Home {
         Main.getProperties().setVerbose(verbose);
         Main.getProperties().setDebug(debug);
         try {
-            Home hm = new Home(home_filename/*, verbose, debug*/);
-            //harcutils.printtable("xxx", hm.gateway_client_classes("irtrans"));
-            //harcutils.printtable("remotes", device.devices2remotes(hm.gateway_client_classes("irtrans")));
+            Home hm = new Home(home_filename);
             if (select_mode) {
-                //harcutils.printtable("blaa", hm.get_selecting_devices());
                 if (src_device.equals("?")) {
                     HarcUtils.printtable("Valid inputs for " + devname + (zone != null ? (" in zone " + zone) : "") + ":", hm.get_sources(devname, zone));
                 } else {
@@ -242,12 +229,10 @@ public final class Home {
                 }
             } else if (devname.equals("?")) {
                 HarcUtils.printtable("Valid devices:", hm.get_devices());
-            } else if (list_commands) // FIXME1: if devname is nonexisting, should produce an
-                // error message instead of just returning nothing.
-            {
+            } else if (list_commands) {
+                // FIXME: if devname is nonexisting, should produce an error message instead of just returning nothing.
                 HarcUtils.printtable("Valid commands for " + devname + " of type " + type + ":", hm.get_commands(devname, type));
             } else {
-                //harcutils.printtable("blubb", hm.get_zones(devname));
                 String output = hm.do_command(devname, cmd, arguments, type, count, toggle, smart_memory);
                 if (output == null) {
                     System.out.println("** Failure **");
@@ -329,11 +314,10 @@ public final class Home {
     public String[] get_devices() {
         int n = device_table.size();
         ArrayList<String> v = new ArrayList<>(n);
-        //for (Enumeration<String> e = device_table.keys(); e.hasMoreElements();) {
-        //    String id = e.nextElement();
         device_table.keySet().stream().filter((id) -> (!device_table.get(id).get_class().equals("null"))).forEachOrdered((id) -> {
             v.add(id);
         });
+
         return v.toArray(new String[v.size()]);
     }
 
@@ -467,17 +451,9 @@ public final class Home {
     // Really generate and send the command, if possible
 
     // TODO: This function should be restructured. Really...
-    private String transmit_command(String dev_class, command_t cmd,
-            String[] arguments,
-            String house, int deviceno,
-            Gateway gw, GatewayPort fgw,
-            CommandType_t type, int count,
-            //String gw_class, String gw_hostname,
-            //int portnumber,
-            //String gw_connector, String gw_model,
-            //String gw_interface,
-            ToggleType toggle/*, String mac*/, HashMap<String, String> attributes, String flavor)
-            throws InterruptedException {
+    private String transmit_command(String dev_class, command_t cmd, String[] arguments, String house, int deviceno,
+            Gateway gw, GatewayPort fgw, CommandType_t type, int count, ToggleType toggle,
+            HashMap<String, String> attributes, String flavor) throws InterruptedException {
         if (DebugArgs.dbg_transmit())
             System.err.println("transmit_command: device " + dev_class
                     + ", command " + cmd + ", house " + house
@@ -488,7 +464,7 @@ public final class Home {
                     + ", connectorno " + fgw.get_connectorno() + ", model " + gw.get_model()
                     + ", interface " + gw.get_interface() + ", toggle " + toggle);
 
-        int portnumber = fgw.get_portnumber(); // FIXME
+        int portnumber = fgw.get_portnumber();
         String output = null;
         boolean success = false;
         boolean failure = false;
@@ -506,10 +482,8 @@ public final class Home {
         } catch (SAXException e) {
             System.err.println(e.getMessage());
         }
-        Command the_command = null;
+        Command the_command = dev.get_command(cmd, type);
         String result = "";
-        String subst_transmitstring;
-        String subst_transmitstring_printable;
 
         if (type == CommandType_t.www) {
             if (cmd != command_t.browse && !Main.getProperties().getUseWwwForCommands()) {
@@ -523,7 +497,6 @@ public final class Home {
                 if (dev == null || !dev.is_valid()) { // FIXME
                     failure = true;
                 } else {
-                    the_command = dev.get_command(cmd, type);
                     if (the_command == null) {
                         if (DebugArgs.dbg_transmit())
                             System.err.println("No such command " + cmd + " of type " + type + " (" + type + ")");
@@ -563,9 +536,7 @@ public final class Home {
 
                                 failure = true;
                             } else {
-                                //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
                                 try (GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose())) {
-                                    //success = gc.send_ir(raw_ccf, Integer.parseInt(gw_connector.substring(3)), count);
                                     GlobalCache.GlobalCacheIrTransmitter transmitter = gc.newTransmitter(fgw.get_connectorno());
                                     success = gc.sendIr(irSignal, count, transmitter);
                                     if (DebugArgs.dbg_transmit()) {
@@ -573,53 +544,6 @@ public final class Home {
                                     }
                                 }
                             }
-//                        } else if (gw.get_class().equals("irtrans")) {
-//                            if (debugargs.dbg_transmit()) {
-//                                System.err.println("Trying an Irtrans (" + gw.get_hostname() + ")...");
-//                            }
-//                            irtrans irt = new irtrans(gw.get_hostname(), userprefs.get_instance().getVerbose());
-//                            command c = dev.get_command(cmd, commandtype_t.ir);
-//                            if (c == null) {
-//                                if (userprefs.get_instance().getVerbose()) {
-//                                    System.err.println("Command " + cmd + " exists, but has no ir code.");
-//                                }
-//                                failure = true;
-//                            } else {
-//                                if (gw.get_interface().equals("preprog_ascii")) {
-//                                    success = irt.send_flashed_command(the_command.get_remotename(), c.get_cmd(), fgw.get_connectorno(), count);
-//                                } else if (gw.get_interface().equals("web_api")) {
-//                                    if (count > 1)
-//                                        System.err.println("** Warning: count > 1 (= " + count + ") ignored.");
-//
-//                                    String url = irtrans.make_url(gw.get_hostname(), the_command.get_remotename(), cmd/*c.getcmd().toString()*/, fgw.get_connectorno());
-//                                    if (debugargs.dbg_transmit() || userprefs.get_instance().getVerbose())
-//                                        System.err.println("Getting URL " + url);
-//
-//                                    success = (new URL(url)).getContent() != null;
-//                                } else if (gw.get_interface().equals("udp")) {
-//                                    IrSignal code = dev.get_code(cmd, commandtype_t.ir, toggle, debugargs.dbg_ir_protocols());
-//                                    success = irt.send_ir(code, fgw.get_connectorno(), count);
-//                                } else {
-//                                    System.err.println("Interface `" + gw.get_interface() + "' for IRTrans not implemented.");
-//                                    success = false;
-//                                }
-//                            }
-//                        } else if (gw.get_class().equals("lirc_server")) {
-//                            if (debugargs.dbg_transmit())
-//                                System.err.println("Trying a Lirc server...");
-//
-//                            command c = dev.get_command(cmd, commandtype_t.ir);
-//                            if (c == null) {
-//                                if (userprefs.get_instance().getVerbose())
-//                                    System.err.println("Command " + cmd + " exists, but has no ir code.");
-//
-//                                failure = true;
-//                            } else {
-//                                lirc lirc_client = new lirc(gw.get_hostname(), userprefs.get_instance().getVerbose());
-//                                if (lirc_client != null)
-//                                    // TODO: evaluate connector
-//                                    success = lirc_client.send_ir(the_command.get_remotename(), c.get_cmd(), count);
-//                            }
                         }
                     } catch (java.net.NoRouteToHostException e) {
                         System.err.println("No route to " + gw.get_hostname());
@@ -652,7 +576,6 @@ public final class Home {
                             EzControlT10 t10 = new EzControlT10(gw.get_hostname(), Main.getProperties().getVerbose());
                             int preset = -1;
                             try {
-                                //preset = Integer.parseInt(gw_connector.substring(7));
                                 preset = fgw.get_connectorno();
                                 if (DebugArgs.dbg_transmit())
                                     System.err.println("Preset no = " + preset);
@@ -696,31 +619,23 @@ public final class Home {
                 case tcp:
                     if (portnumber == IrCoreUtils.INVALID)
                         portnumber = dev.get_portnumber(cmd, CommandType_t.tcp);
-                    subst_transmitstring = dev.get_command(cmd, CommandType_t.tcp).get_transmitstring(true);
-                    subst_transmitstring_printable = dev.get_command(cmd, CommandType_t.tcp).get_transmitstring(false);
+                    String subst_transmitstring = dev.get_command(cmd, CommandType_t.tcp).get_transmitstring(true);
+                    String subst_transmitstring_printable = dev.get_command(cmd, CommandType_t.tcp).get_transmitstring(false);
                     for (int i = 0; i < arguments_length; i++) {
                         subst_transmitstring = subst_transmitstring.replaceAll("\\$" + (i + 1), arguments[i]);
                         subst_transmitstring_printable = subst_transmitstring_printable.replaceAll("\\$" + (i + 1), arguments[i]);
                     }
                     if (DebugArgs.dbg_transmit())
-                        System.err.println("Trying TCP socket to " + fgw.get_hostname()+ ":" + portnumber + " \"" + subst_transmitstring_printable + "\"");
+                        System.err.println("Trying TCP socket to " + fgw.get_hostname() + ":" + portnumber + " \"" + subst_transmitstring_printable + "\"");
 
-                    Socket sock = null;
-                    PrintStream outToServer = null;
-                    BufferedReader inFromServer = null;
-
-                    try {
-                        sock = SocketStorage.getsocket(fgw.get_hostname(), portnumber);//new Socket(gw_hostname, portnumber);
-                        if (sock == null)
-                            throw new IOException("Got a null socket");
+                    try (Socket sock = new Socket(fgw.get_hostname(), portnumber)) {
+                        //Socket sock = SocketStorage.getsocket(fgw.get_hostname(), portnumber); //new Socket(gw_hostname, portnumber);
                         sock.setSoTimeout(fgw.get_timeout());
                         if (DebugArgs.dbg_transmit())
                             System.err.println("Setting timeout on TCP socket to " + fgw.get_timeout());
                         //System.err.println(sock.getSoLinger() + " " + sock.getSoTimeout() + " " + sock.getReuseAddress() + " " + sock.getKeepAlive());
-
-                        //DataOutputStream outToServer = new DataOutputStream(sock.getOutputStream());
-                        outToServer = new PrintStream(sock.getOutputStream());
-                        inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                        PrintStream outToServer = new PrintStream(sock.getOutputStream());
+                        BufferedReader inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
                         String opener = dev.get_open(cmd, CommandType_t.tcp);
                         if (opener != null && !opener.isEmpty()) {
@@ -740,7 +655,6 @@ public final class Home {
 
                                 Thread.sleep(delay_between_reps);
                             }
-                            //outToServer.writeBytes(subst_transmitstring);
                             outToServer.print(subst_transmitstring);
                         }
 
@@ -788,7 +702,6 @@ public final class Home {
                             outToServer.print(closer);
                         }
                         if (dev.get_command(cmd, CommandType_t.tcp).get_response_lines() != 0) {
-                            //System.err.println("Response: " + result);
                             output = result;
                         }
                         success = true;
@@ -798,14 +711,6 @@ public final class Home {
                         System.err.println("Could not get I/O for the connection to "
                                 + fgw.get_hostname() + ":" + portnumber + " " + e.getMessage());
                         failure = true;
-                    } finally {
-                        try {
-                        outToServer.close();
-                        inFromServer.close();
-                        SocketStorage.returnsocket(sock, false);//sock.close();
-                        } catch (IOException e) {
-                            System.err.println("Socket problem: " + e.getMessage());
-                        }
                     }
                     break;
 
@@ -817,125 +722,97 @@ public final class Home {
                         subst_transmitstring_printable = subst_transmitstring_printable.replaceAll("\\$" + (i + 1), arguments[i]);
                     }
                     if (gw.get_class().equals("lan")) {
-                        URLConnection url_connection = null;
                         String urlstr = "http://" + fgw.get_hostname() + ":" + portnumber + "/" + subst_transmitstring;
+                        int response_lines = the_command.get_response_lines();
+                        if (response_lines == 0 && !the_command.get_expected_response().isEmpty()) // this is contradictory, fix
+                            response_lines = 1;
+                        HttpURLConnection url_connection = null;
                         try {
-                            int response_lines = the_command.get_response_lines();
-                            if (response_lines == 0 && !the_command.get_expected_response().isEmpty()) // this is contradictory, fix
-                                response_lines = 1;
-
-
                             URL the_url = new URL(urlstr);
-                            url_connection = the_url.openConnection();
+                            url_connection = (HttpURLConnection) the_url.openConnection();
                             url_connection.setConnectTimeout(fgw.get_timeout());
                             url_connection.setReadTimeout(fgw.get_timeout());
                             if (DebugArgs.dbg_transmit())
                                 System.err.println("Set timeout to " + fgw.get_timeout() + "ms");
                             String charset = dev.get_command(cmd, CommandType_t.web_api).get_charset();
 
-                            for (int c = 0; c < count; c++) {
-                                if (c > 0) {
-                                    int delay_between_reps = the_command.get_delay_between_reps();
-                                    if (delay_between_reps > 0) {
-                                        if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose()) {
-                                            System.err.println("Waiting for " + delay_between_reps + "ms.");
-                                        }
-                                        Thread.sleep(delay_between_reps);
-                                    }
-                                }
-
-                                if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
-                                    System.err.println("Getting URL " + urlstr + ".");
-
-                                if (response_lines == 0) {
-                                    url_connection.getContent();
-                                } else if (response_lines > 0) {
-                                    //BufferedReader inFromServer = null;
-                                    inFromServer = new BufferedReader(new InputStreamReader(url_connection.getInputStream(), charset));
-                                    //inFromServer = new BufferedReader(new InputStreamReader(the_url.openStream()));
-                                    output = "";
-                                    for (int i = 0; i < response_lines; i++) {
-                                        result = inFromServer.readLine();
-                                        if (result != null)
-                                            output = output.isEmpty() ? result : output + "\n" + result;
-                                        if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose() || (the_command.get_expected_response().isEmpty() && the_command.get_response_lines() == 0)) {
-                                            System.err.println("Got: " + result);	// ??
+                            try (BufferedReader inFromServer = new BufferedReader(new InputStreamReader(url_connection.getInputStream(), charset))) {
+                                for (int c = 0; c < count; c++) {
+                                    if (c > 0) {
+                                        int delay_between_reps = the_command.get_delay_between_reps();
+                                        if (delay_between_reps > 0) {
+                                            if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose()) {
+                                                System.err.println("Waiting for " + delay_between_reps + "ms.");
+                                            }
+                                            Thread.sleep(delay_between_reps);
                                         }
                                     }
-                                } else {
-                                    //BufferedReader inFromServer = null;
-                                    //inFromServer = new BufferedReader(new InputStreamReader(the_url.openStream()));
-                                    //URLConnection uc = the_url.openConnection();
-                                    //System.err.println(uc.getContentEncoding());
-                                    //for (int k = 0; k < 20; k++)
-                                    //    System.err.println(uc.getHeaderField(k));
-                                    inFromServer = new BufferedReader(new InputStreamReader(url_connection.getInputStream(), charset));
-                                    output = "";
-                                    do {
-                                        result = inFromServer.readLine();
-                                        if (result != null)
-                                            output = output.isEmpty() ? result : output + "\n" + result;
-                                        if ((DebugArgs.dbg_transmit() || Main.getProperties().getVerbose()) && result != null) {
-                                            System.out.println(result);	// ??
-                                        }
-                                    } while (result != null);
-                                }
 
-                                if (!the_command.get_expected_response().isEmpty()) {
-                                    if (result.equals(the_command.get_expected_response())) {
-                                        if (DebugArgs.dbg_transmit()) {
-                                            System.err.println("response equals expected.");
+                                    if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
+                                        System.err.println("Getting URL " + urlstr + ".");
+
+                                    if (response_lines == 0) {
+                                        url_connection.getContent();
+                                    } else if (response_lines > 0) {
+                                        output = "";
+                                        for (int i = 0; i < response_lines; i++) {
+                                            result = inFromServer.readLine();
+                                            if (result != null)
+                                                output = output.isEmpty() ? result : output + "\n" + result;
+                                            if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose() || (the_command.get_expected_response().isEmpty() && the_command.get_response_lines() == 0)) {
+                                                System.err.println("Got: " + result);	// ??
+                                            }
                                         }
-                                        success = true;
                                     } else {
-                                        System.err.println("response (= " + result + ") does not equal expected (= " + the_command.get_expected_response() + ").");
-                                        success = false;
+                                        output = "";
+                                        do {
+                                            result = inFromServer.readLine();
+                                            if (result != null)
+                                                output = output.isEmpty() ? result : output + "\n" + result;
+                                            if ((DebugArgs.dbg_transmit() || Main.getProperties().getVerbose()) && result != null) {
+                                                System.out.println(result);	// ??
+                                            }
+                                        } while (result != null);
                                     }
-                                } else {
-                                    success = true;
+
+                                    if (!the_command.get_expected_response().isEmpty()) {
+                                        if (result.equals(the_command.get_expected_response())) {
+                                            if (DebugArgs.dbg_transmit()) {
+                                                System.err.println("response equals expected.");
+                                            }
+                                            success = true;
+                                        } else {
+                                            System.err.println("response (= " + result + ") does not equal expected (= " + the_command.get_expected_response() + ").");
+                                            success = false;
+                                        }
+                                    } else {
+                                        success = true;
+                                    }
                                 }
                             }
                         } catch (java.io.IOException e) {
                             failure = true;
                             System.err.println("IOException for " + urlstr + ": " + e.getMessage());
-                        //} catch (java.net.MalformedURLException e) {
-                        //System.err.println(e.getMessage());
                         } finally {
                             if (url_connection != null) {
-                                try {
-                                    InputStream is = url_connection.getInputStream();
-                                    if (is != null)
-                                        is.close();
-                                    OutputStream os = url_connection.getOutputStream();
-                                    if (os != null)
-                                        os.close();
-                                    ((HttpURLConnection)url_connection).disconnect();
-                                } catch (IOException ex) {
-                                }
+                                url_connection.disconnect();
                             }
                         }
                     }
                     break;
 
                 case serial:
-                    try {
-                        // TODO: handle cases expected_lines < 0 (loop forever) senisble, (if possible).
-                        if (gw.get_class().equals("globalcache")) {
-                            GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose());
+                    // TODO: handle cases expected_lines < 0 (loop forever) senisble, (if possible).
+                    if (gw.get_class().equals("globalcache")) {
+                        try (GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose())) {
                             GlobalCache.SerialPort gcSerialPort = gc.getSerialPort(fgw.get_connectorno());
                             subst_transmitstring = dev.get_command(cmd, CommandType_t.serial).get_transmitstring(true);
                             subst_transmitstring_printable = dev.get_command(cmd, CommandType_t.serial).get_transmitstring(false);
                             if (flavor.equals("SonySerialCommand")) {
 
-                                //gc.setserial(1, "38400,FLOW_NONE,PARITY_EVEN");
                                 String[] cmds = subst_transmitstring_printable.split(",");
                                 byte[] bytes = SonySerialCommand.bytes(Integer.parseInt(cmds[1]), Integer.parseInt(cmds[2]), cmds[0]);
-//                                byte[] answer = gc.send_read_serial(bytes, fgw.get_connectorno(),
-//                                        the_command.get_response_lines() > 0 ? SonySerialCommand.size : 0);
                                 gcSerialPort.sendBytes(bytes);
-//                                output = the_command.get_response_lines() > 0
-//                                        ? Integer.toString(SonySerialCommand.interpret(answer).getData())
-//                                        : "";
                                 if (the_command.get_response_lines() > 0) {
                                     byte[] answer = gcSerialPort.readBytes(SonySerialCommand.size);
                                     output = Integer.toString(SonySerialCommand.interpret(answer).getData());
@@ -948,14 +825,12 @@ public final class Home {
                                     subst_transmitstring_printable = subst_transmitstring_printable.replaceAll("\\$" + (i + 1), arguments[i]);
                                 }
 
-                                //try {
                                 if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
                                     System.err.println("Trying Globalcache (" + gw.get_hostname() + ") for serial using " + fgw.get_connectorno() + ", \"" + subst_transmitstring_printable + "\"");
 
                                 int delay_between_reps = the_command.get_delay_between_reps();
                                 int no_read_lines = the_command.get_response_lines();
 
-                                //result = gc.send_serial(subst_transmitstring, fgw.get_connectorno(), no_read_lines == 0 ? 0 : 1, count, delay_between_reps);
                                 gcSerialPort.sendString(subst_transmitstring);
                                 if (no_read_lines > 0) {
                                     if (delay_between_reps > 0)
@@ -964,9 +839,6 @@ public final class Home {
                                      no_read_lines--;
                                 } else
                                     result = "";
-//                                if (no_read_lines > 0)
-//                                    no_read_lines--;
-//                                Thread.sleep(10);
 
                                 if (!the_command.get_expected_response().isEmpty()) {
                                     if (result.equals(the_command.get_expected_response())) {
@@ -984,7 +856,6 @@ public final class Home {
                                 if (no_read_lines != 0)
                                     System.err.println(">>> " + result);
                                 for (int i = 0; i < no_read_lines; i++) {
-                                    //String answ = gc.send_serial(null, fgw.get_connectorno(), 1, count, delay_between_reps);
                                     String answ = gcSerialPort.readString(true);
                                     System.err.println(">>> " + answ);
                                     result = result.isEmpty() ? answ : (result + "\n" + answ);
@@ -995,34 +866,28 @@ public final class Home {
                                         result = gcSerialPort.readString(true);
                                         System.err.println(">>> " + result);
                                     }
-                                //success = result != null;
                                 if (the_command.get_response_lines() > 0)
                                     output = result;
-//                            } catch (Exception e) {
-//                                System.err.println("Silly exception: " + e.getClass().getName() + e.getMessage());
-//                                e.printStackTrace();
-                                //} catch (NoRouteToHostException e) {
-                                //    System.err.println("No route to " + gw.get_hostname());
-                                //} catch (IOException e) {
-                                //    System.err.println("IOException with host " + gw.get_hostname());
                             }
-                        } else {
-                            System.err.println("Not implemented.");
-                            failure = true;
+                        } catch (IOException ex) {
+                            logger.log(Level.SEVERE, null, ex);
+                        } catch (NoSuchTransmitterException ex) {
+                            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } catch (IOException ex) {
-                        logger.log(Level.SEVERE, null, ex);
-                    } catch (NoSuchTransmitterException ex) {
-                        Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                    } else {
+                        System.err.println("Not implemented.");
+                        failure = true;
                     }
                     break;
 
                 case www:
                     if (arguments_length > 0)
                         System.err.println("Warning: arguments to command igored.");
-                    HarcUtils.browse("http://" + fgw.get_hostname() + ":" + portnumber);
+                    String url = "http://" + fgw.get_hostname() + (portnumber == -1 ? "" : (":" + portnumber));
+                    HarcUtils.browse(url);
                     success = true;
                     break;
+
                 case on_off:
                 case sensor:
                     if (arguments_length > 0) {
@@ -1032,8 +897,7 @@ public final class Home {
                         System.err.println("Nonappropriate command for on_off");
                         failure = true;
                     } else if (gw.get_class().equals("globalcache")) {
-                        try {
-                            GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose());
+                        try (GlobalCache gc = new GlobalCache(gw.get_hostname(), /*gw.get_model(),*/ Main.getProperties().getVerbose())) {
                             int con = fgw.get_connectorno();
 
                             if (cmd == command_t.get_state) {
@@ -1047,7 +911,6 @@ public final class Home {
                                     failure = true;
                                 }
                             } else {
-                                //if (gw_connector.startsWith("relay_")) {
                                 if (fgw.get_connectortype()==CommandType_t.on_off) {
 
                                     if (DebugArgs.dbg_transmit()) {
@@ -1079,15 +942,9 @@ public final class Home {
                                     failure = true;
                                 }
                             }
-                        } catch (java.net.NoRouteToHostException e) {
-                            System.err.println("No route to " + gw.get_hostname());
-                        } catch (java.net.UnknownHostException e) {
-                            System.err.println("Unknown host " + gw.get_hostname());
-                        } catch (IOException e) {
-                            System.err.println("IOException with host " + gw.get_hostname());
-                        } catch (NoSuchTransmitterException ex) {
-                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                        } catch (IOException | NoSuchTransmitterException ex) {
+                            logger.log(Level.SEVERE, null, ex);
+                        }
                     } else {
                         System.err.println("Not implemented.");
                         failure = true;
@@ -1125,6 +982,7 @@ public final class Home {
                             System.err.println(e.getMessage());
                         }
                         break;
+
                     case wol:
                         String mac = fgw.get_mac();
                         if ((mac == null) || mac.isEmpty()) {
@@ -1141,6 +999,7 @@ public final class Home {
                             }
                         }
                         break;
+
                     default:
                         System.err.println("Command " + cmd + " of type ip not implemented.");
                         failure = true;
@@ -1148,7 +1007,8 @@ public final class Home {
                 }
                     }
                     break;
-                case special:
+
+                case special: // ????
                     try {
                         if (DebugArgs.dbg_transmit() || Main.getProperties().getVerbose())
                             System.err.println("Trying special with class = " + dev_class + ", method = " + cmd + ", hostname = " + fgw.get_hostname());
@@ -1372,8 +1232,6 @@ public final class Home {
             System.err.println("do_command: device " + devname + ", device_class " + dev_class + ", command " + cmd + ", type " + type + ", memory " + has_memory + ", toggle " + toggle);
         ArrayList<GatewayPort> gateway_ports = the_dev.get_gateway_ports();
         boolean success = false;
-        //for (Enumeration<gateway_port> e = gateway_ports.elements(); e.hasMoreElements() && !success;) {
-        //    gateway_port gwp = e.nextElement();
         for (GatewayPort gwp : gateway_ports) {
             if (success)
                 break;
@@ -1387,16 +1245,8 @@ public final class Home {
                     ? 2 : 1;
             output = "";
             for (int j = 0; j < no_times && output != null; j++) {
-                output = dispatch_command2gateway(
-                        gwp,
-                        dev_class,
-                        cmd,
-                        arguments,
-                        null, // house
-                        (short) -1, //deviceno,
-                        type,
-                        count,
-                        toggle, 0, the_dev.get_attributes(), the_command.get_flavor());
+                output = dispatch_command2gateway(gwp, dev_class, cmd, arguments, null, // house
+                        (short) -1 /*deviceno*/, type, count, toggle, 0, the_dev.get_attributes(), the_command.get_flavor());
             }
             success = output != null;
         }
@@ -1407,16 +1257,9 @@ public final class Home {
     // command described by dev_class and cmd, type, count, and toggle.
     // For this, the contained from-gateway elements is tried.
     // Either calls itself recursively, or calls transmit_command.
-    private String dispatch_command2gateway(
-            GatewayPort fgw,
-            String dev_class,
-            command_t cmd,
-            String[] arguments,
-            String house,
-            short deviceno,
-            CommandType_t type,
-            int count, ToggleType toggle, int hop, HashMap<String, String>attributes, String flavor)
-            throws InterruptedException {
+    private String dispatch_command2gateway(GatewayPort fgw, String dev_class, command_t cmd, String[] arguments,
+            String house, short deviceno, CommandType_t type, int count, ToggleType toggle, int hop,
+            HashMap<String, String> attributes, String flavor) throws InterruptedException {
         if (DebugArgs.dbg_dispatch()) {
             for (int i = 0; i <= hop; i++)
                 System.err.print("<");
@@ -1437,7 +1280,6 @@ public final class Home {
 
         CommandType_t act_type = fgw.get_connectortype();
 
-        //if (!(type == commandtype_t.any || type == act_type)) {
         if (!act_type.is_compatible(type)) {
             // Cannot use this connector, wrong type
             if (DebugArgs.dbg_dispatch())
@@ -1448,39 +1290,17 @@ public final class Home {
             // This gateway has a hostname, issue the command.
             //System.err.println("**************************" + act_type);
             outputs = transmit_command(dev_class, cmd, arguments, house,
-                    deviceno,
-                    gw,
-                    fgw,
-                    act_type, count, //gw_class, fgw_hostname,
-                    //fgw_portnumber, fgw_connector,
-                    //gw_model, gw_interface,
-                    toggle/*, mac*/, attributes, flavor);
-        //} else if (!gw.get_hostname().isEmpty()) {
-        // This gateway has a hostname, issue the command.
-        //     outputs = transmit_command(dev_class, cmd, arguments, house,
-        //             deviceno,
-        //             gw,
-        //             fgw,
-        //             act_type, count, //gw_class, gw_hostname,
-        //fgw_portnumber, fgw_connector,
-        //gw_model, gw_interface,
-        //             toggle/*, mac*/);
+                    deviceno, gw, fgw, act_type, count, toggle, attributes, flavor);
         } else {
-            // None of the above, hope that the gateway is reachable from other
-            // gateways.
+            // None of the above, hope that the gateway is reachable from other gateways.
             ArrayList<GatewayPort> in_ports = gw.get_gateway_ports();
 
             boolean success = false;
-            //for (Enumeration<gateway_port> p = in_ports.elements(); p.hasMoreElements() && !success;) {
-            //    gateway_port gwp = p.nextElement();
             for (GatewayPort gwp : in_ports) {
                 if (success)
                     break;
                 Port outport = gw.get_port(act_type, fgw.get_connectorno());
-                //commandtype_t output_type = gwp.get_connectortype();
-                if (gwp.get_connectortype().is_compatible(type)) {/*output.getAttribute("connector").equals(fgw_connector) &&*/
-                    //    (type == commandtype_t.any || type == output_type)) {
-                    //String cmd_name = cmd.toString();
+                if (gwp.get_connectortype().is_compatible(type)) {
                     command_t actual_command = cmd;
                     String remotename = dev_class;
                     String new_house = house;
@@ -1496,24 +1316,8 @@ public final class Home {
                     }
 
                     // must invoke dispatch_command again.
-                    outputs = dispatch_command2gateway(
-                            gwp,
-                            //fgw.getAttribute("gateway"),
-                            //fgw.getAttribute("connector"),
-                            //gw_hostname,
-                            //fgw_portnumber,
-                            //mac,
-                            remotename,
-                            actual_command,
-                            arguments,
-                            new_house,
-                            new_deviceno,
-                            type,
-                            count,
-                            toggle,
-                            hop + 1,
-                            attributes,
-                            flavor);
+                    outputs = dispatch_command2gateway(gwp, remotename, actual_command, arguments,
+                            new_house, new_deviceno, type, count, toggle, hop + 1, attributes, flavor);
                     success = outputs != null;
                 }
             }
@@ -1533,33 +1337,5 @@ public final class Home {
             v.add(gw.get_id());
         });
         return v.toArray(new String[v.size()]);
-    }
-
-    public boolean lirc_conf_export() {
-        boolean success = true;
-        String[] lircservers = gateway_instances("lirc_server");
-        for (String lircserver : lircservers) {
-            String filename = Main.getProperties().getExportDir()+ File.separatorChar + lircserver + ".lirc.conf";
-            //String[] devs = this.gateway_client_classes(lircservers[i]);
-            String[] devs = device_table.keySet().toArray(new String[device_table.size()]);// FIXME
-            /*try {
-            lirc_export.export(filename, devs);
-            if (userprefs.get_instance().getVerbose())
-            System.err.println("LIRC Export: " + filename + " was successfully created.");
-            } catch (FileNotFoundException ex) {
-            System.err.println(ex);
-            success = false;
-            } catch (IOException ex) {
-            System.err.println(ex);
-            success = false;
-            } catch (SAXParseException ex) {
-            System.err.println(ex);
-            success = false;
-            } catch (SAXException ex) {
-            System.err.println(ex);
-            success = false;
-            }*/
-        }
-        return success;
     }
 }
