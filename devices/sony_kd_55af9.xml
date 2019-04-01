@@ -11,7 +11,7 @@
         <delay type="enter_teletext" delay="5000"/>
     </delays-->
 
-    <commandset type="ir" protocol="sony12" deviceno="1">
+    <commandset type="ir" protocol="sony12" deviceno="1" remotename="sony_12_1">
         <command cmdref="inputs" cmdno="37" />
         <command cmdref="power_toggle" cmdno="21" />
         <command cmdref="exit" cmdno="99" />
@@ -62,7 +62,7 @@
         <command cmdref="TIMER_UP" cmdno="49" />
     </commandset>
 
-    <commandset type="ir" protocol="sony15" deviceno="26">
+    <commandset type="ir" protocol="sony15" deviceno="26" remotename="sony_15_26">
         <command cmdref="tv_radio" cmdno="87" />
         <command cmdref="netflix" cmdno="124" />
         <command cmdref="title_list" cmdno="101" />
@@ -75,11 +75,11 @@
         <command cmdref="MENU_SYNC" cmdno="88" />
     </commandset>
 
-    <commandset type="ir" protocol="sony15" deviceno="119">
+    <commandset type="ir" protocol="sony15" deviceno="119" remotename="sony15_119">
         <command cmdref="digital_analog" cmdno="13" />
     </commandset>
 
-    <commandset type="ir" protocol="sony15" deviceno="151">
+    <commandset type="ir" protocol="sony15" deviceno="151" remotename="sony15_151">
         <command cmdref="red" cmdno="37" />
         <command cmdref="green" cmdno="38" />
         <command cmdref="yellow" cmdno="39" />
@@ -101,7 +101,7 @@
         <command cmdref="STORE_MODE" cmdno="106" />
     </commandset>
 
-    <commandset type="ir" protocol="sony15" deviceno="164">
+    <commandset type="ir" protocol="sony15" deviceno="164" remotename="sony15_164">
         <command cmdref="guide" cmdno="91" />
         <command cmdref="CC_SUBTITLE" cmdno="16" />
         <command cmdref="FORMAT_16_9" cmdno="69" />
@@ -114,7 +114,7 @@
         <command cmdref="SPLIT" cmdno="119" />
     </commandset>
 
-    <commandset type="ir" protocol="sony15" deviceno="196">
+    <commandset type="ir" protocol="sony15" deviceno="196" remotename="sony15_196">
         <command cmdref="ext-box-menu" cmdno="73" />
         <command cmdref="google_play" cmdno="70" />
         <command cmdref="action_menu" cmdno="75" />
@@ -122,7 +122,7 @@
         <command cmdref="help" cmdno="77" />
     </commandset>
 
-    <commandset type="ir" protocol="sony20" deviceno="26" subdevice="26">
+    <commandset type="ir" protocol="sony20" deviceno="26" subdevice="26" remotename="sony20_20_26">
         <command cmdref="DISPLAY" cmdno="58"/>
     </commandset>
 

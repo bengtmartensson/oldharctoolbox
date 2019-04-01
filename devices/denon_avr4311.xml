@@ -3,7 +3,7 @@
  "../dtds/devices.dtd">
 
 <!-- references:
-    - AVR-4311CI/4311 Remote Code List, Ver 0.1 dated 2010-04-10 
+    - AVR-4311CI/4311 Remote Code List, Ver 0.1 dated 2010-04-10
     - Denon AVR control protocol Rev 7.2.0 dated 2010-04-10
 (pages numbers refers to these)
 -->
@@ -228,7 +228,7 @@
       <command cmdref="in_usb" cmdno="718"/>
       <command cmdref="in_dvd_hdp" type="toggle" cmdno="732"/> <!-- CHECKME -->
       <command cmdref="in_vcr_dvr" type="toggle" cmdno="735"/> <!-- CHECKME -->
-      <!--command cmdref="0xff" name="cmd_hdmi_monitor_select" remark="no function" cmdno="753"/-->
+      <command cmdref="hdmi_monitor" name="cmd_hdmi_monitor_select" remark="toggle" cmdno="753"/>
       <!--command cmdref="resolution" remark="no function" cmdno="754"/-->
 
       <!-- http://www.remotecentral.com/cgi-bin/mboard/rc-discrete/thread.cgi?5875 -->
@@ -405,7 +405,7 @@
     <!-- outputs. Some commands, like in_video_aux turn on power. -->
     <commandgroupref commandgroup="serial_tcp_commands"/>
   </commandset>
-  
+
   <commandset type="tcp" suffix="\r" portnumber="23" delay_between_reps="50">
     <!-- In standby with netstandby off, commands are not recognized. -->
     <commandgroup id="serial_tcp_commands">
@@ -467,7 +467,7 @@
       <command cmdref="set_sbr_level" transmit="CVSBR $1">
 	<argument name="vol"/>
       </command>
-      
+
       <command cmdref="mute_on" transmit="MUON"/>
       <command cmdref="mute_off" transmit="MUOFF"/>
       <command cmdref="get_mute" transmit="MU?" response_lines="1">
@@ -585,7 +585,7 @@
       <command cmdref="virtual" transmit="MSVIRTUAL"/>
       <command cmdref="mpeg2_aac" ifattribute="japan" transmit="MSMPEG2 AAC"/>
       <command cmdref="get_dsp_program" name="Return MS Status" transmit="MS?" response_lines="1"/>
-      
+
       <!-- MSQUICK QUICK SELECT 1-3 MODE SELECT -->
       <command cmdref="quick1" transmit="MSQUICK1"/>
       <command cmdref="quick2" transmit="MSQUICK2"/>
@@ -596,12 +596,10 @@
       <command cmdref="get_quick_status" transmit="MSQUICK ?" response_lines="1"/>
 
       <!-- VS -->
-      <!--command cmdref="VS MONIAUTO Set HDMI MONITOR automatic detection"/>
-      (Japan model only)
-      VSMONIAUTO"/-->
-      <!--command cmdref="MONI1 Set HDMI MONITOR OUT-1 (Japan model only) VSMONI1"/-->
-      <!--command cmdref="MONI2 Set HDMI MONITOR OUT-2 (Japan model only) VSMONI2"/-->
-      <!--command cmdref="MONI? Return VSMONITOR Status (Japan model only) VSMONI?"/-->
+      <command cmdref="set_monitor_auto" remark="Set HDMI MONITOR AUTO" transmit="VSMONIAUTO"/>
+      <command cmdref="set_monitor1" remark="Set HDMI MONITOR OUT-1" transmit="VSMONI1"/>
+      <command cmdref="set_monitor2" remark="Set HDMI MONITOR OUT-2" transmit="VSMONI2"/>
+      <command cmdref="get_monitor" remark="Return VSMONITOR Status" transmit="VSMONI?" response_lines="1"/>
       <command cmdref="aspectratio_4_3" transmit="VSASPNRM"/>
       <command cmdref="aspectratio_16_9" transmit="VSASPFUL"/>
       <command cmdref="get_aspectratio" transmit="VSASP?" response_lines="1"/>
@@ -671,7 +669,7 @@
       <command cmdref="effect_on" transmit="PSEFF UP"/>
       <command cmdref="effect_off" transmit="PSEFF DOWN"/>
       <command cmdref="set_effect" transmit="PSEFF arg"/>
-      <command cmdref="get_effect" transmit="PSEFF ?"/>
+      <command cmdref="get_effect" transmit="PSEFF?"/>
       <!--
       <command cmdref="DEL UP DELAY UP/DOWN , direct change to ***dB PSDEL UP"/>
       <command cmdref="DEL DOWN ***:000 to 999 by ASCII , 000=0ms, 300=300ms PSDEL DOWN"/>
@@ -714,7 +712,7 @@
       <command cmdref="DELAY DOWN ***:000 to 999 by ASCII , 000=0ms, 200=200ms PSDELAY DOWN"/>
       <command cmdref="DELAY *** ___AVR-4311 can be operated from 0 to 200 PSDELAY 200"/>
 -->
-      
+
       <command cmdref="night_off" transmit="PSNIGHT OFF"/>
       <command cmdref="night_low" transmit="PSNIGHT LOW"/>
       <command cmdref="night_mid" transmit="PSNIGHT MID"/>
@@ -813,7 +811,7 @@
       <command cmdref="cmd_0xfe" zone="2" transmit="Z2HPFON"/>
       <command cmdref="cmd_0xfd" zone="2" transmit="Z2HPFOFF"/>
       <command cmdref="cmd_0xfc" zone="2" transmit="Z2HPF?"/>
-      
+
       <!-- Z2PS, page 18 -->
       <command cmdref="zone2_bass_up" zone="2" transmit="Z2PSBAS UP"/>
       <command cmdref="zone2_bass_down" zone="2" transmit="Z2PSBAS DOWN"/>
@@ -893,7 +891,7 @@
       <command cmdref="cmd_0xfe" zone="3" transmit="Z3HPFON"/>
       <command cmdref="cmd_0xfd" zone="3" transmit="Z3HPFOFF"/>
       <command cmdref="cmd_0xfc" zone="3" transmit="Z3HPF?"/>
-      
+
       <!-- Z3PS, page 20 -->
       <command cmdref="zone3_bass_up" zone="3" transmit="Z3PSBAS UP"/>
       <command cmdref="zone3_bass_down" zone="3" transmit="Z3PSBAS DOWN"/>
@@ -918,7 +916,7 @@
 	<argument name="freq">
 	  <description>
             <![CDATA[
-	  (6 digits) 
+	  (6 digits)
 	  ****.** kHz at AM band (>050000 is AM.)
 	  ****.** MHz at FM band (<050000 is FM.)
             ]]>
@@ -950,7 +948,7 @@
       <command cmdref="tuner_manual" transmit="TMANMANUAL"/>
 
       <!-- XM Control(North America model only) -->
-      <!-- 
+      <!--
       <command ifattribute="north-america" cmdref="TF XMUP XM Channel UP/DOWN TFXMUP"/>
       <command ifattribute="north-america" cmdref="XMDOWN TFXMDOWN"/>
       XM***
