@@ -42,12 +42,6 @@ public final class ResultFormatter {
 
     public String format(String str) {
         GregorianCalendar c = new GregorianCalendar();
-        String s = "";
-        try {
-            s = String.format(format, str, c);
-        } catch (/*UnknownFormatConversion*/Exception e) {
-            System.err.println("Erroneous format string `" + format + "'.");
-        }
-        return s;
+        return String.format(format, str, c);
     }
 }

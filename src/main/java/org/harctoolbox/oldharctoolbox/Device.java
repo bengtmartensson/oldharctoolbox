@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -130,7 +131,7 @@ public final class Device {
         String[] files = dir.list(new extension_filter(extension));
         String[] result = new String[files.length];
         for (int i =0; i < files.length; i++)
-            result[i] = toLowercase ? files[i].toLowerCase().substring(0, files[i].lastIndexOf(extension))
+            result[i] = toLowercase ? files[i].toLowerCase(Locale.US).substring(0, files[i].lastIndexOf(extension))
                     : files[i].substring(0, files[i].lastIndexOf(extension));
         return result;
     }
@@ -188,14 +189,13 @@ public final class Device {
     }
 
     private static void usage(int exitcode) {
-        System.err.println("Usage:");
-        System.err.println("device [<options>] -f <input_filename> [<cmd_name>]");
-        System.err.println("or");
-        System.err.println("device -x <export_directory>");
-        System.err.println("where options=-o <filename>,-@ <attributename>,-a aliasname,-l,-d,-c,-t "
-                + CommandType_t.valid_types('|'));
-        if (exitcode >= 0)
-            System.exit(exitcode);
+        String message = "Usage:\n"
+                + "device [<options>] -f <input_filename> [<cmd_name>]\n"
+                + "or\n"
+                + "device -x <export_directory>\n"
+                + "where options=-o <filename>,-@ <attributename>,-a aliasname,-l,-d,-c,-t "
+                + CommandType_t.valid_types('|');
+        HarcUtils.doExit(exitcode, message);
     }
 
     private static void usage() {
@@ -279,11 +279,11 @@ public final class Device {
 
         if (export_dir != null) {
             boolean success = export_all_devices(export_dir);
-            System.exit(success ? IrpUtils.EXIT_SUCCESS : IrpUtils.EXIT_CONFIG_WRITE_ERROR);
+            HarcUtils.doExit(success ? IrpUtils.EXIT_SUCCESS : IrpUtils.EXIT_CONFIG_WRITE_ERROR);
         } else if (in_filename == null) {
             usage(-1);
             HarcUtils.printtable("Known devices:", get_devices());
-            System.exit(IrpUtils.EXIT_SUCCESS);
+            HarcUtils.doExit(IrpUtils.EXIT_SUCCESS);
         } else if ((args.length != arg_i) && (args.length != arg_i + 1))
             usage();
 
@@ -292,7 +292,7 @@ public final class Device {
             dev = new Device(in_filename, null, true);
         } catch (IOException e) {
             System.err.println("IOException with " + in_filename);
-            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
+            HarcUtils.doExit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         } catch (SAXParseException e) {
             System.err.println(e.getMessage());
         } catch (SAXException e) {
@@ -301,7 +301,7 @@ public final class Device {
 
         if (!dev.is_valid()) {
             System.err.println("Failure!");
-            System.exit(2);
+            HarcUtils.doExit(IrpUtils.EXIT_FATAL_PROGRAM_FAILURE);
         }
 
         if (debug != 0)
@@ -336,7 +336,7 @@ public final class Device {
                             : c.get_ir_code(ToggleType.toggle_0, true, deviceno, subdevice);
                     if (ircode == null) {
                         System.err.println("No such IR command: " + cmdname);
-                        System.exit(2);
+                        HarcUtils.doExit(IrpUtils.EXIT_SEMANTIC_USAGE_ERROR);
                     } else {
                         System.out.println(ircode);
                         if (c.get_toggle())
@@ -1016,7 +1016,7 @@ public final class Device {
 
         @Override
         public boolean accept(File directory, String name) {
-            return name.toLowerCase().endsWith(extension.toLowerCase());
+            return name.toLowerCase(Locale.US).endsWith(extension.toLowerCase(Locale.US));
         }
     }
 }

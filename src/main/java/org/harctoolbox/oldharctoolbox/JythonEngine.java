@@ -48,7 +48,7 @@ public final class JythonEngine {
             System.err.println(e.getMessage());
         }
         if (hm == null)
-            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
+            HarcUtils.doExit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         JythonEngine jython;
         try {
             jython = new JythonEngine(hm, args.length == 0);
@@ -65,7 +65,7 @@ public final class JythonEngine {
         } catch (PyException e) {
             System.err.println("Could not create jython engine.");
             System.err.println(e.getMessage());
-            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
+            HarcUtils.doExit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         }
     }
 
@@ -134,7 +134,7 @@ public final class JythonEngine {
                 python.exec(macro);
             } catch (Exception e) {
                 System.err.println("Exception from Python " + e.getMessage());
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             return true;
         } else
@@ -149,7 +149,7 @@ public final class JythonEngine {
             po = python.eval(macro);
         } catch (PyException pye) {
             System.err.println("Python error: ");
-            pye.printStackTrace();
+            //pye.printStackTrace();
             return null;
         }
         String s;

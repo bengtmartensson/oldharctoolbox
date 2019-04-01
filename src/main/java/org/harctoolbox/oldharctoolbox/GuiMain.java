@@ -103,19 +103,7 @@ public final class GuiMain extends javax.swing.JFrame {
      * @throws org.xml.sax.SAXException
      */
     public GuiMain(String homefilename) throws IOException, SAXException {
-//        try {
         hm = new Home(homefilename);
-//        } catch (IOException e) {
-//            System.err.println("Cannot open home file");
-//            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
-//        } catch (SAXParseException e) {
-//            System.err.println("home file parse error" + e.getMessage());
-//            System.exit(IrpUtils.EXIT_XML_ERROR);
-//        } catch (SAXException e) {
-//            System.err.println("home file parse error" + e.getMessage());
-//            System.exit(IrpUtils.EXIT_XML_ERROR);
-//        }
-
         properties = Main.getProperties();
         cmd_formatter = new ResultFormatter(properties.getCommandformat());
         engine = new JythonEngine(hm, false);
@@ -1065,13 +1053,8 @@ public final class GuiMain extends javax.swing.JFrame {
         }
     }
 
-    private void doExit() {
-        System.out.println("Exiting...");
-        System.exit(0);
-    }
-
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        doExit();
+        HarcUtils.doExit();
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed

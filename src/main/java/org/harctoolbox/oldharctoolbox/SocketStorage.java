@@ -22,6 +22,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,6 +33,7 @@ public final class SocketStorage {
     private static boolean enable = true;
     private static boolean debug = false;
     private static HashMap<String, socket_stat> sockettable = new HashMap<String, socket_stat>(16);
+    private final static Logger logger = Logger.getLogger(SocketStorage.class.getName());
 
     public static void enable_storage(boolean en) {
         enable = en;
@@ -179,10 +182,8 @@ public final class SocketStorage {
             dispose_sockets(true);
             Thread.sleep(1000);
             sock1 = getsocket(host, port, unique);
-
-
-        } catch (IOException | InterruptedException | NumberFormatException e) {
-            e.printStackTrace();
+        } catch (InterruptedException | IOException ex) {
+            logger.log(Level.SEVERE, ex.getMessage());
         }
     }
     private static class addr_portno {
@@ -218,4 +219,3 @@ public final class SocketStorage {
         }
     }
 }
-

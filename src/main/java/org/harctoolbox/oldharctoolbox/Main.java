@@ -17,10 +17,30 @@ this program. If not, see http://www.gnu.org/licenses/.
 package org.harctoolbox.oldharctoolbox;
 
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.PrintStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.BindException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.gnu.readline.Readline;
@@ -60,7 +80,7 @@ final public class Main {
     private final static Logger logger = Logger.getLogger(Main.class.getName());
 
     private static void usage(int exitstatus) {
-        doExit(exitstatus, "Usage: one of" + IrCoreUtils.LINE_SEPARATOR + helptext);
+        HarcUtils.doExit(exitstatus, "Usage: one of" + IrCoreUtils.LINE_SEPARATOR + helptext);
     }
 
     private static void usage() {
@@ -120,7 +140,7 @@ final public class Main {
                 }
                 if (args[arg_i].equals("--version")) {
                     //System.out.println("JVM: "+ System.getProperty("java.vendor") + " " + System.getProperty("java.version"));
-                    doExit(IrpUtils.EXIT_SUCCESS, Version.versionString + IrCoreUtils.LINE_SEPARATOR + Version.licenseString);
+                    HarcUtils.doExit(IrpUtils.EXIT_SUCCESS, Version.versionString + IrCoreUtils.LINE_SEPARATOR + Version.licenseString);
                 }
                 switch (args[arg_i]) {
                     case "-#":
@@ -135,7 +155,7 @@ final public class Main {
                         arg_i++;
                         charset = args[arg_i++];
                         if (!Charset.isSupported(charset))
-                            doExit(IrpUtils.EXIT_USAGE_ERROR, "Unsupported charset " + charset + ", aborting.");
+                            HarcUtils.doExit(IrpUtils.EXIT_USAGE_ERROR, "Unsupported charset " + charset + ", aborting.");
                         break;
                     case "-M":
                         arg_i++;
@@ -254,7 +274,7 @@ final public class Main {
         try {
             ProtocolDataBase.initialize(properties.getIrpProtocolsPath());
         } catch (IOException | IrpParseException ex) {
-            doExit(IrpUtils.EXIT_CONFIG_READ_ERROR, ex.getMessage());
+            HarcUtils.doExit(IrpUtils.EXIT_CONFIG_READ_ERROR, ex.getMessage());
         }
 
         if (gui_mode) {
@@ -297,9 +317,7 @@ final public class Main {
 
             instance.shutdown();
 
-//            if (status == IrpUtils.EXIT_SUCCESS)
-//                System.err.println("Program exited normally.");
-            doExit(status);
+            HarcUtils.doExit(status);
         }
     }
 
@@ -314,22 +332,12 @@ final public class Main {
             }
         } catch (URISyntaxException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            doExit(IrpUtils.EXIT_FATAL_PROGRAM_FAILURE);
+            HarcUtils.doExit(IrpUtils.EXIT_FATAL_PROGRAM_FAILURE);
         }
         if (applicationHome != null && !applicationHome.endsWith(File.separator))
             applicationHome += File.separator;
 
         return applicationHome;
-    }
-
-    private static void doExit(int status, String message) {
-        if (message != null && !message.isEmpty())
-            (status == IrpUtils.EXIT_SUCCESS ? System.out : System.err).println(message);
-        System.exit(status);
-    }
-
-    private static void doExit(int status) {
-        doExit(status, null);
     }
 
 // GUI does not expand aliases.
@@ -481,9 +489,9 @@ final public class Main {
         try {
             hm = new Home(homefilename/*, this.verbose, this.debug*/);
         } catch (IOException e) {
-            doExit(IrpUtils.EXIT_CONFIG_READ_ERROR, e.getMessage());
+            HarcUtils.doExit(IrpUtils.EXIT_CONFIG_READ_ERROR, e.getMessage());
         } catch (SAXException e) {
-            doExit(IrpUtils.EXIT_XML_ERROR, e.getMessage());
+            HarcUtils.doExit(IrpUtils.EXIT_XML_ERROR, e.getMessage());
         }
         /*try {
             engine = new macro_engine(this.macrofilename, hm, this.debug);
@@ -503,7 +511,7 @@ final public class Main {
         try {
             Main.getProperties().save();
         } catch (IOException e) {
-            doExit(IrpUtils.EXIT_CONFIG_WRITE_ERROR, e.getMessage());
+            HarcUtils.doExit(IrpUtils.EXIT_CONFIG_WRITE_ERROR, e.getMessage());
         }
     }
 
@@ -607,11 +615,11 @@ final public class Main {
             return IrpUtils.EXIT_IO_ERROR;
        } catch (SocketException e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
             return IrpUtils.EXIT_IO_ERROR;
         } catch (IOException e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
             return IrpUtils.EXIT_IO_ERROR;
         }
         return IrpUtils.EXIT_SUCCESS;
@@ -652,13 +660,13 @@ final public class Main {
         return IrpUtils.EXIT_SUCCESS;
     }
 
-    private Calendar get_timer_next(String name) {
-        return timertable != null ? timertable.get(name) : null;
-    }
+//    private Calendar get_timer_next(String name) {
+//        return timertable != null ? timertable.get(name) : null;
+//    }
 
-    private String get_timer_next_as_string(String name) {
-        return timertable != null ? formatdate(timertable.get(name)) : null;
-    }
+//    private String get_timer_next_as_string(String name) {
+//        return timertable != null ? formatdate(timertable.get(name)) : null;
+//    }
 
     //public Enumeration<String> get_timer_names_e() {
     //    return timertable.keys();
@@ -727,7 +735,7 @@ final public class Main {
                 try {
                     SocketStorage.dispose_sockets(true);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
                 if (DebugArgs.dbg_misc())
                     System.err.println("*************** This is Readline shutdown **********");
@@ -839,7 +847,6 @@ final public class Main {
                         result = "";
                 } catch (InterruptedException e) {
                     System.err.println(e.getMessage());
-                //System.exit(IrpUtils.exit_interrupted);
                 }
             }
         } else if (line.startsWith("--")) {
@@ -1022,13 +1029,13 @@ final public class Main {
                     HarcUtils.printtable("Valid inputs for " + dst_device + (zone != null ? (" in zone " + zone) : "") + ":",
                             hm.get_sources(dst_device, zone));
                 } else {
-                    doExit(IrpUtils.EXIT_IO_ERROR, "No such device `" + dst_device + "'");
+                    HarcUtils.doExit(IrpUtils.EXIT_IO_ERROR, "No such device `" + dst_device + "'");
                 }
             } else {
                 try {
                     hm.select(dst_device, src_device, type, zone, the_mediatype, connection_type);
                 } catch (InterruptedException e) {
-                    doExit(IrpUtils.EXIT_INTERRUPTED, e.getMessage());
+                    HarcUtils.doExit(IrpUtils.EXIT_INTERRUPTED, e.getMessage());
                 }
             }
 
@@ -1137,6 +1144,7 @@ final public class Main {
         }
 
         @Override
+        @SuppressWarnings("SleepWhileInLoop")
         public void run() {
             while (true) {
                 long starttime = System.currentTimeMillis();
@@ -1145,8 +1153,9 @@ final public class Main {
                     try {
                         String result = process_line(cmd, false);
                     } catch (EOFException ex) {
-                        ex.printStackTrace();
+                        logger.log(Level.SEVERE, null, ex);
                     }
+
                 }
                 long towait = 1000L * secs - (System.currentTimeMillis() - starttime);
                 if (towait > 10) {
@@ -1217,7 +1226,7 @@ final public class Main {
                     cal.set(Calendar.MINUTE, Integer.parseInt(e.getAttribute("minute")));
                     cal.set(Calendar.SECOND, Integer.parseInt(e.getAttribute("second")));
                 } catch (NumberFormatException expt) {
-                    expt.printStackTrace();
+                    logger.severe(expt.getMessage());
                 }
 
                 fix_cal(cal);
@@ -1245,7 +1254,7 @@ final public class Main {
                     }
                     cal = c;
                 } catch (NumberFormatException expt) {
-                    expt.printStackTrace();
+                    logger.severe(expt.getMessage());
                 }
             } else if (e.getTagName().equals("sunrise")) {
                 // FIXME
@@ -1297,6 +1306,7 @@ final public class Main {
         }
 
         @Override
+        @SuppressWarnings("SleepWhileInLoop")
         public void run() {
             while (true) {
                 //System.out.println("\"" + name + "\" ");
@@ -1321,8 +1331,8 @@ final public class Main {
                     System.out.print("Thread \"" + name + "\" woke up, trying to execute " + cmd + ": ");
                     try {
                         String result = process_line(cmd, false);
-                    }catch (EOFException ex) {
-                        ex.printStackTrace();
+                    } catch (EOFException ex) {
+                        logger.severe(ex.getMessage());
                     }
                 }
                 // Prevent from triggering again immediately.
@@ -1437,7 +1447,7 @@ final public class Main {
                     SocketStorage.dispose_sockets(true);
                     Main.no_threads--;
                     if (kill_prog) {
-                        doExit(restart_prog ? IrpUtils.EXIT_RESTART : IrpUtils.EXIT_SUCCESS);
+                        HarcUtils.doExit(restart_prog ? IrpUtils.EXIT_RESTART : IrpUtils.EXIT_SUCCESS);
                     }
                 } catch (IOException ex) {
                     System.err.println("IOException when closing " + ex.getMessage());

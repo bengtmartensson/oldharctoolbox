@@ -58,14 +58,14 @@ public final class Home {
     private static final Logger logger = Logger.getLogger(Home.class.getName());
 
     private static void usage(int errorcode) {
-        System.err.println("Usage:\n"
+        String message = "Usage:\n"
                 + "home [<options>] <device_instancename> <command> [<command_args>]*"
                 + "\nwhere options=-h <filename>,-t "
                 + CommandType_t.valid_types('|')
                 + ",-m,-T 0|1,-# <count>,-v,-d <debugcode>, -p <propsfile>\n"
-                        + "or\n"
-                        + "home -s [-z zone][-A,-V][-c connection_type] <device_instancename> <src_device>");
-        System.exit(errorcode);
+                + "or\n"
+                + "home -s [-z zone][-A,-V][-c connection_type] <device_instancename> <src_device>";
+        HarcUtils.doExit(errorcode, message);
     }
 
     private static void usage() {
@@ -185,10 +185,8 @@ public final class Home {
                     System.err.println("devname = " + devname + ", commandname = " + args[arg_i + 1] + "(#" + cmd + ")");
                 }
 
-                if (!list_commands && cmd == command_t.invalid) {
-                    System.err.println("Command \"" + args[arg_i + 1] + "\" not recognized, aborting.");
-                    System.exit(7);
-                }
+                if (!list_commands && cmd == command_t.invalid)
+                    HarcUtils.doExit(IrpUtils.EXIT_SEMANTIC_USAGE_ERROR, "Command \"" + args[arg_i + 1] + "\" not recognized, aborting.");
 
                 int no_arguments = args.length - arg_i - 2;
                 arguments = new String[no_arguments];
@@ -235,24 +233,23 @@ public final class Home {
             } else {
                 String output = hm.do_command(devname, cmd, arguments, type, count, toggle, smart_memory);
                 if (output == null) {
-                    System.out.println("** Failure **");
-                    System.exit(1);
+                    HarcUtils.doExit(IrpUtils.EXIT_FATAL_PROGRAM_FAILURE, "** Failure **");
                 } else if (!output.isEmpty()) {
                     System.out.println("Command output: \"" + output + "\"");
                 }
             }
         } catch (IOException e) {
             System.err.println("Cannot read file " + home_filename + " (" + e.getMessage() + ").");
-            System.exit(IrpUtils.EXIT_CONFIG_READ_ERROR);
+            HarcUtils.doExit(IrpUtils.EXIT_CONFIG_READ_ERROR);
         } catch (SAXParseException e) {
             System.err.println("Parse error in " + home_filename + " (" + e.getMessage() + ").");
-            System.exit(IrpUtils.EXIT_XML_ERROR);
+            HarcUtils.doExit(IrpUtils.EXIT_XML_ERROR);
         } catch (SAXException e) {
             System.err.println("Parse error in " + home_filename + " (" + e.getMessage() + ").");
-            System.exit(IrpUtils.EXIT_XML_ERROR);
+            HarcUtils.doExit(IrpUtils.EXIT_XML_ERROR);
         } catch (InterruptedException e) {
             System.err.println("** Interrupted **");
-            System.exit(18);
+            HarcUtils.doExit(18);
         }
     }
 
@@ -451,6 +448,7 @@ public final class Home {
     // Really generate and send the command, if possible
 
     // TODO: This function should be restructured. Really...
+    @SuppressWarnings("SleepWhileInLoop")
     private String transmit_command(String dev_class, command_t cmd, String[] arguments, String house, int deviceno,
             Gateway gw, GatewayPort fgw, CommandType_t type, int count, ToggleType toggle,
             HashMap<String, String> attributes, String flavor) throws InterruptedException {
@@ -494,7 +492,7 @@ public final class Home {
             }
         } else {
             if (!gw.get_class().equals("ezcontrol_t10")) {
-                if (dev == null || !dev.is_valid()) { // FIXME
+                if (!dev.is_valid()) { // FIXME
                     failure = true;
                 } else {
                     if (the_command == null) {
@@ -634,8 +632,8 @@ public final class Home {
                         if (DebugArgs.dbg_transmit())
                             System.err.println("Setting timeout on TCP socket to " + fgw.get_timeout());
                         //System.err.println(sock.getSoLinger() + " " + sock.getSoTimeout() + " " + sock.getReuseAddress() + " " + sock.getKeepAlive());
-                        PrintStream outToServer = new PrintStream(sock.getOutputStream());
-                        BufferedReader inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                        PrintStream outToServer = new PrintStream(sock.getOutputStream(), true, IrCoreUtils.DEFAULT_CHARSET_NAME);
+                        BufferedReader inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream(), IrCoreUtils.DEFAULT_CHARSET_NAME));
 
                         String opener = dev.get_open(cmd, CommandType_t.tcp);
                         if (opener != null && !opener.isEmpty()) {

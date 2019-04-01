@@ -113,10 +113,8 @@ public final class Props {
 
         needSave = false;
         props = new Properties();
-        FileInputStream f = null;
 
-        try {
-            f = new FileInputStream(this.filename);
+        try (FileInputStream f = new FileInputStream(this.filename)) {
             if (useXml)
                 props.loadFromXML(f);
             else
@@ -129,14 +127,6 @@ public final class Props {
             System.err.println("Property File " + this.filename + " could not be read, using builtin defaults.");
             setupDefaults();
             needSave = true;
-        } finally {
-            if (f != null) {
-                try {
-                    f.close();
-                } catch (IOException ex) {
-                    System.err.println(ex.getMessage());
-                }
-            }
         }
         setupDefaults();
     }

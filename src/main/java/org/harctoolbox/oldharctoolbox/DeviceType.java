@@ -17,6 +17,8 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
+import java.util.Locale;
+
 /**
  * Type of device to be controlled.
  */
@@ -46,7 +48,7 @@ public enum DeviceType {
      */
     public static DeviceType parse(String s) {
         try {
-            return valueOf(s.toLowerCase());
+            return valueOf(s.toLowerCase(Locale.US));
         } catch (IllegalArgumentException e) {
             return undefined;
         }

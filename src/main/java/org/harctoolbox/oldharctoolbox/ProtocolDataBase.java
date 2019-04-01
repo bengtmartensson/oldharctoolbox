@@ -45,23 +45,6 @@ public final class ProtocolDataBase {
         protocols = new HashMap<>(8);
     }
 
-//    public static void initialize() throws IOException {
-//        //initialize(harcprops.get_instance().get_irpmaster_configfile());
-//        irpDatabase = new IrpDatabase();
-//        //protocols = new HashMap<String, Protocol>();
-//    }
-
-    // States for toggles, one per protocol
-    //private static Hashtable<String, Integer> toggle_state = new Hashtable<String, Integer>();
-
-//    private static Protocol get_protocol(String name) throws UnassignedException, RecognitionException, ParseException, UnknownProtocolException {
-//        if (!protocols.containsKey(name)) {
-//            Protocol protocol = irpMaster.newProtocol(name);
-//            protocols.put(name, protocol);
-//        }
-//        return protocols.get(name);
-//    }
-
     public static IrSignal encode(String protocol_name, short deviceno,
             short subdevice, short cmdno, ToggleType toggle, String params, boolean verbose) throws IrpException {
         //int itoggle = 0;
@@ -113,12 +96,6 @@ public final class ProtocolDataBase {
         IrSignal irSignal = protocol.toIrSignal(params);
         return irSignal;
     }
-
-    /*private static raw_ir irSignal2ir_code(IrSignal irSignal) throws IncompatibleArgumentException {
-        //IrpMaster.Pronto.getProntoCode(irSignal.getFrequency());
-        Pronto pronto = new Pronto(irSignal);
-        return new raw_ir((int)pronto.getFrequency(), pronto.initArray(), pronto.repeatArray(), null);
-    }*/
 
     private static boolean hasParameter(String protocol_name, String paramName) throws IrpException {
         return irpDatabase.getNamedProtocol(protocol_name).hasParameter(paramName);

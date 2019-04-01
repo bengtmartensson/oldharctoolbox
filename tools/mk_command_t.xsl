@@ -73,6 +73,7 @@ public enum command_t {
 
        /**
         * For debugging only: try to parse args[0].
+        * @param args
         */
         public static void main(String[] args) {
             System.out.println(command_t.parse(args[0]));

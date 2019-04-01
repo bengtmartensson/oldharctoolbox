@@ -17,6 +17,8 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
+import org.harctoolbox.irp.IrpUtils;
+
 /**
  * The mandatory about popup ;-).
  *
@@ -153,7 +155,7 @@ private void homepage_buttonActionPerformed(java.awt.event.ActionEvent evt) {//G
 
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
-                    System.exit(0);
+                    HarcUtils.doExit(IrpUtils.EXIT_SUCCESS);
                 }
             });
             dialog.setVisible(true);
