@@ -415,8 +415,11 @@ public final class HomeParser {
     Input.Connector parse_connector(Element el) {
         HashSet<String> deviceref = new HashSet<>(8);
         NodeList nl = el.getElementsByTagName("deviceref");
-        for (int i = 0; i < nl.getLength(); i++)
-            deviceref.add(((Element) nl.item(i)).getAttribute("device"));
+        for (int i = 0; i < nl.getLength(); i++) {
+            String dev = ((Element) nl.item(i)).getAttribute("device");
+            String expanded = alias_table.get(dev);
+            deviceref.add(expanded != null ? expanded : dev);
+        }
         String n_string = el.getAttribute("number");
         int number = -1;
         try {

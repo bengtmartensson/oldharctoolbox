@@ -429,16 +429,30 @@ public final class Home {
         }
 
         if (DebugArgs.dbg_decode_args())
-            System.err.println("Found select command: " + select_command + (query_command != null ? (", query: " + query_command.get_command() + "==" + query_command.get_response() + ".") : ", no query command found."));
+            System.err.println("Found select command: " + select_command + (query_command != null ? (", query: " + query_command.get_command() + "==" + query_command.get_expected_response() + ".") : ", no query command found."));
 
         if (query_command != null) {
             String result = do_command(devname, query_command.get_command(),
                     new String[0], type, 1, ToggleType.toggle_0, false);
-            if (result != null && result.equals(query_command.get_response())) {
-                if (DebugArgs.dbg_decode_args())
-                    System.err.println(devname + " already turned to " + src_device + ", ignoring.");
+            if (result != null) {
+                Device device = null;
+                try {
+                    device = Device.newDevice(d.get_class(), d.get_attributes());
+                } catch (IOException | SAXException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                Command command = device.get_command(query_command.get_command());
+                int lines = command.get_response_lines();
+                if (lines > 1) {
+                    String[] res = result.split("\n");
+                    result = res[lines - 1];
+                }
+                if (result.equals(query_command.get_expected_response())) { // FIXME
+                    if (DebugArgs.dbg_decode_args())
+                        System.err.println(devname + " already turned to " + src_device + ", ignoring.");
 
-                return true;
+                    return true;
+                }
             }
         }
 
@@ -471,9 +485,9 @@ public final class Home {
         // Use arguments_length instead of arguments.length to allow for arguments == null
         int arguments_length = arguments == null ? 0 : arguments.length;
         try {
-            dev = Device.new_device(dev_class, attributes/*, false*/);
+            dev = Device.newDevice(dev_class, attributes/*, false*/);
             the_command = dev.get_command(cmd, type);
-            if (the_command.get_minsends() > count)
+            if (the_command != null && the_command.get_minsends() > count)
                 count = the_command.get_minsends();
         } catch (IOException | SAXException e) {
             // May be ok, e.g. when using Intertechno and T-10.
@@ -1112,12 +1126,10 @@ public final class Home {
         if (dev_class != null) {
             try {
                 HashMap<String, String>attributes = get_attributes(devname);
-                dev = Device.new_device(dev_class, attributes/*, false*/);
+                dev = Device.newDevice(dev_class, attributes/*, false*/);
             } catch (IOException e) {
                 //if (debug_dispatch())
                 System.err.println("Cannot read device file " + dev_class + ".");
-            } catch (SAXParseException e) {
-                System.err.println(e.getMessage());
             } catch (SAXException e) {
                 System.err.println(e.getMessage());
             }

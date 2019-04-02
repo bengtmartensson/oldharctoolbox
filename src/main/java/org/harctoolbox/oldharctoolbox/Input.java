@@ -167,12 +167,12 @@ public final class Input {
     public static class QueryCommand {
 
         private final command_t cmd;
-        private final String val;
+        private final String expected_response;
         private final MediaType type;
 
-        public QueryCommand(command_t cmd, String val, MediaType type) {
+        public QueryCommand(command_t cmd, String expected_response, MediaType type) {
             this.cmd = cmd;
-            this.val = val;
+            this.expected_response = expected_response;
             this.type = type;
         }
 
@@ -180,8 +180,8 @@ public final class Input {
             return cmd;
         }
 
-        public String get_response() {
-            return val;
+        public String get_expected_response() {
+            return expected_response;
         }
 
         public MediaType get_type() {

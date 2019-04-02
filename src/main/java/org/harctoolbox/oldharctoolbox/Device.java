@@ -57,8 +57,8 @@ public final class Device {
     private static int debug = 0;
     private static HashMap<String, Device> device_storage = new HashMap<String, Device>(16);
 
-    public static Device new_device(String devicename, HashMap<String, String>attributes)
-            throws IOException, SAXParseException, SAXException {
+    public static Device newDevice(String devicename, HashMap<String, String>attributes)
+            throws IOException, SAXException {
         String dwa = (new device_with_attributes(devicename, attributes)).toString();
         Device d = device_storage.get(dwa);
         if (d == null) {
@@ -389,7 +389,7 @@ public final class Device {
      * @throws java.io.IOException
      * @throws org.xml.sax.SAXParseException
      */
-    public Device(String name, HashMap<String, String> attributes) throws IOException, SAXParseException, SAXException {
+    private Device(String name, HashMap<String, String> attributes) throws IOException, SAXParseException, SAXException {
         this(name, attributes, true);
     }
 

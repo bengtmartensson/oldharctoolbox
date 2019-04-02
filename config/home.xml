@@ -281,15 +281,15 @@ Description of devices, applications, gateways, groups, zones.
                         <querycommand cmd="get_videoinput" mediatype="video_only" val="SVSAT/CBL"/>
                     </zone>
                     <zone name="2">
-                        <selectcommand audio_video="zone2_sat"/>
+                        <selectcommand audio_video="zone2_sat_cbl"/>
                         <querycommand cmd="get_zone2" val="Z2SAT/CBL"/>
                     </zone>
                     <zone name="3">
-                        <selectcommand audio_video="zone3_sat"/>
+                        <selectcommand audio_video="zone3_sat_cbl"/>
                         <querycommand cmd="get_zone3" val="Z3SAT/CBL"/>
                     </zone>
                     <zone name="record">
-                        <selectcommand audio_video="recordsrc_sat"/>
+                        <selectcommand audio_video="recordsrc_sat_cbl"/>
                         <querycommand cmd="get_recordsrc" val="SRSAT/CBL"/>
                     </zone>
                     <connector connectiontype="cvbs">
@@ -348,7 +348,7 @@ Description of devices, applications, gateways, groups, zones.
                         <deviceref device="dvd"/>
                     </connector>
                 </input>
-                <input name="DVD" myname="HD-DVD" audio="yes" video="yes">
+                <input name="DVD" myname="UHD BD" audio="yes" video="yes">
                     <zone name="1">
                         <selectcommand audio_video="in_dvd" video_only="videoinput_dvd"/>
                         <querycommand cmd="get_input" val="SIDVD"/>
