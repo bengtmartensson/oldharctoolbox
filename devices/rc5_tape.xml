@@ -17,16 +17,16 @@
       <command cmdref="cmd_7" 				cmdno="7"/>
       <command cmdref="cmd_8" 				cmdno="8"/>
       <command cmdref="cmd_9" 				cmdno="9"/>
-      <command cmdref="power_toggle" 		cmdno="12"/>
-      <command cmdref="in_tape"			cmdno="63"/>
+      <command cmdref="power_toggle"                    cmdno="12"/>
+      <command cmdref="in_tape"                         cmdno="63"/>
       <command cmdref="previous" 			cmdno="33"/>
-      <command cmdref="next" 			cmdno="32"/>
-      <command cmdref="play" 			cmdno="53"/>
-      <command cmdref="rewind" 			cmdno="50"/>
-      <command cmdref="fast_forward" 		cmdno="52"/>
-      <command cmdref="stop" 			cmdno="54"/>
-      <command cmdref="pause_toggle" 		cmdno="48"/>
-      <command cmdref="record_on" 			cmdno="55"/>
+      <command cmdref="next"                            cmdno="32"/>
+      <command cmdref="play"                            cmdno="53"/>
+      <command cmdref="rewind"                          cmdno="50"/>
+      <command cmdref="fast_forward"                    cmdno="52"/>
+      <command cmdref="stop"                            cmdno="54"/>
+      <command cmdref="pause_toggle"                    cmdno="48"/>
+      <command cmdref="record"                          cmdno="55"/>
     </commandset>
   </device>
 </devices>

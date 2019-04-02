@@ -71,6 +71,7 @@
 <!ELEMENT commandset (commandgroup|commandgroupref|command|xi:include)* >
 <!ATTLIST commandset
         type (ir|rf433|rf868|www|web_api|tcp|udp|serial|bluetooth|on_off|ip|special|telnet|sensor) "ir"
+        minsends CDATA "1"
         ifattribute CDATA #IMPLIED
         protocol NMTOKEN #IMPLIED
         prefix CDATA ""

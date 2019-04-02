@@ -11,21 +11,21 @@
         <delay type="enter_teletext" delay="5000"/>
     </delays-->
 
-    <commandset type="ir" protocol="sony12" deviceno="1" remotename="sony_12_1">
+    <commandset type="ir" minsends="3" protocol="sony12" deviceno="1" remotename="sony_12_1">
         <command cmdref="inputs" cmdno="37" />
         <command cmdref="power_toggle" cmdno="21" />
         <command cmdref="exit" cmdno="99" />
-        <command cmdref="1" cmdno="0" />
-        <command cmdref="2" cmdno="1" />
-        <command cmdref="3" cmdno="2" />
-        <command cmdref="4" cmdno="3" />
-        <command cmdref="5" cmdno="4" />
-        <command cmdref="6" cmdno="5" />
-        <command cmdref="7" cmdno="6" />
-        <command cmdref="8" cmdno="7" />
-        <command cmdref="9" cmdno="8" />
+        <command cmdref="cmd_1" cmdno="0" />
+        <command cmdref="cmd_2" cmdno="1" />
+        <command cmdref="cmd_3" cmdno="2" />
+        <command cmdref="cmd_4" cmdno="3" />
+        <command cmdref="cmd_5" cmdno="4" />
+        <command cmdref="cmd_6" cmdno="5" />
+        <command cmdref="cmd_7" cmdno="6" />
+        <command cmdref="cmd_8" cmdno="7" />
+        <command cmdref="cmd_9" cmdno="8" />
         <command cmdref="info" cmdno="58" />
-        <command cmdref="0" cmdno="9" />
+        <command cmdref="cmd_0" cmdno="9" />
         <command cmdref="teletext" cmdno="63" />
         <command cmdref="up" cmdno="116" />
         <command cmdref="down" cmdno="117" />
@@ -33,53 +33,53 @@
         <command cmdref="right" cmdno="51" />
         <command cmdref="ok" cmdno="101" />
         <command cmdref="home" cmdno="96" />
-        <command cmdref="tv" cmdno="36" />
-        <command cmdref="vol_up" cmdno="18" />
-        <command cmdref="vol_down" cmdno="19" />
+        <command cmdref="tv_mode" cmdno="36" />
+        <command cmdref="volume_up" cmdno="18" />
+        <command cmdref="volume_down" cmdno="19" />
         <command cmdref="last_channel" cmdno="59" />
         <command cmdref="mute_toggle" cmdno="20" />
-        <command cmdref="ch_up" cmdno="16" />
-        <command cmdref="ch_down" cmdno="17" />
+        <command cmdref="channel_up" cmdno="16" />
+        <command cmdref="channel_down" cmdno="17" />
         <command cmdref="audio" cmdno="23" />
-        <command cmdref="cmd_10s_WAIT" cmdno="29" />
-        <command cmdref="ENTER" cmdno="11" />
-        <command cmdref="GUIDE" cmdno="14" />
-        <command cmdref="INPUT_VIDEO_AV" cmdno="64" />
-        <command cmdref="PICTURE_OFF" cmdno="62" />
+        <command cmdref="wait_10_seconds" cmdno="29" />
+        <command cmdref="enter" cmdno="11" />
+        <command cmdref="guide" cmdno="14" />
+        <command cmdref="in_av" cmdno="64" />
+        <command cmdref="picture_off" cmdno="62" />
         <command cmdref="PIP" cmdno="91" />
-        <command cmdref="PIP_CHANNEL_DOWN" cmdno="89" />
-        <command cmdref="PIP_CHANNEL_UP" cmdno="88" />
-        <command cmdref="PIP_POSITION" cmdno="94" />
-        <command cmdref="PIP_TV_VIDEO" cmdno="90" />
-        <command cmdref="POWER_OFF" cmdno="47" />
-        <command cmdref="POWER_ON" cmdno="46" />
-        <command cmdref="PRESET" cmdno="108" />
-        <command cmdref="RESET" cmdno="22" />
-        <command cmdref="SLEEP" cmdno="54" />
-        <command cmdref="TELETEXT_HOLD" cmdno="37" />
-        <command cmdref="TIMER" cmdno="60" />
-        <command cmdref="TIMER_DOWN" cmdno="50" />
-        <command cmdref="TIMER_UP" cmdno="49" />
+        <command cmdref="PIP_channel_down" cmdno="89" />
+        <command cmdref="PIP_channel_up" cmdno="88" />
+        <command cmdref="PIP_position" cmdno="94" />
+        <command cmdref="PIP_exchange" cmdno="90" />
+        <command cmdref="power_off" cmdno="47" />
+        <command cmdref="power_on" cmdno="46" />
+        <!--command cmdref="preset" cmdno="108" /-->
+        <command cmdref="reset" cmdno="22" />
+        <command cmdref="sleep" cmdno="54" />
+        <command cmdref="teletext_freeze" cmdno="37" />
+        <command cmdref="timer" cmdno="60" />
+        <command cmdref="timer_down" cmdno="50" />
+        <command cmdref="timer_up" cmdno="49" />
     </commandset>
 
-    <commandset type="ir" protocol="sony15" deviceno="26" remotename="sony_15_26">
+    <commandset type="ir" minsends="3" protocol="sony15" deviceno="26" remotename="sony_15_26">
         <command cmdref="tv_radio" cmdno="87" />
         <command cmdref="netflix" cmdno="124" />
         <command cmdref="title_list" cmdno="101" />
-        <command cmdref="DISCOVER" cmdno="115" />
-        <command cmdref="I_MANUAL" cmdno="123" />
-        <command cmdref="INPUT_HDMI1" cmdno="90" />
-        <command cmdref="INPUT_HDMI2" cmdno="91" />
-        <command cmdref="INPUT_HDMI3" cmdno="92" />
-        <command cmdref="INPUT_HDMI4" cmdno="93" />
-        <command cmdref="MENU_SYNC" cmdno="88" />
+        <command cmdref="discover" cmdno="115" />
+        <command cmdref="i_manual" cmdno="123" />
+        <command cmdref="in_hdmi1" cmdno="90" />
+        <command cmdref="in_hdmi2" cmdno="91" />
+        <command cmdref="in_hdmi3" cmdno="92" />
+        <command cmdref="in_hdmi4" cmdno="93" />
+        <!--command cmdref="menu_sync" cmdno="88" /-->
     </commandset>
 
-    <commandset type="ir" protocol="sony15" deviceno="119" remotename="sony15_119">
+    <!--commandset type="ir" minsends="3" protocol="sony15" deviceno="119" remotename="sony15_119">
         <command cmdref="digital_analog" cmdno="13" />
-    </commandset>
+    </commandset-->
 
-    <commandset type="ir" protocol="sony15" deviceno="151" remotename="sony15_151">
+    <commandset type="ir" minsends="3" protocol="sony15" deviceno="151" remotename="sony15_151">
         <command cmdref="red" cmdno="37" />
         <command cmdref="green" cmdno="38" />
         <command cmdref="yellow" cmdno="39" />
@@ -90,40 +90,40 @@
         <command cmdref="fast_forward" cmdno="28" />
         <command cmdref="subtitle" cmdno="40" />
         <command cmdref="previous" cmdno="60" />
-        <command cmdref="pause" cmdno="25" />
+        <command cmdref="pause_toggle" cmdno="25" />
         <command cmdref="next" cmdno="61" />
         <command cmdref="record" cmdno="32" />
         <command cmdref="stop" cmdno="24" />
-        <command cmdref="DEMO_MODE" cmdno="124" />
-        <command cmdref="DIGIT_SEPARATOR" cmdno="29" />
-        <command cmdref="FORWARD" cmdno="28" />
-        <command cmdref="OPTION" cmdno="54" />
-        <command cmdref="STORE_MODE" cmdno="106" />
+        <command cmdref="demo_mode" cmdno="124" />
+        <command cmdref="two_digit" cmdno="29" />
+        <command cmdref="forward" cmdno="28" />
+        <command cmdref="option_menu" cmdno="54" />
+        <command cmdref="store_mode" cmdno="106" />
     </commandset>
 
-    <commandset type="ir" protocol="sony15" deviceno="164" remotename="sony15_164">
+    <commandset type="ir" minsends="3" protocol="sony15" deviceno="164" remotename="sony15_164">
         <command cmdref="guide" cmdno="91" />
-        <command cmdref="CC_SUBTITLE" cmdno="16" />
-        <command cmdref="FORMAT_16_9" cmdno="69" />
-        <command cmdref="FORMAT_FULL" cmdno="59" />
-        <command cmdref="FORMAT_WIDE" cmdno="61" />
-        <command cmdref="FORMAT_WIDE_ZOOM" cmdno="66" />
-        <command cmdref="PIP_OFF" cmdno="110" />
-        <command cmdref="REPLAY" cmdno="115" />
-        <command cmdref="RF" cmdno="24" />
-        <command cmdref="SPLIT" cmdno="119" />
+        <command cmdref="subtitle" cmdno="16" />
+        <command cmdref="aspectratio_16_9" name="FORMAT_16_9" cmdno="69" />
+        <command cmdref="aspectratio_full" name="FORMAT_FULL" cmdno="59" />
+        <command cmdref="aspectratio_wide" name="FORMAT_WIDE" cmdno="61" />
+        <command cmdref="aspectratio_wide_zoom" name="FORMAT_WIDE_ZOOM" cmdno="66" />
+        <command cmdref="PIP_off" cmdno="110" />
+        <!--command cmdref="replay" cmdno="115" /-->
+        <!--command cmdref="RF" cmdno="24" /-->
+        <command cmdref="split" cmdno="119" />
     </commandset>
 
-    <commandset type="ir" protocol="sony15" deviceno="196" remotename="sony15_196">
-        <command cmdref="ext-box-menu" cmdno="73" />
+    <commandset type="ir" minsends="3" protocol="sony15" deviceno="196" remotename="sony15_196">
+        <command cmdref="ext_box_menu" cmdno="73" />
         <command cmdref="google_play" cmdno="70" />
         <command cmdref="action_menu" cmdno="75" />
         <command cmdref="apps" cmdno="42" />
         <command cmdref="help" cmdno="77" />
     </commandset>
 
-    <commandset type="ir" protocol="sony20" deviceno="26" subdevice="26" remotename="sony20_20_26">
-        <command cmdref="DISPLAY" cmdno="58"/>
+    <commandset type="ir" minsends="3" protocol="sony20" deviceno="26" subdevice="26" remotename="sony20_20_26">
+        <command cmdref="display" cmdno="58"/>
     </commandset>
 
     <xi:include href="ping.xi"/>

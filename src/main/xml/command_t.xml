@@ -13,7 +13,7 @@ action of the command as accurately as possible (without being overly long).
 Names have to be valid Java identifiers: consisting of letters, numbers, and
 underscores; starting with a letter, not being identical to a reserved name. If
 the "natural" name is invalid, "cmd_" can be prepended. The names are
-interpreted case sensitively, although presently all names are in lower case, 
+interpreted case sensitively, although presently all names are in lower case,
 please do not use upper case unless you have a good reason.
 DoNotUseCamelCaseNames.
 
@@ -106,6 +106,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="get_remotes"/>
         <command id="get_commands"/>
         <command id="get_verbosity"/>
+        <command id="get_monitor"/>
     </group>
 
     <group id="netcat_commands">
@@ -214,7 +215,7 @@ command (see "ok" with the synonyms "enter" and "select").
             <parameter name="key_name"/>
         </command>
 
-    <!-- These commands are there for more-or-less temporary experimenting -->
+        <!-- These commands are there for more-or-less temporary experimenting -->
         <command id="special_0"/>
         <command id="special_1"/>
         <command id="special_2"/>
@@ -245,7 +246,7 @@ command (see "ok" with the synonyms "enter" and "select").
     </group>
 
     <group id="power">
-    <!-- Note: there is no, and should be no "power" -->
+        <!-- Note: there is no, and should be no "power" -->
         <command id="power_on" displayname="Power on">
             <synonym name="on"/>
         </command>
@@ -317,11 +318,16 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="internet_mode"/>
         <command id="movie_mode"/>
         <command id="nas_mode"/>
-    </group>
+        <command id="service_mode" />
+        <command id="lock_mode" />
+        <command id="demo_mode" />
+        <command id="store_mode" />
+   </group>
 
     <group id="input_commands">
         <command id="input_select" type="cyclic">
             <synonym name="input"/>
+            <synonym name="inputs"/>
         </command>
         <command id="in_tv"/>
         <command id="in_dtv"/>
@@ -394,7 +400,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="in_scart"/>
         <command id="in_front"/>
         <command id="in_side"/>
-        <command id="input" type="cyclic"/>
+        <!--command id="input" type="cyclic"/-->
 
         <command id="d5_control_on"/>
         <command id="d5_control_off"/>
@@ -527,7 +533,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="get_zone3_input" zone="3"/>
     </group>
     <group id="input_flavor">
-    <!-- these are for receivers that treat ext in as a switch -->
+        <!-- these are for receivers that treat ext in as a switch -->
         <command id="ext_input_toggle"/>
         <command id="ext_input_on"/>
         <command id="ext_input_off"/>
@@ -563,7 +569,8 @@ command (see "ok" with the synonyms "enter" and "select").
     </group>
 
     <group id="display_commands">
-        <command id="display"/><!-- generic -->
+        <!--command id="display"/-->
+        <command id="playback_info" />
         <command id="frame_time" type="toggle"/>
         <command id="chapter_time" type="toggle"/>
         <command id="tape_remaining"/>
@@ -576,6 +583,8 @@ command (see "ok" with the synonyms "enter" and "select").
 
     <group id="timer_commands">
         <command id="timer"/>
+        <command id="timer_up"/>
+        <command id="timer_down"/>
         <command id="turbo_timer"/>
     </group>
 
@@ -927,10 +936,14 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="rewind"/>
         <command id="fast_forward"/>
         <command id="stop"/>
-        <command id="record_toggle"/>
+        <command id="record">
+            <synonym name="record_toggle"/>
+        </command>
         <command id="record_on"/>
         <command id="record_off"/>
-        <command id="pause_toggle" type="toggle"/>
+        <command id="pause" type="toggle">
+            <synonym name="pause_toggle"/>
+        </command>
         <command id="pause_on"/>
         <command id="pause_off"/>
         <command id="cmd_goto"/>
@@ -944,7 +957,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="side_b"/>
         <command id="direct_play"/>
 
-    <!--command id="back"/-->
+        <!--command id="back"/-->
         <command id="speed_down"/>
         <command id="speed_up"/>
         <command id="auto_pause"/>
@@ -955,6 +968,9 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="forward"/>
         <command id="fff"/>
         <command id="rrr"/>
+        <command id="forward_1_min" />
+        <command id="back_10_seconds" />
+        <command id="wait_10_seconds" />
 
         <command id="open"/>
         <command id="close"/>
@@ -1014,11 +1030,26 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="custom_index"/>
         <command id="memory_play"/>
     </group>
-  
+
     <group id="menu_commands">
         <command id="menu" type="toggle" remark="generic, not for use as dvd menu"/>
         <command id="dvd_menu" remark="Go to menu on a DVD"/>
         <command id="service_menu"/>
+        <command id="apps" />
+        <command id="ext_box_menu" />
+        <command id="action_menu" />
+        <command id="google_play" />
+        <command id="internet_menu" />
+        <command id="netflix" />
+        <command id="top_menu" />
+        <command id="popup_menu" />
+        <command id="option_menu" />
+        <command id="hdr_menu" />
+        <command id="sound_effects_menu" />
+        <command id="picture_menu" />
+        <command id="title_list"/>
+        <command id="discover"/>
+        <command id="split"/>
         <command id="menu_on"/>
         <command id="menu_off"/>
         <command id="up"/>
@@ -1037,12 +1068,14 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="cmd_return">
             <synonym name="back"/>
         </command>
+        <command id="exit" />
         <command id="page_up"/>
         <command id="page_down"/>
 
         <command id="epg"/>
         <command id="status_on"/>
         <command id="status_off"/>
+        <command id="status_toggle"/>
 
         <command id="plus" remark="generic menu command"/>
         <command id="minus" remark="generic menu command"/>
@@ -1052,10 +1085,10 @@ command (see "ok" with the synonyms "enter" and "select").
         </command>
         <command id="group" remark="for DVD Audio"/>
         <command id="info" name="?"/>
+        <command id="guide"/>
+        <command id="i_manual"/>
         <command id="help" remark="Calls static help pages, not dynamic information."/>
-        <command id="home">
-            <synonym name="exit"/>
-        </command>
+        <command id="home"/>
         <command id="zone2_up" zone="2"/>
         <command id="zone2_down" zone="2"/>
         <command id="zone2_left" zone="2"/>
@@ -1107,7 +1140,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="SAP" remark="Secondary Audio Program"/>
         <command id="lipsync"/>
     </group>
-  
+
     <group id="zone2div">
         <command id="zone2_repeat" name="zone2 repeat"/>
         <command id="zone2_shuffle" name="zone2 random/shuffle"/>
@@ -1177,6 +1210,11 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="sw_level_up"/>
         <command id="sw_level_down"/>
         <command id="set_sw_level"/>
+
+        <command id="set_monitor1"/>
+        <command id="set_monitor2"/>
+        <command id="set_monitor_auto"/>
+        <command id="hdmi_monitor" />
     </group>
 
     <group id="pictureprops">
@@ -1215,6 +1253,7 @@ command (see "ok" with the synonyms "enter" and "select").
         </command>
         <command id="video_mute_on"/>
         <command id="video_mute_off"/>
+        <command id="picture_off" />
         <command id="resolution" type="cyclic"/>
         <command id="resolution_480p"/>
         <command id="resolution_720p"/>
@@ -1223,25 +1262,25 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="resolution_auto"/>
 
         <command id="cmd_3D"/>
-<command id="cmd_3D_mode" />
-<command id="cmd_3D_format"/>
-<command id="cmd_3D_depth_up"/>
-<command id="cmd_3D_depth_down" />
-<command id="cmd_3D_simulated_toggle" />
-<command id="cmd_3D_brightness_up" />
-<command id="cmd_3D_brightness_down" />
-<command id="cmd_3D_auto" />
-<command id="cmd_3D_3D" />
-<command id="cmd_3D_2D" />
-<command id="cmd_3D_over_under" />
-<command id="cmd_3D_side_by_side" />
-<command id="cmd_3D_simulated" />
-<command id="cmd_3D_simulated_high" />
-<command id="cmd_3D_simulated_mid" />
-<command id="cmd_3D_simulated_low" />
+        <command id="cmd_3D_mode" />
+        <command id="cmd_3D_format"/>
+        <command id="cmd_3D_depth_up"/>
+        <command id="cmd_3D_depth_down" />
+        <command id="cmd_3D_simulated_toggle" />
+        <command id="cmd_3D_brightness_up" />
+        <command id="cmd_3D_brightness_down" />
+        <command id="cmd_3D_auto" />
+        <command id="cmd_3D_3D" />
+        <command id="cmd_3D_2D" />
+        <command id="cmd_3D_over_under" />
+        <command id="cmd_3D_side_by_side" />
+        <command id="cmd_3D_simulated" />
+        <command id="cmd_3D_simulated_high" />
+        <command id="cmd_3D_simulated_mid" />
+        <command id="cmd_3D_simulated_low" />
 
         <group id="aspect-ratio">
-        <!-- To what extent are "zoom" and "aspectratio" synonyms? -->
+            <!-- To what extent are "zoom" and "aspectratio" synonyms? -->
             <command id="aspectratio" type="cyclic"/>
             <command id="aspectratio_for_4_3" type="cyclic"/>
             <command id="aspectratio_automatic"/>
@@ -1260,6 +1299,8 @@ command (see "ok" with the synonyms "enter" and "select").
             <command id="aspectratio_caption_in"/>
             <command id="aspectratio_full_through"/>
             <command id="aspectratio_normal_through"/>
+            <command id="aspectratio_wide"/>
+            <command id="aspectratio_wide_zoom"/>
             <command id="get_aspectratio"/>
             <command id="set_aspectratio"/>
             <command id="get_zoom"/>
@@ -1297,7 +1338,7 @@ command (see "ok" with the synonyms "enter" and "select").
             <command id="picturemode_bright_cinema" />
             <command id="picturemode_film2" />
             <command id="picturemode_photo" />
-     </group>
+        </group>
 
         <group id="lamp_modes">
             <command id="lamp_mode" type="cyclic"/>
@@ -1318,7 +1359,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="vertical_keystone_down"/>
         <command id="horizontal_keystone_up"/>
         <command id="horizontal_keystone_down"/>
-    <!--command id="picture"/-->
+        <!--command id="picture"/-->
         <command id="img_logo_off"/>
         <command id="img_logo_default"/>
         <command id="img_logo_user"/>
@@ -1436,16 +1477,17 @@ command (see "ok" with the synonyms "enter" and "select").
 
     <group id="PIP-commands">
         <command id="PIP" type="toggle"/>
+        <command id="PIP_off"/>
         <command id="PIP_source" type="cyclic"/>
         <command id="PIP_exchange"/>
         <command id="PIP_freeze" type="toggle"/>
         <command id="PIP_position" type="cyclic"/>
-        <command id="PIP_ch_down" name="PIP_ch-"/>
-        <command id="PIP_ch_up" name="PIP_ch_plus"/>
+        <command id="PIP_channel_down" name="PIP_ch-"/>
+        <command id="PIP_channel_up" name="PIP_ch_plus"/>
     </group>
 
     <group id="teletext_control">
-        <command id="teletext_toggle"/>
+        <command id="teletext"/>
         <command id="teletext_on"/>
         <command id="teletext_off"/>
         <command id="teletext_freeze"/>
@@ -1600,7 +1642,7 @@ command (see "ok" with the synonyms "enter" and "select").
             <parameter name="value"/>
         </command>
     </group>
-  
+
     <group id="experimenting">
         <command id="cmd_0x00"/>
         <command id="cmd_0x01"/>
@@ -1861,7 +1903,7 @@ command (see "ok" with the synonyms "enter" and "select").
     </group>
 
     <group id="keyboard_keys">
-    <!-- first row -->
+        <!-- first row -->
         <command id="key_esc"/>
         <command id="key_f1"/>
         <command id="key_f2"/>
@@ -1880,7 +1922,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="key_insert"/>
         <command id="key_delete"/>
 
-    <!-- second row -->
+        <!-- second row -->
         <command id="key_1"/>
         <command id="key_2"/>
         <command id="key_3"/>
@@ -1896,7 +1938,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="key_backspace"/>
         <command id="key_home"/>
 
-    <!-- third row -->
+        <!-- third row -->
         <command id="key_tab"/>
         <command id="key_q"/>
         <command id="key_w"/>
@@ -1913,7 +1955,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="key_backslash"/>
         <command id="key_pageup"/>
 
-    <!-- forth row -->
+        <!-- forth row -->
         <command id="key_capslock"/>
         <command id="key_a"/>
         <command id="key_s"/>
@@ -1929,7 +1971,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="key_enter"/>
         <command id="key_pagedown"/>
 
-    <!-- fifth row -->
+        <!-- fifth row -->
         <command id="key_leftshift"/>
         <command id="key_z"/>
         <command id="key_x"/>
@@ -1945,7 +1987,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="key_up"/>
         <command id="key_end"/>
 
-    <!-- sixth row -->
+        <!-- sixth row -->
         <command id="key_fn_down" remark="In general not transmitted"/>
         <command id="key_fn_up" remark="In general not transmitted"/>
         <command id="key_leftctrl"/>
@@ -1960,7 +2002,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="key_down"/>
         <command id="key_right"/>
 
-    <!-- mouse -->
+        <!-- mouse -->
         <command id="key_btnleft"/>
         <command id="key_btnmiddle"/>
         <command id="key_btnright"/>

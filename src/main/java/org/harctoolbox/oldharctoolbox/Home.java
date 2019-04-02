@@ -330,10 +330,10 @@ public final class Home {
     public int get_arguments(String devname, command_t cmd, CommandType_t cmdtype) {
         Device dev = get_device(expand_alias(devname));
         if (dev == null || !dev.is_valid())
-            return -1;
+            return (int) IrCoreUtils.INVALID;
 
-        Command kommand = dev.get_command(cmd, cmdtype);
-        return kommand != null ? dev.get_command(cmd, cmdtype).get_arguments().length : 0;
+        Command command = dev.get_command(cmd, cmdtype);
+        return command != null ? dev.get_command(cmd, cmdtype).get_arguments().length : 0;
     }
 
     public String[] get_commands(String devname, CommandType_t cmdtype) {
@@ -467,20 +467,21 @@ public final class Home {
         boolean success = false;
         boolean failure = false;
         Device dev = null;
+        Command the_command = null;
         // Use arguments_length instead of arguments.length to allow for arguments == null
         int arguments_length = arguments == null ? 0 : arguments.length;
         try {
             dev = Device.new_device(dev_class, attributes/*, false*/);
-        } catch (IOException e) {
+            the_command = dev.get_command(cmd, type);
+            if (the_command.get_minsends() > count)
+                count = the_command.get_minsends();
+        } catch (IOException | SAXException e) {
             // May be ok, e.g. when using Intertechno and T-10.
-            if (DebugArgs.dbg_transmit())
-                System.err.println("Could not open file " + Main.getProperties().getDevicesDir()+ File.separator + dev_class + HarcUtils.devicefile_extension + ".");
-        } catch (SAXParseException e) {
-            System.err.println(e.getMessage());
-        } catch (SAXException e) {
-            System.err.println(e.getMessage());
+//            if (DebugArgs.dbg_transmit())
+//                System.err.println("Could not open file " + Main.getProperties().getDevicesDir()+ File.separator + dev_class + HarcUtils.devicefile_extension + ".");
+            logger.warning(e.getMessage());
         }
-        Command the_command = dev.get_command(cmd, type);
+
         String result = "";
 
         if (type == CommandType_t.www) {
@@ -558,7 +559,7 @@ public final class Home {
                     }
                     if (gw.get_class().equals("ezcontrol_t10")) {
                         int power = 0;
-                        int arg = -1;
+                        int arg = (int) IrCoreUtils.INVALID;
                         if (cmd == command_t.set_power || cmd == command_t.dim_value_time) {
                             if (arguments.length > 0)
                                 power = Integer.parseInt(arguments[0]);
@@ -572,7 +573,7 @@ public final class Home {
                             failure = true;
                         } else {
                             EzControlT10 t10 = new EzControlT10(gw.get_hostname(), Main.getProperties().getVerbose());
-                            int preset = -1;
+                            int preset = (int) IrCoreUtils.INVALID;
                             try {
                                 preset = fgw.get_connectorno();
                                 if (DebugArgs.dbg_transmit())
@@ -584,13 +585,13 @@ public final class Home {
 
                             try {
                                 EzControlT10.Command t10cmd = EzControlT10.Command.valueOf(cmd.toString());
-                                if (preset != -1 && t10cmd.isPresetCommand())
+                                if (preset != IrCoreUtils.INVALID && t10cmd.isPresetCommand())
                                     switch (cmd) {
                                         case get_status:
                                             output = t10.getPresetStatus(preset);
                                             break;
                                         case set_power:
-                                            success = t10.sendPreset(preset, EzControlT10.Command.power_on, count);
+                                            success = t10.sendPreset(preset, power);
                                             break;
                                         default:
                                             success = t10.sendPreset(preset, t10cmd, count);
@@ -601,7 +602,7 @@ public final class Home {
                                         System.err.println("This command only implemented for presets.");
                                         failure = true;
                                     } else {
-                                        EzControlT10.EZSystem system = EzControlT10.EZSystem.valueOf(dev_class);
+                                        EzControlT10.EZSystem system = EzControlT10.EZSystem.parse(dev_class);
                                         success = t10.sendManual(system, house, deviceno, t10cmd, power, arg, count);
                                     }
                                 }
@@ -867,10 +868,8 @@ public final class Home {
                                 if (the_command.get_response_lines() > 0)
                                     output = result;
                             }
-                        } catch (IOException ex) {
-                            logger.log(Level.SEVERE, null, ex);
-                        } catch (NoSuchTransmitterException ex) {
-                            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException | NoSuchTransmitterException ex) {
+                            logger.log(Level.SEVERE, ex.getMessage());
                         }
                     } else {
                         System.err.println("Not implemented.");
@@ -881,7 +880,7 @@ public final class Home {
                 case www:
                     if (arguments_length > 0)
                         System.err.println("Warning: arguments to command igored.");
-                    String url = "http://" + fgw.get_hostname() + (portnumber == -1 ? "" : (":" + portnumber));
+                    String url = "http://" + fgw.get_hostname() + (portnumber == IrCoreUtils.INVALID ? "" : (":" + portnumber));
                     HarcUtils.browse(url);
                     success = true;
                     break;
@@ -1148,14 +1147,14 @@ public final class Home {
 
     public int get_delay(String devname, String delaytype) {
         Device dev = get_device(devname);
-        return dev != null ? dev.get_delay(delaytype) : -1;
+        return dev != null ? dev.get_delay(delaytype) : (int) IrCoreUtils.INVALID;
     }
 
     public int get_pin(String devname) {
         Dev d = get_dev(devname);
         if (d == null) {
             System.err.println("Device \"" + devname + "\" not found.");
-            return -1;
+            return (int) IrCoreUtils.INVALID;
         }
         return d.get_pin();
     }
@@ -1244,7 +1243,7 @@ public final class Home {
             output = "";
             for (int j = 0; j < no_times && output != null; j++) {
                 output = dispatch_command2gateway(gwp, dev_class, cmd, arguments, null, // house
-                        (short) -1 /*deviceno*/, type, count, toggle, 0, the_dev.get_attributes(), the_command.get_flavor());
+                        (short) IrCoreUtils.INVALID /*deviceno*/, type, count, toggle, 0, the_dev.get_attributes(), the_command.get_flavor());
             }
             success = output != null;
         }

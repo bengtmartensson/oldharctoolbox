@@ -49,6 +49,7 @@ public final class Command {
     private final String ccf_toggle_1;
     private final String charset;
     private final String flavor;
+    private final int minsends;
 
     public Command(CommandSet cmdset, int index) {
         CommandSetEntry c = cmdset.get_entry(index);
@@ -75,6 +76,7 @@ public final class Command {
         this.delay_between_reps = cmdset.get_delay_between_reps();
         this.charset = cmdset.get_charset();
         this.flavor = cmdset.get_flavor();
+        this.minsends = cmdset.get_minsends();
     }
 
     @Override
@@ -156,6 +158,10 @@ public final class Command {
 
     public String get_flavor() {
         return flavor;
+    }
+
+    public int get_minsends() {
+        return minsends;
     }
 
 //    public ir_code get_ir_code() {

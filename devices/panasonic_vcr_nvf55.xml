@@ -9,7 +9,7 @@
     <command cmdref="rewind" 		cmdno="2"/>
     <command cmdref="play" 			cmdno="10"/>
     <command cmdref="fast_forward" 		cmdno="3"/>
-    <command cmdref="record_on" 		cmdno="8"/>
+    <command cmdref="record" 		cmdno="8"/>
     <command cmdref="slow_down" 		cmdno="143"/>
     <command cmdref="slow" 			cmdno="15"/>
     <command cmdref="slow_up" 		cmdno="142"/>

@@ -30,29 +30,30 @@ public final class CommandSet {
         return (int) IrCoreUtils.INVALID;
     }
 
-    private CommandType_t type;
-    private String protocol;
-    private short deviceno;
-    private short subdevice;
-    private boolean has_toggle;
-    private int portnumber;
-    private String additional_parameters;
-    private String name;
-    private String remotename;
-    private String pseudo_power_on;
-    private String prefix;
-    private String suffix;
-    private String open;
-    private String close;
-    private int delay_between_reps;
-    private CommandSetEntry[] entries;
-    private String charset;
-    private String flavor;
+    private final CommandType_t type;
+    private final String protocol;
+    private final short deviceno;
+    private final short subdevice;
+    private final boolean has_toggle;
+    private final int portnumber;
+    private final String additional_parameters;
+    private final String name;
+    private final String remotename;
+    private final String pseudo_power_on;
+    private final String prefix;
+    private final String suffix;
+    private final String open;
+    private final String close;
+    private final int delay_between_reps;
+    private final CommandSetEntry[] entries;
+    private final String charset;
+    private final String flavor;
+    private final int minsends;
 
     public CommandSet(CommandSetEntry[] commands, CommandType_t type, String protocol,
             short deviceno, short subdevice, boolean has_toggle, String additional_parameters, String name,
             String remotename, String pseudo_power_on, String prefix,
-            String suffix, int delay_between_reps, String open, String close, int portnumber, String charset, String flavor) {
+            String suffix, int delay_between_reps, String open, String close, int portnumber, String charset, String flavor, int minsends) {
         this.entries = commands;
         this.type = type;
         this.deviceno = deviceno;
@@ -71,18 +72,19 @@ public final class CommandSet {
         this.portnumber = portnumber;
         this.charset = charset;
         this.flavor = flavor;
+        this.minsends = minsends;
     }
     public CommandSet(CommandSetEntry[] commands, String type,
             String protocol, String deviceno, String subdevice, String toggle,
             String additional_parameters, String name, String remotename, String pseudo_power_on,
             String prefix, String suffix, String delay_between_reps,
-            String open, String close, String portnumber, String charset, String flavor) {
+            String open, String close, String portnumber, String charset, String flavor, String minsends) {
         this(commands, CommandType_t.valueOf(type), protocol,
                 deviceno.isEmpty() ? -1 : Short.parseShort(deviceno),
                 subdevice.isEmpty() ? -1 : Short.parseShort(subdevice),
                 toggle.equals("yes"), additional_parameters, name, remotename, pseudo_power_on,
                 prefix, suffix, Integer.parseInt(delay_between_reps),
-                open, close, safe_parse_portnumber(portnumber), charset, flavor);
+                open, close, safe_parse_portnumber(portnumber), charset, flavor, Integer.parseInt(minsends));
     }
 
     public int get_no_commands() {
@@ -161,6 +163,10 @@ public final class CommandSet {
         return close;
     }
 
+    public int get_minsends() {
+        return minsends;
+    }
+
     public String get_info() {
         StringBuilder s = new StringBuilder(
                 "*** Commandset\n" +
@@ -174,6 +180,7 @@ public final class CommandSet {
                 "   prefix = " + prefix + "\n" +
                 "   suffix = " + suffix + "\n" +
                 "   pseudo_power_on = " + pseudo_power_on + "\n" +
+                "   minsends = " + minsends + "\n" +
                 "   # commands = " + entries.length);
         for (CommandSetEntry entrie : entries)
             s.append("\n").append(entrie.toString(this, true));

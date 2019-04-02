@@ -81,7 +81,21 @@ public enum command_t {
 }
     </xsl:template>
 
-<xsl:template match="command"><xsl:text>        </xsl:text><xsl:value-of select="@id"/>,
-</xsl:template>
+    <xsl:template match="command">
+        <xsl:text>        </xsl:text>
+        <xsl:value-of select="@id"/>
+        <xsl:text>,
+</xsl:text>
+        <xsl:apply-templates select="synonym"/>
+    </xsl:template>
+
+    <xsl:template match="synonym">
+        <xsl:text>        </xsl:text>
+        <xsl:value-of select="@name"/>
+        <xsl:text>, // Synonym for </xsl:text>
+        <xsl:value-of select="../@id"/>
+        <xsl:text>
+</xsl:text>
+    </xsl:template>
 
 </xsl:stylesheet>

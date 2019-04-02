@@ -358,13 +358,12 @@ public final class Device {
     private HashMap<String, String> attributes;
     private String[][] aliases;
     private int no_aliases = 0;
-    private int jp1_setupcode = -1;
     private boolean pingable_on;
     private boolean pingable_standby;
 
     private Device(String filename, HashMap<String, String>attributes, boolean barf_for_invalid)
             throws IOException, SAXParseException, SAXException {
-        this( (filename.contains(File.separator) ? "" : Main.getProperties().getDevicesDir()+ File.separator)
+        this( (filename.contains(File.separator) ? "" : Main.getProperties().getDevicesDir() + File.separator)
                 + filename
                 + ((filename.endsWith(HarcUtils.devicefile_extension)) ? "" : HarcUtils.devicefile_extension),
                 null, attributes, barf_for_invalid);
@@ -390,7 +389,7 @@ public final class Device {
      * @throws java.io.IOException
      * @throws org.xml.sax.SAXParseException
      */
-    public Device(String name, HashMap<String, String>attributes) throws IOException, SAXParseException, SAXException {
+    public Device(String name, HashMap<String, String> attributes) throws IOException, SAXParseException, SAXException {
         this(name, attributes, true);
     }
 
@@ -412,12 +411,6 @@ public final class Device {
         type = DeviceType.valueOf(device_el.getAttribute("type"));
         pingable_on = device_el.getAttribute("pingable_on").equals("yes"); // i.e. default false
         pingable_standby = device_el.getAttribute("pingable_standby").equals("yes"); // i.e. default false
-
-        NodeList nl = device_el.getElementsByTagName("jp1data");
-        if (nl.getLength() > 0) {
-            nl = ((Element)nl.item(0)).getElementsByTagName("setupcode");
-            jp1_setupcode = Integer.parseInt(((Element)nl.item(0)).getAttribute("value"));
-        }
 
         // First read the attributes of the device file, considered as defaults...
         NodeList attributes_nodes = device_el.getElementsByTagName("attribute");
@@ -548,7 +541,8 @@ public final class Device {
                     cs.getAttribute("close"),
                     cs.getAttribute("portnumber"),
                     cs.getAttribute("charset"),
-                    cs.getAttribute("flavor"));
+                    cs.getAttribute("flavor"),
+                    cs.getAttribute("minsends"));
         }
     }
 
@@ -864,10 +858,6 @@ public final class Device {
         return doc != null;
     }
 
-    public int get_jp1_setupcode() {
-        return this.jp1_setupcode;
-    }
-
     // TODO: Implement conjunctions, disjunctions, equalitytest.
     private boolean evaluate_ifattribute(String expr) {
         String s = expr.trim();
@@ -922,7 +912,6 @@ public final class Device {
                 NodeList cmd_nodes = cs.getElementsByTagName("command");
                 boolean has_toggle = cs.getAttribute("toggle").equals("yes");
                 String protocol = cs.getAttribute("protocol");
-                //jp1protocoldata jp1data = protocol_parser.get_jp1data(protocol);
                 // This weird stuff (using cmd_index instead of j)
                 // counteracts for the fact that commands with invalid names.
                 // (such not in command_t) are not sorted in.
@@ -997,10 +986,11 @@ public final class Device {
     private static class device_with_attributes {
         String device_classname;
         HashMap<String, String> attributes;
-        device_with_attributes(String device_classname, HashMap<String, String>attributes) {
+        device_with_attributes(String device_classname, HashMap<String, String> attributes) {
             this.device_classname = device_classname;
             this.attributes = attributes;
         }
+
         @Override
         public String toString() {
             return device_classname + attributes.toString(); // May not be portable, i.e. work with all implementations

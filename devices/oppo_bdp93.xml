@@ -6,7 +6,9 @@
 
   <attributes>
     <attribute name="rs232"/> <!-- Is default, but not everyone connects it -->
-    <!--attribute name="bluraychip_rs232_pro"/-->
+    <attribute name="bluraychip_rs232_pro"/>
+    <attribute name="bluraychip_rs232"/>
+    <attribute name="bluraychip"/>
     <attribute name="rc_1" defaultvalue="yes"/><!-- RC device 1 -->
     <attribute name="rc_2"/><!-- RC device 2 -->
     <attribute name="rc_3"/><!-- RC device 3 -->
