@@ -1033,50 +1033,67 @@ Description of devices, applications, gateways, groups, zones.
           <gateway-port gateway="lan" hostname="vaio"/>
         </device-->
 
+        <device id="dell_monitor" class="misc"/>
+
         <device id="yamaha_rxv1400" class="yamaha_rxv1400" name="Yamaha RX-V 1400" canonical="desk_amp">
             <gateway-port-ref gateway-port="desk_gw"/>
             <inputs>
-                <input name="dvd/ld">
-                    <selectcommand audio_video="in_dvd"/>
-                    <connector connectiontype="spdif" hardware="optical">
-                        <deviceref permanent="yes" device="epsilon"/>
-                    </connector>
-                </input>
-                <input name="dtv">
-                    <selectcommand audio_video="in_dtv"/>
-                    <connector connectiontype="spdif" hardware="optical">
-                        <deviceref device="mac"/>
-                    </connector>
-                </input>
-                <input name="vcr">
-                    <selectcommand audio_video="in_vcr"/>
-                </input>
                 <input name="v_aux">
                     <selectcommand audio_video="in_video_aux"/>
                 </input>
+                <input name="dvr/vcr2">
+                    <selectcommand audio_video="in_vcr2"/>
+                    <externalsrc name="zone3"/>
+                </input>
+                <input name="vcr1">
+                    <selectcommand audio_video="in_vcr"/>
+                </input>
                 <input name="cbl/sat">
                     <selectcommand audio_video="in_cable"/>
-                    <connector connectiontype="analog">
+                    <!--connector connectiontype="analog">
                         <deviceref device="denon"/>
                     </connector>
                     <connector connectiontype="spdif" hardware="coax">
                         <deviceref device="denon"/>
+                    </connector-->
+                </input>
+                <input name="dtv">
+                    <selectcommand audio_video="in_dtv"/>
+                    <connector connectiontype="analog">
+                       <deviceref device="dell_monitor"/>
                     </connector>
-                    <externalsrc name="zone3"/>
+                </input>
+                <input name="dvd">
+                    <selectcommand audio_video="in_dvd"/>
+                    <connector connectiontype="spdif" hardware="optical">
+                        <deviceref permanent="yes" device="mac"/>
+                    </connector>
+                </input>
+                <input name="md/tape">
+                    <selectcommand audio_video="in_cd_r"/>
+                </input>
+
+                <input name="cd-r">
+                    <selectcommand audio_video="in_cd_r"/>
+                    <connector connectiontype="spdif" hardware="coax">
+                        <deviceref device="denon"/>
+                    </connector>
+                </input>
+                <input name="cd">
+                  <selectcommand audio_video="in_cd"/>
+                  <connector connectiontype="spdif" hardware="optival">
+                    <deviceref permanent="yes" device="epsilon"/>
+                  </connector>
                 </input>
                 <input name="tuner">
                     <selectcommand audio_video="in_tuner"/>
                     <internalsrc name="tuner"/>
                 </input>
-                <!--input name="cd">
-                  <selectcommand audio_video="in_cd"/>
-                  <connector connectiontype="analog">
-                    <deviceref device="epsilon"/>
-                  </connector>
-                </input-->
                 <input name="phono">
                     <selectcommand audio_video="in_phono"/>
                 </input>
+
+
             </inputs>
         </device>
 
