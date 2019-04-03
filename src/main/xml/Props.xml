@@ -27,7 +27,7 @@ this program. If not, see http://www.gnu.org/licenses/.
     <property name="dtdDir" type="string" default='"dtds"'/>
     <property name="devicesDir" type="string" default='"devices"'/>
     <property name="exportDir" type="string" default='"exports"'/>
-    <property name="aliasfilename" type="string" default='"src/org/harctoolbox/commandnames.xml"'/>
+    <property name="aliasfilename" type="string" default='"src/main/xml/command_t.xml"'/>
     <property name="rlHistoryfile" type="string" default='"/home/bengt/.harctoolbox.rl"'/> <!-- FIXME -->
     <property name="appname" type="string" default='"oldharctoolbox"'/>
     <property name="rlPrompt" type="string" default='"harctoolbox> "'/>
