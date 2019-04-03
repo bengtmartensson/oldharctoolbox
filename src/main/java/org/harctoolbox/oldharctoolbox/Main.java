@@ -266,9 +266,9 @@ final public class Main {
         properties = new Props(propsfilename, appHome);
         //HarcProps.initialize(propsfilename);
         //properties.set_propsfilename(propsfilename);
-        if (debug != NO_VALUE)
+        if (debug != NO_VALUE || ! gui_mode)
             properties.setDebug(debug);
-        if (verbose)
+        if (verbose || ! gui_mode)
             properties.setVerbose(verbose);
 
         try {
@@ -315,8 +315,7 @@ final public class Main {
             else
                 status = instance.noninteractive_execute(noninteractive_args);
 
-            instance.shutdown();
-
+            // Do not save properties, these are not really useful outside of the GUI
             HarcUtils.doExit(status);
         }
     }
@@ -505,14 +504,6 @@ final public class Main {
             System.err.println(e.getMessage());
             engine = null;
         }*/
-    }
-
-    private void shutdown() {
-        try {
-            Main.getProperties().save();
-        } catch (IOException e) {
-            HarcUtils.doExit(IrpUtils.EXIT_CONFIG_WRITE_ERROR, e.getMessage());
-        }
     }
 
     private void do_tasks(String tasksfilename) {
