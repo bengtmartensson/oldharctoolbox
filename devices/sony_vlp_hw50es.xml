@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE devices PUBLIC "-//bengt-martensson.de//devices//en"
+ "../dtds/devices.dtd">
+<devices>
+    <device id="sony_vlp_hw50es" name="Sony VLP HW50ES" vendor="Sony" model="VLP HW50ES" type="projector">
+        <commandset type="serial" protocol="rs232_38400_8n1_evenparity" flavor="SonySerialCommand">
+<!-- Page 2 -->
+<!--
+ Picture Mode 00h 02h Dynamic 0000h Set/Get
+Standard 0001h
+Cinema1 0002h
+Cinema2 0003h
+Cinema3 0004h
+Game 0005h
+Photo 0006h
+User1 0007h
+User2 0008h
+Contrast 00h 10h Set Value 0000h to 0064h (0 to 100)
+Brightness 00h 11h Set Value 0000h to 0064h (0 to 100)
+Color 00h 12h Set Value 0000h to 0064h (0 to 100)
+Hue 00h 13h Set Value 0000h to 0064h (0 to 100)
+Sharpness 00h 14h Set Value 0000h to 0064h (0 to 100)
+Color Temp. 00h 17h High 0000h
+Mid 0001h
+Low1 0002h
+Custom1 0003h
+Custom2 0004h
+Custom3 0005h
+Custom4 0006h
+Low2 0007h
+Custom5 0008h
+Lamp Control 00h 1Ah Low 0000h
+High 0001h
+Black Level Adj. 00h 1Ch Set Value FFFDh to 0003h (_3 to 3)
+
+            -->
+            <!-- Page 3 -->
+            <!--
+            VPL-VW95ES 3 (E)
+            <Table 1> <Table 2> Remarks
+            Item Number Data
+            Item Upper byte Lower byte Data Byte
+            Advanced Iris 00h 1Dh Off 0000h Set/Get
+            Manual 0001h
+            Auto1 0002h
+            Auto2 0003h
+            Real Color
+            Processing
+            00h 1Eh Off 0000h
+            User1 0001h
+            User2 0002h
+            User3 0003h
+            Film Mode 00h 1Fh Off 0000h
+            Auto1 0001h
+            Auto2 0002h
+            Gamma Correction 00h 22h Off 0000h
+            Gamma 1 0001h
+            Gamma 2 0002h
+            Gamma 3 0003h
+            Gamma 4 0004h
+            Gamma 5 0005h
+            Gamma 6 0006h
+            Gamma 7 0007h
+            Gamma 8 0008h
+            Gamma 9 0009h
+            Gamma 10 000Ah
+            NR 00h 25h Off 0000h
+            Low 0001h
+            Middle 0002h
+            High 0003h
+            Block NR 00h 26h Off 0000h
+            Low 0001h
+            Middle 0002h
+            High 0003h
+            Mosquito NR 00h 27h Off 0000h
+            Low 0001h
+            Middle 0002h
+            High 0003h
+            White Level Adj. 00h 28h Set Value FFFDh to 0003h (_3 to 3)
+            Color Space 00h 3Bh Normal 0000h
+            Wide1 0001h
+            Wide2 0002h
+            Wide3 0003h
+            -->
+            <!-- Page 4 -->
+            <!--
+            User Gain Red 00h 50h Set Value FFE2h to 001Eh (_30 to 30) Set/Get
+            User Gain Green 00h 51h Set Value FFE2h to 001Eh (_30 to 30)
+            User Gain Blue 00h 52h Set Value FFE2h to 001Eh (_30 to 30)
+            User Bias Red 00h 53h Set Value FFE2h to 001Eh (_30 to 30)
+            User Bias Green 00h 54h Set Value FFE2h to 001Eh (_30 to 30)
+            User Bias Blue 00h 55h Set Value FFE2h to 001Eh (_30 to 30)
+            Iris Sensitivity 00h 56h Recommend 0000h
+            Fast 0001h
+            Slow 0002h
+            Iris Manual 00h 57h Set Value 0000h to 0064h (0 to 100)
+            Film Projection 00h 58h Off 0000h
+            Mode1 0001h
+            Mode2 0002h
+            Motion Enhancer 00h 59h Off 0000h
+            Low 0001h
+            High 0002h
+            xvColor 00h 5Ah Off 0000h
+            On 0001h
+            Picture Position 00h 66h Position1 0000h
+            Position2 0001h
+            Position3 0002h
+            Position4 0003h
+            Position5 0004h
+            Table 2-2 ITEM List For Screen
+            <Table 1> <Table 2> Remarks
+            Item Number Data
+            Item Upper byte Lower byte Data Byte
+            Wide Mode 00h 20h Full 0000h Set/Get
+            Normal 0001h
+            Wide Zoom 0002h
+            Zoom 0003h
+            Full1 0007h
+            Full2 0008h
+            Anamorphic
+            Zoom
+            000Bh
+            Over Scan 00h 23h Off 0000h
+            On 0001h
+            Screen Area 00h 24h Full 0000h
+            Through 0001h
+            -->
+            <!-- page 5 -->
+            <!--
+            Input 00h 01h Input A 0002h Set/Get
+            Component 0003h
+            HDMI1 0004h
+            HDMI2 0005h
+            Picture Muting 00h 30h Off 0000h
+            On 0001h
+            Input-A Signal Sel 00h 32h Auto 0000h
+            Computer 0001h
+            Component 0002h
+            Video GBR 0003h
+            Table 2-4 ITEM List For 3D
+            <Table1> <Table2> Remarks
+            Item Number Data
+            Item Upper byte Lower byte Data Byte
+            2D-3D Display Sel. 00h 60h Auto 0000h Set/Get
+            3D 0001h
+            2D 0002h
+            3D Format 00h 61h Simulated 3D 0000h
+            Side-by-Side 0001h
+            Over-Under 0002h
+            3D Depth Adjust 00h 62h Set Value FFFEh to 0002h (_2 to 2)
+            Simulated 3D
+            Effect
+            00h 63h High 0000h
+            Middle 0001h
+            Low 0002h
+            3D Glasses
+            Brightness
+            00h 65h Set Value 0000h to 0004h (0 to 4)
+            -->
+            <!-- page 6 -->
+            <command cmdref="get_status_error" transmit="get,1,1" response_lines="1">
+                <!-- Status Error 01h 01h No Error 0000h Get only
+                Lamp Error 0001h
+                Fan Error 0002h
+                Cover Error 0004h
+                Temp Error 0008h
+                D5V Error 0010h
+                Power Error 0020h
+                Temp Warning 0040h
+                NVM Data Error 0080h -->
+            </command>
+            <command cmdref="get_status_power" transmit="get,1,2" response_lines="1">
+                <!--
+                Standby 0000h
+                Start Up 0001h
+                Startup Lamp 0002h
+                Power On 0003h
+                Cooling1 0004h
+                Cooling2 0005h
+                Saving Cooling1 0006h
+                Saving Cooling2 0007h
+                Saving Standby 0008h
+                -->
+            </command>
+            <command cmdref="get_lamp_hours" transmit="get,1,19" response_lines="1" remark="Use Time 0000h to FFFFh"/>
+            <command cmdref="get_status_error2" transmit="get,1,32" response_lines="1">
+                <!--            Status Error (2) 01h 25h No Error 0000h
+                Lens Shutter Error 0001h
+                Highland Warning 0020h
+                -->
+            </command>
+
+            <command cmdref="power_toggle"	transmit="set,23,21"	remark="toggle" />
+            <command cmdref="video_mute_toggle"	transmit="set,23,36"	remark="toggle" />
+            <command cmdref="status_on"		transmit="set,23,37"	remark="" />
+            <command cmdref="status_off"          transmit="set,23,38"	remark="" />
+            <command cmdref="menu"		transmit="set,23,41"	remark="" />
+            <command cmdref="in_vga"		transmit="set,23,43"	remark="vga input" />
+            <command cmdref="in_component"	        transmit="set,23,44"	remark="" />
+            <command cmdref="power_on"	        transmit="set,23,46"	remark="discrete" />
+            <command cmdref="reset"		transmit="set,23,123"	remark="" />
+            <command cmdref="in_hdmi2"		transmit="set,23,112"	remark="" />
+            <command cmdref="in_hdmi1"		transmit="set,23,111"	remark="" />
+            <command cmdref="ok"		transmit="set,23,90"	remark="" />
+            <command cmdref="input_select"	transmit="set,23,87"	remark="cyclic" />
+            <command cmdref="down"		transmit="set,23,54"	remark="" />
+            <command cmdref="up"                  transmit="set,23,53"	remark="" />
+            <command cmdref="left"		transmit="set,23,52"	remark="" />
+            <command cmdref="right"		transmit="set,23,51"	remark="" />
+            <command cmdref="power_off"	        transmit="set,23,47"	remark="discrete" />
+            <command cmdref="sharpness_down"          transmit="set,23,35"	remark="" />
+            <command cmdref="sharpness_up"          transmit="set,23,34"	remark="" />
+            <command cmdref="hue_down"		transmit="set,23,33"	remark="->purple" />
+            <command cmdref="hue_up"		transmit="set,23,32"	remark="->green" />
+            <command cmdref="brightness_down"         transmit="set,23,31"	remark="" />
+            <command cmdref="brightness_up"         transmit="set,23,30"	remark="" />
+            <command cmdref="color_down"		transmit="set,23,27"	remark="" />
+            <command cmdref="color_up"		transmit="set,23,26"	remark="" />
+            <command cmdref="contrast_down"	        transmit="set,23,25"	remark="" />
+            <command cmdref="contrast_up"	        transmit="set,23,24"	remark="" />
+            <command cmdref="black_insertion"	transmit="set,23,8"	remark="toggle, Film projection in menu" />
+            <command cmdref="black_level"         transmit="set,23,7" />
+            <command cmdref="motion_enhancer"	transmit="set,23,5"	remark="cyclic" />
+
+            <command cmdref="gamma_toggle"	        transmit="set,25,94"	remark="cyclic" />
+            <command cmdref="picturemode_game"	transmit="set,25,86"	remark="" />
+            <command cmdref="picturemode_reference" transmit="set,25,85"	remark="cinema3 on VW95" />
+            <command cmdref="picturemode_user"	transmit="set,25,84"	remark="cinema2 on VW95" />
+            <command cmdref="picturemode_film1"  transmit="set,25,83"	remark="cinema1 on VW95" />
+            <command cmdref="picturemode_TV"	transmit="set,25,82"	remark="standard on VW95" />
+            <command cmdref="picturemode_bright_TV" transmit="set,25,81"	remark="dynamic on VW95" />
+            <command cmdref="reality_creation"	transmit="set,25,76"	remark="menu, only HW50" />
+            <command cmdref="colorspace"         transmit="set,25,75"	remark="cyclic" />
+            <command cmdref="rcp"                 transmit="set,25,8"	remark="menu" />
+            <command cmdref="color_temp"	transmit="set,25,92"	remark="cyclic" />
+            <command cmdref="picturemode"	transmit="set,25,91"	remark="cyclic" />
+            <command cmdref="picturemode_bright_cinema" transmit="set,25,89"	remark="user2 on VW95" />
+            <command cmdref="picturemode_film2"  transmit="set,25,88"	remark="user1 on VW95" />
+            <command cmdref="picturemode_photo"  transmit="set,25,87"	remark="" />
+            <command cmdref="iris"		transmit="set,25,95"	remark="cyclic" />
+            <command cmdref="aspectratio"		transmit="set,25,110"	remark="cyclic, 'wide mode' on VW95" />
+            <command cmdref="lenstoggle_pattern" transmit="set,25,120"	remark="toggle" />
+            <command cmdref="cmd_3D"                  transmit="set,25,59"	remark="menu" />
+            <command cmdref="vertical_keystone"	transmit="set,25,58"	remark="menu" />
+            <command cmdref="vertical_keystone_down"  transmit="set,25,1"	remark="" />
+            <command cmdref="vertical_keystone_up"  transmit="set,25,0"	remark="" />
+
+            <command transmit="set,27,18" cmdref="cmd_3D_mode" remark="cyclic 2D-3D DISPLAY SEL. TOGGLE" />
+            <command transmit="set,27,19" cmdref="cmd_3D_format"/><!--3D_toggle" remark="cyclic 3D FORMAT TOGGLE"/-->
+            <command transmit="set,27,21" cmdref="cmd_3D_depth_up"/><!--3D_depth_plus" remark="3D DEPTH + HIGH" /-->
+            <command transmit="set,27,22" cmdref="cmd_3D_depth_down" remark="3D DEPTH _ LOW" />
+            <command transmit="set,27,23" cmdref="cmd_3D_simulated_toggle" remark="SIMULATED 3D EFFECT TOGGLE" />
+            <command transmit="set,27,25" cmdref="cmd_3D_brightness_up" remark="3D GLASSES BRIGHTNESS+" />
+            <command transmit="set,27,26" cmdref="cmd_3D_brightness_down" remark="3D GLASSES BRIGHTNESS_" />
+            <command transmit="set,27,50" cmdref="cmd_3D_auto" remark="discrete 2D-3D DISPLAY SEL. AUTO" />
+            <command transmit="set,27,51" cmdref="cmd_3D_3D" remark="discrete 2D-3D DISPLAY SEL. 3D" />
+            <command transmit="set,27,52" cmdref="cmd_3D_2D" remark="discrete 2D-3D DISPLAY SEL. 2D" />
+            <command transmit="set,27,53" cmdref="cmd_3D_over_under" remark="discrete 3D FORMAT OVER-UNDER" />
+            <command transmit="set,27,54" cmdref="cmd_3D_side_by_side" remark="discrete 3D FORMAT SIDE-BY-SIDE" />
+            <command transmit="set,27,55" cmdref="cmd_3D_simulated" remark="discrete 3D FORMAT SIMULATED 3D" />
+            <command transmit="set,27,59" cmdref="cmd_3D_simulated_high" remark="SIMULATED 3D EFFECT HIGH" />
+            <command transmit="set,27,60" cmdref="cmd_3D_simulated_mid" remark="SIMULATED 3D EFFECT MIDDLE" />
+            <command transmit="set,27,61" cmdref="cmd_3D_simulated_low" remark="SIMULATED 3D EFFECT LOW" />
+        </commandset>
+
+       <commandset name="sony15" protocol="sony15" deviceno="84">
+            <command cmdref="video_mute_toggle"	cmdno="36"	remark="toggle" />
+            <command cmdref="status_on"		cmdno="37"	remark="" />
+            <command cmdref="status_off"          cmdno="38"	remark="" />
+            <command cmdref="menu"		cmdno="41"	remark="" />
+            <command cmdref="in_vga"		cmdno="43"	remark="vga input" />
+            <command cmdref="in_component"	        cmdno="44"	remark="" />
+            <command cmdref="power_on"	        cmdno="46"	remark="discrete" />
+            <command cmdref="reset"		cmdno="123"	remark="" />
+            <command cmdref="in_hdmi2"		cmdno="112"	remark="" />
+            <command cmdref="in_hdmi1"		cmdno="111"	remark="" />
+            <command cmdref="ok"		cmdno="90"	remark="" />
+            <command cmdref="input_select"	cmdno="87"	remark="cyclic" />
+            <command cmdref="down"		cmdno="54"	remark="" />
+            <command cmdref="up"                  cmdno="53"	remark="" />
+            <command cmdref="left"		cmdno="52"	remark="" />
+            <command cmdref="right"		cmdno="51"	remark="" />
+            <command cmdref="power_off"	        cmdno="47"	remark="discrete" />
+            <command cmdref="sharpness_down"          cmdno="35"	remark="" />
+            <command cmdref="sharpness_up"          cmdno="34"	remark="" />
+            <command cmdref="hue_down"		cmdno="33"	remark="->purple" />
+            <command cmdref="hue_up"		cmdno="32"	remark="->green" />
+            <command cmdref="brightness_down"         cmdno="31"	remark="" />
+            <command cmdref="brightness_up"         cmdno="30"	remark="" />
+            <command cmdref="color_down"		cmdno="27"	remark="" />
+            <command cmdref="color_up"		cmdno="26"	remark="" />
+            <command cmdref="contrast_down"	        cmdno="25"	remark="" />
+            <command cmdref="contrast_up"	        cmdno="24"	remark="" />
+            <command cmdref="black_insertion"	cmdno="8"	remark="toggle, Film projection in menu" />
+            <command cmdref="black_level"         cmdno="7" />
+            <command cmdref="motion_enhancer"	cmdno="5"	remark="cyclic" />
+        </commandset>
+
+        <commandset name="sony20" protocol="sony20" deviceno="26" subdevice="42">
+            <command cmdref="gamma_toggle"	        cmdno="94"	remark="cyclic" />
+            <command cmdref="picturemode_game"	cmdno="86"	remark="" />
+            <command cmdref="picturemode_reference" cmdno="85"	remark="cinema3 on VW95" />
+            <command cmdref="picturemode_user"	cmdno="84"	remark="cinema2 on VW95" />
+            <command cmdref="picturemode_film1"  cmdno="83"	remark="cinema1 on VW95" />
+            <command cmdref="picturemode_TV"	cmdno="82"	remark="standard on VW95" />
+            <command cmdref="picturemode_bright_TV" cmdno="81"	remark="dynamic on VW95" />
+            <command cmdref="reality_creation"	cmdno="76"	remark="menu, only HW50" />
+            <command cmdref="colorspace"         cmdno="75"	remark="cyclic" />
+            <command cmdref="rcp"                 cmdno="8"	remark="menu" />
+            <command cmdref="color_temp"	cmdno="92"	remark="cyclic" />
+            <command cmdref="picturemode"	cmdno="91"	remark="cyclic" />
+            <command cmdref="picturemode_bright_cinema" cmdno="89"	remark="user2 on VW95" />
+            <command cmdref="picturemode_film2"  cmdno="88"	remark="user1 on VW95" />
+            <command cmdref="picturemode_photo"  cmdno="87"	remark="" />
+            <command cmdref="iris"		cmdno="95"	remark="cyclic" />
+            <command cmdref="aspectratio"		cmdno="110"	remark="cyclic, 'wide mode' on VW95" />
+            <command cmdref="lenstoggle_pattern" cmdno="120"	remark="toggle" />
+            <command cmdref="cmd_3D"                  cmdno="59"	remark="menu" />
+            <command cmdref="vertical_keystone"	cmdno="58"	remark="menu" />
+            <command cmdref="vertical_keystone_down"  cmdno="1"	remark="" />
+            <command cmdref="vertical_keystone_up"  cmdno="0"	remark="" />
+        </commandset>
+
+    </device>
+</devices>
