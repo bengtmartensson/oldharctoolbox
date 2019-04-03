@@ -431,30 +431,34 @@ public final class Home {
         if (DebugArgs.dbg_decode_args())
             System.err.println("Found select command: " + select_command + (query_command != null ? (", query: " + query_command.get_command() + "==" + query_command.get_expected_response() + ".") : ", no query command found."));
 
-        if (query_command != null) {
-            String result = do_command(devname, query_command.get_command(),
-                    new String[0], type, 1, ToggleType.toggle_0, false);
-            if (result != null) {
-                Device device = null;
-                try {
-                    device = Device.newDevice(d.get_class(), d.get_attributes());
-                } catch (IOException | SAXException ex) {
-                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                Command command = device.get_command(query_command.get_command());
-                int lines = command.get_response_lines();
-                if (lines > 1) {
-                    String[] res = result.split("\n");
-                    result = res[lines - 1];
-                }
-                if (result.equals(query_command.get_expected_response())) { // FIXME
-                    if (DebugArgs.dbg_decode_args())
-                        System.err.println(devname + " already turned to " + src_device + ", ignoring.");
+        // Queuery has problems for the current setup, where everything is closed between invocations.
+        // Besides, this is better done in higher-level macros.
+        // Commenting out for now.
 
-                    return true;
-                }
-            }
-        }
+//        if (query_command != null) {
+//            String result = do_command(devname, query_command.get_command(),
+//                    new String[0], type, 1, ToggleType.toggle_0, false);
+//            if (result != null) {
+//                Device device = null;
+//                try {
+//                    device = Device.newDevice(d.get_class(), d.get_attributes());
+//                } catch (IOException | SAXException ex) {
+//                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                Command command = device.get_command(query_command.get_command());
+//                int lines = command.get_response_lines();
+//                if (lines > 1) {
+//                    String[] res = result.split("\n");
+//                    result = res[lines - 1];
+//                }
+//                if (result.equals(query_command.get_expected_response())) { // FIXME
+//                    if (DebugArgs.dbg_decode_args())
+//                        System.err.println(devname + " already turned to " + src_device + ", ignoring.");
+//
+//                    return true;
+//                }
+//            }
+//        }
 
         return do_command(devname, select_command, new String[0], type, 1, ToggleType.toggle_0, false) != null;
     }
