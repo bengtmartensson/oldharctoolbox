@@ -95,10 +95,6 @@ final public class Main {
         return instance;
     }
 
-    public static Props getProperties() {
-        return instance.properties;
-    }
-
     /**
      * This method, dependent on the arguments,
      * starts the program either in GUI mode, in interactive commandline mode,
@@ -348,9 +344,9 @@ final public class Main {
         harcprops.initialize();*/
 
         if (homefilename != null)
-            Main.getProperties().setHomeConf(homefilename);
+            properties.setHomeConf(homefilename);
         else
-            homefilename = Main.getProperties().getHomeConf();
+            homefilename = properties.getHomeConf();
 
         /*if (macrofilename != null)
         harcprops.get_instance().set_macrofilename(macrofilename);
@@ -462,9 +458,9 @@ final public class Main {
             harcprops.initialize();*/
 
         if (homefilename != null)
-            Main.getProperties().setHomeConf(homefilename);
+            properties.setHomeConf(homefilename);
         else
-            homefilename = Main.getProperties().getHomeConf();
+            homefilename = properties.getHomeConf();
 
         /*if (macrofilename != null)
             harcprops.get_instance().set_macrofilename(macrofilename);
@@ -477,9 +473,9 @@ final public class Main {
             this.browser = harcprops.get_instance().get_browser();
 */
         if (aliasfilename != null)
-            Main.getProperties().setAliasfilename(aliasfilename);
+            properties.setAliasfilename(aliasfilename);
         else
-            this.aliasfilename = Main.getProperties().getAliasfilename();
+            this.aliasfilename = properties.getAliasfilename();
 
         this.alias_expander = new CommandAlias(this.aliasfilename);
         //db = new debugargs(debug);
@@ -504,6 +500,10 @@ final public class Main {
             System.err.println(e.getMessage());
             engine = null;
         }*/
+    }
+
+    public Props getProperties() {
+        return properties;
     }
 
     private void do_tasks(String tasksfilename) {
@@ -718,7 +718,7 @@ final public class Main {
             @Override
             public void run() {
                 try {
-                    Readline.writeHistoryFile(Main.getProperties().getRlHistoryfile());
+                    Readline.writeHistoryFile(properties.getRlHistoryfile());
                 } catch (IOException e) {
                     System.err.println(e.getMessage());
                 }
@@ -739,9 +739,9 @@ final public class Main {
             System.err.println("Warning: GNU readline not found.");
         }
 
-        Readline.initReadline(Main.getProperties().getAppname());
+        Readline.initReadline(properties.getAppname());
 
-        history = new File(Main.getProperties().getRlHistoryfile());
+        history = new File(properties.getRlHistoryfile());
 
         // I become funny errors (UnsupportedEncodingException below) if historyfile
         // does not exist. Therefore create it if not there already.
@@ -752,7 +752,7 @@ final public class Main {
         }
         try {
             if (history.exists())
-                Readline.readHistoryFile(Main.getProperties().getRlHistoryfile());
+                Readline.readHistoryFile(properties.getRlHistoryfile());
         } catch (EOFException | UnsupportedEncodingException e) {
             System.err.println("Could not read rl history " + e.getMessage());
         }
@@ -762,7 +762,7 @@ final public class Main {
         } catch (UnsupportedEncodingException enc) {
             // FIXME
             System.err.println(enc.getMessage() + "Could not set word break characters");
-            System.err.println("Try touching " + Main.getProperties().getRlHistoryfile());
+            System.err.println("Try touching " + properties.getRlHistoryfile());
             return IrpUtils.EXIT_THIS_CANNOT_HAPPEN;
         }
 
@@ -778,7 +778,7 @@ final public class Main {
                         thr.start();
                         thr.join();
                     } else {
-                        String line = Readline.readline(Main.getProperties().getRlPrompt(), false);
+                        String line = Readline.readline(properties.getRlPrompt(), false);
                         if (line != null && !line.isEmpty()) {
                             line = line.trim();
                             int history_size = Readline.getHistorySize();
@@ -1455,7 +1455,7 @@ final public class Main {
         @Override
         public void run() {
             try {
-                String line = Readline.readline(Main.getProperties().getRlPrompt());
+                String line = Readline.readline(properties.getRlPrompt());
                 //Thread.sleep(100);
                 String result = process_line(line, true);
                 //Thread.sleep(100);

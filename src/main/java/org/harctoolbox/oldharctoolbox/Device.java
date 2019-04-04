@@ -118,7 +118,7 @@ public final class Device {
      * @return Array of strings of the device names.
      */
     public static String[] get_devices() {
-        return get_basenames(Main.getProperties().getDevicesDir(), HarcUtils.devicefile_extension, false);
+        return get_basenames(Main.getInstance().getProperties().getDevicesDir(), HarcUtils.devicefile_extension, false);
     }
 
     private static String[] get_basenames(String dirname, String extension, boolean toLowercase) {
@@ -363,7 +363,7 @@ public final class Device {
 
     private Device(String filename, HashMap<String, String>attributes, boolean barf_for_invalid)
             throws IOException, SAXParseException, SAXException {
-        this( (filename.contains(File.separator) ? "" : Main.getProperties().getDevicesDir() + File.separator)
+        this( (filename.contains(File.separator) ? "" : Main.getInstance().getProperties().getDevicesDir() + File.separator)
                 + filename
                 + ((filename.endsWith(HarcUtils.devicefile_extension)) ? "" : HarcUtils.devicefile_extension),
                 null, attributes, barf_for_invalid);
@@ -887,7 +887,7 @@ public final class Device {
             Transformer tr = TransformerFactory.newInstance().newTransformer();
             tr.setOutputProperty(OutputKeys.INDENT, "yes");
             tr.setOutputProperty(OutputKeys.METHOD, "xml");
-            tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, Main.getProperties().getDtdDir()+ File.separatorChar + doctype_systemid_filename);
+            tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, Main.getInstance().getProperties().getDtdDir()+ File.separatorChar + doctype_systemid_filename);
             tr.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype_publicid);
             tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             if (filename.equals("-"))

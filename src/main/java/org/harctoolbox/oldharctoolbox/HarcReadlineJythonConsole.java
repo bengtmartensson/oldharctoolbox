@@ -44,7 +44,7 @@ public final class HarcReadlineJythonConsole extends org.python.util.Interactive
     public HarcReadlineJythonConsole(PyObject locals, String filename, ReadlineCompleter completer) {
         super(locals, filename, true);
 
-        history_pathname = Main.getProperties().getRlHistoryfile() + ".python";
+        history_pathname = Main.getInstance().getProperties().getRlHistoryfile() + ".python";
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
 
