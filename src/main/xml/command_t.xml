@@ -555,9 +555,7 @@ command (see "ok" with the synonyms "enter" and "select").
     </group>
 
     <group id="osd_commands">
-        <command id="osd" type="toggle">
-            <synonym name="display"/>
-        </command>
+        <command id="osd" type="toggle"/>
         <command id="osd_on"/>
         <command id="osd_off">
             <synonym name="display_clear"/>
@@ -566,6 +564,7 @@ command (see "ok" with the synonyms "enter" and "select").
         <command id="osd_full"/>
         <command id="get_osd"/>
         <command id="get_osd_position"/>
+        <command id="display"/>
     </group>
 
     <group id="display_commands">
@@ -1286,12 +1285,10 @@ command (see "ok" with the synonyms "enter" and "select").
             <command id="aspectratio_automatic"/>
             <command id="aspectratio_4_3_LB"/>
             <command id="aspectratio_4_3_PS"/>
-            <command id="aspectratio_4_3">
-                <synonym name="aspectratio_normal"/>
-            </command>
-            <command id="aspectratio_16_9">
-                <synonym name="aspectratio_full"/>
-            </command>
+            <command id="aspectratio_4_3"/>
+            <command id="aspectratio_normal"/>
+            <command id="aspectratio_16_9"/>
+            <command id="aspectratio_full"/>
             <command id="aspectratio_14_9"/>
             <command id="aspectratio_zoom"/>
             <command id="aspectratio_nat_wide1"/>

@@ -12,7 +12,7 @@
     </delays-->
 
     <commandset type="ir" minsends="3" protocol="sony12" deviceno="1" remotename="sony_12_1">
-        <command cmdref="inputs" cmdno="37" />
+        <command cmdref="input_select" cmdno="37" />
         <command cmdref="power_toggle" cmdno="21" />
         <command cmdref="exit" cmdno="99" />
         <command cmdref="cmd_1" cmdno="0" />
@@ -42,7 +42,7 @@
         <command cmdref="channel_down" cmdno="17" />
         <command cmdref="audio" cmdno="23" />
         <command cmdref="wait_10_seconds" cmdno="29" />
-        <command cmdref="enter" cmdno="11" />
+        <command cmdref="ok" name="enter" cmdno="11" />
         <command cmdref="guide" cmdno="14" />
         <command cmdref="in_av" cmdno="64" />
         <command cmdref="picture_off" cmdno="62" />
@@ -84,13 +84,13 @@
         <command cmdref="green" cmdno="38" />
         <command cmdref="yellow" cmdno="39" />
         <command cmdref="blue" cmdno="36" />
-        <command cmdref="back" cmdno="35" />
+        <command cmdref="cmd_return" name="back" cmdno="35" />
         <command cmdref="rewind" cmdno="27" />
         <command cmdref="play" cmdno="26" />
         <command cmdref="fast_forward" cmdno="28" />
         <command cmdref="subtitle" cmdno="40" />
         <command cmdref="previous" cmdno="60" />
-        <command cmdref="pause_toggle" cmdno="25" />
+        <command cmdref="pause" cmdno="25" />
         <command cmdref="next" cmdno="61" />
         <command cmdref="record" cmdno="32" />
         <command cmdref="stop" cmdno="24" />
