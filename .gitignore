@@ -1,3 +1,5 @@
 *~
 *.class
 target
+.oldharctoolbox.rl
+.oldharctoolbox.rl.python

@@ -87,7 +87,7 @@ public final class HarcReadlineJythonConsole extends org.python.util.Interactive
         }
 
         try {
-            Readline.setWordBreakCharacters(""/* \t;"*/);
+            Readline.setWordBreakCharacters("\0377"/* \t;"*/);
         } catch (UnsupportedEncodingException enc) {
             // FIXME
             System.err.println(enc.getMessage() + "Could not set word break characters");

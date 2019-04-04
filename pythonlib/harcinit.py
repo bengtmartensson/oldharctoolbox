@@ -12,13 +12,13 @@ def cmd(dev, command):
    harcmacros.device_command(dev, command)
 
 def version():
-   print str(org.harctoolbox.harcutils.version_string)
+   print str(org.harctoolbox.oldharctoolbox.Version.versionString)
 
 #def help():
 #    print "Useful commands are, e.g., <TODO>"
 
 def license():
-    print str(org.harctoolbox.harcutils.license_string)
+    print str(org.harctoolbox.oldharctoolbox.Version.licenseString)
 
 def _harcfuncs_n_args(n):
    """Return all functions taking exactly n arguments."""

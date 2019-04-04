@@ -441,6 +441,7 @@ public final class GuiMain extends javax.swing.JFrame {
 
         stop_macro_Button.setText("Stop");
         stop_macro_Button.setToolTipText("Stop executing macro");
+        stop_macro_Button.setEnabled(false);
         stop_macro_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stop_macro_ButtonActionPerformed(evt);
