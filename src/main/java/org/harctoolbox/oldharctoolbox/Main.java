@@ -74,7 +74,7 @@ final public class Main {
     private static Main the_instance = null;
     private static final String helptext =
             "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + CommandType_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
-    private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<macro>\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
+    private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
     private static Main instance;
     private static Props properties;
     private final static Logger logger = Logger.getLogger(Main.class.getName());
@@ -136,7 +136,9 @@ final public class Main {
                 }
                 if (args[arg_i].equals("--version")) {
                     //System.out.println("JVM: "+ System.getProperty("java.vendor") + " " + System.getProperty("java.version"));
-                    HarcUtils.doExit(IrpUtils.EXIT_SUCCESS, Version.versionString + IrCoreUtils.LINE_SEPARATOR + Version.licenseString);
+                    HarcUtils.doExit(IrpUtils.EXIT_SUCCESS, Version.versionString + "; "
+                            + org.harctoolbox.irp.Version.versionString + "." + IrCoreUtils.LINE_SEPARATOR
+                            + Version.licenseString);
                 }
                 switch (args[arg_i]) {
                     case "-#":
@@ -316,7 +318,7 @@ final public class Main {
                 status = instance.noninteractive_execute(noninteractive_args);
 
             // Do not save properties, these are not really useful outside of the GUI
-            HarcUtils.doExit(status);
+            HarcUtils.doExit(status, ""); // to force new prompt at beginning of line
         }
     }
 
@@ -339,7 +341,7 @@ final public class Main {
         return applicationHome;
     }
 
-// GUI does not expand aliases.
+    // GUI does not expand aliases.
     private static void gui_execute(String homefilename/*, String propsfilename*/) {
         // Setup properites
         /*if (propsfilename != null)
@@ -679,23 +681,6 @@ final public class Main {
 
     // Recognizes aliases, however, readline does not know them
     private int readline_execute() throws InterruptedException {
-        // FIXME: should not die from control-c
-        /*try {
-        hm = new home(homefilename, verbose, debug, browser);
-        engine = new macro_engine(macrofilename, hm, debug);
-        } catch (IOException e) {
-        System.err.println(e.getMessage());
-        return IrpUtils.exit_config_read_error;
-        } catch (SAXParseException e) {
-        System.err.println(e.getMessage());
-        return IrpUtils.exit_xml_error;
-        }
-         */
-
-        if (DebugArgs.dbg_decode_args()) {
-            System.err.println("Entering readline mode");
-        }
-
         String[] cl_commands = new String[]{
             "--help",
             "--version",
@@ -758,9 +743,8 @@ final public class Main {
         }
 
         try {
-            Readline.setWordBreakCharacters(""/*" \t;"*/);
+            Readline.setWordBreakCharacters("\0377");// Just "" does not work, probably bug in readline.
         } catch (UnsupportedEncodingException enc) {
-            // FIXME
             System.err.println(enc.getMessage() + "Could not set word break characters");
             System.err.println("Try touching " + properties.getRlHistoryfile());
             return IrpUtils.EXIT_THIS_CANNOT_HAPPEN;
@@ -768,31 +752,17 @@ final public class Main {
 
         Readline.setCompleter(new RlCompleter(cl_commands, /*engine,*/ hm));
 
-        // FIXME
-        boolean use_readline_thread = false;
         try {
             while (readline_go_on) {
                 try {
-                    if (use_readline_thread) {
-                        Thread thr = new readline_thread();
-                        thr.start();
-                        thr.join();
-                    } else {
-                        String line = Readline.readline(properties.getRlPrompt(), false);
-                        if (line != null && !line.isEmpty()) {
-                            line = line.trim();
-                            int history_size = Readline.getHistorySize();
-                            if (history_size < 1 || !Readline.getHistoryLine(Readline.getHistorySize()-1).equals(line))
-                                Readline.addToHistory(line);
-                            process_line(line, true);
-                        }
-                    //readline_go_on = result != null;
+                    String line = Readline.readline(properties.getRlPrompt(), false);
+                    if (line != null && !line.isEmpty()) {
+                        line = line.trim();
+                        int history_size = Readline.getHistorySize();
+                        if (history_size < 1 || !Readline.getHistoryLine(Readline.getHistorySize() - 1).equals(line))
+                            Readline.addToHistory(line);
+                        process_line(line, true);
                     }
-                //System.err.println(thr.isInterrupted());
-                //if (Thread.interrupted())
-                //    System.err.println("interrupted******rrrrrrrrrrrrrrr");
-                } catch (InterruptedException e) {
-                    System.err.println("interrupted" + e.getMessage());
                 } catch (EOFException e) {
                     // User pressed EOF and want to quit
                     readline_go_on = false;
@@ -863,15 +833,6 @@ final public class Main {
                     result = Version.licenseString;
                     break;
                 case "--verbose":
-                    /*boolean v = true;
-                    try {
-                    v = Integer.parseInt(arguments[1]);
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("+++ Argument missing, assuming 1.");
-                    } catch (NumberFormatException e) {
-                    System.out.println("+++ Parse error, assuming 1.");
-                    }*/
-                    //hm.set_verbosity(true);
                     properties.setVerbose(true);
                     result = "Verbosity set";
                     break;
@@ -908,27 +869,7 @@ final public class Main {
                     result = null;
                     break;
             }
-        }/* else if (engine != null && engine.has_macro(arguments[0])) {
-            // NO-FIXME: not implemented: macro arguments,
-            // FIXME (possibly): no_execute
-            if (db.decode_args())
-                System.err.println("%%% Now executing macro `" + arguments[0] + "'");
-            try {
-                result = engine.eval_macro(arguments[0], null, 0, false);
-
-                if (result == null) {
-                    if (verbose)
-                        System.out.println(bell + "*** macro failed ***");
-                } else if (!result.isEmpty()) {
-                    if (verbose)
-                        System.out.println(formatter.format(result));
-                }
-            } catch (non_existing_command_exception e) {
-                // This cannot happen
-                } catch (InterruptedException e) {
-                System.out.println(bell + "*** Interrupted ***");
-            }
-        }*/ else if (hm.has_device(arguments[0])) {
+        } else if (hm.has_device(arguments[0])) {
             // TODO: not implemented: type, count, toggle, smart_memory
             if (DebugArgs.dbg_decode_args())
                 System.out.println("%%% Trying to execute `" + line + "'");
@@ -983,7 +924,7 @@ final public class Main {
             }
         } else {
             if (verbose)
-                System.out.println(bell + "*** Neither macro nor device with name `" + arguments[0] + "'***.");
+                System.out.println(bell + "*** No device with name `" + arguments[0] + "'***.");
             result = null;
         }
         return result;
@@ -1443,35 +1384,6 @@ final public class Main {
                 } catch (IOException ex) {
                     System.err.println("IOException when closing " + ex.getMessage());
                 }
-            }
-        }
-    }
-    private class readline_thread extends Thread {
-
-        readline_thread() {
-            super("readline_thread");
-        }
-
-        @Override
-        public void run() {
-            try {
-                String line = Readline.readline(properties.getRlPrompt());
-                //Thread.sleep(100);
-                String result = process_line(line, true);
-                //Thread.sleep(100);
-                Main.readline_go_on = result != null;
-                //if (isInterrupted())
-                //    System.err.println("rrrrrrrrrrrrrrr");
-                //if (interrupted())
-                //    System.err.println("interrupted******rrrrrrrrrrrrrrr");
-            } catch (EOFException e) {
-                System.err.println("EOF " + e.getMessage());
-                Main.readline_go_on = false;
-            } catch (IOException e) {
-                System.err.println("io " + e.toString() + e.getMessage());
-                Main.readline_go_on = false;
-                //} catch (InterruptedException e) {
-                //    System.err.println("aaaaaaaaaaaarrg");
             }
         }
     }
