@@ -104,7 +104,7 @@ public final class GuiMain extends javax.swing.JFrame {
      */
     public GuiMain(String homefilename) throws IOException, SAXException {
         hm = new Home(homefilename);
-        properties = Main.getInstance().getProperties();
+        properties = Main.getProperties();
         cmd_formatter = new ResultFormatter(properties.getCommandformat());
         engine = new JythonEngine(hm, false);
         String[] macs = engine.get_argumentless_macros();
@@ -188,7 +188,7 @@ public final class GuiMain extends javax.swing.JFrame {
     }
 
     public GuiMain() throws IOException, SAXException {
-        this(Main.getInstance().getProperties().getHomeConf());
+        this(Main.getProperties().getHomeConf());
     }
 
     private void warning(String message) {

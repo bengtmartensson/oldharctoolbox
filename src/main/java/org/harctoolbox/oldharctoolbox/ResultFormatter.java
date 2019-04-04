@@ -37,7 +37,7 @@ public final class ResultFormatter {
     }
 
     public ResultFormatter() {
-        this(Main.getInstance().getProperties().getResultformat());
+        this(Main.getProperties().getResultformat());
     }
 
     public String format(String str) {

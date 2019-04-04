@@ -91,8 +91,8 @@ final public class Main {
         return c != null ? String.format("%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)) : "";
     }
 
-    public static Main getInstance() {
-        return instance;
+    public static Props getProperties() {
+        return properties;
     }
 
     /**
@@ -148,6 +148,7 @@ final public class Main {
                         the_mediatype = MediaType.audio_only;
                         break;
                     case "-C":
+                    case "--encoding":
                         arg_i++;
                         charset = args[arg_i++];
                         if (!Charset.isSupported(charset))
@@ -158,6 +159,7 @@ final public class Main {
                         smart_memory = true;
                         break;
                     case "-P":
+                    case "--python":
                         arg_i++;
                         use_python = true;
                         break;
@@ -182,6 +184,7 @@ final public class Main {
                         debug = Integer.parseInt(args[arg_i++]);
                         break;
                     case "-g":
+                    case "--gui":
                         arg_i++;
                         gui_mode = true;
                         break;
@@ -222,6 +225,7 @@ final public class Main {
                         }   type = CommandType_t.valueOf(typename);
                         break;
                     case "-v":
+                    case "--verbose":
                         arg_i++;
                         verbose = true;
                         break;
@@ -500,10 +504,6 @@ final public class Main {
             System.err.println(e.getMessage());
             engine = null;
         }*/
-    }
-
-    public Props getProperties() {
-        return properties;
     }
 
     private void do_tasks(String tasksfilename) {
