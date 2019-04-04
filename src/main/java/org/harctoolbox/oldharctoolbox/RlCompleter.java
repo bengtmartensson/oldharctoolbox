@@ -19,40 +19,29 @@ package org.harctoolbox.oldharctoolbox;
 
 import org.gnu.readline.ReadlineCompleter;
 
-/**
- *
- * @author bengt
- */
 public final class RlCompleter implements ReadlineCompleter {
 
-    //private macro_engine engine = null;
     private Home hm = null;
     private String[] commands = null;
-    private final String[] macros = null;
     private String[] devices = null;
     private String[] selecting_devices = null;
     private String[] device_commands = null;
     private String[] src_devices = null;
     private int commands_p = 0;
-    private int macro_p = 0;
     private int devices_p = 0;
     private int selecting_devices_p = 0;
     private int device_commands_p = 0;
     private int src_devices_p = 0;
     private boolean is_device = false;
     private boolean select_mode = false;
-
-    private final int no_words = 0;
     private boolean between_words = false;
     private String[] tokens = null;
     private String devicename = null;
     private String dst_device = null;
 
-    public RlCompleter(String[] commands, /*macro_engine engine,*/ Home hm) {
-        //this.engine = engine;
+    public RlCompleter(String[] commands, Home hm) {
         this.hm = hm;
         this.commands = commands;
-        //macros = engine != null ? engine.get_macros(false) : null;
         devices = hm.get_devices();
         selecting_devices = hm.get_selecting_devices();
     }
@@ -65,14 +54,6 @@ public final class RlCompleter implements ReadlineCompleter {
             }
         commands_p = commands.length;
 
-        /*for (int i = macro_p; i < macros.length; i++)
-            if (macros[i].startsWith(in)) {
-                macro_p = i + 1;
-                return macros[i]
-                        + (in.endsWith(" ") ? ("# " + engine.describe_macro(macros[i])) : "");
-            }
-        macro_p = macros.length;*/
-
         for (int i = devices_p; i < devices.length; i++)
             if (devices[i].startsWith(in)) {
                 devices_p = i + 1;
@@ -82,19 +63,6 @@ public final class RlCompleter implements ReadlineCompleter {
 
         return null;
     }
-
-//    private String device_completer(String prefix, String in, int s) {
-//        //if (s == 0)
-//          //  System.out.println("***" + prefix + ">>>" + in );
-//        for (int i = devices_p; i < devices.length; i++)
-//            if (devices[i].startsWith(in)) {
-//                devices_p = i + 1;
-//                return prefix + " " + devices[i];
-//            }
-//        devices_p = devices.length;
-//
-//        return null;
-//    }
 
     private String selecting_device_completer(String prefix, String in, int s) {
         for (int i = selecting_devices_p; i < selecting_devices.length; i++)
@@ -108,8 +76,6 @@ public final class RlCompleter implements ReadlineCompleter {
     }
 
     private String src_device_completer(String prefix, String in, int s) {
-        //if (s == 0)
-          //  System.out.println("***" + prefix + ">>>" + in );
         for (int i = src_devices_p; i < src_devices.length; i++)
             if (src_devices[i].startsWith(in)) {
                 src_devices_p = i + 1;
@@ -133,13 +99,12 @@ public final class RlCompleter implements ReadlineCompleter {
     }
 
     @Override
-    public String completer(String in, int s) {
+    public String completer(String inString, int s) {
 
-        in = in.replaceFirst("^[ \t]+", "");
+        String in = inString.replaceFirst("^[ \t]+", "");
 
         if (s == 0) {
             commands_p = 0;
-            macro_p = 0;
             devices_p = 0;
             selecting_devices_p = 0;
             device_commands_p = 0;
@@ -164,10 +129,7 @@ public final class RlCompleter implements ReadlineCompleter {
         if (tokens.length <= 1 && !between_words) {
             // Find a command, macro, or device.
             return first_token_completer(in, s);
-        }/* else if (tokens.length == 1 && between_words && s == 0 && engine.has_macro(tokens[0])) {
-            // Macro, deliver its documentation (only once).
-            return in + " # " + engine.describe_macro(tokens[0]);
-        }*/ else if (select_mode) {
+        } else if (select_mode) {
             if ((tokens.length == 1 && between_words) || (tokens.length == 2 && !between_words)) {
                 // Find a selecting device.
                 return selecting_device_completer(tokens[0], tokens.length > 1 ? tokens[1] : "", s);
