@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.harctoolbox.harchardware.HarcHardwareException;
@@ -469,7 +471,7 @@ public final class Home {
     @SuppressWarnings("SleepWhileInLoop")
     private String transmit_command(String dev_class, command_t cmd, String[] arguments, String house, int deviceno,
             Gateway gw, GatewayPort fgw, CommandType_t type, int count, ToggleType toggle,
-            HashMap<String, String> attributes, String flavor) throws InterruptedException {
+            Map<String, String> attributes, String flavor) throws InterruptedException {
         if (DebugArgs.dbg_transmit())
             System.err.println("transmit_command: device " + dev_class
                     + ", command " + cmd + ", house " + house
@@ -1129,7 +1131,7 @@ public final class Home {
 
         if (dev_class != null) {
             try {
-                HashMap<String, String>attributes = get_attributes(devname);
+                Map<String, String>attributes = get_attributes(devname);
                 dev = Device.newDevice(dev_class, attributes/*, false*/);
             } catch (IOException e) {
                 //if (debug_dispatch())
@@ -1151,7 +1153,7 @@ public final class Home {
         return d.get_class();
     }
 
-    public HashMap<String, String> get_attributes(String devname) {
+    public Map<String, String> get_attributes(String devname) {
         Dev d = get_dev(devname);
         //Element dev_node = find_node("device", devname);
         if (d == null) {
@@ -1243,7 +1245,7 @@ public final class Home {
         boolean has_memory = (mem != null) && mem.equals("yes");
         if (DebugArgs.dbg_dispatch())
             System.err.println("do_command: device " + devname + ", device_class " + dev_class + ", command " + cmd + ", type " + type + ", memory " + has_memory + ", toggle " + toggle);
-        ArrayList<GatewayPort> gateway_ports = the_dev.get_gateway_ports();
+        List<GatewayPort> gateway_ports = the_dev.get_gateway_ports();
         boolean success = false;
         for (GatewayPort gwp : gateway_ports) {
             if (success)
@@ -1272,7 +1274,7 @@ public final class Home {
     // Either calls itself recursively, or calls transmit_command.
     private String dispatch_command2gateway(GatewayPort fgw, String dev_class, command_t cmd, String[] arguments,
             String house, short deviceno, CommandType_t type, int count, ToggleType toggle, int hop,
-            HashMap<String, String> attributes, String flavor) throws InterruptedException {
+            Map<String, String> attributes, String flavor) throws InterruptedException {
         if (DebugArgs.dbg_dispatch()) {
             for (int i = 0; i <= hop; i++)
                 System.err.print("<");

@@ -24,6 +24,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import org.harctoolbox.ircore.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -103,9 +105,9 @@ public final class HomeParser {
         String notes = "";
         String powered_through = "";
         String defaultzone = "";
-        HashMap <String, String> attributes = new HashMap <>(16);
-        ArrayList<GatewayPort> gateway_ports = new ArrayList<>(16);
-        HashMap<String, Input> inputs = new HashMap<>(16);
+        Map <String, String> attributes = new HashMap <>(16);
+        List<GatewayPort> gateway_ports = new ArrayList<>(16);
+        Map<String, Input> inputs = new HashMap<>(16);
 
         org.w3c.dom.NodeList nodes = element.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -57,7 +58,7 @@ public final class Device {
     private static int debug = 0;
     private static HashMap<String, Device> device_storage = new HashMap<String, Device>(16);
 
-    public static Device newDevice(String devicename, HashMap<String, String>attributes)
+    public static Device newDevice(String devicename, Map<String, String>attributes)
             throws IOException, SAXException {
         String dwa = (new device_with_attributes(devicename, attributes)).toString();
         Device d = device_storage.get(dwa);
@@ -361,7 +362,7 @@ public final class Device {
     private boolean pingable_on;
     private boolean pingable_standby;
 
-    private Device(String filename, HashMap<String, String>attributes, boolean barf_for_invalid)
+    private Device(String filename, Map<String, String>attributes, boolean barf_for_invalid)
             throws IOException, SAXParseException, SAXException {
         this( (filename.contains(File.separator) ? "" : Main.getProperties().getDevicesDir() + File.separator)
                 + filename
@@ -369,12 +370,12 @@ public final class Device {
                 null, attributes, barf_for_invalid);
     }
 
-    private Device(String filename, String devicename, HashMap<String, String> attributes, boolean barf_for_invalid)
+    private Device(String filename, String devicename, Map<String, String> attributes, boolean barf_for_invalid)
             throws IOException, SAXParseException, SAXException {
         this(XmlUtils.openXmlFile(new File(filename)), devicename, attributes, barf_for_invalid);
     }
 
-    private Device(Document doc, HashMap<String, String>attributes, boolean barf_for_invalid) {
+    private Device(Document doc, Map<String, String>attributes, boolean barf_for_invalid) {
         this(doc, (String) null, attributes, barf_for_invalid);
     }
 
@@ -389,7 +390,7 @@ public final class Device {
      * @throws java.io.IOException
      * @throws org.xml.sax.SAXParseException
      */
-    private Device(String name, HashMap<String, String> attributes) throws IOException, SAXParseException, SAXException {
+    private Device(String name, Map<String, String> attributes) throws IOException, SAXParseException, SAXException {
         this(name, attributes, true);
     }
 
@@ -397,7 +398,7 @@ public final class Device {
         this(name, null);
     }
 
-    private Device(Document doc, String dev_name, HashMap<String, String>instance_attributes, boolean barf_for_invalid) {
+    private Device(Document doc, String dev_name, Map<String, String>instance_attributes, boolean barf_for_invalid) {
         this.doc = doc;
         if (doc == null)
             return;
@@ -985,8 +986,8 @@ public final class Device {
 
     private static class device_with_attributes {
         String device_classname;
-        HashMap<String, String> attributes;
-        device_with_attributes(String device_classname, HashMap<String, String> attributes) {
+        Map<String, String> attributes;
+        device_with_attributes(String device_classname, Map<String, String> attributes) {
             this.device_classname = device_classname;
             this.attributes = attributes;
         }

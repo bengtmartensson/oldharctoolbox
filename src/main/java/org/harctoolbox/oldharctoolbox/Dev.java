@@ -17,14 +17,9 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-
-/**
- *
- * @author bengt
- */
+import java.util.List;
+import java.util.Map;
 
 /** For the device in the home (the name device was already taken...) */
 
@@ -40,10 +35,10 @@ public final class Dev {
     //private final String description;
     //private final String notes;
     private final String defaultzone;
-    private final HashMap<String, String> attributes;
+    private final Map<String, String> attributes;
     private final String powered_through;
-    private final ArrayList<GatewayPort> gateway_ports;
-    private final HashMap<String, Input> inputs;
+    private final List<GatewayPort> gateway_ports;
+    private final Map<String, Input> inputs;
 
     public Dev(String name,
             String id,
@@ -55,10 +50,10 @@ public final class Dev {
             String defaultzone,
             String description,
             String notes,
-            HashMap<String, String> attributes,
+            Map<String, String> attributes,
             String powered_through,
-            ArrayList<GatewayPort> gateway_ports,
-            HashMap<String, Input> inputs) {
+            List<GatewayPort> gateway_ports,
+            Map<String, Input> inputs) {
         //this.name = name;
         this.id = id;
         this.canonical = canonical;
@@ -132,7 +127,7 @@ public final class Dev {
         return powered_through;
     }
 
-    public ArrayList<GatewayPort> get_gateway_ports() {
+    public List<GatewayPort> get_gateway_ports() {
         return gateway_ports;
     }
 
@@ -143,7 +138,7 @@ public final class Dev {
         return gateway_ports.stream().anyMatch((g) -> (g.get_connectortype() == type));
     }
 
-    public HashMap<String, Input> get_inputs() {
+    public Map<String, Input> get_inputs() {
         return inputs;
     }
 
@@ -155,7 +150,7 @@ public final class Dev {
         return pin;
     }
 
-    public HashMap<String, String> get_attributes() {
+    public Map<String, String> get_attributes() {
         return attributes;
     }
 }
