@@ -48,7 +48,7 @@
     <command cmdref="next"				cmdno="0x34"/>
     <command cmdref="stop"				cmdno="0x18"/>
     <command cmdref="play"				cmdno="0x1a"/>
-    <command cmdref="pause_toggle"			cmdno="0x19"/>
+    <command cmdref="pause"     			cmdno="0x19"/>
     <command cmdref="ff"				cmdno="0x1f"/>
     <command cmdref="rewind"				cmdno="0x1f"/>
     <command cmdref="fff"				cmdno="0x1c"/>

@@ -39,7 +39,7 @@
     <command cmdref="volume_down"	 cmdno="17"/>
     <command cmdref="mute_toggle"	 cmdno="13"/>
     <command cmdref="channel_down"	 cmdno="31"/>
-    <command cmdref="record_toggle"	 cmdno="55"/>
+    <command cmdref="record"    	 cmdno="55"/>
     <command cmdref="archive"		 cmdno="213"/>
     <command cmdref="stop"		 cmdno="49"/>
     <command cmdref="rewind"		 cmdno="33"/>

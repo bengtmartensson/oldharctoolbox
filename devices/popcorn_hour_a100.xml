@@ -37,7 +37,7 @@
     <command cmdref="suspend" 		cmdno="0x4d"/>
     <command cmdref="tv_mode" 		cmdno="0x13"/>
     <command cmdref="play" 		cmdno="0x50"/>
-    <command cmdref="pause_toggle"	cmdno="0x54"/>
+    <command cmdref="pause"     	cmdno="0x54"/>
     <command cmdref="reverse" 		cmdno="0x0e"/>
     <command cmdref="fast_forward"	cmdno="0x0d"/>
     <command cmdref="stop" 		cmdno="0x4c"/>

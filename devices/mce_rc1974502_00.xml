@@ -25,7 +25,7 @@
     <command cmdref="music_mode"	 cmdno="36"/>
 
     <command cmdref="clear"		 cmdno="10"/>
-    <command cmdref="teletext_toggle"	 cmdno="90"/>
+    <command cmdref="teletext"  	 cmdno="90"/>
     <command cmdref="select"		 cmdno="11"/>
 
     <command cmdref="up"		 cmdno="30"/>
@@ -36,12 +36,12 @@
 
     <command cmdref="volume_up"		 cmdno="16"/>
     <command cmdref="volume_down"	 cmdno="17"/>
-    <command cmdref="mute_toggle"	 cmdno="14"/>
+    <command cmdref="mute"      	 cmdno="14"/>
     <command cmdref="channel_up"	 cmdno="18"/>
     <command cmdref="channel_down"	 cmdno="19"/>
 
-    <command cmdref="record_toggle"	 cmdno="23"/>
-    <command cmdref="pause_toggle"	 cmdno="24"/>
+    <command cmdref="record"    	 cmdno="23"/>
+    <command cmdref="pause"     	 cmdno="24"/>
     <command cmdref="stop"		 cmdno="25"/>
     <command cmdref="rewind"		 cmdno="21"/>
     <command cmdref="play"		 cmdno="22"/>

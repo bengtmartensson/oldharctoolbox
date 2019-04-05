@@ -24,6 +24,6 @@
     <command cmdref="rewind" 			cmdno="50"/>
     <command cmdref="fast_forward" 		cmdno="52"/>
     <command cmdref="stop" 			cmdno="54"/>
-    <command cmdref="pause_toggle" 		cmdno="48"/>
+    <command cmdref="pause"      		cmdno="48"/>
   </commandset>
 </device>

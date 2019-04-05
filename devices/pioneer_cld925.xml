@@ -45,7 +45,7 @@
     <command cmdref="side_a"			cmdno="77"/>
     <command cmdref="side_b"			cmdno="78"/>
     <command cmdref="stop"			cmdno="23"/>
-    <command cmdref="pause_toggle"		cmdno="24"/>
+    <command cmdref="pause"     		cmdno="24"/>
     <command cmdref="aspectratio_16_9"		cmdno="18"/>
     <!--
     Disc Side Toggle*,021,,enter,23 - +10,not on OEM remote,,,,,,,

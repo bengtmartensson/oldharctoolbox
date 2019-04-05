@@ -19,8 +19,8 @@
     <command cmdref="previous"		cmdno="8"/>
     <command cmdref="next"		cmdno="17"/>
     <command cmdref="stop"		cmdno="16"/>
-    <command cmdref="pause_toggle"	cmdno="20"/>
-    <command cmdref="record_toggle"	cmdno="19"/>
+    <command cmdref="pause"     	cmdno="20"/>
+    <command cmdref="record"    	cmdno="19"/>
     <command cmdref="cmd_return"	cmdno="22"/>
     <command cmdref="info"		cmdno="18"/>
     <command cmdref="up"		cmdno="21"/>

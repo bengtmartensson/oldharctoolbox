@@ -45,7 +45,7 @@
       <command transmit="YLW" cmdref="yellow"/>
       <command transmit="STP" cmdref="stop"/>
       <command transmit="PLA" cmdref="play"/>
-      <command transmit="PAU" cmdref="pause_toggle"/>
+      <command transmit="PAU" cmdref="pause"/>
       <command transmit="PRE" cmdref="previous"/>
       <command transmit="REV" cmdref="rewind"/>
       <command transmit="FWD" cmdref="fast_forward"/>

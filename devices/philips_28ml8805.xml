@@ -17,11 +17,11 @@
     <command cmdref="cmd_7" 				cmdno="7"/>
     <command cmdref="cmd_8" 				cmdno="8"/>
     <command cmdref="cmd_9" 				cmdno="9"/>
-    <command cmdref="power_off" name="power"	cmdno="12"/>
+    <command cmdref="power_toggle" name="power"         cmdno="12"/>
     <command cmdref="tv_mode"			cmdno="63"/>
     <command cmdref="channel_up" 			cmdno="32"/>
     <command cmdref="channel_down" 			cmdno="33"/>
-    <command cmdref="mute_toggle" name="mute"	cmdno="13"/>
+    <command cmdref="mute"      name="mute"     	cmdno="13"/>
     <command cmdref="last_channel" 			cmdno="34"/>
     <command cmdref="volume_up" 			cmdno="16"/>
     <command cmdref="volume_down" 			cmdno="17"/>
@@ -40,7 +40,7 @@
     <command cmdref="white" 			cmdno="111"/>
     <command cmdref="menu_off" 			cmdno="83"/>
     <command cmdref="I_II" 				cmdno="35"/>
-    <command cmdref="teletext_toggle" 			cmdno="60"/>
+    <command cmdref="teletext"   			cmdno="60"/>
     <command cmdref="teletext_freeze" 		cmdno="41"/>
     <command cmdref="teletext_reveal" 		cmdno="44"/>
     <command cmdref="teletext_hide" 		cmdno="45"/>
@@ -52,9 +52,9 @@
     <command cmdref="PIP_exchange" 			cmdno="90"/>
     <command cmdref="PIP_freeze" 			cmdno="101"/>
     <command cmdref="PIP_position" 			cmdno="89"/>
-    <command cmdref="PIP_ch_down" 			cmdno="103"/>
-    <command cmdref="PIP_ch_up" 			cmdno="102"/>
-    <command cmdref="freeze_toggle"			cmdno="93"/>
+    <command cmdref="PIP_channel_down" 			cmdno="103"/>
+    <command cmdref="PIP_channel_up" 			cmdno="102"/>
+    <command cmdref="freeze"    			cmdno="93"/>
     <command cmdref="DNR" 				cmdno="97"/>
     <command cmdref="special" 			cmdno="94"/>
   </commandset>

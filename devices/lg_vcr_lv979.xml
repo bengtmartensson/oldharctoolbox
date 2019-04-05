@@ -27,7 +27,7 @@
     <command cmdref="stop" 				cmdno="54"/>
     <command cmdref="channel_up" 			cmdno="32"/>
     <command cmdref="channel_down" 			cmdno="33"/>
-    <command cmdref="record_toggle"			cmdno="55"/>
+    <command cmdref="record"    			cmdno="55"/>
     <command cmdref="info" 				cmdno="15"/>
     <command cmdref="smart_picture" 			cmdno="70"/>
     <command cmdref="ok" 				cmdno="87"/>

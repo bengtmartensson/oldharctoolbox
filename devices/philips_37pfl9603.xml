@@ -25,11 +25,11 @@
     <command cmdref="cmd_7" 				cmdno="7"/>
     <command cmdref="cmd_8" 				cmdno="8"/>
     <command cmdref="cmd_9" 				cmdno="9"/>
-    <command cmdref="power_toggle" 	name="power"	cmdno="12"/>
+    <command cmdref="power"                     	cmdno="12"/>
     <!--command cmdref="tv_mode"			cmdno="63"/-->
     <command cmdref="channel_up" 			cmdno="32"/>
     <command cmdref="channel_down" 			cmdno="33"/>
-    <command cmdref="mute_toggle" 	name="mute"	cmdno="13"/>
+    <command cmdref="mute"                      	cmdno="13"/>
     <command cmdref="last_channel" 			cmdno="34"/>
     <command cmdref="volume_up" 			cmdno="16"/>
     <command cmdref="volume_down" 			cmdno="17"/>
@@ -51,7 +51,7 @@
     <command cmdref="white" 				cmdno="111"/>
     <command cmdref="menu_off" 				cmdno="83"/>
     <command cmdref="I_II" 				cmdno="35"/>
-    <command cmdref="teletext_toggle"			cmdno="60"/>
+    <command cmdref="teletext"  			cmdno="60"/>
     <command cmdref="teletext_freeze" 			cmdno="41"/>
     <command cmdref="teletext_reveal" 			cmdno="44"/>
     <command cmdref="teletext_hide" 			cmdno="45"/>
@@ -63,8 +63,8 @@
     <command cmdref="PIP_exchange" 			cmdno="90"/>
     <command cmdref="PIP_freeze" 			cmdno="101"/>
     <command cmdref="PIP_position" 			cmdno="89"/>
-    <command cmdref="PIP_ch_down" 			cmdno="103"/>
-    <command cmdref="PIP_ch_up" 			cmdno="102"/>
+    <command cmdref="PIP_channel_down" 			cmdno="103"/>
+    <command cmdref="PIP_channel_up" 			cmdno="102"/>
     <command cmdref="subtitle"	 			cmdno="58"/>
     <!--command cmdref="freeze_toggle"			cmdno="93"/-->
     <!--command cmdref="DNR" 				cmdno="97"/-->
@@ -86,7 +86,7 @@ Notes=Dummy device to support RC-5 commands on Philips TV discrete input selecti
     <command cmdref="in_side"				cmdno="5"/>
     <command cmdref="in_hdmi3"				cmdno="6"/>
     <command cmdref="in_hdmi4"				cmdno="7"/>
-    <command cmdref="mute_toggle"			cmdno="13"/>
+    <command cmdref="mute"      			cmdno="13"/>
     <command cmdref="in_usb"				cmdno="19"/>
     <command cmdref="ambilight_on"			cmdno="40"/>
     <command cmdref="ambilight_off"			cmdno="41"/>
@@ -113,7 +113,7 @@ Notes=Dummy device to support RC-5 commands on Philips TV discrete input selecti
     <!--command cmdref="in_hdmi1"				cmdno="121"/-->
     <!--command cmdref="in_hdmi3"			cmdno="70"/-->
     <!--command cmdref="in_hdmi4"			cmdno="71"/-->
-    <!--command cmdref="mute_toggle"			cmdno="77"/-->
+    <!--command cmdref="mute"			cmdno="77"/-->
     <!--command cmdref="in_usb"				cmdno="83"/-->
 
   </commandset>
@@ -121,7 +121,7 @@ Notes=Dummy device to support RC-5 commands on Philips TV discrete input selecti
   <commandset remotename="philips_37pfl9603_rc6" type="ir" protocol="rc6" toggle="yes" deviceno="0">
     <command cmdref="power_toggle" 	cmdno="12"/>
     <command cmdref="input" 		cmdno="56"/>
-    <command cmdref="teletext_toggle"	cmdno="60"/>
+    <command cmdref="teletext"  	cmdno="60"/>
     <command cmdref="teletext_pip" 	cmdno="93"/>
     <command cmdref="subtitle" 		cmdno="75"/>
     <command cmdref="aspectratio" 	cmdno="245"/>
@@ -143,11 +143,11 @@ Notes=Dummy device to support RC-5 commands on Philips TV discrete input selecti
     <command cmdref="play_pause"	cmdno="44"/>
     <command cmdref="fast_forward"	cmdno="40"/>
     <command cmdref="stop"		cmdno="49"/>
-    <command cmdref="record_toggle"	cmdno="55"/>
+    <command cmdref="record"    	cmdno="55"/>
 
     <command cmdref="volume_up"		cmdno="16"/>
     <command cmdref="volume_down"	cmdno="17"/>
-    <command cmdref="mute_toggle"	cmdno="13"/>
+    <command cmdref="mute"      	cmdno="13"/>
     <command cmdref="cmd_0"		cmdno="0"/>
     <command cmdref="cmd_1"		cmdno="1"/>
     <command cmdref="cmd_2"		cmdno="2"/>

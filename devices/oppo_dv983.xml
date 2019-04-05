@@ -7,7 +7,7 @@
   </jp1data>
   <commandset type="ir" protocol="nec1" deviceno="73" remotename="oppo_dv983">
     <!--"Custom Code",49,73,,Device,49B6,18870,,-->
-    
+
     <command cmdref="power_toggle"	cmdno="26"/>
     <command cmdref="open_close"	cmdno="27"/>
     <command cmdref="setup"		cmdno="0"/>
@@ -15,7 +15,7 @@
     <command cmdref="power_off"		cmdno="91"/>
     <command cmdref="in_usb"		cmdno="17" type="toggle"/>
     <command cmdref="play"		cmdno="86"/>
-    <command cmdref="pause_toggle"	cmdno="20"/>
+    <command cmdref="pause"     	cmdno="20"/>
     <command cmdref="stop"		cmdno="82" remark="one stop allows resuming with play, two really stops"/>
     <command cmdref="rewind"		cmdno="85" remark="set speed backwards"/>
     <command cmdref="fast_forward"	cmdno="81" remark="set speed forwards"/>
@@ -114,7 +114,7 @@
       <command transmit="HDM" cmdref="resolution"/>
       <command transmit="SYS" cmdref="pal_ntsc"/>
       <command transmit="PLA" cmdref="play"/>
-      <command transmit="PAU" cmdref="pause_toggle"/>
+      <command transmit="PAU" cmdref="pause"/>
     </commandgroup>
 
     <commandgroup description="Commands without parameters, but with returnvalue.">
@@ -138,7 +138,7 @@
 	  <description>Volume is XX (XX = 00 - 20, 0 is mute)</description>
 	</returnvalues>
       </command>
-      <command cmdref="get_soundfield" transmit="QSF" remark="Query sound field setting" 
+      <command cmdref="get_soundfield" transmit="QSF" remark="Query sound field setting"
 	response_lines="1">
 	<returnvalues>
 	  <description>
@@ -241,7 +241,7 @@
       <command cmdref="get_disc_type" transmit="QDT" remark="Query disc type" response_lines="1">
 	<returnvalues>
 	  <description>
-	Opening 
+	Opening
 	No disc
 	Loading
 	DVD-Video
@@ -279,14 +279,14 @@
 	<argument name="resolution">
 	  <description>
 	The resolution parameter can be one of the followings:
-	480P 	
-	720P60 	
-	1080I60 	
-	1080P60 	
-	576P 	
-	720P50 	
-	1080I50 	
-	1080P50 	
+	480P
+	720P60
+	1080I60
+	1080P60
+	576P
+	720P50
+	1080I50
+	1080P50
 	480PAUTO
 	720PAUTO
 	1080IAUTO
@@ -307,11 +307,11 @@
       <command cmdref="set_forward_speed" transmit="SFF $1" remark="Fast forward">
 	<argument name="speed">
 	  <description>The speed parameter can be one of the followings:
-	1X 	
-	2X 	
-	4X 	
-	8X 	
-	16X 	
+	1X
+	2X
+	4X
+	8X
+	16X
 	32X
 </description>
 	</argument>
@@ -319,11 +319,11 @@
       <command cmdref="set_reverse_speed" transmit="SRV $1" remark="Fast reverse">
 	<argument name="speed">
 	<description>The speed parameter can be one of the followings:
-	1X 	
-	2X 	
-	4X 	
-	8X 	
-	16X 	
+	1X
+	2X
+	4X
+	8X
+	16X
 	32X</description>
 	</argument>
       </command>

@@ -9,7 +9,7 @@
       <command cmdref="source"		cmdno="17"/> <!-- Selects GUI Menu -->
       
       <command cmdref="play"		cmdno="86"/>
-      <command cmdref="pause_toggle"	cmdno="20"/>
+      <command cmdref="pause"   	cmdno="20"/>
       <command cmdref="stop"		cmdno="82" remark="one stop allows resuming with play, two irrecovably stops"/>
       <command cmdref="rewind"		cmdno="85" remark="set speed backwards"/>
       <command cmdref="fast_forward"	cmdno="81" remark="set speed forwards"/>

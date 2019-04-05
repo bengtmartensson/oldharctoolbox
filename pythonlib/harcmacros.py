@@ -40,7 +40,8 @@ def _trace(function, arg, message):
 # Issue a hint to a remote panel that it is to jump to a particular page,
 # if possible and wanted
 def paneljump(panelname):
-    print "paneljump to " + panelname + " not yet implemented."
+    #print "paneljump to " + panelname + " not yet implemented."
+    return True
 
 def devices_command(devices, command, count = 1):
     """To all entries in DEVICES (a list of strings), the command COMMAND is sent."""
@@ -84,7 +85,7 @@ def print_device_group(devicegroup):
         print str(d)
 
 def print_protocols():
-    prt = org.harctoolbox.oldharctoolbox.Protocol.get_protocols()
+    prt = org.harctoolbox.oldharctoolbox.ProtocolDataBase.get_protocols()
     for p in prt:
         print str(p)
 
@@ -93,7 +94,7 @@ def ping_all():
     ons = []
     offs = []
     for d in get_devices():
-        if hm.has_command(d, org.harctoolbox.oldharctoolbox.commandtype_t.any, org.harctoolbox.oldharctoolbox.command_t.ping):
+        if hm.has_command(d, org.harctoolbox.oldharctoolbox.CommandType_t.any, org.harctoolbox.oldharctoolbox.command_t.ping):
             if device_command(d, 'ping'):
                 ons.append(d)
             else:
@@ -154,14 +155,14 @@ def assure_on(device, wait=False, max_trys=default_max_trys):
     
     elif stat == False or stat is None:
         # Device is off, is_on is working; turn on, possibly wait
-        if hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.ip, org.harctoolbox.oldharctoolbox.command_t.wol):
+        if hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.ip, org.harctoolbox.oldharctoolbox.command_t.wol):
             device_command(device, org.harctoolbox.oldharctoolbox.command_t.wol)
-        elif hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.any, org.harctoolbox.oldharctoolbox.command_t.power_on):
+        elif hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.any, org.harctoolbox.oldharctoolbox.command_t.power_on):
             _trace('assure_on', device, "discret power on present, using that")
             hm.do_command(device, org.harctoolbox.oldharctoolbox.command_t.power_on, 1)
         else:
             _trace('assure_on', device, "discret power on not present, but known state (off)")
-            device_command(device, org.harctoolbox.oldharctoolbox.command_t.power_toggle)
+            device_command(device, org.harctoolbox.oldharctoolbox.command_t.power)
 
         if wait:
             i = 0;
@@ -181,12 +182,12 @@ def assure_on(device, wait=False, max_trys=default_max_trys):
     else:
         # Unknown state, use discrete command if present.
         _trace('assure_on', device, "unknown state...")
-        if hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.ip, org.harctoolbox.oldharctoolbox.command_t.wol):
+        if hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.ip, org.harctoolbox.oldharctoolbox.command_t.wol):
             device_command(device, org.harctoolbox.oldharctoolbox.command_t.wol)
             if wait:
                 wait_delay(device, "from_standby", 1000)
             return True
-        elif hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.any, org.harctoolbox.oldharctoolbox.command_t.power_on):
+        elif hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.any, org.harctoolbox.oldharctoolbox.command_t.power_on):
             _trace('assure_on', device, "discret power on present, using that")
             hm.do_command(device, org.harctoolbox.oldharctoolbox.command_t.power_on, 1)
             if wait:
@@ -204,12 +205,12 @@ def assure_off(device):
     """Assure that the device is turned off."""
     stat=is_on(device)
     if stat and stat != "unknown":
-        if hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.any, org.harctoolbox.oldharctoolbox.command_t.power_off):
+        if hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.any, org.harctoolbox.oldharctoolbox.command_t.power_off):
             _trace('assure_off', device, 'discret power off present, using that')
             hm.do_command(device, org.harctoolbox.oldharctoolbox.command_t.power_off, 1)
         else:
             _trace('assure_off', device, 'discret power on not found, but known state (on)')
-            device_command(device, org.harctoolbox.oldharctoolbox.command_t.power_toggle)
+            device_command(device, org.harctoolbox.oldharctoolbox.command_t.power)
 
         return True
     elif stat == False or stat is None:
@@ -217,7 +218,7 @@ def assure_off(device):
         return True
     else:
         _trace('assure_off', device, 'unknown state...')
-        if hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.any, org.harctoolbox.oldharctoolbox.command_t.power_off):
+        if hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.any, org.harctoolbox.oldharctoolbox.command_t.power_off):
             _trace('assure_off', device, 'discret power off present, using that')
             hm.do_command(device, org.harctoolbox.oldharctoolbox.command_t.power_off, 1)
         else:
@@ -226,12 +227,12 @@ def assure_off(device):
 
 def is_on(device):
     dev=hm.get_device(device)
-    if hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.ip, org.harctoolbox.oldharctoolbox.command_t.ping) and dev.get_pingable_on() and not dev.get_pingable_standby():
+    if hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.ip, org.harctoolbox.oldharctoolbox.command_t.ping) and dev.get_pingable_on() and not dev.get_pingable_standby():
         return hm.do_command(device, org.harctoolbox.oldharctoolbox.command_t.ping, 1) == ""
-    elif hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.any, org.harctoolbox.oldharctoolbox.command_t.get_power):
+    elif hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.any, org.harctoolbox.oldharctoolbox.command_t.get_power):
         response = device_command(device, org.harctoolbox.oldharctoolbox.command_t.get_power)
         return "unknown" if (response is None) else (device_command(device, org.harctoolbox.oldharctoolbox.command_t.get_power).find("ON") != -1)
-    elif hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.any, org.harctoolbox.oldharctoolbox.command_t.get_status_power):
+    elif hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.any, org.harctoolbox.oldharctoolbox.command_t.get_status_power):
         response = device_command(device, org.harctoolbox.oldharctoolbox.command_t.get_status_power)
         return response == '1' or response == '2' or response == '3'
     else:
@@ -263,7 +264,7 @@ def device_command_n(device, command, arg1, arg2=None):
     return res == "" or res
 
 def set_verbose(true_false=True):
-    org.harctoolbox.oldharctoolbox.Main.getPreferences().setVerbose(true_false)
+    org.harctoolbox.oldharctoolbox.Main.getProperties().setVerbose(true_false)
     return True
 
 def set_verbose_on():
@@ -272,8 +273,11 @@ def set_verbose_on():
 def set_verbose_off():
     return set_verbose(False)
 
+def get_verbose():
+    return org.harctoolbox.oldharctoolbox.Main.getProperties().getVerbose()
+
 def set_debug(arg):
-    org.harctoolbox.oldharctoolbox.Main.getPreferences().setDebug(arg)
+    org.harctoolbox.oldharctoolbox.Main.getProperties().setDebug(arg)
 
 # Turn on tracing and verboseness on my development machine, not for deployment
 _jython_trace = socket.gethostname() == 'epsilon'
@@ -335,7 +339,6 @@ def volume_standard():
     """"Standard" volume, whatever that means"""
     volume_room()
 
-
 def desk_amp_on():
     """Turn on the desk amplifier"""
     device_command("desk_amp", "power_on")
@@ -363,7 +366,6 @@ def volume_mute_off():
 def get_mute():
     return device_command("amp", "get_mute") == "MUON"
 
-#   <macros name="Complex-AV-macros">
 #    """Actions involving several components"""
 
 def assure_tuxbox_ready(device, max_trys=default_max_trys):
@@ -420,11 +422,11 @@ def shutdown(zone='all'):
     if zone in ['3', 'zone3', 'desk', 'all']:
         shutdown_desk()
 
-def denon_restart():
-    assure_off_devices(["dvd", "uhd-bluray"])
-    assure_off("amp")
+def amp_restart(dev='amp'):
+    assure_off_devices(["dvd", "uhd_bluray"])
+    assure_off(dev)
     time.sleep(10)
-    assure_on("amp")
+    assure_on(dev)
 
 ################################################################
 # Make sure to keep srcdevice "canonical", i.e. to use the name given as 
@@ -561,12 +563,12 @@ def gother_commands():
 ################################################################
 def other_commands(device):
     # Heuristic: Return only IR commands
-    return netremote_string(hm.get_commands(device, org.harctoolbox.oldharctoolbox.commandtype_t.ir))
+    return netremote_string(hm.get_commands(device, org.harctoolbox.oldharctoolbox.CommandType_t.ir))
 
 def netremote_string(cmds):
     return '\n'.join(cmds)
 
-######################################## "mode-change-macros"
+######################################## "mode_change_macros"
 
 def projector_mode():
     """Turn on projector, and use it"""
@@ -574,6 +576,7 @@ def projector_mode():
     # TODO: replace by assure_on('projector')
     device_command("projector", "power_on")
     #setup_dbox_projector() # FIXME
+    device_command('denon', 'set_monitor2')
     assure_off("tv")
 
 def tv_mode(raise_screen=False):
@@ -585,8 +588,9 @@ def tv_mode(raise_screen=False):
     assure_off("projector")
     setup_dbox_tv() # FIXME
     assure_on("tv", True)
+    device_command('denon', 'set_monitor1')
     set_srcdevice()
-    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, video_connection_type(srcdevice))
+    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, video_connection_type(srcdevice))
     return ""
 
 #def tv_mode_screen_up():
@@ -594,7 +598,7 @@ def tv_mode(raise_screen=False):
 #    device_command("screen", "power_off")
 #    return tv_mode()
 
-#         <macros name="Bedroom-commands():
+#         Bedroom_commands
 # def bedroom_speakers_a():
 #     """Turn on bedroom speaker pair A exclusively"""
 #     device_command("yamaha_rxv1400", "spk_a_on")
@@ -609,7 +613,7 @@ def tv_mode(raise_screen=False):
 #     global bedroom_srcdevice
 #     assure_on("yamaha_rxv1400")
 #     assure_on(device, True)
-#     hm.select('yamaha_rxv1400', device, org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
+#     hm.select('yamaha_rxv1400', device, org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
 #     return ""
 
 #     <macros name="AV-output-macros">
@@ -657,8 +661,8 @@ def look_htpc():
     global srcdevice
     assure_on("tv")
     assure_on("htpc", True)
-    #hm.select('tv', 'htpc', org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.hdmi)
-    #hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.hdmi)
+    #hm.select('tv', 'htpc', org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.hdmi)
+    #hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.hdmi)
     srcdevice = hm.get_canonical_name("htpc")
     paneljump("htpc")
 
@@ -676,7 +680,7 @@ def listen_device(device):
 
     assure_on("amp", True)
     assure_on(device, True)
-    hm.select('amp', device, org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_only, None) or hm.select('amp', device, org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
+    hm.select('amp', device, org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_only, None) or hm.select('amp', device, org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
     srcdevice = hm.get_canonical_name(device)
     paneljump(device)
     return ""
@@ -699,9 +703,9 @@ def watch_device(device):
     tv_unless_projector(False)
     assure_on("amp", True)
     assure_on(device, True)
-    hm.select('amp', device, org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
+    hm.select('amp', device, org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
     tv_unless_projector(True)
-    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.hdmi)
+    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.hdmi)
     srcdevice = hm.get_canonical_name(device)
     paneljump(device)
     return ""
@@ -712,8 +716,8 @@ def look_device(device):
     tv_unless_projector(False)
     assure_on("amp", True)
     assure_on(device, True)
-    hm.select('amp', device, org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.video_only, None)
-    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.hdmi)
+    hm.select('amp', device, org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.video_only, None)
+    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.hdmi)
     srcdevice = hm.get_canonical_name(device)
 
 def look_dvd(device):
@@ -744,7 +748,7 @@ def listen_hddvd():
 
 def assure_dvd_open(device):
     """Makes up for the lack of a discrete open command"""
-    if hm.has_command(device, org.harctoolbox.oldharctoolbox.commandtype_t.any, org.harctoolbox.oldharctoolbox.command_t.get_status):
+    if hm.has_command(device, org.harctoolbox.oldharctoolbox.CommandType_t.any, org.harctoolbox.oldharctoolbox.command_t.get_status):
         answ=str(device_command(device, "get_status"))
         if not answ.find("OPEN") > 0:
             device_command(device, "stop")
@@ -832,7 +836,7 @@ def toshiba_rce_1():
     time.sleep(2000/1000)
     device_command("toshiba", "title_search")
 
-def hb(device):
+def hb(device='dvd'):
     device_command(device, "ok")
     wait_delay(device, "intra-command", 2000)
     wait_delay(device, "intra-command", 2000)
@@ -881,7 +885,7 @@ def listen_dbox(dev=default_tuxbox):
     """Sets up the system for dBox viewing on TV (just sound)."""
     assure_on(dev, False)
     assure_on('amp', True)
-    hm.select('amp', dev, org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_only, None)
+    hm.select('amp', dev, org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_only, None)
     assure_on(dev, True)
     srcdevice = "sat"
     paneljump("sat")
@@ -892,8 +896,8 @@ def look_dbox(dev=default_tuxbox):
     assure_on(dev, False)
     assure_on('amp', True)
     tv_unless_projector(True)
-    hm.select('amp', dev, org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.video_only, None)
-    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, "hdmi")
+    hm.select('amp', dev, org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.video_only, None)
+    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, "hdmi")
     assure_on(dev, True)
     device_command(dev, "standby_off")
     setup_dbox_tv_or_projector(dev)
@@ -907,8 +911,8 @@ def watch_dbox(dev=default_tuxbox):
     assure_on(dev, False)
     assure_on('amp', True)
     tv_unless_projector(True)
-    hm.select('amp', dev, org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
-    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.any)
+    hm.select('amp', dev, org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
+    hm.select('tv', 'amp', org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.any)
     assure_on(dev, True)
     assure_tuxbox_ready(dev)
     device_command(dev, "standby_off")
@@ -954,7 +958,7 @@ def set_prog(progname, dev=default_tuxbox):
 def watch_tv():
     """Turn on TV (not using projector)"""
     global srcdevice
-    hm.select("amp", "tv", org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_only, None)
+    hm.select("amp", "tv", org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_only, None)
     srcdevice="tv"
     device_command("tv", "tv_mode")
     paneljump("tv")
@@ -971,13 +975,13 @@ def listen_tv():
     watch_tv()
 
 def desk_listen_device(device):
-    assure_on('yamaha_rxv596')
-    return hm.select('yamaha_rxv596', device, org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
+    assure_on('desk_amp')
+    return hm.select('desk_amp', device, org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
 
 def desk_listen_mac():
     desk_listen_device('mac')
 
-def desk_listen_delta():
+def desk_listen_epsilon():
     desk_listen_device('epsilon')
 
 def desk_listen_zone1():
@@ -1013,34 +1017,34 @@ def send_numsequence(device, num, append_ok=False):
     if append_ok:
         device_command(device, 'ok')
 
-def watch_vcr():
-    """Watch VCR"""
-    global srcdevice
-    hm.select("amp", "vcr", org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
-    hm.select("tv", "amp", org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.yuv)
-    srcdevice="vcr"
+#def watch_vcr():
+#    """Watch VCR"""
+#    global srcdevice
+#    hm.select("amp", "vcr", org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
+#    hm.select("tv", "amp", org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.yuv)
+#    srcdevice="vcr"
 
-def look_vcr():
-    """Watch VCR"""
-    global srcdevice
-    hm.select("amp", "vcr", org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.video_only, None)
-    hm.select("tv", "amp", org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.yuv)
-    srcdevice="vcr"
-    paneljump("vcr")
+#def look_vcr():
+#    """Watch VCR"""
+#    global srcdevice
+#    hm.select("amp", "vcr", org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.video_only, None)
+#    hm.select("tv", "amp", org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, org.harctoolbox.oldharctoolbox.ConnectionType.yuv)
+#    srcdevice="vcr"
+#    paneljump("vcr")
 
-def listen_vcr():
-    """Watch VCR"""
-    global srcdevice
-    hm.select("amp", "vcr", org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
-    srcdevice="vcr"
-    paneljump("vcr")
+#def listen_vcr():
+#    """Watch VCR"""
+#    global srcdevice
+#    hm.select("amp", "vcr", org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_video, None)
+#    srcdevice="vcr"
+#    paneljump("vcr")
 
 
 #def vcr_off():
 #    """Discretely Turns on VCR (very bad implementation)"""
 #    device_command("vr1100", "standby_toggle")
 #    #time.sleep(1)
-#    device_command("vr1100", "power_toggle")
+#    device_command("vr1100", "power")
 
 #def vcr_on():
 #    """Turns on VCR"""
@@ -1052,14 +1056,14 @@ def listen_vcr():
 def listen_phono():
     """Listen to vinyl"""
     global srcdevice
-    hm.select("amp", "phono", org.harctoolbox.oldharctoolbox.commandtype_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_only, None)
+    hm.select("amp", "phono", org.harctoolbox.oldharctoolbox.CommandType_t.any, None, org.harctoolbox.oldharctoolbox.MediaType.audio_only, None)
     srcdevice="phono"
     paneljump("phono")
 
 #         <macros name="Popcorn-hour-macros():
 def poweroff_popcorn():
     """Shuts down the Popcorn hour"""
-    device_command("popcorn", "power_toggle")
+    device_command("popcorn", "power")
     device_command("popcorn", "delete")
 
 def on(device):
@@ -1069,16 +1073,20 @@ def off(device):
     device_command(device, 'power_off')
 
 def power(device):
-    device_command(device, 'power_toggle')
+    device_command(device, 'power')
 
 def sunrise():
     """Macro called at sunrise."""
-    #devicegroup_command("blinds", "power_off")
+    return all_blinds_up()
+
+def sunrise():
     return devicegroup_command("blinds", "power_off")
 
 def sunset():
     """Macro called at sunset."""
-    #devicegroup_command("blinds", "power_on")
+    all_blinds_down()
+
+def all_blinds_down():
     return devicegroup_command("blinds", "power_on")
 
 #     <macros name="Powermacros():
@@ -1097,11 +1105,11 @@ def front_left_right_off():
 
 def front_left_right_toggle():
     """Toggle halogen light front, left, and right"""
-    return devicegroup_command("front left right halogen lights", 'power_toggle')
+    return devicegroup_command("front left right halogen lights", 'power')
 
 def front_left_right_shelf_toggle():
     """Toggle halogen light front, left, and right"""
-    return devicegroup_command("front halogen lights", 'power_toggle')
+    return devicegroup_command("front halogen lights", 'power')
 
 def floorlamps_on():
     """Turn on halogen light front, left, and right"""

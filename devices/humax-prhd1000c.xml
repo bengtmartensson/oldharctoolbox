@@ -39,7 +39,7 @@
     <command cmdref="channel_down"	cmdno="21"/>
 
     <command cmdref="menu" 		cmdno="14"/>
-    <command cmdref="teletext_toggle"	cmdno="70"/>
+    <command cmdref="teletext"  	cmdno="70"/>
     <command cmdref="channellist"	cmdno="77"/>
     <command cmdref="aspectratio"	cmdno="78"/>
     <command cmdref="power_toggle" 	cmdno="0"/>

@@ -25,7 +25,7 @@
     <command cmdref="play" 		cmdno="6"/>
     <command cmdref="previous" 	cmdno="24"/>
     <command cmdref="next" 		cmdno="25"/>
-    <command cmdref="pause_toggle"	cmdno="89"/>
+    <command cmdref="pause"     	cmdno="89"/>
     <command cmdref="still_advance" cmdno="27"/>
     <command cmdref="stop" 		cmdno="30"/>
 

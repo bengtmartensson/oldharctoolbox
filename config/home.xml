@@ -2,25 +2,27 @@
 <!DOCTYPE homemap PUBLIC "-//bengt-martensson.de//home//en" "../dtds/home.dtd">
 <!--
 Description of devices, applications, gateways, groups, zones.
+
+Use underscore _, not hyphen - for ease of remembering!
 -->
 <homemap>
     <aliases> <!-- every name referred to by canonical should be defined here -->
-        <alias id="main-receiver" device="denon"/>
+        <alias id="main_receiver" device="denon"/>
         <alias id="receiver" device="denon"/>
         <alias id="amp" device="denon"/>
         <alias id="sat" device="coolstream"/>
-        <alias id="sat-receiver" device="coolstream"/>
-        <alias id="cable-receiver" device="coolstream"/>
+        <alias id="sat_receiver" device="coolstream"/>
+        <alias id="cable_receiver" device="coolstream"/>
         <alias id="cable" device="coolstream"/>
         <alias id="cool" device="coolstream"/>
-        <alias id="digital-receiver" device="coolstream"/>
-        <alias id="hd-cable-receiver" device="coolstream"/>
+        <alias id="digital_receiver" device="coolstream"/>
+        <alias id="hd_cable_receiver" device="coolstream"/>
         <alias id="dvd" device="oppo_bdp93"/>
         <!--alias id="hddvd" device="toshiba"/-->
         <alias id="bluray" device="oppo_bdp93"/>
-        <alias id="uhd-bluray" device="panasonic"/>
-        <alias id="philips-tv" device="philips_37pfl9603"/>
-        <alias id="bedroom-tv" device="philips_37pfl9603"/>
+        <alias id="uhd_bluray" device="panasonic"/>
+        <alias id="philips_tv" device="philips_37pfl9603"/>
+        <alias id="bedroom_tv" device="philips_37pfl9603"/>
         <alias id="tv" device="sony_kd_55af9"/>
         <!--alias id="vcr" device="vr1100"/-->
         <alias id="projector" device="hw50es"/>
@@ -28,20 +30,20 @@ Description of devices, applications, gateways, groups, zones.
         <alias id="delta" device="epsilon"/>
         <alias id="camera" device="canon"/>
         <alias id="sub" device="nubert"/>
-        <alias id="desk-amp" device="yamaha_rxv1400"/>
+        <alias id="desk_amp" device="yamaha_rxv1400"/>
         <!--alias id="bedroom_amp" device="yamaha_rxv1400"/-->
-        <alias id="bedroom-amp" device="denon_avr3808"/>
-        <alias id="ipod-dock" device="denon_ipod_dock"/>
+        <alias id="bedroom_amp" device="denon_avr3808"/>
+        <alias id="ipod_dock" device="denon_ipod_dock"/>
         <!--alias id="player" device="oplay"/-->
     </aliases>
     <device-groups>
-        <device-group id="front-halogen-lights" name="front halogen lights">
+        <device-group id="front_halogen_lights" name="front halogen lights">
             <deviceref device="front_light"/>
             <deviceref device="left_light"/>
             <deviceref device="right_light"/>
             <deviceref device="shelf_light"/>
         </device-group>
-        <device-group id="front-left-right" name="front left right halogen lights">
+        <device-group id="front_left_right" name="front left right halogen lights">
             <deviceref device="front_light"/>
             <deviceref device="left_light"/>
             <deviceref device="right_light"/>
@@ -101,9 +103,9 @@ Description of devices, applications, gateways, groups, zones.
             <deviceref device="floor_fan"/>
             <deviceref device="desk_fan"/>
             <deviceref device="conrad_test"/>
-            <deviceref device="x10-N1"/>
-            <deviceref device="x10-N2"/>
-            <deviceref device="x10-N3"/>
+            <deviceref device="x10_N1"/>
+            <deviceref device="x10_N2"/>
+            <deviceref device="x10_N3"/>
         </device-group>
 
         <device-group id="fans" name="fans">
@@ -163,8 +165,8 @@ Description of devices, applications, gateways, groups, zones.
             <!--deviceref device="lg_vcr"/-->
             <!--deviceref device="panasonic_dvd_s75"/-->
             <!--deviceref device="panasonic_dvd_s33"/-->
-            <deviceref device="bedroom-tv"/>
-            <deviceref device="bedroom-amp"/>
+            <deviceref device="bedroom_tv"/>
+            <deviceref device="bedroom_amp"/>
         </device-group>
 
         <device-group id="deskzone" name="desk" zone="3">
@@ -197,11 +199,11 @@ Description of devices, applications, gateways, groups, zones.
             <deviceref device="hw50es"/>
         </device-group>
 
-        <device-group id="hometheatre-sources" name="Hometheatre sources" zone="1">
+        <device-group id="hometheatre_sources" name="Hometheatre sources" zone="1">
             <deviceref device="denon_ipod_dock"/>
             <!--deviceref device="vr1100"/-->
             <deviceref device="oppo_bdp93"/>
-            <deviceref device="uhd-bluray"/>
+            <deviceref device="uhd_bluray"/>
             <!--deviceref permanent="no" device="popcorn"/-->
             <!--deviceref device="toshiba"/-->
             <!--deviceref device="dbox"/-->
@@ -723,11 +725,11 @@ Description of devices, applications, gateways, groups, zones.
             <attribute name="rc_1"/>
             <attribute name="rs232"/>
             <attribute name="bluraychip_rs232"/>
-            <powered-through device="bedroom-amp"/>
+            <powered-through device="bedroom_amp"/>
             <!--gateway-port-ref gateway-port="dvd_serial_gw"/>
             <gateway-port-ref gateway-port="globalcache_mainzone"/-->
             <gateway-port-ref gateway-port="dvd_ir_gw"/>
-            <gateway-port gateway="lan" connectortype="ip" hostname="oppo83"
+            <gateway-port gateway="lan" connectortype="ip" hostname="oppo-83"
                     wol="no"/>
         </device>
 
@@ -819,7 +821,7 @@ Description of devices, applications, gateways, groups, zones.
           <gateway-port gateway="gc2" connector="2"/>
         </device-->
 
-        <!--device id="oplay" class="asus_oplay_hdp-r1" name="Asus O!Play">
+        <!--device id="oplay" class="asus_oplay_hdp_r1" name="Asus O!Play">
           <gateway-port-ref gateway-port="globalcache_mainzone"/>
           <gateway-port-ref gateway-port="irtrans_mainzone"/>
           <gateway-port gateway="lan" connectortype="ip" hostname="oplay" wol="no"
@@ -855,14 +857,14 @@ Description of devices, applications, gateways, groups, zones.
         </device-->
 
         <device id="philips_37pfl9603" class="philips_37pfl9603"
-            name="Philips 37pfl9603" canonical="bedroom-tv" firmware="Q591E-0.100.0.0">
-            <powered-through device="bedroom-amp"/>
+            name="Philips 37pfl9603" canonical="bedroom_tv" firmware="Q591E-0.100.0.0">
+            <powered-through device="bedroom_amp"/>
             <gateway-port gateway="lan" connectortype="ip" hostname="tv" wol="no"/>
             <inputs>
                 <input name="hdmi1">
                     <selectcommand audio_video="in_hdmi1"/>
                     <connector connectiontype="hdmi">
-                        <deviceref device="bedroom-amp"/>
+                        <deviceref device="bedroom_amp"/>
                     </connector>
                 </input>
                 <input name="hdmi2">
@@ -910,7 +912,7 @@ Description of devices, applications, gateways, groups, zones.
                 <input name="hdmi2">
                     <selectcommand audio_video="in_hdmi2"/>
                     <connector connectiontype="hdmi">
-                        <deviceref device="uhd-bluray"/>
+                        <deviceref device="uhd_bluray"/>
                     </connector>
                 </input>
                 <input name="hdmi3">
@@ -932,7 +934,7 @@ Description of devices, applications, gateways, groups, zones.
             <gateway-port-ref gateway-port="globalcache_mainzone"/>
         </device>
 
-        <device id="denon_avr3808" class="denon_avr3808" name="Denon AVR 3808" canonical="bedroom-amp">
+        <device id="denon_avr3808" class="denon_avr3808" name="Denon AVR 3808" canonical="bedroom_amp">
             <gateway-port-ref gateway-port="bedroom_gw"/>
             <inputs>
                 <input name="phono" video="no">
@@ -966,7 +968,7 @@ Description of devices, applications, gateways, groups, zones.
                         <deviceref device="marantz_tape"/>
                     </connector-->
                 </input>
-                <input name="cd-r" myname="TV">
+                <input name="cd_r" myname="TV">
                     <selectcommand audio_video="in_cd_r"/>
                 </input>
                 <input name="dtv" myname="Laserdsc">
@@ -1033,7 +1035,7 @@ Description of devices, applications, gateways, groups, zones.
           <gateway-port gateway="lan" hostname="vaio"/>
         </device-->
 
-        <device id="dell_monitor" class="misc"/>
+        <device id="dell_monitor" class="null"/>
 
         <device id="yamaha_rxv1400" class="yamaha_rxv1400" name="Yamaha RX-V 1400" canonical="desk_amp">
             <gateway-port-ref gateway-port="desk_gw"/>
@@ -1286,14 +1288,14 @@ Description of devices, applications, gateways, groups, zones.
             <gateway-port gateway="gw_rs200_test" connectortype="on_off"/>
         </device>
 
-        <device id="x10-N1" class="lamp_status_toggle" name="x10:N1">
-            <gateway-port gateway="gw_x10-N1" connectortype="on_off"/>
+        <device id="x10_N1" class="lamp_status_toggle" name="x10:N1">
+            <gateway-port gateway="gw_x10_N1" connectortype="on_off"/>
         </device>
-        <device id="x10-N2" class="lamp_status_toggle" name="x10:N2">
-            <gateway-port gateway="gw_x10-N2" connectortype="on_off"/>
+        <device id="x10_N2" class="lamp_status_toggle" name="x10:N2">
+            <gateway-port gateway="gw_x10_N2" connectortype="on_off"/>
         </device>
-        <device id="x10-N3" class="lamp_status_toggle" name="x10:N3">
-            <gateway-port gateway="gw_x10-N3" connectortype="on_off"/>
+        <device id="x10_N3" class="lamp_status_toggle" name="x10:N3">
+            <gateway-port gateway="gw_x10_N3" connectortype="on_off"/>
         </device>
 
         <!-- Gateways as devices -->
@@ -1831,7 +1833,7 @@ Description of devices, applications, gateways, groups, zones.
             </ports>
         </gateway>
 
-        <gateway class="x10" id="gw_x10-N1" model="FIXME">
+        <gateway class="x10" id="gw_x10_N1" model="FIXME">
             <gateway-port gateway="t10" connectortype="rf" connectorno="21"/>
             <ports type="on_off">
                 <port>
@@ -1843,7 +1845,7 @@ Description of devices, applications, gateways, groups, zones.
             </ports>
         </gateway>
 
-        <gateway class="x10" id="gw_x10-N2" model="FIXME">
+        <gateway class="x10" id="gw_x10_N2" model="FIXME">
             <gateway-port gateway="t10" connectortype="rf" connectorno="22"/>
             <ports type="on_off">
                 <port>
@@ -1855,7 +1857,7 @@ Description of devices, applications, gateways, groups, zones.
             </ports>
         </gateway>
 
-        <gateway class="x10" id="gw_x10-N3" model="FIXME">
+        <gateway class="x10" id="gw_x10_N3" model="FIXME">
             <gateway-port gateway="t10" connectortype="rf" connectorno="23"/>
             <ports type="on_off">
                 <port>
@@ -1926,9 +1928,9 @@ Description of devices, applications, gateways, groups, zones.
             <preset programno="18" device="desk_fan"/>
             <preset programno="19" device="bathroom_light"/>
             <preset programno="20" device="monitor"/>
-            <preset programno="21" device="x10-N1"/>
-            <preset programno="22" device="x10-N2"/>
-            <preset programno="23" device="x10-N3"/-->
+            <preset programno="21" device="x10_N1"/>
+            <preset programno="22" device="x10_N2"/>
+            <preset programno="23" device="x10_N3"/-->
             <!--
             <preset programno="24" device="unassigned"/>
             <preset programno="25" device="unassigned"/>

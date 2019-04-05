@@ -63,7 +63,7 @@
     <command cmdno="09" cmdref="sort_audiobook" remark="Sort by Audio Books"/>
   </commandset>
   <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="48" remotename="marantz_is201">
-    <command cmdno="01" cmdref="pause_toggle" remark="Pause"/>
+    <command cmdno="01" cmdref="pause" remark="Pause"/>
   </commandset>
   <commandset type="ir" protocol="rc5x" deviceno="14" subdevice="53" remotename="marantz_is201">
     <command cmdno="01" cmdref="play_pause" remark="Play/Pause toggle"/>
