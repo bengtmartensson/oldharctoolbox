@@ -991,19 +991,19 @@ def desk_listen_zone1():
 
 def rtl_f1():
     """Display the RTL Formula 1 teletext pages"""
-    assure_on("tv", True)
-    device_command("tv", "cmd_4")
-    device_command("tv", "ok")
-    wait_delay("tv", "input_switch", 1234)
-    wait_delay("tv", "channel_switch", 1234)
-    device_command("tv", "teletext_toggle")
-    wait_delay("tv", "enter_teletext", 1234)
-    device_command("tv", "cmd_2")
-    wait_delay("tv", "intra_command", 500)
-    device_command("tv", "cmd_5")
-    wait_delay("tv", "intra_command", 500)
-    device_command("tv", "cmd_0")
-    paneljump("tv")
+    watch_dbox()
+    device_command("coolstream", "cmd_4")
+    wait_delay("coolstream", "intra_command", 500)
+    device_command("coolstream", "ok")
+    wait_delay("coolstream", "input_switch", 1234)
+    device_command("coolstream", "teletext")
+    wait_delay("coolstream", "enter_teletext", 1234)
+    device_command("coolstream", "cmd_2")
+    wait_delay("coolstream", "intra_command", 500)
+    device_command("coolstream", "cmd_5")
+    wait_delay("coolstream", "intra_command", 500)
+    device_command("coolstream", "cmd_0")
+    paneljump("coolstream")
     
 def enter_pin(device='humax'):
     send_numsequence(device, hm.get_pin(device))
