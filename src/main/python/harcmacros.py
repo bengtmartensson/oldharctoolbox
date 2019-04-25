@@ -1142,6 +1142,23 @@ def all_up_smart():
     all_up()
     return all_up()
 
+def blind_smart_command(blind, cmd):
+    device_command(blind, cmd)
+    time.sleep(0.02)
+    return device_command(blind, cmd)
+
+def blind_smart_down(blind):
+    return blind_smart_command(blind, 'power_on')
+
+def blind_smart_up(blind):
+    return blind_smart_command(blind, 'power_off')
+
+def small_blind_smart_down():
+    return blind_smart_down('small_blind')
+
+def small_blind_smart_up():
+    return blind_smart_up('small_blind')
+
 def bedroom_slowly_dark(level=50, dimtime=240):
     """Set light level to specified value, then dim down in specified time."""
     device_command_n('bedroom_light', 'set_power', str(level))
