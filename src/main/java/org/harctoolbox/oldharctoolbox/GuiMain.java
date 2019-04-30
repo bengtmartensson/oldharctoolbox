@@ -52,8 +52,6 @@ public final class GuiMain extends javax.swing.JFrame {
     //private int debug = 0;
     //private boolean verbose = false;
     private DefaultComboBoxModel<String> macros_dcbm;
-    private DefaultComboBoxModel<String> toplevel_macrofolders_dcbm;
-    private DefaultComboBoxModel<String> secondlevel_macrofolders_dcbm;
     private DefaultComboBoxModel<String> devices_dcbm;
     private DefaultComboBoxModel<String> commands_dcbm;
     private DefaultComboBoxModel<String> devicegroups_dcbm;
@@ -121,8 +119,6 @@ public final class GuiMain extends javax.swing.JFrame {
             macros_dcbm = new DefaultComboBoxModel<>(new String[]{dummy_no_selection});
         }
 
-        toplevel_macrofolders_dcbm = new DefaultComboBoxModel<>(new String[]{dummy_no_selection});
-        secondlevel_macrofolders_dcbm = new DefaultComboBoxModel<>(new String[]{dummy_no_selection});
         devices_dcbm = new DefaultComboBoxModel<>(hm.get_devices());
         devicegroups_dcbm = new DefaultComboBoxModel<>(hm.get_devicegroups());
         commands_dcbm = new DefaultComboBoxModel<>(new String[]{dummy_no_selection});
@@ -212,8 +208,6 @@ public final class GuiMain extends javax.swing.JFrame {
         device_ComboBox = new javax.swing.JComboBox();
         macroComboBox = new javax.swing.JComboBox();
         macroButton = new javax.swing.JButton();
-        toplevel_macrofolders_ComboBox = new javax.swing.JComboBox();
-        secondlevel_macrofolders_ComboBox = new javax.swing.JComboBox();
         devicegroup_ComboBox = new javax.swing.JComboBox();
         command_ComboBox = new javax.swing.JComboBox();
         selecting_device_ComboBox = new javax.swing.JComboBox();
@@ -310,27 +304,6 @@ public final class GuiMain extends javax.swing.JFrame {
         macroButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 macroButtonActionPerformed(evt);
-            }
-        });
-
-        toplevel_macrofolders_ComboBox.setModel(toplevel_macrofolders_dcbm);
-        toplevel_macrofolders_ComboBox.setToolTipText("Top level folder");
-        toplevel_macrofolders_ComboBox.setEnabled(false);
-        toplevel_macrofolders_ComboBox.setMaximumSize(new java.awt.Dimension(120, 25));
-        toplevel_macrofolders_ComboBox.setMinimumSize(new java.awt.Dimension(120, 25));
-        toplevel_macrofolders_ComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toplevel_macrofolders_ComboBoxActionPerformed(evt);
-            }
-        });
-
-        secondlevel_macrofolders_ComboBox.setMaximumRowCount(20);
-        secondlevel_macrofolders_ComboBox.setModel(secondlevel_macrofolders_dcbm);
-        secondlevel_macrofolders_ComboBox.setToolTipText("Second level folder");
-        secondlevel_macrofolders_ComboBox.setEnabled(false);
-        secondlevel_macrofolders_ComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                secondlevel_macrofolders_ComboBoxActionPerformed(evt);
             }
         });
 
@@ -460,14 +433,12 @@ public final class GuiMain extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel1))
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(toplevel_macrofolders_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(selecting_device_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(devicegroup_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(secondlevel_macrofolders_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(38, 38, 38)
                         .addComponent(macroComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(stop_macro_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -518,8 +489,6 @@ public final class GuiMain extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(toplevel_macrofolders_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(secondlevel_macrofolders_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(macroComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(stop_macro_Button)
                     .addComponent(macroButton))
@@ -1147,29 +1116,6 @@ public final class GuiMain extends javax.swing.JFrame {
         properties.setVerbose(verbose);
     }//GEN-LAST:event_verbose_CheckBoxMenuItemActionPerformed
 
-    private void toplevel_macrofolders_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toplevel_macrofolders_ComboBoxActionPerformed
- /*       toplevel_macrofolders_ComboBox.setToolTipText(engine.describe_folder((String) toplevel_macrofolders_dcbm.getSelectedItem()));
-        String[] secondlevel_macrofolders = engine.get_folders((String) toplevel_macrofolders_ComboBox.getSelectedItem(), 1);
-        if (secondlevel_macrofolders != null && secondlevel_macrofolders.length > 0) {
-            secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(secondlevel_macrofolders);
-            secondlevel_macrofolders_ComboBox.setModel(secondlevel_macrofolders_dcbm);
-            secondlevel_macrofolders_ComboBox.setEnabled(true);
-            secondlevel_macrofolders_ComboBox.setToolTipText(engine.describe_folder((String) secondlevel_macrofolders_dcbm.getSelectedItem()));
-        } else {
-            secondlevel_macrofolders_dcbm = new DefaultComboBoxModel(new String[]{dummy_no_selection});
-            secondlevel_macrofolders_ComboBox.setModel(secondlevel_macrofolders_dcbm);
-            secondlevel_macrofolders_ComboBox.setEnabled(false);
-            secondlevel_macrofolders_ComboBox.setToolTipText(null);
-        }
-        update_macro_menu();
-  */
-}//GEN-LAST:event_toplevel_macrofolders_ComboBoxActionPerformed
-
-    private void secondlevel_macrofolders_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_secondlevel_macrofolders_ComboBoxActionPerformed
-        //secondlevel_macrofolders_ComboBox.setToolTipText(engine.describe_folder((String) secondlevel_macrofolders_dcbm.getSelectedItem()));
-        //update_macro_menu();
-}//GEN-LAST:event_secondlevel_macrofolders_ComboBoxActionPerformed
-
     private void enable_devicegroups_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enable_devicegroups_CheckBoxMenuItemActionPerformed
         properties.setEnableDeviceGroups(enable_devicegroups_CheckBoxMenuItem.isSelected());
         update_device_menu();
@@ -1551,7 +1497,6 @@ public final class GuiMain extends javax.swing.JFrame {
     private javax.swing.JTabbedPane output_hw_TabbedPane;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
-    private javax.swing.JComboBox secondlevel_macrofolders_ComboBox;
     private javax.swing.JButton select_Button;
     private javax.swing.JComboBox selecting_device_ComboBox;
     private javax.swing.JCheckBoxMenuItem sort_commands_CheckBoxMenuItem;
@@ -1560,7 +1505,6 @@ public final class GuiMain extends javax.swing.JFrame {
     private javax.swing.JComboBox src_device_ComboBox;
     private javax.swing.JButton stop_command_Button;
     private javax.swing.JButton stop_macro_Button;
-    private javax.swing.JComboBox toplevel_macrofolders_ComboBox;
     private javax.swing.JCheckBoxMenuItem verbose_CheckBoxMenuItem;
     private javax.swing.JComboBox zones_ComboBox;
     // End of variables declaration//GEN-END:variables

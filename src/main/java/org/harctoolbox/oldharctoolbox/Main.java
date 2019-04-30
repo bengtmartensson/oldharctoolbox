@@ -73,11 +73,11 @@ final public class Main {
     private static int no_threads = 0;
     private static Main the_instance = null;
     private static final String helptext =
-            "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>,-t " + CommandType_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
+            "\tharctoolbox --version|--help\n" + "\tharctoolbox [OPTIONS] [-P] [-g|-r|-l [<portnumber>]]\n" + "\tharctoolbox [OPTIONS] -P <pythoncommand>\n" + "\tharctoolbox [OPTIONS] <device_instance> [<command> [<argument(s)>]]\n" + "\tharctoolbox [OPTIONS] -s <device_instance> <src_device_instance>\n" + "where OPTIONS=-A,-V,-M,-C <charset>,-h <filename>, --apphome <appHome>,-t " + CommandType_t.valid_types('|') + ",-T 0|1,-# <count>,-v,-d <debugcode>," + "-a <aliasfile>, -p <propsfile>, -w <tasksfile>, -z <zone>,-c <connectiontype>.";
     private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
     private static Main instance;
     private static Props properties;
-    private static String appHome;
+    private static String appHome = null;
     private final static Logger logger = Logger.getLogger(Main.class.getName());
 
     private static void usage(int exitstatus) {
@@ -142,6 +142,10 @@ final public class Main {
                             + Version.licenseString);
                 }
                 switch (args[arg_i]) {
+                    case "--apphome":
+                        arg_i++;
+                        appHome = args[arg_i++];
+                        break;
                     case "-#":
                         arg_i++;
                         count = Integer.parseInt(args[arg_i++]);
@@ -192,6 +196,7 @@ final public class Main {
                         gui_mode = true;
                         break;
                     case "-h":
+                    case "--homefile":
                         arg_i++;
                         homefilename = args[arg_i++];
                         break;
@@ -265,7 +270,8 @@ final public class Main {
             usage();
         }
 
-        appHome = findApplicationHome(homefilename);
+        if (appHome == null)
+            appHome = findApplicationHome(homefilename);
         properties = new Props(propsfilename, appHome);
         //HarcProps.initialize(propsfilename);
         //properties.set_propsfilename(propsfilename);
@@ -732,7 +738,7 @@ final public class Main {
             System.err.println("Warning: GNU readline not found.");
         }
 
-        Readline.initReadline(properties.getAppname());
+        Readline.initReadline(properties.getAppName());
 
         history = new File(properties.getRlHistoryfile());
 

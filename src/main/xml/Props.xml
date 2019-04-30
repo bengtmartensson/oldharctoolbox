@@ -19,26 +19,32 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 <!-- All relative file names are relative to HARCTOOLBOXHOME = applicationHome -->
 <properties package="org.harctoolbox.oldharctoolbox" useXml = "true" appName="Version.appName" home-environment-var="OLDHARCTOOLBOXHOME">
+
+    <!-- GUI persistence variables -->
     <property name="verbose" type="boolean" default='"false"' doc='If true, execute some commands more verbosely' />
     <property name="useWwwForCommands" type="boolean" default='"false"' doc='If true, execute some commands more verbosely' />
     <property name="debug" type="int" default='"0"' />
-    <property name="irpProtocolsPath" type="string" default='""' doc='Path to IrpProtocols.xml' />
-    <property name="homeConf" type="string" default='"home.xml"'/>
-    <property name="dtdDir" type="string" default='"dtds"'/>
-    <property name="devicesDir" type="string" default='"devices"'/>
-    <property name="aliasfilename" type="string" default='"command_t.xml"'/> <!-- ? -->
-    <property name="rlHistoryfile" type="string" default='".oldharctoolbox.rl"'/> <!-- FIXME(?) -->
-    <property name="appname" type="string" default='"oldharctoolbox"'/>
-    <property name="rlPrompt" type="string" default='"oldharctoolbox> "'/>
-    <property name="resultformat" type="string" default='"[%2$tY-%2$tm-%2$td %2$tk:%2$tM:%2$tS] >%1$s&lt;"'/>
-    <property name="commandformat" type="string" default='"harc>%1$s"'/>
-    <property name="pythonLibDir" type="string" default='"python"'/>
-    <property name="pythonHome" type="string" default='"/usr/local/jython2.7.0"'/>
-    <property name="harcmacros" type="string" default='"harcinit.py"'/>
     <property name="enableDeviceGroups" type="boolean" default='"false"' />
     <property name="sortDevices" type="boolean" default='"false"' />
     <property name="sortCommands" type="boolean" default='"false"' />
     <property name="sortMacros" type="boolean" default='"false"' />
     <property name="immediateExecutionMacros" type="boolean" default='"false"' />
     <property name="immediateExecutionCommands" type="boolean" default='"false"' />
+
+    <!-- Paths -->
+    <property name="irpProtocolsPath" type="string" default='""' doc='Path to IrpProtocols.xml' />
+    <property name="homeConf" type="string" default='"home.xml"'/>
+    <property name="dtdDir" type="string" default='"dtds"'/>
+    <property name="devicesDir" type="string" default='"devices"'/>
+    <property name="aliasfilename" type="string" default='"command_t.xml"'/> <!-- ? -->
+    <property name="rlHistoryfile" type="string" default='".harctoolbox.rl"'/>
+    <property name="appName" type="string" default='"harctoolbox"'/>
+    <property name="pythonLibDir" type="string" default='"python"'/>
+    <property name="pythonHome" type="string" default='"/usr/local/jython2.7.0"'/>
+    <property name="harcMacros" type="string" default='"harcinit.py"'/>
+
+    <!-- Other variables -->
+    <property name="rlPrompt" type="string" default='"oldharctoolbox> "'/>
+    <property name="resultformat" type="string" default='"[%2$tY-%2$tm-%2$td %2$tk:%2$tM:%2$tS] >%1$s&lt;"'/>
+    <property name="commandformat" type="string" default='"harc>%1$s"'/>
 </properties>

@@ -258,15 +258,13 @@
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="toplevel_macrofolders_ComboBox" min="-2" pref="120" max="-2" attributes="0"/>
                           <Component id="selecting_device_ComboBox" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                           <Component id="devicegroup_ComboBox" min="-2" pref="120" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="secondlevel_macrofolders_ComboBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                               <Component id="macroComboBox" min="-2" pref="258" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="stop_macro_Button" min="-2" pref="72" max="-2" attributes="0"/>
@@ -326,8 +324,6 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="toplevel_macrofolders_ComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="secondlevel_macrofolders_ComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="macroComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="stop_macro_Button" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="macroButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -402,37 +398,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="macroButtonActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JComboBox" name="toplevel_macrofolders_ComboBox">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="toplevel_macrofolders_dcbm" type="code"/>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Top level folder"/>
-                <Property name="enabled" type="boolean" value="false"/>
-                <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[120, 25]"/>
-                </Property>
-                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[120, 25]"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toplevel_macrofolders_ComboBoxActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JComboBox" name="secondlevel_macrofolders_ComboBox">
-              <Properties>
-                <Property name="maximumRowCount" type="int" value="20"/>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="secondlevel_macrofolders_dcbm" type="code"/>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Second level folder"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="secondlevel_macrofolders_ComboBoxActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="devicegroup_ComboBox">

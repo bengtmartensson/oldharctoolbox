@@ -7,7 +7,7 @@
 HARCTOOLBOX_HOME="$(dirname -- "$(readlink -f -- "${0}")" )"
 READLINE_LIB=/usr/local/lib
 
-if [ -n $JAVA_HOME ] ; then
+if [ x${JAVA_HOME}y != "xy" ] ; then
     JAVA=$JAVA_HOME/bin/java
 else
     JAVA=java

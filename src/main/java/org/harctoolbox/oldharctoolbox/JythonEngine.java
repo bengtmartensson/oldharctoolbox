@@ -88,7 +88,7 @@ public final class JythonEngine {
         python.set("hm", hm);
         python.exec("import sys");
 
-        String harcinit = Main.getProperties().getHarcmacros();
+        String harcinit = Main.getProperties().getHarcMacros();
         String pythonLibDir = Main.addAppHomeIfNecessary(Main.getProperties().getPythonLibDir()).getAbsolutePath();
         python.exec("sys.path.append('" + pythonLibDir + "')");
         try {
@@ -150,8 +150,8 @@ public final class JythonEngine {
         try {
             po = python.eval(macro);
         } catch (PyException pye) {
-            System.err.println("Python error: ");
-            //pye.printStackTrace();
+            System.err.println("Python error: " + pye);
+            pye.printStackTrace();
             return null;
         }
         String s;

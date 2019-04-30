@@ -33,7 +33,7 @@ TZ=CET; export TZ
 
 case "$1" in
   start)
-	harctoolbox -P -l -w /usr/local/harctoolbox/config/tasks.xml 1> /var/log/harctoolboxd 2>&1  &
+	harctoolbox -P -l -w /usr/local/share/harctoolbox/tasks.xml 1> /var/log/harctoolboxd 2>&1  &
 	dispatcher &
 	;;
   stop)
