@@ -1,5 +1,0 @@
-2012-05-10  Bengt Martensson
-
-	* src/org/harctoolbox/wav_export.java: Moved away, to
-	org.harctoolbox.IrpMaster.WaveExport. 
-
