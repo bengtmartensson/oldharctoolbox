@@ -80,7 +80,7 @@ public final class JythonEngine {
             completer = new JythonRlCompleter(hm);
         Properties pythonProperties = new Properties();
         pythonProperties.setProperty("python.home", Main.getProperties().getPythonHome());
-        pythonProperties.setProperty("pythonlibdir", Main.getProperties().getPythonLibDir());
+        pythonProperties.setProperty("pythonlibdir", Main.addAppHomeIfNecessary(Main.getProperties().getPythonLibDir()).getAbsolutePath());
         PythonInterpreter.initialize(System.getProperties(), pythonProperties, new String[0]);
         python = interactive ?
             new HarcReadlineJythonConsole(null, org.python.util.InteractiveConsole.CONSOLE_FILENAME, completer) :
@@ -89,12 +89,14 @@ public final class JythonEngine {
         python.exec("import sys");
 
         String harcinit = Main.getProperties().getHarcmacros();
-        python.exec("sys.path.append('" + Main.getProperties().getPythonLibDir()+ "')");
+        String pythonLibDir = Main.addAppHomeIfNecessary(Main.getProperties().getPythonLibDir()).getAbsolutePath();
+        python.exec("sys.path.append('" + pythonLibDir + "')");
         try {
-            if ((new File(harcinit)).exists())
-                python.execfile(harcinit);
+            File absFile = new File(pythonLibDir, harcinit);
+            if (absFile.exists())
+                python.execfile(absFile.getAbsolutePath());
             else
-                System.err.println("Python init file " + harcinit + " does not exist");
+                System.err.println("Python init file " + absFile + " does not exist");
 
             if (interactive) {
                 String[] stdcommands = getstuff("_stdcommands()", null);
@@ -134,7 +136,7 @@ public final class JythonEngine {
                 python.exec(macro);
             } catch (Exception e) {
                 System.err.println("Exception from Python " + e.getMessage());
-                //e.printStackTrace();
+                e.printStackTrace();
             }
             return true;
         } else

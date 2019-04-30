@@ -102,7 +102,7 @@ public final class GuiMain extends javax.swing.JFrame {
      * @throws java.io.IOException
      * @throws org.xml.sax.SAXException
      */
-    public GuiMain(String homefilename) throws IOException, SAXException {
+    public GuiMain(File homefilename) throws IOException, SAXException {
         hm = new Home(homefilename);
         properties = Main.getProperties();
         cmd_formatter = new ResultFormatter(properties.getCommandformat());
@@ -188,7 +188,7 @@ public final class GuiMain extends javax.swing.JFrame {
     }
 
     public GuiMain() throws IOException, SAXException {
-        this(Main.getProperties().getHomeConf());
+        this(Main.addAppHomeIfNecessary(Main.getProperties().getHomeConf()));
     }
 
     private void warning(String message) {

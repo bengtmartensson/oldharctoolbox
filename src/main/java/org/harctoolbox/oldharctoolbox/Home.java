@@ -261,8 +261,12 @@ public final class Home {
     private final LinkedHashMap<String, DeviceGroup> device_groups_table; // indexed by name, not id
     private final HashMap<String, Gateway> gateway_table;
 
-    public Home(String home_filename/*, boolean verbose, int debug*/) throws IOException, SAXParseException, SAXException {
-        Document doc = XmlUtils.openXmlFile(new File(home_filename));
+    public Home(String home_filename) throws IOException, SAXParseException, SAXException {
+        this(new File(home_filename));
+    }
+
+    public Home(File home_filename/*, boolean verbose, int debug*/) throws IOException, SAXParseException, SAXException {
+        Document doc = XmlUtils.openXmlFile(home_filename);
         if (DebugArgs.dbg_dom())
             System.err.println("Home configuration " + home_filename + " parsed.");
 

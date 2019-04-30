@@ -33,21 +33,21 @@ import org.xml.sax.SAXException;
 public final class CommandAlias {
 
     public static void main(String[] args) {
-        CommandAlias ca = new CommandAlias(args[0]);
+        CommandAlias ca = new CommandAlias(new File(args[0]));
         System.out.println(ca.canonicalize(args[1]));
     }
 
     private HashMap<String, command_t> aliastable = null;
     private boolean is_valid = false;
 
-    public CommandAlias(String filename) {
-        if (filename == null)
+    public CommandAlias(File file) {
+        if (file == null)
             return;
 
         aliastable = new HashMap<>(64);
         Document doc;
         try {
-            doc = XmlUtils.openXmlFile(new File(filename));
+            doc = XmlUtils.openXmlFile(file);
         } catch (IOException | SAXException e) {
             System.err.println(e.getMessage());
             is_valid = false;

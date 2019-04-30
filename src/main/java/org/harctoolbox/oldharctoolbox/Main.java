@@ -77,6 +77,7 @@ final public class Main {
     private static final String readline_help = "Usage: one of\n\t--<command> [<argument(s)>]\n\t<device_instance> <command> [<argument(s)>]\n\t--select <device_instance> <src_device_instance>";
     private static Main instance;
     private static Props properties;
+    private static String appHome;
     private final static Logger logger = Logger.getLogger(Main.class.getName());
 
     private static void usage(int exitstatus) {
@@ -264,7 +265,7 @@ final public class Main {
             usage();
         }
 
-        String appHome = findApplicationHome(homefilename);
+        appHome = findApplicationHome(homefilename);
         properties = new Props(propsfilename, appHome);
         //HarcProps.initialize(propsfilename);
         //properties.set_propsfilename(propsfilename);
@@ -328,11 +329,11 @@ final public class Main {
             if (applicationHome == null) {
                 URL url = Main.class.getProtectionDomain().getCodeSource().getLocation();
                 File dir = new File(url.toURI()).getParentFile();
-                applicationHome = (dir.getName().equals("target") || dir.getName().equals("dist"))
-                        ? dir.getParent() : dir.getPath();
+                applicationHome = /*(dir.getName().equals("target") || dir.getName().equals("dist"))
+                        ? dir.getParent() :*/ dir.getPath();
             }
         } catch (URISyntaxException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
             HarcUtils.doExit(IrpUtils.EXIT_FATAL_PROGRAM_FAILURE);
         }
         if (applicationHome != null && !applicationHome.endsWith(File.separator))
@@ -368,7 +369,7 @@ final public class Main {
         //System.err.println("Invoking GUI ...");
         //final int dbg = debug;
         //final boolean vrbs = verbose;
-        final String hmnam = homefilename;
+        final File hmnam = Main.addAppHomeIfNecessary(homefilename);
         //final String macronam = macrofilename;
         //final String brwsr = browser;
         java.awt.EventQueue.invokeLater(() -> {
@@ -402,39 +403,44 @@ final public class Main {
         return lnr.getLineNumber();
     }
 
+    public static File addAppHomeIfNecessary(String filename) {
+        File f = new File(filename);
+        return f.getParentFile() == null ? new File(appHome, filename) : f;
+    }
+
     //String homefilename = null;
     //String macrofilename = null;
     //String browser = null;
     //String propsfilename = null;
-    private String aliasfilename = null;
-    private ResultFormatter formatter = null;
+    private String aliasfilename;
+    private ResultFormatter formatter;
     //debugargs db = null;
     //private boolean no_execute = false;
-    private boolean select_mode = false;
+    private boolean select_mode;
     //int debug = 0;
     //boolean verbose = false;
-    private Home hm = null;
-    //macro_engine engine = null;
-    private HashMap< String, Calendar> timertable = new HashMap<>(16);
+    private Home hm;
+    private HashMap< String, Calendar> timertable;
     //jython_engine jython = null;
-    private CommandAlias alias_expander = null;
-    private CommandType_t type = CommandType_t.any;
-    private MediaType the_mediatype = MediaType.audio_video;
-    private ConnectionType connection_type = ConnectionType.any;
-    private String charset = null;
-    private String zone = null;
-    private int count = 1;
-    private ToggleType toggle = ToggleType.dont_care;
-    private boolean smart_memory = false;
+    private CommandAlias alias_expander;
+    private CommandType_t type;
+    private MediaType the_mediatype;
+    private ConnectionType connection_type;
+    private String charset;
+    private String zone;
+    private int count;
+    private ToggleType toggle;
+    private boolean smart_memory;
 
     private Main(String homefilename, /*String macrofilename, String browser,*/
             /*String propsfilename,*/ String aliasfilename, //int debug, boolean verbose,
             boolean no_execute, boolean select_mode, boolean smart_memory,
             int count, CommandType_t type, ToggleType toggle,
             MediaType the_mediatype, String zone, ConnectionType connection_type, String charset) {
+        this.timertable = new HashMap<>(16);
 
         if (the_instance != null) {
-            System.err.println("This class can be instantiated only once!!");
+            System.err.println("This class can be instantiated only once!");
             return;
         }
         the_instance = this;
@@ -483,12 +489,14 @@ final public class Main {
         else
             this.aliasfilename = properties.getAliasfilename();
 
-        this.alias_expander = new CommandAlias(this.aliasfilename);
+        File aliasFile = addAppHomeIfNecessary(this.aliasfilename);
+        this.alias_expander = new CommandAlias(aliasFile);
         //db = new debugargs(debug);
         formatter = new ResultFormatter();
 
+        File homeFile = addAppHomeIfNecessary(homefilename);
         try {
-            hm = new Home(homefilename/*, this.verbose, this.debug*/);
+            hm = new Home(homeFile/*, this.verbose, this.debug*/);
         } catch (IOException e) {
             HarcUtils.doExit(IrpUtils.EXIT_CONFIG_READ_ERROR, e.getMessage());
         } catch (SAXException e) {

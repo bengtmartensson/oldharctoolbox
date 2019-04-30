@@ -57,6 +57,11 @@ public final class Device {
     public static final String doctype_publicid = "-//bengt-martensson.de//devices//en";
     private static int debug = 0;
     private static HashMap<String, Device> device_storage = new HashMap<String, Device>(16);
+    private static final File devicesDir;
+
+    static {
+        devicesDir = Main.addAppHomeIfNecessary(Main.getProperties().getDevicesDir());
+    }
 
     public static Device newDevice(String devicename, Map<String, String>attributes)
             throws IOException, SAXException {
@@ -119,11 +124,10 @@ public final class Device {
      * @return Array of strings of the device names.
      */
     public static String[] get_devices() {
-        return get_basenames(Main.getProperties().getDevicesDir(), HarcUtils.devicefile_extension, false);
+        return get_basenames(devicesDir, HarcUtils.devicefile_extension, false);
     }
 
-    private static String[] get_basenames(String dirname, String extension, boolean toLowercase) {
-        File dir = new File(dirname);
+    private static String[] get_basenames(File dir, String extension, boolean toLowercase) {
         if (!dir.isDirectory())
             return null;
 
@@ -364,7 +368,7 @@ public final class Device {
 
     private Device(String filename, Map<String, String>attributes, boolean barf_for_invalid)
             throws IOException, SAXParseException, SAXException {
-        this( (filename.contains(File.separator) ? "" : Main.getProperties().getDevicesDir() + File.separator)
+        this( (filename.contains(File.separator) ? "" : devicesDir + File.separator)
                 + filename
                 + ((filename.endsWith(HarcUtils.devicefile_extension)) ? "" : HarcUtils.devicefile_extension),
                 null, attributes, barf_for_invalid);
