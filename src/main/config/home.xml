@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE homemap PUBLIC "-//bengt-martensson.de//home//en" "../dtds/home.dtd">
+<!DOCTYPE homemap PUBLIC "-//bengt-martensson.de//home//en" "dtds/home.dtd">
 <!--
 Description of devices, applications, gateways, groups, zones.
 
@@ -34,7 +34,7 @@ This is a sample file.
     <device-group id="misc" name="Misc.">
       <deviceref device="balcony_door"/>
       <deviceref device="screen"/>
-      <deviceref device="x10-N1"/>  
+      <deviceref device="x10-N1"/>
     </device-group>
 
     <device-group id="living_room" name="Living Room">
@@ -116,7 +116,7 @@ This is a sample file.
 	    <selectcommand audio_video="recordsrc_sat"/>
 	    <querycommand cmd="get_recordsrc" val="SRSAT"/>
 	  </zone>
-	  
+
           <connector connectiontype="cvbs">
 	    <!--deviceref device="dbox"/-->
 	    <deviceref device="dbox"/>
@@ -190,7 +190,7 @@ This is a sample file.
 	    <selectcommand audio_video="recordsrc_hdp"/>
 	    <querycommand cmd="get_recordsrc" val="SRHDP"/>
 	  </zone>
-	  
+
 	</input>
 	<input name="dvr" myname="HD-DVD" audio="yes" video="yes">
 	  <zone name="1">
