@@ -125,9 +125,9 @@
                             </fileMappers>
                         </transformationSet-->
                     </transformationSets>
-                    <!--catalogs>
-                        <catalog>../schemas/catalog.xml</catalog>
-                    </catalogs-->
+                    <catalogs>
+                        <catalog>${project.basedir}/src/main/dtds/catalog.xml</catalog>
+                    </catalogs>
                 </configuration>
 
                 <!-- Use xalan instead of builtin parser which doesn't really work -->
