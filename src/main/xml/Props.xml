@@ -26,7 +26,6 @@ this program. If not, see http://www.gnu.org/licenses/.
     <property name="homeConf" type="string" default='"home.xml"'/>
     <property name="dtdDir" type="string" default='"dtds"'/>
     <property name="devicesDir" type="string" default='"devices"'/>
-    <property name="exportDir" type="string" default='"exports"'/>
     <property name="aliasfilename" type="string" default='"command_t.xml"'/> <!-- ? -->
     <property name="rlHistoryfile" type="string" default='".oldharctoolbox.rl"'/> <!-- FIXME(?) -->
     <property name="appname" type="string" default='"oldharctoolbox"'/>

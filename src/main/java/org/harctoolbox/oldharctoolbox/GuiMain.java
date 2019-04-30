@@ -234,10 +234,6 @@ public final class GuiMain extends javax.swing.JFrame {
         output_deviceComboBox = new javax.swing.JComboBox();
         deviceclass_stop_Button = new javax.swing.JButton();
         device_remote_ComboBox = new javax.swing.JComboBox();
-        xmlDeviceExportButton = new javax.swing.JButton();
-        jLabel27 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
-        xmlAllDevicesExportButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         outputHWTabbedPane = new javax.swing.JTabbedPane();
         globalcache_Panel = new javax.swing.JPanel();
@@ -254,9 +250,6 @@ public final class GuiMain extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         consoletext_save_MenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
-        export_device_MenuItem = new javax.swing.JMenuItem();
-        export_all_MenuItem = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JSeparator();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         copy_console_to_clipboard_MenuItem = new javax.swing.JMenuItem();
@@ -592,24 +585,6 @@ public final class GuiMain extends javax.swing.JFrame {
             }
         });
 
-        xmlDeviceExportButton.setText("XML");
-        xmlDeviceExportButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                xmlDeviceExportButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel27.setText("Export current device class");
-
-        jLabel28.setText("Export all known device classes");
-
-        xmlAllDevicesExportButton.setText("XML");
-        xmlAllDevicesExportButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                xmlAllDevicesExportButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout deviceclassesPanelLayout = new javax.swing.GroupLayout(deviceclassesPanel);
         deviceclassesPanel.setLayout(deviceclassesPanelLayout);
         deviceclassesPanelLayout.setHorizontalGroup(
@@ -624,23 +599,17 @@ public final class GuiMain extends javax.swing.JFrame {
                     .addGroup(deviceclassesPanelLayout.createSequentialGroup()
                         .addComponent(output_deviceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(no_sends_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(xmlDeviceExportButton)
-                    .addComponent(jLabel27))
+                        .addComponent(no_sends_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(deviceclassesPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(device_command_ComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(deviceclassesPanelLayout.createSequentialGroup()
                         .addGap(11, 11, 11)
-                        .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(deviceclassesPanelLayout.createSequentialGroup()
-                                .addComponent(deviceclass_stop_Button)
-                                .addGap(18, 18, 18)
-                                .addComponent(deviceclass_send_Button))
-                            .addComponent(xmlAllDevicesExportButton)
-                            .addComponent(jLabel28))))
-                .addContainerGap(79, Short.MAX_VALUE))
+                        .addComponent(deviceclass_stop_Button)
+                        .addGap(18, 18, 18)
+                        .addComponent(deviceclass_send_Button)))
+                .addContainerGap(147, Short.MAX_VALUE))
             .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
         );
         deviceclassesPanelLayout.setVerticalGroup(
@@ -659,15 +628,7 @@ public final class GuiMain extends javax.swing.JFrame {
                     .addComponent(deviceclass_send_Button))
                 .addGap(9, 9, 9)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel28)
-                    .addComponent(jLabel27))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(deviceclassesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(xmlAllDevicesExportButton)
-                    .addComponent(xmlDeviceExportButton))
-                .addGap(30, 30, 30))
+                .addGap(82, 82, 82))
         );
 
         output_hw_TabbedPane.addTab("Device classes", deviceclassesPanel);
@@ -775,23 +736,6 @@ public final class GuiMain extends javax.swing.JFrame {
         });
         fileMenu.add(consoletext_save_MenuItem);
         fileMenu.add(jSeparator1);
-
-        export_device_MenuItem.setText("Export XML (deviceclass)");
-        export_device_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                export_device_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(export_device_MenuItem);
-
-        export_all_MenuItem.setText("Export XML (all)");
-        export_all_MenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                export_all_MenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(export_all_MenuItem);
-        fileMenu.add(jSeparator2);
 
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
@@ -1471,10 +1415,6 @@ public final class GuiMain extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_consoletext_save_MenuItemActionPerformed
 
-    private void export_all_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_all_MenuItemActionPerformed
-        Device.export_all_devices(properties.getExportDir());
-}//GEN-LAST:event_export_all_MenuItemActionPerformed
-
     private void stop_macro_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_macro_ButtonActionPerformed
         the_macro_thread.interrupt();
         macroButton.setEnabled(true);
@@ -1483,10 +1423,6 @@ public final class GuiMain extends javax.swing.JFrame {
                 + (the_macro_thread.get_name()) + "' interrupted *************");
         the_macro_thread = null;
     }//GEN-LAST:event_stop_macro_ButtonActionPerformed
-
-    private void export_device_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_device_MenuItemActionPerformed
-        Device.export_device(properties.getExportDir(), (String) deviceclasses_dcbm.getSelectedItem());
-    }//GEN-LAST:event_export_device_MenuItemActionPerformed
 
     private void gc_address_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gc_address_TextFieldActionPerformed
         try (GlobalCache gc = new GlobalCache(gc_address_TextField.getText(), verbose_CheckBoxMenuItem.getState())) {
@@ -1534,14 +1470,6 @@ public final class GuiMain extends javax.swing.JFrame {
 //            Logger.getLogger(GuiMain.class.getName()).log(Level.SEVERE, ex.getMessage());
 //        }
     }//GEN-LAST:event_gc_stop_ir_ActionPerformed
-
-private void xmlDeviceExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlDeviceExportButtonActionPerformed
-    Device.export_device(properties.getExportDir(), (String) deviceclasses_dcbm.getSelectedItem());
-}//GEN-LAST:event_xmlDeviceExportButtonActionPerformed
-
-private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xmlAllDevicesExportButtonActionPerformed
-    Device.export_all_devices(properties.getExportDir());
-}//GEN-LAST:event_xmlAllDevicesExportButtonActionPerformed
 
     private void immediate_execution_macros_CheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_immediate_execution_macros_CheckBoxMenuItemActionPerformed
         properties.setImmediateExecutionMacros(immediate_execution_macros_CheckBoxMenuItem.isSelected());
@@ -1596,8 +1524,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JMenu editMenu;
     private javax.swing.JCheckBoxMenuItem enable_devicegroups_CheckBoxMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenuItem export_all_MenuItem;
-    private javax.swing.JMenuItem export_device_MenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JTextField gc_address_TextField;
     private javax.swing.JButton gc_browse_Button;
@@ -1610,12 +1536,9 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JButton macroButton;
@@ -1639,8 +1562,6 @@ private void xmlAllDevicesExportButtonActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JButton stop_macro_Button;
     private javax.swing.JComboBox toplevel_macrofolders_ComboBox;
     private javax.swing.JCheckBoxMenuItem verbose_CheckBoxMenuItem;
-    private javax.swing.JButton xmlAllDevicesExportButton;
-    private javax.swing.JButton xmlDeviceExportButton;
     private javax.swing.JComboBox zones_ComboBox;
     // End of variables declaration//GEN-END:variables
     private AboutPopup aboutBox;

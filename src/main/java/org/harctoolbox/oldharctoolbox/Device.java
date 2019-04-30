@@ -141,63 +141,10 @@ public final class Device {
         return result;
     }
 
-    public static boolean export_device(String export_dir, String devname) {
-        String out_filename = export_dir + File.separator + devname + HarcUtils.devicefile_extension;
-        System.err.println("Exporting " + devname + " to " + out_filename + ".");
-        Device dev = null;
-        try {
-            dev = new Device(devname, null, true);
-        } catch (IOException e) {
-            System.err.println("IOException with " + devname);
-            return false;
-        } catch (SAXParseException e) {
-            System.err.println(e.getMessage());
-            return false;
-        } catch (SAXException e) {
-            System.err.println(e.getMessage());
-            return false;
-        }
-
-        if (!dev.is_valid()) {
-            System.err.println("Failure!");
-            return false;
-        }
-
-        if (debug != 0)
-            System.out.println(dev.info());
-
-        dev.augment_dom(false);
-        dev.print(out_filename);
-
-        return true;
-    }
-
-    public static boolean export_all_devices(String export_dir) {
-        File dir = new File(export_dir);
-        if (dir.isFile()) {
-            System.err.println("Error: File " + export_dir + " exists, but is not a directory.");
-            return false;
-        } else if (!dir.exists()) {
-            System.err.println("Directory " + export_dir + " does not exist, creating.");
-            boolean stat = dir.mkdir();
-            if (!stat) {
-                System.err.println("Directory creation failed.");
-                return false;
-            }
-        }
-        String[] devs = get_devices();
-        // Ignore errors, just continue
-        for (String dev : devs)
-            export_device(export_dir, dev);
-
-        return true;
-    }
-
     private static void usage(int exitcode) {
         String message = "Usage:\n"
                 + "device [<options>] -f <input_filename> [<cmd_name>]\n"
                 + "or\n"
-                + "device -x <export_directory>\n"
                 + "where options=-o <filename>,-@ <attributename>,-a aliasname,-l,-d,-c,-t "
                 + CommandType_t.valid_types('|');
         HarcUtils.doExit(exitcode, message);
@@ -215,7 +162,6 @@ public final class Device {
         String out_filename = null;
         String attribute_name = null;
         String alias_name = null;
-        String export_dir = null;
 
         short deviceno = -1;
         short subdevice = 0;
@@ -269,10 +215,6 @@ public final class Device {
                             usage();
                         type = CommandType_t.valueOf(typename);
                         break;
-                    case "-x":
-                        arg_i++;
-                        export_dir = args[arg_i++];
-                        break;
                     default:
                         usage(IrpUtils.EXIT_USAGE_ERROR);
                         break;
@@ -282,10 +224,7 @@ public final class Device {
             usage();
         }
 
-        if (export_dir != null) {
-            boolean success = export_all_devices(export_dir);
-            HarcUtils.doExit(success ? IrpUtils.EXIT_SUCCESS : IrpUtils.EXIT_CONFIG_WRITE_ERROR);
-        } else if (in_filename == null) {
+        if (in_filename == null) {
             usage(-1);
             HarcUtils.printtable("Known devices:", get_devices());
             HarcUtils.doExit(IrpUtils.EXIT_SUCCESS);
