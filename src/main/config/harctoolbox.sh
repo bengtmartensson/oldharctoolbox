@@ -4,7 +4,7 @@
 
 # Change the following lines to fit your needs
 #JAVA_HOME=/opt/jdk1.6.0_25
-HARCTOOLBOX_HOME=/home/bengt/harc/harctoolbox
+HARCTOOLBOX_HOME="$(dirname -- "$(readlink -f -- "${0}")" )"
 READLINE_LIB=/usr/local/lib
 
 if [ -n $JAVA_HOME ] ; then
@@ -20,4 +20,4 @@ if [ -w /var/run ] ; then
     echo $$ > /var/run/harctoolbox.pid
 fi
 
-exec ${JAVA} -Djava.library.path=${READLINE_LIB} -jar ${HARCTOOLBOX_HOME}/dist/harctoolbox.jar -p ${HARCTOOLBOX_HOME}/harctoolbox.properties.xml "$@"
+exec ${JAVA} -Djava.library.path=${READLINE_LIB} -jar ${HARCTOOLBOX_HOME}/OldHarctoolbox-jar-with-dependencies.jar "$@"
