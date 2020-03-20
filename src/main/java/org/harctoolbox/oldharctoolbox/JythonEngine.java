@@ -153,6 +153,10 @@ public final class JythonEngine {
             System.err.println("Python error: " + pye);
             pye.printStackTrace();
             return null;
+        } catch (IllegalArgumentException ex) {
+            System.err.println("Python error (IllegalArgumentException): " + ex.getLocalizedMessage());
+            ex.printStackTrace();
+            return null;
         }
         String s;
         try {
