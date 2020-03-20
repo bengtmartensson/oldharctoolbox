@@ -1,15 +1,15 @@
 #!/bin/sh
 #
 ### BEGIN INIT INFO
-# Provides:          tomcat
+# Provides:          harctoolboxd
 # Required-Start:    $local_fs $remote_fs $network
 # Required-Stop:     $local_fs $remote_fs $network
 # Should-Start:      $named
 # Should-Stop:       $named
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start Tomcat.
-# Description:       Start the Tomcat servlet engine.
+# Short-Description: Start Harctoolboxd.
+# Description:       Start the Harctoolboxd engine.
 ### END INIT INFO
 
 set -e
@@ -17,7 +17,7 @@ set -e
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin
 NAME=harctoolbox
 DESC="Harctoolbox daemon"
-         
+
 #JAVA_HOME=/opt/jdk1.6.0_14
 #JRE_HOME=$JAVA_HOME
 #export JAVA_HOME
