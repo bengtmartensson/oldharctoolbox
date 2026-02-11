@@ -38,6 +38,7 @@ import org.harctoolbox.harchardware.ir.GlobalCache;
 import org.harctoolbox.harchardware.ir.NoSuchTransmitterException;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
+import static org.harctoolbox.oldharctoolbox.Main.DEFAULT_CHARSET_NAME;
 import org.xml.sax.SAXException;
 
 /**
@@ -1354,7 +1355,7 @@ public final class GuiMain extends javax.swing.JFrame {
 
     private void consoletext_save_MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consoletext_save_MenuItemActionPerformed
         String filename = SelectFile.selectFile(this, "Save console text as...", null, true, true, "Text file", "txt").getAbsolutePath();
-        try (PrintStream ps = new PrintStream(new FileOutputStream(filename), false, IrCoreUtils.DEFAULT_CHARSET_NAME)) {
+        try (PrintStream ps = new PrintStream(new FileOutputStream(filename), false, DEFAULT_CHARSET_NAME)) {
             ps.println(console.getText());
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             System.err.println(ex);

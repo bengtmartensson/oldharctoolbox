@@ -10,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineCompleter;
 import org.gnu.readline.ReadlineLibrary;
-import org.harctoolbox.ircore.IrCoreUtils;
+import static org.harctoolbox.oldharctoolbox.Main.DEFAULT_CHARSET_NAME;
 import org.python.core.Py;
 import org.python.core.PyException;
 import org.python.core.PyObject;
@@ -140,8 +140,8 @@ public final class HarcReadlineJythonConsole extends org.python.util.Interactive
             if (!more && line.startsWith("!")) {
                 try {
                     Process proc = Runtime.getRuntime().exec(line.substring(1));
-                    BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream(), IrCoreUtils.DEFAULT_CHARSET_NAME));
-                    BufferedReader err = new BufferedReader(new InputStreamReader(proc.getErrorStream(), IrCoreUtils.DEFAULT_CHARSET_NAME));
+                    BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream(), DEFAULT_CHARSET_NAME));
+                    BufferedReader err = new BufferedReader(new InputStreamReader(proc.getErrorStream(), DEFAULT_CHARSET_NAME));
                     while (true) {
                         String l = out.readLine();
                         if (l == null)

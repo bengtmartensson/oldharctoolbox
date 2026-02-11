@@ -92,8 +92,9 @@ This is a sample file.
       <!-- Here, order is significant, and denotes preference.
       In particular, make sure that www comes last! -->
       <gateway-port gateway="lan" connectortype="tcp" hostname="denon" portnumber="23"/>
+      <gateway-port-ref gateway-port="denon_ir_gw"/>
       <gateway-port-ref gateway-port="globalcache_mainzone"/>
-      <gateway-port-ref gateway-port="irtrans_mainzone"/>
+      <!--gateway-port-ref gateway-port="irtrans_mainzone"/-->
       <gateway-port gateway="lan" connectortype="ip" hostname="denon" wol="no"/>
       <gateway-port gateway="lan" connectortype="www" hostname="denon" portnumber="80"/>
       <inputs>
@@ -720,13 +721,6 @@ This is a sample file.
       </ports>
     </gateway>
 
-    <gateway id="conrad_egg" class="ir_to_rf433">
-        <gateway-port-ref gateway-port="conrad_egg_ir_gw"/>
-        <ports type="rf">
-            <port/>
-        </ports>
-    </gateway>
-
     <gateway id="dbox_lirc" class="lirc_server">
         <ports type="ir">
             <port/>
@@ -1055,15 +1049,16 @@ This is a sample file.
     <gateway-port id="projector_serial_gw" gateway="globalcache" connectortype="serial" connectorno="1"/>
 
     <!-- big Globalcache -->
-    <gateway-port id="globalcache_test" gateway="gc2" connectortype="ir" connectorno="1"/>
+    <!--gateway-port id="globalcache_test" gateway="gc2" connectortype="ir" connectorno="1"/-->
     <gateway-port id="dvd_serial_gw" gateway="gc2" connectortype="serial" connectorno="1"/>
-    <gateway-port id="ipod_serial_gw" gateway="gc2" connectortype="serial" connectorno="2"/>
-    <gateway-port id="denon_serial_gw" gateway="gc2" connectortype="serial" connectorno="1"/>
+    <gateway-port id="denon_serial_gw" gateway="gc2" connectortype="serial" connectorno="2"/>
     <gateway-port id="balcony_relay_gw" gateway="gc2" connectortype="on_off" connectorno="1"/>
+    <gateway-port id="denon_ir_gw" gateway="gc2" connectortype="ir" connectorno="1"/>
+
     <gateway-port id="balcony_sensor_gw" gateway="gc2" connectortype="sensor" connectorno="6"/>
-    <gateway-port id="dvd_ir_gw" gateway="gc2" connectortype="ir" connectorno="5"/>
-    <gateway-port id="ipod_ir_gw" gateway="gc2" connectortype="ir" connectorno="2"/>
-    <gateway-port id="conrad_egg_ir_gw" gateway="gc2" connectortype="ir" connectorno="6"/>
+    <gateway-port id="dvd_ir_gw" gateway="gc2" connectortype="ir" connectorno="2"/>
+    <!--gateway-port id="ipod_ir_gw" gateway="gc2" connectortype="ir" connectorno="2"/-->
+    <!--gateway-port id="conrad_egg_ir_gw" gateway="gc2" connectortype="ir" connectorno="6"/-->
 
     <!-- dbox lirc server -->
     <gateway-port id="dbox_lirc_mainzone" gateway="dbox_lirc" connectortype="ir"/>

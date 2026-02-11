@@ -17,6 +17,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
+import java.io.IOException;
 import org.harctoolbox.harchardware.misc.Ethers;
 
 /**
@@ -31,7 +32,6 @@ public final class GatewayPort {
    private final String hostname;
    private final int portnumber;
    private final String mac;
-   private final boolean wol;
    private final int timeout;
 
    public GatewayPort(String id, String gateway, int connectorno,
@@ -43,8 +43,15 @@ public final class GatewayPort {
        this.connectortype = connectortype;
        this.hostname = hostname;
        this.portnumber = portnumber;
-       this.mac = ((mac == null) || mac.isEmpty()) ? Ethers.getEtherAddress(hostname) : mac;
-       this.wol = wol;
+       String lookupMac = null;
+       if (hostname.equals("router"))
+           System.err.println("fgf");
+       try {
+           lookupMac = Ethers.getEtherAddress(hostname);
+       } catch (IOException | Ethers.MacAddressNotFound ex) {
+           System.err.println(ex.getMessage());
+       }
+       this.mac = ((mac == null) || mac.isEmpty()) ? lookupMac : mac;
        this.timeout = timeout;
    }
 

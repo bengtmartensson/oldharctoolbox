@@ -4,7 +4,7 @@ import time
 import subprocess
 import string
 import socket
-import org.harctoolbox.oldharctoolbox.ProtocolDataBase
+#import org.harctoolbox.oldharctoolbox.ProtocolDataBase
 import org.harctoolbox.oldharctoolbox.Home
 import org.harctoolbox.oldharctoolbox.command_t
 import org.harctoolbox.oldharctoolbox.CommandType_t

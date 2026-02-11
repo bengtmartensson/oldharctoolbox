@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.harctoolbox.ircore.XmlUtils;
+import org.harctoolbox.xml.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -293,6 +293,8 @@ public final class HomeParser {
                 Integer.parseInt(gw_el.getAttribute("timeout"));
             } catch (NumberFormatException e) {
             }
+            String wapString = gw_el.getAttribute("web_api_portnumber");
+            int wap = wapString.isEmpty() ? -1 : Integer.parseInt(wapString);
             Gateway gw = new Gateway(gw_el.getAttribute("hostname"),
                     gateway_ports,
                     ports_table,
@@ -304,7 +306,7 @@ public final class HomeParser {
                     gw_el.getAttribute("firmware"),
                     parse_yes_no(gw_el.getAttribute("www")),
                     parse_yes_no(gw_el.getAttribute("web_api")),
-                    Integer.parseInt(gw_el.getAttribute("web_api_portnumber")),
+                    wap,
                     gw_el.getAttribute("name"),
                     gw_el.getAttribute("id"),
                     timeout);
@@ -455,7 +457,9 @@ public final class HomeParser {
                         //mediatype type = mediatype.valueOf(nodeElement.getAttribute("mediatype"));
                         Input.QueryCommand qc = parse_querycommand(nodeElement);
                         //new input.querycommand(command_t.parse(nodeElement.getAttribute("cmd")),nodeElement.getAttribute("val"));
-                        querycommands.put(qc.get_type(), qc);
+                        MediaType mediatype = qc.get_type();
+                        if (mediatype != null)
+                            querycommands.put(qc.get_type(), qc);
                     }
                     break;
                 case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
@@ -466,7 +470,7 @@ public final class HomeParser {
     }
 
     Input.QueryCommand parse_querycommand(Element element) {
-        MediaType type = MediaType.valueOf(element.getAttribute("mediatype"));
+        MediaType type = MediaType.parse(element.getAttribute("mediatype"));
         return new Input.QueryCommand(command_t.parse(element.getAttribute("cmd")),
                                 element.getAttribute("val"), type);
     }

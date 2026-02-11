@@ -46,7 +46,8 @@ import java.util.logging.Logger;
 import org.gnu.readline.Readline;
 import org.gnu.readline.ReadlineLibrary;
 import org.harctoolbox.ircore.IrCoreUtils;
-import org.harctoolbox.ircore.XmlUtils;
+import org.harctoolbox.irp.IrpDatabase;
+import org.harctoolbox.xml.XmlUtils;
 import org.harctoolbox.irp.IrpParseException;
 import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
@@ -79,6 +80,8 @@ final public class Main {
     private static Props properties;
     private static String appHome = null;
     private final static Logger logger = Logger.getLogger(Main.class.getName());
+    public final static String DEFAULT_CHARSET_NAME = "WINDOWS-1252";
+    private static IrpDatabase protocolDatabase;
 
     private static void usage(int exitstatus) {
         HarcUtils.doExit(exitstatus, "Usage: one of" + IrCoreUtils.LINE_SEPARATOR + helptext);
@@ -94,6 +97,10 @@ final public class Main {
 
     public static Props getProperties() {
         return properties;
+    }
+    
+    public static IrpDatabase getProtocolDatabase() {
+        return protocolDatabase;
     }
 
     /**
@@ -281,10 +288,13 @@ final public class Main {
             properties.setVerbose(verbose);
 
         try {
-            ProtocolDataBase.initialize(properties.getIrpProtocolsPath());
-        } catch (IOException | IrpParseException ex) {
+            //ProtocolDataBase.initialize(properties.getIrpProtocolsPath());
+            protocolDatabase = new IrpDatabase(properties.getIrpProtocolsPath());
+        } catch (IOException | IrpParseException | SAXException ex) {
             HarcUtils.doExit(IrpUtils.EXIT_CONFIG_READ_ERROR, ex.getMessage());
         }
+        
+        XmlUtils.setAllowDoctype(true);
 
         if (gui_mode) {
             gui_execute(homefilename);

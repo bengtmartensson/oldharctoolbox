@@ -40,12 +40,14 @@ import org.harctoolbox.harchardware.HarcHardwareException;
 import org.harctoolbox.harchardware.comm.Wol;
 import org.harctoolbox.harchardware.ir.GlobalCache;
 import org.harctoolbox.harchardware.ir.NoSuchTransmitterException;
+import org.harctoolbox.harchardware.misc.Ethers;
 import org.harctoolbox.harchardware.misc.EzControlT10;
 import org.harctoolbox.harchardware.misc.SonySerialCommand;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
-import org.harctoolbox.ircore.XmlUtils;
+import org.harctoolbox.xml.XmlUtils;
 import org.harctoolbox.irp.IrpUtils;
+import static org.harctoolbox.oldharctoolbox.Main.DEFAULT_CHARSET_NAME;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -657,8 +659,8 @@ public final class Home {
                         if (DebugArgs.dbg_transmit())
                             System.err.println("Setting timeout on TCP socket to " + fgw.get_timeout());
                         //System.err.println(sock.getSoLinger() + " " + sock.getSoTimeout() + " " + sock.getReuseAddress() + " " + sock.getKeepAlive());
-                        PrintStream outToServer = new PrintStream(sock.getOutputStream(), true, IrCoreUtils.DEFAULT_CHARSET_NAME);
-                        BufferedReader inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream(), IrCoreUtils.DEFAULT_CHARSET_NAME));
+                        PrintStream outToServer = new PrintStream(sock.getOutputStream(), true, DEFAULT_CHARSET_NAME);
+                        BufferedReader inFromServer = new BufferedReader(new InputStreamReader(sock.getInputStream(), DEFAULT_CHARSET_NAME));
 
                         String opener = dev.get_open(cmd, CommandType_t.tcp);
                         if (opener != null && !opener.isEmpty()) {
@@ -1015,8 +1017,8 @@ public final class Home {
                             try {
                                 Wol.wol(fgw.get_mac());
                                 success = true;
-                            } catch (NumberFormatException | IOException | HarcHardwareException e) {
-                                System.err.println(e.getMessage());
+                            } catch (Ethers.MacAddressNotFound | IOException ex) {
+                                logger.log(Level.SEVERE, null, ex);
                             }
                         }
                         break;

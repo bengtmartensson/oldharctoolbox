@@ -23,5 +23,14 @@ package org.harctoolbox.oldharctoolbox;
 public enum MediaType {
     audio_video,
     video_only,
-    audio_only
+    audio_only;
+
+    public static MediaType parse(String input) {
+        try {
+            MediaType mt = MediaType.valueOf(input);
+            return mt;
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return null;
+        }
+    }
 }

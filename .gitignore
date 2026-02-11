@@ -3,3 +3,6 @@
 target
 .oldharctoolbox.rl
 .oldharctoolbox.rl.python
+attic
+harctoolbox
+nb*.xml

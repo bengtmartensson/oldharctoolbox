@@ -17,10 +17,14 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.oldharctoolbox;
 
-import org.harctoolbox.ircore.InvalidArgumentException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import org.harctoolbox.ircore.IrCoreException;
+import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
 import org.harctoolbox.ircore.Pronto;
 import org.harctoolbox.irp.IrpException;
+import org.harctoolbox.irp.Protocol;
 
 
 // TODO: use a reference to the commandset instead of copying most of its content.
@@ -28,7 +32,6 @@ public final class Command {
 
     private final command_t cmd;
     private final short cmdno;
-    private final String name;
     private final String transmit;
     private final String prefix;
     private final String suffix;
@@ -55,7 +58,7 @@ public final class Command {
         CommandSetEntry c = cmdset.get_entry(index);
         this.cmd = c.get_cmd();
         this.cmdno = c.get_cmdno();
-        this.name = c.get_name();
+        c.get_name();
         this.transmit = c.get_transmit();
         this.response_lines = c.get_response_lines();
         this.response_ending = c.get_response_ending();
@@ -77,6 +80,45 @@ public final class Command {
         this.charset = cmdset.get_charset();
         this.flavor = cmdset.get_flavor();
         this.minsends = cmdset.get_minsends();
+    }
+
+    private static final int invalid_parameter = -1;
+
+    private IrSignal encode(String protocol_name, short deviceno,
+            short subdevice, short cmdno, ToggleType toggle, String params, boolean verbose) throws IrpException, IrCoreException {
+        return protocol_name.equals("raw_ccf") ? null
+            : protocol_parser(protocol_name, deviceno, subdevice, cmdno, toggle, params);
+    }
+
+    private HashMap<String, Long> parameters(short deviceno, short subdevice, short cmdno, ToggleType toggle, String extra_params) {
+        HashMap<String, Long>params = new LinkedHashMap<>(4);
+        if (deviceno != invalid_parameter)
+            params.put("D", (long) deviceno);
+        if (subdevice != invalid_parameter)
+            params.put("S", (long) subdevice);
+        if (cmdno != invalid_parameter)
+            params.put("F", (long) cmdno);
+        if (toggle != ToggleType.dont_care)
+            params.put("T", (long) ToggleType.toInt(toggle));
+        if (extra_params != null && !extra_params.trim().isEmpty()) {
+            String[] str = extra_params.trim().split("[ \t]+");
+            for (String s : str) {
+                String[] q = s.split("=");
+                if (q.length == 2)
+                    params.put(q[0], IrCoreUtils.parseLong(q[1]));
+            }
+        }
+        return params;
+    }
+
+    private IrSignal protocol_parser(String protocol_name, short deviceno, short subdevice, short cmdno, ToggleType /*i*/toggle, String extra_params)
+            throws IrpException, IrCoreException {
+        Protocol protocol = Main.getProtocolDatabase().getNamedProtocol(protocol_name);
+        if (protocol == null)
+            return null;
+
+        HashMap<String, Long> params = parameters(deviceno, subdevice, cmdno, toggle, extra_params);
+        return protocol.toIrSignal(params);
     }
 
     @Override
@@ -175,7 +217,7 @@ public final class Command {
     public IrSignal get_ir_code(ToggleType toggle, boolean verbose, short devno, short subdev) {
         IrSignal ir = null;
         try {
-            ir = ProtocolDataBase.encode(protocol_name, devno, subdev, cmdno, toggle, additional_parameters, verbose);
+            ir = encode(protocol_name, devno, subdev, cmdno, toggle, additional_parameters, verbose);
             // Fallback
             if (ir == null || protocol_name.equals("raw_ccf")) {
                 String ccf = toggle == ToggleType.toggle_1 ? ccf_toggle_1 : ccf_toggle_0;
@@ -189,7 +231,7 @@ public final class Command {
                 //ir = new ccf_parse(ccf);
                 ir = Pronto.parse(ccf);
             }
-        } catch (IrpException | Pronto.NonProntoFormatException | InvalidArgumentException ex) {
+        } catch (IrpException | IrCoreException ex) {
             System.err.println(ex.getMessage());
         }
         return ir ;

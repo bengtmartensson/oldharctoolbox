@@ -4,27 +4,32 @@
 # else.
 
 VERSION=0.7.0
-INSTALLDIR=/usr/local/harctoolbox
+INSTALLDIR=/usr/local/share/harctoolbox
 BINDIR=/usr/local/bin
-SVNURL=svn://localhost/harctoolbox/trunk
-WWW_ROOT=../www.harctoolbox.org/src/content/xdocs
+#SVNURL=svn://localhost/harctoolbox/trunk
+#WWW_ROOT=../www.harctoolbox.org/src/content/xdocs
 
-SRCDISTFILE=harctoolbox-$(VERSION)_src.tar.gz
-BINDISTFILE=harctoolbox-$(VERSION)_bin.tar.gz
+JAR=target/OldHarctoolbox-jar-with-dependencies.jar
 
-/tmp/harctoolbox-$(VERSION):
-	rm -rf $@
-	svn checkout $(SVNURL) $@
+#SRCDISTFILE=harctoolbox-$(VERSION)_src.tar.gz
+#BINDISTFILE=harctoolbox-$(VERSION)_bin.tar.gz
 
-$(SRCDISTFILE): /tmp/harctoolbox-$(VERSION)
-	tar zcf $@ --exclude=.svn -C /tmp $(notdir $<)
+#/tmp/harctoolbox-$(VERSION):
+#	rm -rf $@
+#	svn checkout $(SVNURL) $@
 
-$(BINDISTFILE):
-	tar zcf $@ --exclude=.svn --exclude=javadoc --exclude=*class --exclude=*~ COPYING NEWS config devices dist docs dtds protocols pythonlib src/org/harctoolbox/commandnames.xml
+#$(SRCDISTFILE): /tmp/harctoolbox-$(VERSION)
+#	tar zcf $@ --exclude=.svn -C /tmp $(notdir $<)
 
-all:  $(SRCDISTFILE) $(BINDISTFILE) dist/javadoc
+#$(BINDISTFILE):
+#	tar zcf $@ --exclude=.svn --exclude=javadoc --exclude=*class --exclude=*~ COPYING NEWS config devices dist docs dtds protocols pythonlib src/org/harctoolbox/commandnames.xml
 
-dist: $(SRCDISTFILE) $(BINDISTFILE)
+all:  $(JAR)
+
+$(JAR):
+	mvn install
+
+#dist: $(SRCDISTFILE) $(BINDISTFILE)
 
 # harctoolbox runs fine "inplace" (just for example execute
 # misc/harctoolbox.sh). This target installs a minimal version in
@@ -68,8 +73,8 @@ uninstall:
 	rm -rf $(INSTALLDIR)
 	rm -f $(BINDIR)/harctoolbox
 
-dist/javadoc:
-	ant javadoc
+#dist/javadoc:
+#	ant javadoc
 
 install_www: dist/javadoc $(SRCDISTFILE) $(BINDISTFILE)
 	install -m 444 dtds/*.dtd $(WWW_ROOT)/dtds
@@ -82,3 +87,6 @@ install_www: dist/javadoc $(SRCDISTFILE) $(BINDISTFILE)
 	cp -a dist/lib $(WWW_ROOT)/downloads
 	install -m 444 $(SRCDISTFILE) $(WWW_ROOT)/downloads
 	install -m 444 $(BINDISTFILE) $(WWW_ROOT)/downloads
+
+clean:
+	mvn clean

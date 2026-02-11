@@ -37,7 +37,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.IrSignal;
 import org.harctoolbox.ircore.Pronto;
-import org.harctoolbox.ircore.XmlUtils;
+import org.harctoolbox.xml.XmlUtils;
 import org.harctoolbox.irp.IrpUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
