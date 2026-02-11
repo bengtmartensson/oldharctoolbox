@@ -1,0 +1,15 @@
+[Unit]
+Description=Old Harctoolbox
+After=network-online.target
+
+[Service]
+Type=simple
+#User=%i
+WorkingDirectory=/usr/local/share/harctoolbox
+ExecStart=/usr/local/share/harctoolbox/harctoolboxd.sh
+RestartForceExitStatus=100
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
